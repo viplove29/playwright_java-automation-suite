@@ -22,6 +22,30 @@ public class AccountingService {
   public final String DELETE_ACCOUNT_GROUP_BY_ID = "/groups/{id}";
   public final String POST_ACCOUNT_GROUP_BY_JOURNAL_ID = "/journals/{journalId}/groups";
 
+  // account balances controller constants
+  public final String GET_BALANCES_BY_JOURNAL_ID = "/journals/{journalId}/balances";
+
+  // account controller constants
+  public final String GET_ACCOUNT_BY_ID = "/accounts/{id}";
+  public final String PUT_ACCOUNT_BY_ID = "/accounts/{id}";
+  public final String DELETE_ACCOUNT_BY_ID = "/accounts/{id}";
+  public final String POST_ACCOUNT_BY_JOURNAL_ID = "/journals/{journalId}/accounts";
+
+  // settings controller constants
+  public final String GET_SCHEDULE_SETTINGS = "/setting-groups/schedules";
+  public final String PUT_SCHEDULE_SETTINGS = "/setting-groups/schedules";
+
+  // journal entry controller constants
+  public final String GET_JOURNAL_ENTRY_BY_ID = "/entries/{id}";
+  public final String PATCH_JOURNAL_ENTRY_BY_ID = "/entries/{id}";
+  public final String POST_JOURNAL_ENTRY_BY_ID = "/journals/{journalId}/entries";
+
+  // transaction controller constants
+  public final String GET_TRANSACTION_BY_ID = "/transactions/{id}";
+  public final String PATCH_TRANSACTION_BY_ID = "/transactions/{id}";
+
+
+
   private ServiceUtils serviceUtils;
 
   public AccountingService() throws IOException {
@@ -43,6 +67,21 @@ public class AccountingService {
     String hydratedURL = hydrateURL(DELETE_JOURNAL_BY_ID, "{id}", id);
     return serviceUtils.sendDeleteRequest(hydratedURL);
   }
+
+  public JournalV1 getJournalById(String id){
+    String hydratedURL = hydrateURL(GET_JOURNAL_BY_ID, "{id}", id);
+    Response response = serviceUtils.sendGetRequest(hydratedURL);
+    return response.getBody().jsonPath().getObject("content", JournalV1.class);
+  }
+
+  public JournalV1 putJournalById(String id, JournalV1 requestBody){
+    String hydratedURL = hydrateURL(PUT_JOURNAL_BY_ID, "{id}", id);
+    Response response = serviceUtils.sendPutRequest(hydratedURL, requestBody);
+    return response.getBody().jsonPath().getObject("content", JournalV1.class);
+  }
+
+  // finish this later
+//  public JournalV1 patchJournalById(String id){}
 
   // Account Group API calls
   public AccountGroupV1 postAccountGroupByJournalId(String id, AccountGroupV1 requestBody) {
