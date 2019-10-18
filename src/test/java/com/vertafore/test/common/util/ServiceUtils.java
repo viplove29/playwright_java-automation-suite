@@ -21,7 +21,6 @@ import net.serenitybdd.core.Serenity;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.assertj.core.api.AssertionsForClassTypes;
-import org.jetbrains.annotations.NotNull;
 
 public class ServiceUtils {
 
@@ -31,8 +30,13 @@ public class ServiceUtils {
   public ServiceUtils() throws IOException {
     dataHandler = DataHandler.getInstance(null);
   }
+
+  /**
+   * Rest Calls
+   */
+
   // responsible for sending each post request and validating the response
-  public <T> Response sendPostRequest(@NotNull String url, T requestBody) {
+  public <T> Response sendPostRequest(String url, T requestBody) {
     builder = dataHandler.getBuilder();
     builder.setBody(requestBody);
     Response response = BaseCalls.makePostCall(builder, url);
@@ -40,9 +44,9 @@ public class ServiceUtils {
     return response;
   }
 
-  // send create Form Template Version request and save response
-  // now hardcoding "version" and "file" as to avoid using reflection for the multi-part request.
-  // if we want to expand to more generic multi-part post we need to get creative.
+  // set up to consume a map <string, generic type>
+  // Right now, we are expecting the only generic type to be a File
+  // and all other values in the map will be written as a string.
   public <T> Response sendMultiPartPostRequest(HashMap<String, T> multiPartBody, String url) {
     builder = dataHandler.getBuilder();
     builder.setContentType("multipart/form-data");
@@ -50,13 +54,13 @@ public class ServiceUtils {
       String k = entry.getKey();
       T v = entry.getValue();
 
-      if (k.equals("version")) {
-        builder.addMultiPart(k, v.toString());
-      }
       if (k.equals("file")) {
         assert v instanceof File;
         builder.addMultiPart(k, (File) v);
+      } else {
+        builder.addMultiPart(k, v.toString());
       }
+
     }
     // send response
     Response response = BaseCalls.makePostCall(builder, url);
@@ -65,27 +69,6 @@ public class ServiceUtils {
 
     return response;
   }
-
-  public File getFileByFileName(String fileName, String fileExtension) {
-    return new File(
-        Objects.requireNonNull(
-                getClass()
-                    .getClassLoader()
-                    .getResource("file_resources/" + fileName + fileExtension))
-            .getFile());
-  }
-
-  private void checkResponseForSuccessCodeOrThrowError(Response response) {
-    assertThat(response.getStatusCode()).isBetween(200, 299);
-  }
-  // responsible for sending get requests and checking response for success
-  public Response sendGetRequest(String url) {
-    builder = dataHandler.getBuilder();
-    Response response = BaseCalls.makeGetCall(builder, url);
-    checkResponseForSuccessCodeOrThrowError(response);
-    return response;
-  }
-
   // responsible for sending patch requests and checking response for success
   public <T> Response sendPatchRequest(String url, T patchRequestBody) {
     builder = dataHandler.getBuilder();
@@ -96,10 +79,10 @@ public class ServiceUtils {
     return response;
   }
 
-  //  Generic Patch Builder that takes a hydrated model and builds a valid patch body request for
-  // each field that is not empty from the model passed in.
+  //  Generic Patch Builder that takes a hydrated model (ex: FormFieldV1)
+  //  and builds a valid patch body request
   public <T> ArrayList<PatchBody> buildPatchRequestFromModel(T hydratedModel)
-      throws IllegalAccessException {
+          throws IllegalAccessException {
     ArrayList<PatchBody> result = new ArrayList<>();
 
     for (Field f : hydratedModel.getClass().getDeclaredFields()) {
@@ -109,14 +92,23 @@ public class ServiceUtils {
     }
     return result;
   }
-
-  public <T> PatchBody buildSinglePatchBody(String path, T value) {
+  private <T> PatchBody buildSinglePatchBody(String path, T value) {
     PatchBody singlePatchBody = new PatchBody();
     singlePatchBody.setOperation(PatchOperation.REPLACE);
     singlePatchBody.setPath(path);
     singlePatchBody.setValue(value);
     return singlePatchBody;
   }
+
+
+  // responsible for sending get requests and checking response for success
+  public Response sendGetRequest(String url) {
+    builder = dataHandler.getBuilder();
+    Response response = BaseCalls.makeGetCall(builder, url);
+    checkResponseForSuccessCodeOrThrowError(response);
+    return response;
+  }
+
 
   // responsible for sending put requests and checking response for success
   public <T> Response sendPutRequest(String url, T requestBody) {
@@ -134,6 +126,29 @@ public class ServiceUtils {
     checkResponseForSuccessCodeOrThrowError(response);
     return response;
   }
+
+  // general success response method
+  private void checkResponseForSuccessCodeOrThrowError(Response response) {
+    assertThat(response.getStatusCode()).isBetween(200, 299);
+  }
+
+  /**
+   * Generic Utils -- maybe should live in a different file?
+   */
+  // generic method to find resources to upload
+  public File getFileByFileName(String fileName, String fileExtension) {
+    return new File(
+        Objects.requireNonNull(
+                getClass()
+                    .getClassLoader()
+                    .getResource("resources/" + fileName + fileExtension))
+            .getFile());
+  }
+
+
+  /**
+   * Login and session variable helpers
+   */
 
   // general helpers to change contexts/services/logging in
   public void loginWithServiceAndContext(
@@ -155,6 +170,53 @@ public class ServiceUtils {
       throw new IllegalArgumentException("service was not reset...");
     }
   }
+
+  public String getCurrentEntityId() {
+    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
+    return currentContext.get("entityid").toString();
+  }
+
+  public String getCurrentTenantId() {
+    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
+    return currentContext.get("tenantid").toString();
+  }
+
+  public String getCurrentProductId() {
+    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
+    return currentContext.get("productid").toString();
+  }
+
+  public String getCurrentUserName() {
+    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
+    return currentContext.get("name").toString();
+  }
+
+  public String getCurrentService() {
+    return Serenity.sessionVariableCalled("service");
+  }
+
+  // check current user and service if not what we need then we login.
+  public void checkLoginOrLogIn(
+          String userName, String service, String overrideDefaultUri, String userContextName)
+          throws IOException {
+    if (!service.equals(getCurrentService()) && !getCurrentUserName().equals(userName)) {
+      loginWithServiceAndContext(userName, service, overrideDefaultUri, userContextName);
+    }
+  }
+
+  // manually add contexts to a user
+  public void manuallyAddAgencyEntityContextInfo(
+          String userCommonName,
+          String entityIdToSet,
+          String contextCommonNameToSaveAs,
+          String productId,
+          String tenantId) {
+    UserData userData = dataHandler.getUserByName(userCommonName);
+    userData.addContext(contextCommonNameToSaveAs, productId, tenantId, entityIdToSet);
+  }
+  /**
+   * Validation Helpers
+   */
 
   public static void validatePostRequest(Object req, Object res) throws IllegalAccessException {
     Class<?> reqClass = req.getClass();
@@ -197,47 +259,4 @@ public class ServiceUtils {
     AssertionsForClassTypes.assertThat(req).isEqualTo(res);
   }
 
-  // manually add contexts to a use
-  public void manuallyAddAgencyEntityContextInfo(
-      String userCommonName,
-      String entityIdToSet,
-      String contextCommonNameToSaveAs,
-      String productId,
-      String tenantId) {
-    UserData userData = dataHandler.getUserByName(userCommonName);
-    userData.addContext(contextCommonNameToSaveAs, productId, tenantId, entityIdToSet);
-  }
-
-  public String getCurrentEntityId() {
-    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
-    return currentContext.get("entityid").toString();
-  }
-
-  public String getCurrentTenantId() {
-    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
-    return currentContext.get("tenantid").toString();
-  }
-
-  public String getCurrentProductId() {
-    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
-    return currentContext.get("productid").toString();
-  }
-
-  public String getCurrentUserName() {
-    CaseInsensitiveMap currentContext = Serenity.sessionVariableCalled("currentContext");
-    return currentContext.get("name").toString();
-  }
-
-  public String getCurrentService() {
-    return Serenity.sessionVariableCalled("service");
-  }
-
-  // check current user and service if not what we need then we login.
-  public void checkLoginOrLogIn(
-      String userName, String service, String overrideDefaultUri, String userContextName)
-      throws IOException {
-    if (!service.equals(getCurrentService()) && !getCurrentUserName().equals(userName)) {
-      loginWithServiceAndContext(userName, service, overrideDefaultUri, userContextName);
-    }
-  }
 }
