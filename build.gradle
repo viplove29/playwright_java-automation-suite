@@ -1,0 +1,116 @@
+buildscript {
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.33")
+        classpath("io.rest-assured:rest-assured:3.0.5")
+        classpath('com.fasterxml.jackson.core:jackson-databind:2.9.5')
+        classpath('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8')
+        classpath('com.vertafore:titan-auth-gen:1.0.3')
+        classpath('com.vertafore.autotest:qtest-serenity:1.0.1-SNAPSHOT')
+    }
+}
+
+plugins {
+    id 'com.bmuschko.nexus' version '2.3.1' apply false
+    id "com.diffplug.gradle.spotless" version "3.21.1"
+}
+allprojects {
+    group 'com.vertafore'
+    version '1.0.0-SNAPSHOT'
+
+    apply plugin: 'java-library'
+    apply plugin: 'com.vertafore.titanauthgen'
+    apply plugin: 'com.vertafore.gradle.qtest.QTestSerenityPlugin'
+
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
+
+    repositories(gradle.nexusConfiguration)
+
+    // Publish
+
+    apply plugin: 'com.bmuschko.nexus'
+    apply plugin: 'net.serenity-bdd.aggregator'
+
+    extraArchive {
+        sources = true
+        tests = true
+        javadoc = true
+    }
+
+    nexus {
+        sign = false
+        repositoryUrl = 'https://nexus.util.v4af.com/repository/libs-release-local/'
+        snapshotRepositoryUrl = 'https://nexus.util.v4af.com/repository/libs-snapshot-local/'
+    }
+
+    task sourceJar(type: Jar, dependsOn: classes) {
+        classifier 'sources'
+        from sourceSets.main.allSource
+    }
+
+    apply plugin: 'maven-publish'
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourceJar
+            }
+        }
+    }
+
+    // Make Gradle use the latest version of SNAPSHOT artifacts (no caching)
+    configurations.all {
+        resolutionStrategy {
+            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
+}
+
+
+
+dependencies {
+    implementation 'com.github.javafaker:javafaker:0.18'
+//    // import exposure test repo for models
+    implementation "com.vertafore:exposure-service-test:1.0.3-SNAPSHOT:tests"
+    // import canonical models
+    implementation 'com.vertafore:canonical-models:13'
+    // Apache Collections
+    implementation 'org.apache.commons:commons-collections4:4.3'
+    // titan foundation
+    implementation 'com.vertafore.core:foundation:2.2.0'
+
+    // for making titan-serenity-base work in this repo..
+    // Serenitybdd vertafore wide base
+    api "com.vertafore:serenitybdd-base:1.0.9-SNAPSHOT"
+    // Jackson
+    api 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.5'
+    // SLF4J
+    api 'org.apache.logging.log4j:log4j-to-slf4j:2.11.2'
+    api 'org.apache.logging.log4j:log4j-iostreams:2.11.2'
+    api 'ch.qos.logback:logback-classic:1.0.13'
+    api 'ch.qos.logback:logback-core:1.0.13'
+}
+
+test {
+    systemProperties System.properties
+    systemProperties.remove("java.endorsed.dirs")
+    // comment the next line out if not using authgen
+//    dependsOn titanauthgen
+}
+
+spotless {
+    java {
+        googleJavaFormat('1.6')
+    }
+}
+
+
+test.shouldRunAfter(titanauthgen)
+test.finalizedBy(aggregate)
+qtestsync.shouldRunAfter(aggregate)
+
+gradle.startParameter.continueOnFailure = true

@@ -1,0 +1,46 @@
+products: null
+tenants:
+  -
+    commonName: 'DIA Tenant'
+    context:
+      name: 'DIA Tenant Context'
+      product: AMS-WEB-UI
+      tenant: 'DIA Tenant'
+      entity: 'DIA Tenant'
+entities:
+  -
+    parentCommonName: 'DIA Tenant'
+    commonName: 'DIA Entity'
+    context:
+      name: 'DIA Entity Context'
+      product: AMS-WEB-UI
+      tenant: 'DIA Tenant'
+      entity: 'DIA Entity'
+roles:
+  -
+    roleCommonName: 'Form Admin Role'
+    subServiceRoles:
+      FORM: [adminAll]
+  -
+    roleCommonName: 'DIA Role'
+    subServiceRoles:
+      AMS-WEB-UI: [viewPolicy]
+      AUTH: [viewEntity, createAndEditEntity]
+      EXPOSURE: [exposureGroupCreate, exposureGroupDelete, exposureGroupRead, exposureGroupUpdate, staticValueRead, additionalCoverageRead, exposureTypesRead]
+      FEE: [allEntitlements]
+      FORM: [viewFormTemplate, viewFormInstance, createFormInstance, updateFormInstance, deleteFormInstance]
+      POLICY: [viewPolicy, createPolicy, updatePolicy, deletePolicy]
+users:
+  -
+    displayName: 'Form Admin'
+    roleAssignment:
+      - {roleCommonName: 'Form Admin Role', context: default}
+    context:
+      - default
+  -
+    displayName: 'DIA User'
+    roleAssignment:
+      - {roleCommonName: 'DIA Role', context: 'DIA Entity Context'}
+    context:
+      - 'DIA Tenant Context'
+      - 'DIA Entity Context'

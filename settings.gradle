@@ -1,0 +1,15 @@
+pluginManagement {
+    gradle.ext.nexusConfiguration = {
+        maven {
+            url 'https://nexus.util.v4af.com/repository/libs-snapshot'
+            credentials {
+                username 'vf_dependencies'
+                password 'vfDepReadOnly201711'
+            }
+        }
+    }
+
+    repositories(gradle.nexusConfiguration)
+}
+
+rootProject.name = 'titan-service-test'
