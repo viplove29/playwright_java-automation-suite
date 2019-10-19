@@ -12,4 +12,4 @@ pluginManagement {
     repositories(gradle.nexusConfiguration)
 }
 
-rootProject.name = 'titan-service-test'
+rootProject.name = 'integration-tests'

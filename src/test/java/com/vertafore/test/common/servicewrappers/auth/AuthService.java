@@ -24,9 +24,6 @@ public class AuthService {
   public EntityV1 getAgencyDataFromAuth() {
     Response response = serviceUtils.sendGetRequest(GET_ENTITY_ANCESTOR);
     // return the EntityV1 object
-
-    // because there is an error for the address of vertafore for the entity
-    // I am testing I need to filter
     return response.getBody().jsonPath().getObject("content", EntityV1.class);
   }
 
