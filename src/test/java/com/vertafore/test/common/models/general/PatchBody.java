@@ -1,17 +1,17 @@
 package com.vertafore.test.common.models.general;
 
 public class PatchBody {
-  private PatchOperation operation;
-  private String from;
-  private String path;
-  private Object value;
+  public PatchOperation op;
+  public String from;
+  public String path;
+  public Object value;
 
   public PatchOperation getOperation() {
-    return operation;
+    return op;
   }
 
   public void setOperation(PatchOperation operation) {
-    this.operation = operation;
+    this.op = operation;
   }
 
   public String getFrom() {

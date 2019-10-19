@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 @RunWith(CucumberWithSerenity.class)
 @CucumberOptions(
     plugin = {"pretty", "html:target/cucumber-html-report"},
-    features = "src/test/java/com/vertafore/test/form/features/form-service-integration.feature",
-    glue = "src.test.java.com.vertafore.test")
-public class TestAll {}
+    features = "src/test/resources/features",
+    glue = "com.vertafore.test",
+    tags = "@FormService"
+)
+public class TestForm {}

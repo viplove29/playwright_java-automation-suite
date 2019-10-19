@@ -225,7 +225,7 @@ public class FormInstanceTestSteps extends ScenarioSteps {
       // need a copy of the object so I can change "COLORADO" w/o manipulating the original
       EntityV1 agencyDataToChange = authService.getAgencyDataFromAuth();
       // change the state
-      agencyDataToChange.address.region = StateProvinceV1.COLORADO;
+      agencyDataToChange.address.region = StateProvinceV1.COLORADO.toString();
       // reassign our agencyData to have the new response from update
       agencyData =
           authService.updateEntityByPut(AuthService.CREATE_OR_UPDATE_ENTITY, agencyDataToChange);
