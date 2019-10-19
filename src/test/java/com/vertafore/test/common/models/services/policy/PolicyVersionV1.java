@@ -49,7 +49,9 @@ public class PolicyVersionV1 {
   public LocalDate cancellationDate;
 
   public PolicyVersionV1() {
-    namedInsureds = new ArrayList<>();;
-    formInstanceIds = new ArrayList<>();;
+    namedInsureds = new ArrayList<>();
+    ;
+    formInstanceIds = new ArrayList<>();
+    ;
   }
 }

@@ -16,4 +16,3 @@ public class AddressV1 {
 
   public AddressV1() {}
 }
-

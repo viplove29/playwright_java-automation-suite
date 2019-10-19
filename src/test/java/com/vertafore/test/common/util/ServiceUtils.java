@@ -31,9 +31,7 @@ public class ServiceUtils {
     dataHandler = DataHandler.getInstance(null);
   }
 
-  /**
-   * Rest Calls
-   */
+  /** Rest Calls */
 
   // responsible for sending each post request and validating the response
   public <T> Response sendPostRequest(String url, T requestBody) {
@@ -60,7 +58,6 @@ public class ServiceUtils {
       } else {
         builder.addMultiPart(k, v.toString());
       }
-
     }
     // send response
     Response response = BaseCalls.makePostCall(builder, url);
@@ -82,7 +79,7 @@ public class ServiceUtils {
   //  Generic Patch Builder that takes a hydrated model (ex: FormFieldV1)
   //  and builds a valid patch body request
   public <T> ArrayList<PatchBody> buildPatchRequestFromModel(T hydratedModel)
-          throws IllegalAccessException {
+      throws IllegalAccessException {
     ArrayList<PatchBody> result = new ArrayList<>();
 
     for (Field f : hydratedModel.getClass().getDeclaredFields()) {
@@ -96,6 +93,7 @@ public class ServiceUtils {
     }
     return result;
   }
+
   private <T> PatchBody buildSinglePatchBody(String path, T value) {
     PatchBody singlePatchBody = new PatchBody();
     singlePatchBody.setOperation(PatchOperation.REPLACE);
@@ -104,7 +102,6 @@ public class ServiceUtils {
     return singlePatchBody;
   }
 
-
   // responsible for sending get requests and checking response for success
   public Response sendGetRequest(String url) {
     builder = dataHandler.getBuilder();
@@ -112,7 +109,6 @@ public class ServiceUtils {
     checkResponseForSuccessCodeOrThrowError(response);
     return response;
   }
-
 
   // responsible for sending put requests and checking response for success
   public <T> Response sendPutRequest(String url, T requestBody) {
@@ -136,24 +132,19 @@ public class ServiceUtils {
     assertThat(response.getStatusCode()).isBetween(200, 299);
   }
 
-  /**
-   * Generic Utils -- maybe should live in a different file?
-   */
+  /** Generic Utils -- maybe should live in a different file? */
   // generic method to find resources to upload
   public File getFileByFileName(String pathName, String fileName, String fileExtension) {
 
     return new File(
-            Objects.requireNonNull(
-                    getClass()
-                            .getClassLoader()
-                            .getResource("files/" + pathName + "/" + fileName + fileExtension))
-                    .getFile());
+        Objects.requireNonNull(
+                getClass()
+                    .getClassLoader()
+                    .getResource("files/" + pathName + "/" + fileName + fileExtension))
+            .getFile());
   }
 
-
-  /**
-   * Login and session variable helpers
-   */
+  /** Login and session variable helpers */
 
   // general helpers to change contexts/services/logging in
   public void loginWithServiceAndContext(
@@ -202,8 +193,8 @@ public class ServiceUtils {
 
   // check current user and service if not what we need then we login.
   public void checkLoginOrLogIn(
-          String userName, String service, String overrideDefaultUri, String userContextName)
-          throws IOException {
+      String userName, String service, String overrideDefaultUri, String userContextName)
+      throws IOException {
     if (!service.equals(getCurrentService()) && !getCurrentUserName().equals(userName)) {
       loginWithServiceAndContext(userName, service, overrideDefaultUri, userContextName);
     }
@@ -211,18 +202,15 @@ public class ServiceUtils {
 
   // manually add contexts to a user
   public void manuallyAddAgencyEntityContextInfo(
-          String userCommonName,
-          String entityIdToSet,
-          String contextCommonNameToSaveAs,
-          String productId,
-          String tenantId) {
+      String userCommonName,
+      String entityIdToSet,
+      String contextCommonNameToSaveAs,
+      String productId,
+      String tenantId) {
     UserData userData = dataHandler.getUserByName(userCommonName);
     userData.addContext(contextCommonNameToSaveAs, productId, tenantId, entityIdToSet);
   }
-  /**
-   * Validation Helpers
-   */
-
+  /** Validation Helpers */
   public static void validatePostRequest(Object req, Object res) throws IllegalAccessException {
     Class<?> reqClass = req.getClass();
     Class<?> resClass = res.getClass();
@@ -263,5 +251,4 @@ public class ServiceUtils {
   public static void validateGetRequestFromPostResponse(Object req, Object res) {
     AssertionsForClassTypes.assertThat(req).isEqualTo(res);
   }
-
 }

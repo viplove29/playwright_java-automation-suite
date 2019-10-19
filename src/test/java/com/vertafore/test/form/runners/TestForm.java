@@ -9,6 +9,5 @@ import org.junit.runner.RunWith;
     plugin = {"pretty", "html:target/cucumber-html-report"},
     features = "src/test/resources/features",
     glue = "com.vertafore.test",
-    tags = "@FormService"
-)
+    tags = "@FormService")
 public class TestForm {}
