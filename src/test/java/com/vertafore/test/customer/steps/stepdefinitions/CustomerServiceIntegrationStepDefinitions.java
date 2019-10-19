@@ -9,7 +9,4 @@ public class CustomerServiceIntegrationStepDefinitions {
   // import other test step dependencies
   @Steps CustomerTestSteps customerTestSteps;
 
-  // this does all the work needed in form service
-  @Given("^test step definition here'([^']*?)'$")
-  public void stepDefinition(String parameter) {}
 }

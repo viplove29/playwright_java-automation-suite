@@ -33,9 +33,9 @@ public class ScheduleSettingsV1 {
     this.updatedOn = updatedOn;
   }
 
-  public static ScheduleSettingsV1 getGenericScheduleSettingsDTO() {
-    ScheduleSettingsV1 dto = new ScheduleSettingsV1();
-    dto.setSchedules(ScheduleV1.getDefaultListOfSchedulesDTOs());
-    return dto;
-  }
+//  public static ScheduleSettingsV1 getGenericScheduleSettingsDTO() {
+//    ScheduleSettingsV1 dto = new ScheduleSettingsV1();
+//    dto.setSchedules(ScheduleV1.getDefaultListOfSchedulesDTOs());
+//    return dto;
+//  }
 }

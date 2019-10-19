@@ -18,5 +18,7 @@ public class EntityV1 {
   public String zoneId;
   public AddressV1 address;
 
-  public EntityV1() {}
+  public EntityV1() {
+    attributes = new ArrayList<>();
+  }
 }

@@ -515,7 +515,7 @@ public class FormTemplateTestSteps extends ScenarioSteps {
     // finish building the request body
     FormTemplateVersionV1 requestBody = new FormTemplateVersionV1();
     requestBody.version = new ObjectMapper().writeValueAsString(versionMetaDataMap);
-    requestBody.file = serviceUtils.getFileByFileName(fileName, ".pdf");
+    requestBody.file = serviceUtils.getFileByFileName("form", fileName, ".pdf");
     return requestBody;
   }
 

@@ -88,7 +88,11 @@ public class ServiceUtils {
     for (Field f : hydratedModel.getClass().getDeclaredFields()) {
       java.lang.Object value = f.get(hydratedModel);
       java.lang.Object key = f.getName();
-      result.add(buildSinglePatchBody("/" + key.toString(), value));
+
+      // because we probably aren't going to path an ID/createdOn/updateOn
+      if (!key.equals("id") && !key.equals("createdOn") && !key.equals("updatedOn")) {
+        result.add(buildSinglePatchBody("/" + key.toString(), value));
+      }
     }
     return result;
   }
@@ -136,13 +140,14 @@ public class ServiceUtils {
    * Generic Utils -- maybe should live in a different file?
    */
   // generic method to find resources to upload
-  public File getFileByFileName(String fileName, String fileExtension) {
+  public File getFileByFileName(String pathName, String fileName, String fileExtension) {
+
     return new File(
-        Objects.requireNonNull(
-                getClass()
-                    .getClassLoader()
-                    .getResource("resources/" + fileName + fileExtension))
-            .getFile());
+            Objects.requireNonNull(
+                    getClass()
+                            .getClassLoader()
+                            .getResource("files/" + pathName + "/" + fileName + fileExtension))
+                    .getFile());
   }
 
 
