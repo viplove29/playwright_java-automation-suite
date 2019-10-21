@@ -3,7 +3,7 @@ package com.vertafore.test.common.models.services.invoice.invoicePayments;
 import com.ibm.icu.math.BigDecimal;
 import org.joda.time.Instant;
 
-public class InvoicePayment {
+public class InvoicePaymentV1 {
 
     public String id;
     public String invoiceId;
