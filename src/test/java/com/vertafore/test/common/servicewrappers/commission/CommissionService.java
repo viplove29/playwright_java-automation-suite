@@ -1,6 +1,7 @@
 package com.vertafore.test.common.servicewrappers.commission;
 
 import com.vertafore.test.common.models.services.commission.AgencyCommission.AgencyCommissionV1;
+import com.vertafore.test.common.models.services.commission.commissionEnums.AgencyCommissionLineOfBusiness;
 import com.vertafore.test.common.models.services.commission.producerCommission.ProducerCommissionV1;
 import com.vertafore.test.common.util.ServiceUtils;
 import io.restassured.response.Response;
