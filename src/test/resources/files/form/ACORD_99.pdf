@@ -1,720 +1,0 @@
-%PDF-1.4
-%ÿğ°
-1 0 obj 
-<< /AcroForm << /DR << /Font << /F2 2 0 R >> >> /Fields [ 3 0 R 4 0 R 5 0 R 6 0 R 7 0 R 8 0 R 9 0 R 10 0 R 11 0 R 12 0 R 13 0 R 14 0 R 15 0 R 16 0 R 17 0 R 18 0 R 19 0 R 20 0 R 21 0 R 22 0 R 23 0 R 24 0 R 25 0 R 26 0 R 27 0 R 28 0 R 29 0 R 30 0 R 31 0 R 32 0 R 33 0 R 34 0 R 35 0 R 36 0 R 37 0 R 38 0 R 39 0 R 40 0 R 41 0 R 42 0 R 43 0 R 44 0 R 45 0 R 46 0 R 47 0 R 48 0 R 49 0 R 50 0 R 51 0 R 52 0 R 53 0 R 54 0 R 55 0 R 56 0 R 57 0 R 58 0 R 59 0 R 60 0 R 61 0 R 62 0 R 63 0 R 64 0 R 65 0 R 66 0 R 67 0 R 68 0 R 69 0 R 70 0 R 71 0 R 72 0 R 73 0 R 74 0 R 75 0 R 76 0 R 77 0 R 78 0 R 79 0 R 80 0 R 81 0 R 82 0 R 83 0 R 84 0 R 85 0 R 86 0 R 87 0 R 88 0 R 89 0 R 90 0 R 91 0 R 92 0 R 93 0 R 94 0 R 95 0 R 96 0 R 97 0 R 98 0 R 99 0 R 100 0 R 101 0 R 102 0 R 103 0 R 104 0 R 105 0 R 106 0 R 107 0 R 108 0 R 109 0 R 110 0 R 111 0 R 112 0 R 113 0 R 114 0 R 115 0 R 116 0 R 117 0 R 118 0 R 119 0 R 120 0 R 121 0 R 122 0 R 123 0 R 124 0 R 125 0 R 126 0 R 127 0 R 128 0 R 129 0 R 130 0 R 131 0 R 132 0 R 133 0 R 134 0 R 135 0 R 136 0 R 137 0 R 138 0 R 139 0 R 140 0 R 141 0 R 142 0 R 143 0 R 144 0 R 145 0 R 146 0 R 147 0 R 148 0 R 149 0 R 150 0 R 151 0 R 152 0 R 153 0 R 154 0 R 155 0 R 156 0 R 157 0 R 158 0 R 159 0 R 160 0 R 161 0 R 162 0 R 163 0 R ] >> /OpenAction << /JS (function DateV\(event\) {  var regEx = /^\\d{1,2}\\/\\d{1,2}\\/\\d{4}$/; if \(!regEx.test\(event.value\)\) { event.rc = false; app.alert\("The date must be of the format MM/DD/YYYY."\); } };function YesNoK\(event\) { if \(event.change.length>0\) { event.change = event.change.toUpperCase\(\); if \(event.change!="Y" && event.change!="N"\) event.change = ""; } };\nfunction YesNoV\(event\) { if \(event.value!=null\) event.value = event.value.toUpperCase\(\); if \(event.value!="Y" && event.value!="N" && event.value!=""\) event.rc = false; };\n) /S /JavaScript /Type /Action >> /Pages 164 0 R /Type /Catalog >>
-endobj
-165 0 obj 
-<< /Author (ACORD Corporation) /CreationDate (D:20150824120942-04'00') /Creator (Silverlake Software LLC - Forms Dev Environment) /ModDate (D:20150824120942-04'00') /Producer (Silverlake Software LLC - Form Designer - v1.4.15348) /Title (ACORD 0099 2009-02 Acroform) >>
-endobj
-2 0 obj 
-<< /BaseFont /Arial /Encoding /WinAnsiEncoding /FirstChar 0 /FontDescriptor << /Ascent 905.27 /CapHeight 716.31 /Descent -211.91 /Flags 32 /FontBBox [ -45.90 -168.46 1000.00 938.48 ] /FontName /Arial /ItalicAngle 0.00 /StemV 0.00 /Type /FontDescriptor >> /LastChar 255 /Subtype /Type1 /Type /Font /Widths [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 277.83 277.83 354.98 556.15 556.15 889.16 666.99 190.92 333.01 333.01 389.16 583.98 277.83 333.01 277.83 277.83 556.15 556.15 556.15 556.15 556.15 556.15 556.15 556.15 556.15 556.15 277.83 277.83 583.98 583.98 583.98 556.15 1015.14 666.99 666.99 722.17 722.17 666.99 610.84 777.83 722.17 277.83 500.00 666.99 556.15 833.01 722.17 777.83 666.99 777.83 722.17 666.99 610.84 722.17 666.99 943.85 666.99 666.99 610.84 277.83 277.83 277.83 469.24 556.15 333.01 556.15 556.15 500.00 556.15 556.15 277.83 556.15 556.15 222.17 222.17 500.00 222.17 833.01 556.15 556.15 556.15 556.15 333.01 500.00 277.83 556.15 500.00 722.17 500.00 500.00 500.00 333.98 259.77 333.98 583.98 0 556.15 0 222.17 556.15 333.01 1000.00 556.15 556.15 333.01 1000.00 666.99 333.01 1000.00 0 610.84 0 0 222.17 222.17 333.01 333.01 350.10 556.15 1000.00 333.01 1000.00 500.00 333.01 943.85 0 500.00 666.99 277.83 333.01 556.15 556.15 556.15 556.15 259.77 556.15 333.01 736.82 370.12 556.15 583.98 333.01 736.82 552.25 399.90 548.83 333.01 333.01 333.01 576.17 537.11 333.01 333.01 333.01 365.23 556.15 833.98 833.98 833.98 610.84 666.99 666.99 666.99 666.99 666.99 666.99 1000.00 722.17 666.99 666.99 666.99 666.99 277.83 277.83 277.83 277.83 722.17 722.17 777.83 777.83 777.83 777.83 777.83 583.98 777.83 722.17 722.17 722.17 722.17 666.99 666.99 610.84 556.15 556.15 556.15 556.15 556.15 556.15 889.16 500.00 556.15 556.15 556.15 556.15 277.83 277.83 277.83 277.83 556.15 556.15 556.15 556.15 556.15 556.15 556.15 548.83 610.84 556.15 556.15 556.15 556.15 500.00 556.15 500.00 ] >>
-endobj
-3 0 obj 
-<< /DV (ACORD 0099 2009-02 Acroform) /F 2 /Ff 1 /FT /Tx /P 166 0 R /Rect [ 0 1 0 1 ] /Subtype /Widget /T (Form_EditionIdentifier_A) /TU (The edition identifier of the form including the form number and edition \(the date is typically formatted YYYY/MM\).) /Type /Annot /V (ACORD 0099 2009-02 Acroform) >>
-endobj
-4 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 378 756 594 768 ] /Subtype /Widget /T (Producer_CustomerIdentifier_A) /TU (Enter identifier: The customer's identification number assigned by the producer \(e.g. agency or brokerage\). ) /Type /Annot >>
-endobj
-5 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 536 738 558 750 ] /Subtype /Widget /T (Form_CurrentPageNumber_A) /TU (Enter number: The page number applicable to this page. ) /Type /Annot >>
-endobj
-6 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 572 738 594 750 ] /Subtype /Widget /T (Form_TotalPageNumber_A) /TU (Enter number: The total number of pages applicable to this form \(e.g., Page 1 of 4\).  If only one page, indicate Page 1 of 1. ) /Type /Annot >>
-endobj
-7 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 708 302 720 ] /Subtype /Widget /T (Producer_FullName_A) /TU (Enter text: The full name of the producer/agency. ) /Type /Annot >>
-endobj
-8 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 684 245 696 ] /Subtype /Widget /T (Policy_PolicyNumberIdentifier_A) /TU (Enter identifier: The identifier assigned by the insurer to the policy, or submission, being referenced exactly as it appears on the policy, including prefix and suffix symbols. If required for self-insurance, the self-insured license or contract number. ) /Type /Annot >>
-endobj
-9 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 252 684 302 696 ] /Subtype /Widget /T (Policy_EffectiveDate_A) /TU (Enter date: The effective date of the policy.  The date that the terms and conditions of the policy commence. ) /Type /Annot >>
-endobj
-10 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 310 708 590 720 ] /Subtype /Widget /T (NamedInsured_FullName_A) /TU (Enter text: The named insured\(s\) as it/they will appear on the policy declarations page. As used here, full name of the applicant as it should appear on the policy. The First Named Insured is given certain rights and responsibilities by the policy contract language. If more than one insured is named, be sure the one intended to receive these rights and responsibilities is named first and any additional insureds identified as such. If joint ownership, the name used may include both names \(e.g., John and Mary Smith\).) /Type /Annot >>
-endobj
-11 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 310 684 540 696 ] /Subtype /Widget /T (Insurer_FullName_A) /TU (Enter text: The insurer's full legal company name\(s\) as found in the file copy of the policy.  Use the actual name of the company within the group to which the policy has been issued.  This is not the insurer's group name or trade name. ) /Type /Annot >>
-endobj
-12 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 684 590 696 ] /Subtype /Widget /T (Insurer_NAICCode_A) /TU (Enter code: The identification code assigned to the insurer by the NAIC. ) /Type /Annot >>
-endobj
-13 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 642 36 654 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_A) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-14 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 642 112 654 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_A) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-15 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 636 414 660 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_A) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-16 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 642 504 654 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_A) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-17 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 642 533 654 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_A) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-18 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 642 590 654 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_A) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-19 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 618 36 630 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_B) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-20 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 618 112 630 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_B) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-21 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 612 414 636 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_B) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-22 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 618 504 630 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_B) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-23 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 618 533 630 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_B) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-24 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 618 590 630 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_B) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-25 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 594 36 606 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_C) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-26 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 594 112 606 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_C) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-27 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 588 414 612 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_C) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-28 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 594 504 606 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_C) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-29 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 594 533 606 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_C) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-30 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 594 590 606 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_C) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-31 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 570 36 582 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_D) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-32 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 570 112 582 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_D) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-33 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 564 414 588 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_D) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-34 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 570 504 582 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_D) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-35 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 570 533 582 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_D) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-36 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 570 590 582 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_D) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-37 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 546 36 558 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_E) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-38 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 546 112 558 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_E) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-39 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 540 414 564 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_E) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-40 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 546 504 558 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_E) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-41 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 546 533 558 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_E) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-42 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 546 590 558 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_E) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-43 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 522 36 534 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_F) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-44 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 522 112 534 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_F) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-45 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 516 414 540 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_F) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-46 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 522 504 534 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_F) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-47 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 522 533 534 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_F) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-48 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 522 590 534 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_F) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-49 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 498 36 510 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_G) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-50 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 498 112 510 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_G) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-51 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 492 414 516 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_G) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-52 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 498 504 510 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_G) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-53 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 498 533 510 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_G) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-54 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 498 590 510 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_G) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-55 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 474 36 486 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_H) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-56 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 474 112 486 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_H) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-57 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 468 414 492 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_H) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-58 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 474 504 486 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_H) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-59 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 474 533 486 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_H) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-60 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 474 590 486 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_H) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-61 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 450 36 462 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_I) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-62 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 450 112 462 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_I) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-63 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 444 414 468 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_I) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-64 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 450 504 462 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_I) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-65 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 450 533 462 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_I) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-66 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 450 590 462 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_I) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-67 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 426 36 438 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_J) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-68 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 426 112 438 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_J) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-69 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 420 414 444 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_J) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-70 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 426 504 438 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_J) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-71 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 426 533 438 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_J) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-72 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 426 590 438 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_J) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-73 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 402 36 414 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_K) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-74 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 402 112 414 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_K) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-75 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 396 414 420 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_K) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-76 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 402 504 414 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_K) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-77 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 402 533 414 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_K) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-78 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 402 590 414 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_K) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-79 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 378 36 390 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_L) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-80 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 378 112 390 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_L) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-81 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 372 414 396 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_L) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-82 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 378 504 390 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_L) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-83 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 378 533 390 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_L) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-84 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 378 590 390 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_L) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-85 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 354 36 366 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_M) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-86 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 354 112 366 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_M) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-87 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 348 414 372 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_M) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-88 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 354 504 366 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_M) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-89 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 354 533 366 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_M) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-90 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 354 590 366 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_M) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-91 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 330 36 342 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_N) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-92 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 330 112 342 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_N) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-93 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 324 414 348 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_N) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-94 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 330 504 342 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_N) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-95 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 330 533 342 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_N) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-96 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 330 590 342 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_N) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-97 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 306 36 318 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_O) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-98 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 306 112 318 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_O) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-99 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 300 414 324 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_O) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-100 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 306 504 318 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_O) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-101 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 306 533 318 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_O) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-102 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 306 587 318 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_O) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-103 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 282 36 294 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_P) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-104 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 282 112 294 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_P) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-105 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 276 414 300 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_P) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-106 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 282 504 294 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_P) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-107 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 282 533 294 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_P) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-108 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 282 590 294 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_P) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-109 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 258 36 270 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_Q) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-110 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 258 112 270 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_Q) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-111 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 252 414 276 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_Q) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-112 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 258 504 270 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_Q) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-113 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 258 533 270 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_Q) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-114 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 258 590 270 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_Q) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-115 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 234 36 246 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_R) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-116 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 234 112 246 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_R) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-117 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 228 414 252 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_R) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-118 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 234 504 246 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_R) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-119 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 234 533 246 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_R) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-120 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 234 590 246 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_R) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-121 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 210 36 222 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_S) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-122 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 210 112 222 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_S) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-123 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 204 414 228 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_S) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-124 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 210 504 222 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_S) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-125 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 210 533 222 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_S) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-126 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 210 590 222 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_S) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-127 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 186 36 198 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_T) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-128 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 186 112 198 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_T) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-129 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 180 414 204 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_T) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-130 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 186 504 198 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_T) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-131 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 186 533 198 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_T) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-132 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 186 590 198 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_T) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-133 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 162 36 174 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_U) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-134 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 162 112 174 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_U) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-135 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 156 414 180 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_U) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-136 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 162 504 174 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_U) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-137 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 162 533 174 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_U) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-138 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 162 590 174 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_U) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-139 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 138 36 150 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_V) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-140 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 138 112 150 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_V) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-141 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 132 414 156 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_V) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-142 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 138 504 150 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_V) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-143 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 138 533 150 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_V) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-144 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 138 590 150 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_V) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-145 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 114 36 126 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_W) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-146 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 114 112 126 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_W) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-147 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 108 414 132 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_W) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-148 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 114 504 126 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_W) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-149 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 114 533 126 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_W) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-150 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 114 590 126 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_W) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-151 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 90 36 102 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_X) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-152 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 90 112 102 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_X) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-153 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 84 414 108 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_X) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-154 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 90 504 102 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_X) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-155 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 90 533 102 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_X) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-156 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 90 590 102 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_X) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-157 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 22 66 36 78 ] /Subtype /Widget /T (AccidentConviction_DriverProducerIdentifier_Y) /TU (Enter number: The producer's driver number for the driver involved in the accident or conviction. ) /Type /Annot >>
-endobj
-158 0 obj 
-<< /AA << /V << /JS (DateV\(event\);) /S /JavaScript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 10 /P 166 0 R /Q 1 /Rect [ 43 66 112 78 ] /Subtype /Widget /T (AccidentConviction_IncidentDate_Y) /TU (Enter date: The date of the accident or conviction. ) /Type /Annot >>
-endobj
-159 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8392704 /FT /Tx /P 166 0 R /Rect [ 119 60 414 84 ] /Subtype /Widget /T (AccidentConviction_IncidentDescription_Y) /TU (Enter text: The description of the accident or conviction.   ACORD 101, Additional Remarks Schedule, may be attached if more space is needed. As used here, include the number of vehicles involved and the type of vehicles \(private passenger or commercial\). Convictions constitute a judgment of guilty, plea of nolo contendere or forfeiture of bail.) /Type /Annot >>
-endobj
-160 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 421 66 504 78 ] /Subtype /Widget /T (AccidentConviction_PlaceOfIncident_Y) /TU (Enter text: The place of the accident or conviction. ) /Type /Annot >>
-endobj
-161 0 obj 
-<< /AA << /K << /JS (YesNoK\(event\);) /S /JavaScript /Type /Action >> /V << /JS (YesNoV\(event\);) /S /Javascript /Type /Action >> >> /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /MaxLen 1 /P 166 0 R /Q 1 /Rect [ 518 66 533 78 ] /Subtype /Widget /T (AccidentConviction_BodilyInjuryOrDeathCode_Y) /TU (Enter Y for a Yes response. Input N for No response. Indicates if the accident or conviction resulted in bodily injury or death. ) /Type /Annot >>
-endobj
-162 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 547 66 590 78 ] /Subtype /Widget /T (AccidentConviction_PropertyDamageAmount_Y) /TU (Enter amount: The amount of property damage resulting from the accident or conviction. As used here, includes both the applicant's and all claimant's combined damages. Refer to company manual.) /Type /Annot >>
-endobj
-163 0 obj 
-<< /DA (/F2 8 Tf 0 g) /F 4 /Ff 8388608 /FT /Tx /P 166 0 R /Rect [ 540 36 594 48 ] /Subtype /Widget /T (NamedInsured_Initials_A) /TU (Initial here: The named insured's initials. ) /Type /Annot >>
-endobj
-164 0 obj 
-<< /Count 1 /Kids [ 166 0 R ] /Type /Pages >>
-endobj
-166 0 obj 
-<< /Annots 167 0 R /Contents 168 0 R /CropBox [ 0 0 612 792 ] /MediaBox [ 0 0 612 792 ] /Parent 164 0 R /Resources << /Font << /F1 169 0 R /F2 2 0 R >> /ProcSet [ /PDF /Text /ImageB ] /XObject << /Img1 170 0 R >> >> /Type /Page >>
-endobj
-167 0 obj 
-[ 3 0 R 4 0 R 5 0 R 6 0 R 7 0 R 8 0 R 9 0 R 10 0 R 11 0 R 12 0 R 13 0 R 14 0 R 15 0 R 16 0 R 17 0 R 18 0 R 19 0 R 20 0 R 21 0 R 22 0 R 23 0 R 24 0 R 25 0 R 26 0 R 27 0 R 28 0 R 29 0 R 30 0 R 31 0 R 32 0 R 33 0 R 34 0 R 35 0 R 36 0 R 37 0 R 38 0 R 39 0 R 40 0 R 41 0 R 42 0 R 43 0 R 44 0 R 45 0 R 46 0 R 47 0 R 48 0 R 49 0 R 50 0 R 51 0 R 52 0 R 53 0 R 54 0 R 55 0 R 56 0 R 57 0 R 58 0 R 59 0 R 60 0 R 61 0 R 62 0 R 63 0 R 64 0 R 65 0 R 66 0 R 67 0 R 68 0 R 69 0 R 70 0 R 71 0 R 72 0 R 73 0 R 74 0 R 75 0 R 76 0 R 77 0 R 78 0 R 79 0 R 80 0 R 81 0 R 82 0 R 83 0 R 84 0 R 85 0 R 86 0 R 87 0 R 88 0 R 89 0 R 90 0 R 91 0 R 92 0 R 93 0 R 94 0 R 95 0 R 96 0 R 97 0 R 98 0 R 99 0 R 100 0 R 101 0 R 102 0 R 103 0 R 104 0 R 105 0 R 106 0 R 107 0 R 108 0 R 109 0 R 110 0 R 111 0 R 112 0 R 113 0 R 114 0 R 115 0 R 116 0 R 117 0 R 118 0 R 119 0 R 120 0 R 121 0 R 122 0 R 123 0 R 124 0 R 125 0 R 126 0 R 127 0 R 128 0 R 129 0 R 130 0 R 131 0 R 132 0 R 133 0 R 134 0 R 135 0 R 136 0 R 137 0 R 138 0 R 139 0 R 140 0 R 141 0 R 142 0 R 143 0 R 144 0 R 145 0 R 146 0 R 147 0 R 148 0 R 149 0 R 150 0 R 151 0 R 152 0 R 153 0 R 154 0 R 155 0 R 156 0 R 157 0 R 158 0 R 159 0 R 160 0 R 161 0 R 162 0 R 163 0 R ]
-endobj
-168 0 obj 
-<< /Filter [ /FlateDecode ] /Length 1776 >>
-stream
-xœ­ZÁnÛF¼Ğ?,ĞKÔ4w—K‰¹)²°%W’ÈÅˆi[­mµ”’|Sÿ²ÉGIË9‡^$DÃyóŞ,É1Ú¨0Cù8úç×—~Ï¨ßû½È…Õ¶ş*vß?ÊïÄ"ÏıŞ¢ßû¸ì÷Î/´T¿-ÊË´sA8TV«Ÿîû½+K¼Ë¦Ù2].>¼WË?û½tÙ¨š°.àÙJn”zPéêÀ•×m$ÂgºUN/.Òñ2ûœªÉh™îåA!7¬„âğ ®.4]¥•M7ótòåİâË{oíè(îªG©po²b}Ú ]·}4¿Ù9Rµ}=»ÌÆ·jzsõ1{GÎ2ñzÃıÈÅH=1bZ6VãÙä§Œ?¬±¿uÆ£ù<ë´.f'ôv}«sİ=í½èèS:ßî5‡Mq}|$Ñ°ş>‹êï"ßŸ¬•kùÃG*ƒ¸1ÆFÍu‡Ï”¶‡=ªñÍb9»Jç*›|èº¼>usRÖÄÕÍ±;¨0°ÃºØò)W£ñl>Q¯w/¹º{½WÏëÇµº+òrªÇÕf›ù½z¹+şÚ¨õC}í)9“$®²è@NZ×rÿ*†Ã_wŸI£[~\Ïæ£e6›JŸU±z|ÚnJùM^|Ïïƒ“ÓÕ§y¬Öf%$êË»àyh^ZÌÅzĞŞÓa0ĞRmœMÒér¡ÎË¦§Ÿ³ñ®çEY|ºŞæÔíú[¡î‹Õ÷ÕëcÙü×uq¯Võ=/V«ÒÃ«í“Ú–~o¶wÛ\½¬·ë¢DŸV_ŸsuŸÿ}Wl_ò×muëòºB­^7ßŠ¼Øt^9¶yH]çÄvŞ8IÌ8‚t9íÛ Kj!À2œe(ËFC:”@]–¼øÃ†¤,#	¢©}] ]ï²°gÊò=BöuYbŸæö)ËH%Ô¾.§A Ç÷Ø‡X†³eùû «±/âi„¤,#	ÒısÁ3	Ø×åø!û Ëp–¡,ß#d_—%ö?CG¥,#	â¨}] ]ï²°gÊò=BöuYbxÍ&JYF„FàÂ£uç¨’ï²GJ $eI€#Ô£J¾GÈ>h(htD<:”e¤±4: §A Ç÷Ø‡X†³eùû «±Ïòè@R–‘¡Ñ8‚ğè@İ9ªä{„ìãÑ†ˆF‡åÑ¤,#	B£páÑºsTÉ÷ÙÇ£%Ë£IYF„FàÂ£uç¨’ï²GJ –G’²Œ$À„GêÎQ%ß#d4”@4:,$e©AÀiÀñ=ö!–á,CY¾GÀ>Àjì3<:”e$Aht  <:Pw*ù!ûxt ¡¢Ñaxt )ËH‚Ğè Axt îUò=Böñè@C	D£Ãğè@R–‘¡Ñ8‚ğè@İ9ªä{„ìãÑ†ˆF‡áÑ¤,#	B£páÑºsTÉ÷ÙÇ£%Ã£IYFjM£pp|€}ˆe8ËP–ï°°û4$eI€#Ô£J¾GÈ>h(hthHÊ2’ 4: G¨;G•|}<:ĞPÑèĞ<:”e$Aht  <:Pw*ù!ûxt ¡¢Ñ¡yt )ËH‚Ğè Axt îUò=Böñè@C	D£Cóè@R–‘„& 4Ô›c:¾AÀ;h ¢©ÁCƒfš40x^ğ¸àiÁÃ‚g
-š<(hNĞ˜ )AC‚gÄ‰Åj<h:ğpàã¸˜ÏÃB,CYmã{–ñg¢G¤¼ÿïŞ€ciwbŞ	÷HõòƒQ‘–¥“ÈZ[_§«¹ê¥Y~¸UçjÚİ°ƒjíbGMT­c9—İ¶û@£«ÙÍt©f~‰£LäšíÚ‹¢¸.ñ1S³¹š¤£åo§–ŠìÀêzç¤ÈY¸fßåúr4NA‡%\=•WAöÁvëdoĞÃán#î°@e}ÍŸ>¹eâÀÚİi%]î/''âæœ[æ™	†öx{åhyåäñ`ĞÜÃƒzVlHãyv½«Rº¡Úòåı\}ëÜÿĞïÁè¢¸>6íoÀİ­Uû|vÎ—·j2º}Jé†—<tí†—,4+^íÒP}²Õ/»aõKàøÄÖ{©Ê[«^6Ú˜¨jV–ÒtXy²ÛÎ<Ï^µš¬û½?ö²M3õ^—­æuÜ¦qtz[i1ş-Ü\‚Å¼ƒ‘L|b¤ë»ÇÜ_(ŒÁu^?­=®ópV‚XÿªÓY
-endstream
-endobj
-169 0 obj 
-<< /BaseFont /Arial,Bold /Encoding /WinAnsiEncoding /FirstChar 0 /FontDescriptor << /Ascent 905.27 /CapHeight 715.82 /Descent -211.91 /Flags 32 /FontBBox [ -45.90 -175.78 1000.00 938.48 ] /FontName /Arial,Bold /ItalicAngle 0.00 /StemV 0.00 /Type /FontDescriptor >> /LastChar 255 /Subtype /Type1 /Type /Font /Widths [ 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 277.83 333.01 474.12 556.15 556.15 889.16 722.17 237.79 333.01 333.01 389.16 583.98 277.83 333.01 277.83 277.83 556.15 556.15 556.15 556.15 556.15 556.15 556.15 556.15 556.15 556.15 333.01 333.01 583.98 583.98 583.98 610.84 975.10 722.17 722.17 722.17 722.17 666.99 610.84 777.83 722.17 277.83 556.15 722.17 610.84 833.01 722.17 777.83 666.99 777.83 722.17 666.99 610.84 722.17 666.99 943.85 666.99 666.99 610.84 333.01 277.83 333.01 583.98 556.15 333.01 556.15 610.84 556.15 610.84 556.15 333.01 610.84 610.84 277.83 277.83 556.15 277.83 889.16 610.84 610.84 610.84 610.84 389.16 556.15 333.01 610.84 556.15 777.83 556.15 556.15 500.00 389.16 279.79 389.16 583.98 0 556.15 0 277.83 556.15 500.00 1000.00 556.15 556.15 333.01 1000.00 666.99 333.01 1000.00 0 610.84 0 0 277.83 277.83 500.00 500.00 350.10 556.15 1000.00 333.01 1000.00 556.15 333.01 943.85 0 500.00 666.99 277.83 333.01 556.15 556.15 556.15 556.15 279.79 556.15 333.01 736.82 370.12 556.15 583.98 333.01 736.82 552.25 399.90 548.83 333.01 333.01 333.01 576.17 556.15 333.01 333.01 333.01 365.23 556.15 833.98 833.98 833.98 610.84 722.17 722.17 722.17 722.17 722.17 722.17 1000.00 722.17 666.99 666.99 666.99 666.99 277.83 277.83 277.83 277.83 722.17 722.17 777.83 777.83 777.83 777.83 777.83 583.98 777.83 722.17 722.17 722.17 722.17 666.99 666.99 610.84 556.15 556.15 556.15 556.15 556.15 556.15 889.16 556.15 556.15 556.15 556.15 556.15 277.83 277.83 277.83 277.83 610.84 610.84 610.84 610.84 610.84 610.84 610.84 548.83 610.84 610.84 610.84 610.84 610.84 556.15 610.84 556.15 ] >>
-endobj
-170 0 obj 
-<< /BitsPerComponent 8 /ColorSpace /DeviceGray /Filter [ /FlateDecode ] /Height 122 /Length 4626 /Subtype /Image /Type /XObject /Width 285 >>
-stream
-xœí]{\Lé?]U£+åRH*]F+—BÉ-Š²Y»‰Q¬²?¬{Xë²vå³î,-k±.‰!aÑÙhY¶T’İè2İk~gÎ™™÷™™sfN™f
-ß?Vûç½=ó¾ÏûÜŞs¸ÜøˆµUœŠÅåœª:e§5 ®$ëŞ¥#;¾û:Èw¬ûp‡>}ú¸ç¼lëÑëéo•=>%¡áÕİÃçw¶é¬ƒÑ@ßjPÀº³9Ê©BÑ˜›úû²ÉıMh™"u£«K”=f… âŸÓ“í™±AÕuÓ#e¼eÑX’´'x`WÍ&2†Ó deO ÅŸ¸# ·ZóøÂ‡Vpª²gÑÈü9¸¿î;1†„ÙÎ÷ì„/LüŞÍXŒ!ñùKeÏG~H?2§ÜCÀá_eÏI.hÌÚãg¡*c®*êj$ÔUr‡ı²'öîÈ8üÍfRa™ôrpñ˜·zcÔşè„x—Eí\³0Ğs]ç|ß|eÏíİwd’¹ä¬T­GO]¸5æÊ½gô:]Ãë	GW:KS~Õ
-œŠœñæBH/±3[ÛØÁwéîËéùÌÚh(É<»Â³³:5w¢Zv-‡Äˆ~"igë>w[\VysÚÊ9âHÅ«<yZx½Û]L¢£ËWŸ¿Ó&xõG¾$w¶ÈkÀ
-CÙÍğÂá·ïå“Q)‡fÓÖXˆ3§oV òöÖŒİÂwÃ¥l9¶¹ÊT”9j7äØzK£>e¾%Ü†£Ö'¼`(v™#c–¨lŞ$ïZeqşÚÄ5ÙAûä¹b Nõ„Ì	j¡^äÂ½Ãˆı¤ã¶êâóìç±`{›:éæ¼Ávöú)•ÓÂ]UMCÌü¦…;“’æá#í0a—B¬AÎd!sú¼PD‡ï‚Û³qåwø–TE9YŞ¸	˜Óïµ‚ºlª/OÅ0×ué~ÊèÆgÎĞ
-öÚdœaÖá—=ÆÃ|æ|*weAn¨‰wÁ4<N¾R|ÏuãHæÌQ|×ëÙ-}¢œ¾Ï‘±‹]Êé]&.Òó<¦4³¸| 77¥ÑD²Y,–wDŠ¢%ÀÍ±Ö·”ˆà1ÇºŒ †ÇŞYŠ—{o¦cDº";”D9ÁôÏ#q¦°Ãb®Fâ˜Æ(l\™ë'nUºòõ‚§v¥}ÌãM$©>gñØsU1£Ê?¹öX©bº’†·66€Ö}_-)‘$¢ŞDáÿ§ˆÕp?úF³\òF%®%¯£}êÍbÅp"Ç4_Ga
-SM¨HT»c]Ó=La±¹8sØøÂaóãÊb)T(+œ¡XíC|¥¤ğ˜ãÿı†÷O.76¥ãm/Mú§7‹Í0'ŠøG1ûªµ W~áàÌá±E¨çDJ>œ1–+ai~¤»~PÌùz±”‡,S.¹­Iaó†X>
-JçJyÉ;É	æd±ˆs
-<m6vÜtäHµ&q–¸òrï¿oLY¦mÀÛ,/4JÆ;æà|aE¹¶ìIŞPVX\\T\Û„o‹Š‹‹92¦Ñ2ÈÂY29æ*oy¥\2%#äoŠ<ppëF±¥úÒÌóûÖÍñ3¢¿½ƒC×‘Ÿ…m8x£€>) ¡ìÙ¥ıkç~î>Â‘íààÀ4Âkê’]g2ië†‡§>ÇıœââRªøzİƒ¿%ˆÈ+yË©R¦àaGñ¶RJ$77U.ßu¿AaCÆ¹môÄƒ÷8T»Œ\›E±Š²ã7ûÛPÔÀôÙsüGÑÉ-#um>´ptìjÖÛuÆ–Dq‡QŒ†65´´MºZò8œ\Äç+ïwõ&¼:yór¸£¥¦>4ÜßìÓLNÓ°SOS#¨¶üK¬Jæn_{”x­®oÜ£GÇöA½‚â%úYOÅI!G?=/J&š„‰óü+¤×=Ràíòfê¯(.h…%%Ó9{È¯Ñ³™ºùÔ_Ÿå=¾¶?ÌQ›_ì^k¼>îÛAP¡Å§k\˜YXû“¯¹¶˜_³nzØmÅŠeËfù»vSm7ş„ENèIWïÑ$<†Ø™Šdé¸EWô)Q¸áy•ñ1•;
-µA›¡pä×`¿½.r‡D,shåf¯e£QÏ‹-iîÙÖ^`àëDÄÕ£ÎèÑR²¨>s3(ÄÂÁîM )”Ûğ‹ ·¶<ÿnôªÑ"éãhvz uƒc05Í‹°.ˆÆí„dH±ñJüÉATP´ÁRX¡Ój
-É’5	t\ìEå*hQÕBÅZwõjTl$~?¤<)¦óZ\‘ÍQ”ùBîjß£ ©)V{¨î¼ñØda4­1¥_«L¢–WNıÎFb¶È¹ëòŸ…ÅUƒPé˜*®¢ajS&^)‡? µ’$ÀóI´ş¡¢£ÂàÜ`´ßõvÑ ß|Úİ+,ÎéˆJ¿FÔÕ@a¿
-‹SÀÎ¡<kïÀı8´IÙU¢¼Á†Kè×mÑSµL"/)}Q®çèé‘i!”I¿¢BU (ÃĞ}(,ş•ê‰•$¶Áô÷£†/@±´Õ: ÚwÄHbAF´æN&&tG5¯I!Ì³ÃşEP
-Ö©-ˆ^œôîŸê‘¨t Å®Âñ
-póa2~ÓADïöƒê?ˆ’\ 
-Ÿ*#[ä
-ØØi”ŸÊi|“âE7T6#%ü®ßP÷ef_Äd
-<pˆ
-Ë¹™ Wy{*Ë™4šsïI§]HİøªÇ!°À®ŠCª£ú>T¼«%Ñô²ôÒ…i˜C®›Ü
- éh> $…0IÜ…IŒ¡ æ¨;K'^hmI»®¬3¤=Bš¹öVÔ@%ÈdSï*.7ôb|›ÁpÔMğFTa‡Ş±ÿr=Fí~j¨Ÿ‘A<ÛÌÉrÈ_Hx¥b;@ë!ÍQ¯ é¤nŞiL&Á-'S§©—ÉâŒ~0{QÚË] ªacex&jİñP2R‹ä®Ú	>Ùİ,A™ıj¡±Õ×ú“¦—‚ —~ŒÎòÚäCjYœ¨¾î5MİdĞ¬>£İ
-’:1•8ÄiÀ"ÁüHu¬UÓû¯rŸŞŠ^ç%bÆ¾â™Ì`Qô- è‡dxE+ˆÉ$ªCÈ	¢¸Ph-=Ô¥ŒÁ(¿È’QPöbë‰¢r°«4Ì»›™´'ïèÚ?-®då õw]/ßƒNé9ä/ì/ÔÎ¯€
-Bñ«`³¿Ò4E?]ú¨5‰Z/@¬KÚ-"[HZÕƒ(Íè¨;:ùVï‘ödp’×}Iú¡”ÆrpùD#?øá Y#F©7sA}©V85 µé°[ŠJÌ»Q`Û÷ <œ€¿ğÙSàòFå°lh‚oÑ@uÀ$7´r,¨ñ‰Ÿ‰ ¿‘€&i0—Ù7»	t y/¬Ñó º!¹FØÒB7$øz±Ús§	Œ[ÌdD2ômzÒiå£A	2ˆÀm3Ÿ,»NÍ-Ü
-@1Bòœ9ŒÎ4½ìËS3ZæjšEMR=¿r/&wêD˜3I:í3hXæË‚5¨Hõ	¾ñàA#)Â ‡Æ4k"Ş§‘½©82yƒ+†e6t…gr±®ÊÔğ—JÊÒØ’ï¥ªŠÊ†ñÌ ‚0ƒKbM” ‹Ò¿^¼•PœNMÀ_7¾±'‹à"ôS$œ up»vbô¨Q{J#l„¢ÛJàƒºVÊF^A)Ù‰9 /g»){©ÿ
-Ì–)5«¦„^’	|P×&Õ·- il¬¦‰ñ‚W¼ô”rõ¬ZÎBïÌT¨GuÑĞ<Cô§Ÿ‡˜Rº‡«B…ê™ƒçë~ı(vh-Ô²Éó*ß92qØWƒ@ŞùS·ö(	Õ•ò›ÚÏ ¥ÚØH)P`(¯;d'ggÙií3	Ê¾”Ö4^­È•â\)W¬¨$PÃš.õ6É—ô#T¾„_vÏAÚ¾Wş¾]²“ÊıH«~*ûÎW%¹Ñ{P[IÑ`Ø²l?”Í£K¦M›/<ËöµCÆP&ú?_ƒ6°î0Øªª_‚­†aıôw=‰Ë…ÇÁÁétH¦(æ6†¤†’!Fi0È+0ÁOBcÉãEµüÃSL°ÍhYïÍ–´”ó~D2VÍ[ä–3tÙÙµš2¸İ±/…Ôeà¸S©Ş&,‘>‡…ÒùÂC5É›vÇi—ÅÙ~¢Ç`õjùüşÈüªÜÛ;&™âöM(lçÆ0Paê•<ô«Udš…ÔÓé‰yƒâ+T'ò/¡ì¸]9Ù2Ó“ãö¯ñ1G«·ËÇ™dHD7­¸º42yv"Ø)XÏ9ë‰‹;{pãWã{“Ş›~¢Iã•¿ #@•q &îÂÙC›æz  p{m[á0¨Æ52ÇHXûöèB¢“Èû­zúo{(Ş	%JI16‡~ûAS›Š6JÍí%¶¢oaÓÔÑAc¹ÜoéuŒ¯1´Ï5tXÀ	¦n:~wŠ¤ÒÑ0‘XÂ×àü#O˜#©íTÃ —Tµ-=ÖœÏ-jÔ¯íŞÏeH_ËÉR|,q»ÛÙ:uêdkgÖ_äıWµ‰[üœº‰¿ØGÇÌqì’ßQúûr£¹ÛŠ½[Iİ°·ÛÔŸâ©e@¡¹…]Ÿ!..ìlLD	;;w³³í;ÔÅÅÅÁÖV5ñ³åsr¡ÀÁc}¾\¾ûó¥0'-­¸¼,?]Ú¬H~˜“]R^V^’óà„¡Y’â§•á!¡8BB­Şy*şÔ{¸uÏnşñË†Å¡d°å»™Io…TŞ}’ó²¬¬¬èyÖÑvkï¥ædç—ãÏ^fgßJ%˜SSò¶Œ¥¥­÷‚ç{šÜ¬§ÅéJIfl(uY6Ñ‡ŠhÛ6ùÊ+… ÑÉ­M¼_E)ˆWùì£È¡ÃtlRë`NMA«;4ÿë„Mlƒª¸÷LÙcÀ.sSşèŠ3?Rä«*>fN•o¯Häí
-ùş©’Ç@…§qƒ[VjDËâß¥.ó™¹“<Ë™.H¸ñ¥Õ”Öú
-DÂ+Û[Y/u*8Ü¿›ÏßJê\6ÆN—¦¤êÊwVX¶ó¿®”®¡Ú™`N?Å€£ø §ÊºlĞV—üØó2Ù¤òDÑÅy0ƒYJ~õ,¼à§³êÒ¿Fî¨¿½b†uZ|_q]6/I!]ôñNÊZ³^ß^F’#L„¶WÀ‡mÊÿüÖ•’¶[ù:9€+>Ö½›‹Š„•.¼“¦ÏéVñV" 7PLµX/µÏO…Ûa,³éwšp']ÉXCL¡-"^Æ¯ŸÀOÙM(Zœùj‰å^9_‚ópG€5?^k×Æ¾ˆWd% yJn(L>0·¿ }TÅqEübÎ2±x/6dÇ³wo5÷Ò–€(m·ã´?ä„´>¤›ˆsë>ãæ5ª,÷ÆŞğæ ‰Å`øö§­Á×ØDH0‡EğÁûMş‚EÑ£óÛç4ıè@¿oşb˜øĞQîNÅëìyıy%ç{]É³¤Ãß†Œa›iˆ6¡j¹àrës~6	é]©¹ƒCÃĞÉoñö˜[ÿdæ•TÔÖÕXSË)}“–štş·ïLÕ[—â‹ŠšvÁ1ïÁ×6/IŠQ°:Z:ºùÌgJèlB§øLğéÌîÑ¡=íçyO¾vwÓ’nÍ‚Áà•·d\ƒmKx<^^ŒQ±ğùñ^[=›hP¶¶ƒì‰Ë„ş°E1OŞ3Îøwåk¤£ÛEÑOÛğÇídàÚLŠo1‚¹ÇÂCJz{¿âğpİ@-Ù¬€Ğ4øcBV«ş^‡ÜP{û»q–íd3Ã´ÌØcÃ·_NÏ>Ş+ui6ÍlLóUH\14èå´r×ÅÏ?Ôœ§ÒÜä[–‡úqv²¶Âaé0ÄÙËoö7>•”]PŞ:zZ*9<´aãñ#š„ÿÓ…M
-endstream
-endobj
-xref
-0 171
-0000000000 65535 f
-0000000017 00000 n
-0000002205 00000 n
-0000004145 00000 n
-0000004469 00000 n
-0000004757 00000 n
-0000004985 00000 n
-0000005284 00000 n
-0000005501 00000 n
-0000005935 00000 n
-0000006302 00000 n
-0000006999 00000 n
-0000007406 00000 n
-0000007647 00000 n
-0000007938 00000 n
-0000008258 00000 n
-0000008797 00000 n
-0000009036 00000 n
-0000009510 00000 n
-0000009893 00000 n
-0000010184 00000 n
-0000010504 00000 n
-0000011043 00000 n
-0000011282 00000 n
-0000011756 00000 n
-0000012139 00000 n
-0000012430 00000 n
-0000012750 00000 n
-0000013289 00000 n
-0000013528 00000 n
-0000014002 00000 n
-0000014385 00000 n
-0000014676 00000 n
-0000014996 00000 n
-0000015535 00000 n
-0000015774 00000 n
-0000016248 00000 n
-0000016631 00000 n
-0000016922 00000 n
-0000017242 00000 n
-0000017781 00000 n
-0000018020 00000 n
-0000018494 00000 n
-0000018877 00000 n
-0000019168 00000 n
-0000019488 00000 n
-0000020027 00000 n
-0000020266 00000 n
-0000020740 00000 n
-0000021123 00000 n
-0000021414 00000 n
-0000021734 00000 n
-0000022273 00000 n
-0000022512 00000 n
-0000022986 00000 n
-0000023369 00000 n
-0000023660 00000 n
-0000023980 00000 n
-0000024519 00000 n
-0000024758 00000 n
-0000025232 00000 n
-0000025615 00000 n
-0000025906 00000 n
-0000026226 00000 n
-0000026765 00000 n
-0000027004 00000 n
-0000027478 00000 n
-0000027861 00000 n
-0000028152 00000 n
-0000028472 00000 n
-0000029011 00000 n
-0000029250 00000 n
-0000029724 00000 n
-0000030107 00000 n
-0000030398 00000 n
-0000030718 00000 n
-0000031257 00000 n
-0000031496 00000 n
-0000031970 00000 n
-0000032353 00000 n
-0000032644 00000 n
-0000032964 00000 n
-0000033503 00000 n
-0000033742 00000 n
-0000034216 00000 n
-0000034599 00000 n
-0000034890 00000 n
-0000035210 00000 n
-0000035749 00000 n
-0000035988 00000 n
-0000036462 00000 n
-0000036845 00000 n
-0000037136 00000 n
-0000037456 00000 n
-0000037995 00000 n
-0000038234 00000 n
-0000038708 00000 n
-0000039091 00000 n
-0000039382 00000 n
-0000039702 00000 n
-0000040241 00000 n
-0000040481 00000 n
-0000040956 00000 n
-0000041340 00000 n
-0000041632 00000 n
-0000041953 00000 n
-0000042493 00000 n
-0000042733 00000 n
-0000043208 00000 n
-0000043592 00000 n
-0000043884 00000 n
-0000044205 00000 n
-0000044745 00000 n
-0000044985 00000 n
-0000045460 00000 n
-0000045844 00000 n
-0000046136 00000 n
-0000046457 00000 n
-0000046997 00000 n
-0000047237 00000 n
-0000047712 00000 n
-0000048096 00000 n
-0000048388 00000 n
-0000048709 00000 n
-0000049249 00000 n
-0000049489 00000 n
-0000049964 00000 n
-0000050348 00000 n
-0000050640 00000 n
-0000050961 00000 n
-0000051501 00000 n
-0000051741 00000 n
-0000052216 00000 n
-0000052600 00000 n
-0000052892 00000 n
-0000053213 00000 n
-0000053753 00000 n
-0000053993 00000 n
-0000054468 00000 n
-0000054852 00000 n
-0000055144 00000 n
-0000055465 00000 n
-0000056005 00000 n
-0000056245 00000 n
-0000056720 00000 n
-0000057104 00000 n
-0000057396 00000 n
-0000057717 00000 n
-0000058257 00000 n
-0000058497 00000 n
-0000058972 00000 n
-0000059356 00000 n
-0000059647 00000 n
-0000059967 00000 n
-0000060506 00000 n
-0000060745 00000 n
-0000061219 00000 n
-0000061602 00000 n
-0000061892 00000 n
-0000062211 00000 n
-0000062749 00000 n
-0000062987 00000 n
-0000063460 00000 n
-0000063842 00000 n
-0000064058 00000 n
-0000001914 00000 n
-0000064125 00000 n
-0000064377 00000 n
-0000065586 00000 n
-0000067448 00000 n
-0000069399 00000 n
-trailer
-<< /Info 165 0 R /Root 1 0 R /Size 171 >>
-startxref
-74209
-%%EOF

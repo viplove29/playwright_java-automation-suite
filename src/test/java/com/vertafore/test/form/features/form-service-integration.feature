@@ -18,7 +18,7 @@ Feature: Form Service Integration Suite
   Background:
     Given I act as 'Form Admin' using the 'form' service on the server located at 'https://api.dev.titan.v4af.com'
     And I set the context to be for the entity 'VERTAFORE'
-@FormTest
+
   Scenario: Map a form to a canonical object type of POLICY
     Given That a form template is mapped to a canonical 'POLICY'
     And I create a titan 'POLICY'
@@ -31,7 +31,7 @@ Feature: Form Service Integration Suite
 #    And I create a titan 'POLICY'
 #    When I create and render a form instance under that form with 'PERSONAL AUTO POLICY' data
 #    Then titan 'POLICY' data is in the form
-@FormTest
+
   Scenario: Map a form to a canonical object type of AGENCY
     Given That a form template is mapped to a canonical 'AGENCY'
     When I create and render a form instance associated to that form with 'AGENCY' data

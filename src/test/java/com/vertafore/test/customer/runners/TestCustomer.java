@@ -5,5 +5,7 @@ import net.serenitybdd.cucumber.CucumberWithSerenity;
 import org.junit.runner.RunWith;
 
 @RunWith(CucumberWithSerenity.class)
-@CucumberOptions(features = "test/customer/features", glue = "com.vertafore.test.customer")
+@CucumberOptions(
+    features = "src/test/java/com/vertafore/test/customer/features",
+    glue = "com.vertafore.test")
 public class TestCustomer {}
