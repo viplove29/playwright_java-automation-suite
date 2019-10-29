@@ -1,9 +1,14 @@
 package com.vertafore.test.common.models.services.customer.customer;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vertafore.test.common.models.AddressV1;
 import com.vertafore.test.common.models.PhoneNumberV1;
-import com.vertafore.test.common.models.services.customer.subentities.*;
+import com.vertafore.test.common.models.services.customer.subentities.ContactV1;
+import com.vertafore.test.common.models.services.customer.subentities.DisqualificationV1;
+import com.vertafore.test.common.models.services.customer.subentities.EmailAddressV1;
+import com.vertafore.test.common.models.services.customer.subentities.EmployeeServiceMemberV1;
+import com.vertafore.test.common.models.services.customer.subentities.LocationV1;
+import com.vertafore.test.common.models.services.customer.subentities.NamedInsuredV1;
+import com.vertafore.test.common.models.services.customer.subentities.SocialMediaV1;
 
 import java.time.Instant;
 import java.util.ArrayList;
