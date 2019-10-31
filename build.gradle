@@ -15,7 +15,7 @@ plugins {
 }
 allprojects {
     group 'com.vertafore'
-    version '0.0.2-SNAPSHOT'
+    version '0.0.3'
 
     apply plugin: 'java-library'
     apply plugin: 'com.vertafore.titanauthgen'
