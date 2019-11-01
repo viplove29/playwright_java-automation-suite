@@ -1,6 +1,7 @@
 package com.vertafore.test.common.models.services.policy;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vertafore.test.common.models.general.ContextualIdV1;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PolicyProductLineOfBusinessV1 {

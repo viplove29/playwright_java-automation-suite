@@ -1,6 +1,6 @@
 package com.vertafore.test.form.steps.teststeps;
 
-import com.vertafore.test.common.models.services.policy.ContextualIdV1;
+import com.vertafore.test.common.models.general.ContextualIdV1;
 import com.vertafore.test.common.models.services.policy.PolicyProductLineOfBusinessV1;
 import com.vertafore.test.common.models.services.policy.PolicyV1;
 import com.vertafore.test.common.models.services.policy.PolicyVersionV1;

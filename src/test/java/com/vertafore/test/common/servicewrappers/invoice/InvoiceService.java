@@ -1,5 +1,6 @@
 package com.vertafore.test.common.servicewrappers.invoice;
 
+import com.vertafore.test.common.models.services.invoice.charge.ChargeV1;
 import com.vertafore.test.common.models.services.invoice.invoice.InvoiceV1;
 import com.vertafore.test.common.models.services.invoice.invoicePayments.InvoicePaymentV1;
 import com.vertafore.test.common.models.services.invoice.settings.LateFeeSettingsV1;
@@ -32,6 +33,11 @@ public class InvoiceService {
     public final String DELETE_INVOICE_BY_ID = "/invoices/{id}";
     public final String GET_INVOICE_PDF_BY_ID = "/invoices/{id}/pdf";
     public final String POST_INVOICE_PDF_BY_ID = "/invoices/{id}/pdf";
+
+    // charges controller constants
+    public final String POST_CHARGE = "/charges";
+    public final String GET_CHARGE = "/charges";
+
 
     private ServiceUtils serviceUtils;
 
@@ -111,6 +117,17 @@ public class InvoiceService {
     }
 
     //make get and post invoice pdfs later
+
+    // charges API calls
+    public ChargeV1 getCharges(){
+        Response response = serviceUtils.sendGetRequest(GET_CHARGE);
+        return response.getBody().jsonPath().getObject("content", ChargeV1.class);
+    }
+
+    public ChargeV1 posttCharges(ChargeV1 requestBody){
+        Response response = serviceUtils.sendPostRequest(POST_CHARGE, requestBody);
+        return response.getBody().jsonPath().getObject("content", ChargeV1.class);
+    }
 
     // helper methods
     private String hydrateURL(String url, String target, String value) {
