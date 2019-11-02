@@ -5,7 +5,6 @@ import com.vertafore.test.common.models.services.commission.commissionEnums.Agen
 
 public class AgencyCommissionV1 extends CommissionV1 {
 
-    public String carrierId;
-    public AgencyCommissionLineOfBusiness lob;
-
+  public String carrierId;
+  public AgencyCommissionLineOfBusiness lob;
 }

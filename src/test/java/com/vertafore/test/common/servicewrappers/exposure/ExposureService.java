@@ -1,6 +1,6 @@
 package com.vertafore.test.common.servicewrappers.exposure;
 
-import com.vertafore.autotest.policies.dtos.exposuregroup.ExposureGroupV1DTO;
+import com.vertafore.test.common.models.services.exposures.ExposureGroupV1;
 import com.vertafore.test.common.util.ServiceUtils;
 import io.restassured.response.Response;
 import java.io.IOException;
@@ -66,9 +66,9 @@ public class ExposureService {
       BASE_PATH + "/exposure-types{?pageSize,page}";
 
   // post an exposure group
-  public ExposureGroupV1DTO postExposureGroup(ExposureGroupV1DTO requestBody) {
+  public ExposureGroupV1 postExposureGroup(ExposureGroupV1 requestBody) {
     Response response = serviceUtils.sendPostRequest(CREATE_EXPOSURE_GROUP, requestBody);
     // return the ExposureGroupV1DTO object
-    return response.getBody().jsonPath().getObject("content", ExposureGroupV1DTO.class);
+    return response.getBody().jsonPath().getObject("content", ExposureGroupV1.class);
   }
 }

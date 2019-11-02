@@ -5,6 +5,5 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class NameV1 {
 
-    public String formattedName;
-
+  public String formattedName;
 }
