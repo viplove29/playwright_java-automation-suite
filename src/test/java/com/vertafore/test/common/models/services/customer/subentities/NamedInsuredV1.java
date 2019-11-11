@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class NamedInsuredV1 {
 
-    public String id;
-    public String name;
-
+  public String id;
+  public String name;
 }

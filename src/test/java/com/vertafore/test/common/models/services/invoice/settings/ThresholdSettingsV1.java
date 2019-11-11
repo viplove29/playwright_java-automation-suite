@@ -5,9 +5,8 @@ import org.joda.time.Instant;
 
 public class ThresholdSettingsV1 {
 
-    public BigDecimal refundThreshold;
-    public BigDecimal invoiceThreshold;
-    public Instant createdOn;
-    public Instant updatedOn;
-
+  public BigDecimal refundThreshold;
+  public BigDecimal invoiceThreshold;
+  public Instant createdOn;
+  public Instant updatedOn;
 }

@@ -71,20 +71,20 @@ public class AccountingService {
     return serviceUtils.sendDeleteRequest(hydratedURL);
   }
 
-  public JournalV1 getJournalById(String id){
+  public JournalV1 getJournalById(String id) {
     String hydratedURL = hydrateURL(GET_JOURNAL_BY_ID, "{id}", id);
     Response response = serviceUtils.sendGetRequest(hydratedURL);
     return response.getBody().jsonPath().getObject("content", JournalV1.class);
   }
 
-  public JournalV1 putJournalById(String id, JournalV1 requestBody){
+  public JournalV1 putJournalById(String id, JournalV1 requestBody) {
     String hydratedURL = hydrateURL(PUT_JOURNAL_BY_ID, "{id}", id);
     Response response = serviceUtils.sendPutRequest(hydratedURL, requestBody);
     return response.getBody().jsonPath().getObject("content", JournalV1.class);
   }
 
   // finish this later
-//  public JournalV1 patchJournalById(String id){}
+  //  public JournalV1 patchJournalById(String id){}
 
   // Account Group API calls
   public AccountGroupV1 postAccountGroupByJournalId(String journalId, AccountGroupV1 requestBody) {
@@ -111,57 +111,57 @@ public class AccountingService {
   }
 
   // account API calls
-  public AccountV1 getAccountById(String id){
+  public AccountV1 getAccountById(String id) {
     String hydratedURL = hydrateURL(GET_ACCOUNT_BY_ID, "{id}", id);
     Response response = serviceUtils.sendGetRequest(hydratedURL);
     return response.getBody().jsonPath().getObject("content", AccountV1.class);
   }
 
-  public AccountV1 putAccountById(String id, AccountV1 requestBody){
+  public AccountV1 putAccountById(String id, AccountV1 requestBody) {
     String hydratedURL = hydrateURL(PUT_ACCOUNT_BY_ID, "{id}", id);
     Response response = serviceUtils.sendPutRequest(hydratedURL, requestBody);
     return response.getBody().jsonPath().getObject("content", AccountV1.class);
   }
 
-  public Response deleteAccountById(String id){
+  public Response deleteAccountById(String id) {
     String hydratedURL = hydrateURL(DELETE_ACCOUNT_BY_ID, "{id}", id);
     return serviceUtils.sendDeleteRequest(hydratedURL);
   }
 
-  public AccountV1 postAccountByJournalId(String journalId, AccountV1 requestBody){
+  public AccountV1 postAccountByJournalId(String journalId, AccountV1 requestBody) {
     String hydratedURL = hydrateURL(POST_ACCOUNT_BY_JOURNAL_ID, "{journalId}", journalId);
     Response response = serviceUtils.sendPostRequest(hydratedURL, requestBody);
     return response.getBody().jsonPath().getObject("content", AccountV1.class);
   }
 
   // schedule settings API calls
-  public ScheduleSettingsV1 getScheduleSettings(){
+  public ScheduleSettingsV1 getScheduleSettings() {
     Response response = serviceUtils.sendGetRequest(GET_SCHEDULE_SETTINGS);
     return response.getBody().jsonPath().getObject("content", ScheduleSettingsV1.class);
   }
 
-  public ScheduleSettingsV1 putScheduleSettings(ScheduleSettingsV1 requestBody){
+  public ScheduleSettingsV1 putScheduleSettings(ScheduleSettingsV1 requestBody) {
     Response response = serviceUtils.sendPutRequest(PUT_SCHEDULE_SETTINGS, requestBody);
     return response.getBody().jsonPath().getObject("content", ScheduleSettingsV1.class);
   }
 
   // journal entry API calls
-  public JournalEntryV1 getJournalEntryById(String id){
+  public JournalEntryV1 getJournalEntryById(String id) {
     String hydratedURL = hydrateURL(GET_JOURNAL_ENTRY_BY_ID, "{id}", id);
     Response response = serviceUtils.sendGetRequest(hydratedURL);
     return response.getBody().jsonPath().getObject("content", JournalEntryV1.class);
   }
 
-  //make patch journal entry later
+  // make patch journal entry later
 
-  public JournalEntryV1 postJournalEntryByJournalId(String journalId, JournalEntryV1 requestBody){
+  public JournalEntryV1 postJournalEntryByJournalId(String journalId, JournalEntryV1 requestBody) {
     String hydratedURL = hydrateURL(POST_JOURNAL_ENTRY_BY_JOURNAL_ID, "{journalId}", journalId);
     Response response = serviceUtils.sendPostRequest(hydratedURL, requestBody);
     return response.getBody().jsonPath().getObject("content", JournalEntryV1.class);
   }
 
   // Transaction API calls
-  public TransactionV1 getTransactionById(String id){
+  public TransactionV1 getTransactionById(String id) {
     String hydratedURL = hydrateURL(GET_TRANSACTION_BY_ID, "{id}", id);
     Response response = serviceUtils.sendGetRequest(hydratedURL);
     return response.getBody().jsonPath().getObject("content", TransactionV1.class);
@@ -170,7 +170,7 @@ public class AccountingService {
   // make patch transaction later
 
   // balances API calls
-  public AccountBalanceV1 getAccountBalancesByJournalId(String journalId){
+  public AccountBalanceV1 getAccountBalancesByJournalId(String journalId) {
     String hydratedURL = hydrateURL(GET_BALANCES_BY_JOURNAL_ID, "{journalId}", journalId);
     Response response = serviceUtils.sendGetRequest(hydratedURL);
     return response.getBody().jsonPath().getObject("content", AccountBalanceV1.class);

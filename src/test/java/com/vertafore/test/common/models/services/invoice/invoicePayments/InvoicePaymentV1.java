@@ -5,12 +5,11 @@ import org.joda.time.Instant;
 
 public class InvoicePaymentV1 {
 
-    public String id;
-    public String invoiceId;
-    public String paymentId;
-    public BigDecimal amount = new BigDecimal(0);
-    public String currencyCode;
-    public Instant createdOn;
-    public Instant updatedOn;
-
+  public String id;
+  public String invoiceId;
+  public String paymentId;
+  public BigDecimal amount = new BigDecimal(0);
+  public String currencyCode;
+  public Instant createdOn;
+  public Instant updatedOn;
 }

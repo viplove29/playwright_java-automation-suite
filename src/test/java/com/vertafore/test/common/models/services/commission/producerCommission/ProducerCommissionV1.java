@@ -4,6 +4,5 @@ import com.vertafore.test.common.models.services.commission.commission.Commissio
 
 public class ProducerCommissionV1 extends CommissionV1 {
 
-    public String producerId;
-
+  public String producerId;
 }

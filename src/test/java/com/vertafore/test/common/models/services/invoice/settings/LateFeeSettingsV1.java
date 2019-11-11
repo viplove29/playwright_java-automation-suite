@@ -6,13 +6,12 @@ import org.joda.time.Instant;
 
 public class LateFeeSettingsV1 {
 
-    public Integer dayCount;
-    public BigDecimal balance;
-    public String memo;
-    public LateFeeSettingsCalculationType calculationType;
-    public BigDecimal fee;
-    public Integer percentage;
-    public Instant createdOn;
-    public Instant updatedOn;
-
+  public Integer dayCount;
+  public BigDecimal balance;
+  public String memo;
+  public LateFeeSettingsCalculationType calculationType;
+  public BigDecimal fee;
+  public Integer percentage;
+  public Instant createdOn;
+  public Instant updatedOn;
 }

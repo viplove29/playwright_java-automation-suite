@@ -1,4 +1,3 @@
 package com.vertafore.test.common.models.services.carrier.carrierEnums;
 
-public class CarrierLocationEmailV1 {
-}
+public class CarrierLocationEmailV1 {}

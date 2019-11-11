@@ -79,10 +79,6 @@ dependencies {
     implementation 'com.vertafore.core:foundation:2.2.0'
     // faker
     implementation 'com.github.javafaker:javafaker:0.18'
-
-    // import exposure test repo for models
-    implementation "com.vertafore:exposure-service-test:1.0.3-SNAPSHOT:tests"
-
     // These last dependencies are to make titan-base functional here
     // Serenitybdd vertafore wide base
     api "com.vertafore:serenitybdd-base:1.0.9-SNAPSHOT"

@@ -8,7 +8,6 @@ import com.vertafore.test.common.models.services.invoice.settings.PaymentPriorit
 import com.vertafore.test.common.models.services.invoice.settings.ThresholdSettingsV1;
 import com.vertafore.test.common.util.ServiceUtils;
 import io.restassured.response.Response;
-
 import java.io.IOException;
 
 public class InvoiceService {

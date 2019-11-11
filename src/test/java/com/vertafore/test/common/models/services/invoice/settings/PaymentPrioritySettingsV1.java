@@ -5,8 +5,7 @@ import org.joda.time.Instant;
 
 public class PaymentPrioritySettingsV1 {
 
-    public PaymentPrioritySettingsPaymentPriority paymentPriority;
-    public Instant createdOn;
-    public Instant updatedOn;
-
+  public PaymentPrioritySettingsPaymentPriority paymentPriority;
+  public Instant createdOn;
+  public Instant updatedOn;
 }

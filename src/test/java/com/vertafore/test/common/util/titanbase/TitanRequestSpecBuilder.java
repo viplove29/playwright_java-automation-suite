@@ -1,6 +1,6 @@
 package com.vertafore.test.common.util.titanbase;
 
-import com.vertafore.autotest.titanbase.utilities.JsonUtils;
+import com.vertafore.test.common.util.titanbase.json.JsonUtils;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.LogConfig;
 import io.restassured.config.ObjectMapperConfig;
