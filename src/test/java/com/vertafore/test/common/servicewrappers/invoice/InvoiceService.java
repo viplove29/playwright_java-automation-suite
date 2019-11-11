@@ -37,6 +37,8 @@ public class InvoiceService {
     // charges controller constants
     public final String POST_CHARGE = "/charges";
     public final String GET_CHARGE = "/charges";
+    public final String GET_CHARGES_BY_POLICY_ID = "/charges/policy-charges/{policyId}";
+
 
 
     private ServiceUtils serviceUtils;
@@ -124,7 +126,13 @@ public class InvoiceService {
         return response.getBody().jsonPath().getObject("content", ChargeV1.class);
     }
 
-    public ChargeV1 posttCharges(ChargeV1 requestBody){
+    public ChargeV1 getChargesByPolicyId(String policyId){
+        String hydratedURL = hydrateURL(GET_CHARGES_BY_POLICY_ID, "{policyId}", policyId);
+        Response response = serviceUtils.sendGetRequest(hydratedURL);
+        return response.getBody().jsonPath().getObject("content", ChargeV1.class);
+    }
+
+    public ChargeV1 postCharges(ChargeV1 requestBody){
         Response response = serviceUtils.sendPostRequest(POST_CHARGE, requestBody);
         return response.getBody().jsonPath().getObject("content", ChargeV1.class);
     }
