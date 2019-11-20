@@ -2,6 +2,8 @@ package com.vertafore.test.common.models.services.policy;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.vertafore.test.common.models.general.ContextualIdV1;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;

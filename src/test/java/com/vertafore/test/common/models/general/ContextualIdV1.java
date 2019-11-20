@@ -1,4 +1,4 @@
-package com.vertafore.test.common.models.services.policy;
+package com.vertafore.test.common.models.general;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
