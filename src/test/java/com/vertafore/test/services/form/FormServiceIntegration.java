@@ -44,7 +44,9 @@ public class FormServiceIntegration {
     int statusCode = SerenityRest.lastResponse().statusCode();
     currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
 
+
     String id = SerenityRest.lastResponse().getBody().jsonPath().getString("content.id");
+
     currentActor.attemptsTo(UseAccountingServiceTo.deleteJournalById(id));
     statusCode = SerenityRest.lastResponse().statusCode();
     currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
