@@ -14,9 +14,9 @@ allprojects {
     group 'com.vertafore'
     version '0.0.3-SNAPSHOT'
 
-    apply plugin: 'java-library'
     apply plugin: 'com.vertafore.gradle.qtest.QTestSerenityPlugin'
-
+    apply plugin: 'java-library'
+    apply plugin: 'net.serenity-bdd.aggregator'
 
     sourceCompatibility = 1.11
     targetCompatibility = 1.11
@@ -24,7 +24,6 @@ allprojects {
     repositories(gradle.nexusConfiguration)
 
     // Publish
-
     apply plugin: 'com.bmuschko.nexus'
     apply plugin: 'net.serenity-bdd.aggregator'
 
@@ -60,7 +59,13 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             cacheChangingModulesFor 0, 'seconds'
+            force "io.cucumber:cucumber-core:4.8.0"
         }
+    }
+
+    test {
+        systemProperties System.properties
+        systemProperties.remove("java.endorsed.dirs")
     }
 }
 
@@ -75,20 +80,19 @@ dependencies {
     implementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-report-resources', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-rest', version: '2.0.90'
-    implementation group: 'net.serenity-bdd', name: 'serenity-ensure', version: '2.1.1'
+    implementation group: 'net.serenity-bdd', name: 'serenity-ensure', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.90'
+    // Cucumber
+    implementation group: 'io.cucumber', name: 'cucumber-core', version: '4.8.0'
+    implementation group: 'io.cucumber', name: 'cucumber-junit', version: '4.8.0'
+    implementation group: 'io.cucumber', name: 'cucumber-java', version: '4.8.0'
     // Vertafore
     implementation 'com.vertafore.core:foundation:10.0.1'
-    // JUNIT
-    implementation group: 'junit', name: 'junit', version: '4.13'
 
 
 }
 
-test {
-    systemProperties System.properties
-    systemProperties.remove("java.endorsed.dirs")
-}
+
 
 spotless {
     java {

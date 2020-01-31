@@ -1,4 +1,4 @@
-package com.vertafore.test.services;
+package com.vertafore.test.services.form;
 
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 
 // JUNIT TEST ("step-definition"- like layer) for form-service integration tests
 @RunWith(SerenityRunner.class)
-public class Form {
+public class FormServiceIntegration {
 
   private List<TitanUser> users = new ArrayList<>();
 
