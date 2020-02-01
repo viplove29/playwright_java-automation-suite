@@ -30,6 +30,7 @@ public class UpdateTheir implements Task {
     if (abilityToBeChanged.equals(DOMAIN_KEY)) {
       actor.can(UseADomain.of(newValue));
       actor.can(CallAnApi.at(theDomainOf(actor)));
+      return;
     } else if (abilityToBeChanged.equals(TENANT_ID_KEY)) {
       actor.can(HaveTenantId.of(newValue));
     } else if (abilityToBeChanged.equals(ENTITY_ID_KEY)) {

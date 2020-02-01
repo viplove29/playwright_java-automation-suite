@@ -39,8 +39,7 @@ public class FormServiceIntegration {
   public void testJonHasActiveJournal() {
     Actor currentActor = theActorCalled("Jon Duncan");
 
-    currentActor.can(UseAService.called("accounting"));
-    currentActor.attemptsTo(ConfigureParamsAndHeaders.asUser());
+    currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"));
 
     currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
     int statusCode = SerenityRest.lastResponse().statusCode();
