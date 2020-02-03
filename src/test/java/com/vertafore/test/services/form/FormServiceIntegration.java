@@ -3,16 +3,13 @@ package com.vertafore.test.services.form;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.core.util.JsonHelper;
-import com.vertafore.test.abilities.UseAService;
 import com.vertafore.test.actors.JsonToActorsConverter;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.servicewrappers.accounting.UseAccountingServiceTo;
-import com.vertafore.test.tasks.utilities.ConfigureParamsAndHeaders;
+import com.vertafore.test.tasks.utilities.UpdateTheir;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.vertafore.test.tasks.utilities.UpdateTheir;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -44,7 +41,6 @@ public class FormServiceIntegration {
     currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
     int statusCode = SerenityRest.lastResponse().statusCode();
     currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
-
 
     String id = SerenityRest.lastResponse().getBody().jsonPath().getString("content.id");
 
