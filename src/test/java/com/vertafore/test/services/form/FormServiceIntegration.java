@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.vertafore.core.util.JsonHelper;
-import com.vertafore.test.abilities.UseAService;
 import com.vertafore.test.actors.JsonToActorsConverter;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.servicewrappers.accounting.UseAccountingServiceTo;
@@ -54,7 +53,6 @@ public class FormServiceIntegration {
     currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
     int statusCode = SerenityRest.lastResponse().statusCode();
     currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
-
 
     String id = SerenityRest.lastResponse().getBody().jsonPath().getString("content.id");
 
