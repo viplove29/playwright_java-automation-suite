@@ -2,17 +2,27 @@ package com.vertafore.test.services.form;
 
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.abilities.UseAService;
 import com.vertafore.test.actors.JsonToActorsConverter;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.servicewrappers.accounting.UseAccountingServiceTo;
 import com.vertafore.test.tasks.utilities.ConfigureParamsAndHeaders;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import com.vertafore.test.tasks.utilities.UpdateTheir;
+import com.vertafore.test.utilities.ServiceWrapperMethodGenerator;
+import gherkin.Parser;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -60,5 +70,8 @@ public class FormServiceIntegration {
     currentActor.attemptsTo(UseAccountingServiceTo.createJournal(JsonHelper.serializeAsJson(body)));
     statusCode = SerenityRest.lastResponse().statusCode();
     currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
+
+    ServiceWrapperMethodGenerator.generateMethods();
   }
+
 }
