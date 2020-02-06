@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.util.Set;
 
+// TODO: has a ton of room for refactoring
 public class ServiceWrapperClassGenerator {
 
   static final String json =
@@ -13,7 +14,7 @@ public class ServiceWrapperClassGenerator {
   static final String METHOD_TEMPLATE =
       "public static Performable %s(%s){\n"
           + "\treturn Task.where(\n\t\t\"{0} %s\", \n\t\t\tactor -> {\n\t\t\t\t%s;\n\t\t\t}\n\t)"
-          + ";\n}\n\n";
+          + ";\n}\n";
 
   static final String CONSTANT_TEMPLATE = "private static final String %s = \"%s\";\n";
 
@@ -46,7 +47,7 @@ public class ServiceWrapperClassGenerator {
         String summary = pathJsonObject.get(apiCall).getAsJsonObject().get("summary").getAsString();
         constantsResults.append(generateConstant(path, summary));
         methodResults.append(
-            generateMethod(summary, pathJsonObject.get(apiCall).getAsJsonObject()));
+            generateMethod(summary, apiCall, generateEndpointFromPath(path), pathJsonObject.get(apiCall).getAsJsonObject()));
       }
     }
     System.out.println(
@@ -75,16 +76,15 @@ public class ServiceWrapperClassGenerator {
         .replaceAll("UPDATEPATCH", "PATCH");
   }
 
-  private static String generateMethod(String summary, JsonObject apiCallJsonObject) {
+  private static String generateMethod(String summary, String verb, String endpoint, JsonObject apiCallJsonObject) {
     String methodName = getCamalCaseMethodNameFromSummary(summary);
     String methodParams = generateMethodParamsFromapiCallJsonObject(apiCallJsonObject);
     String taskDescription = apiCallJsonObject.get("description").getAsString();
-    String restCallMethodChain = "";
+    String restCallMethodChain = generateRestCall(verb, generateRestPathParamsFromEndPoint(endpoint), generateConstantNameFromSummary(summary));
     return String.format(
         METHOD_TEMPLATE, methodName, methodParams, taskDescription, restCallMethodChain);
   }
 
-  // TODO: room for refactoring
   private static String getCamalCaseMethodNameFromSummary(String str) {
     String[] arr = str.toLowerCase().trim().split("\\s");
     StringBuilder result = new StringBuilder();
@@ -99,7 +99,6 @@ public class ServiceWrapperClassGenerator {
     return result.toString().replaceAll("update/patch", "patch").replaceAll("\\.", "");
   }
 
-  // TODO: room for refactoring
   private static String generateMethodParamsFromapiCallJsonObject(JsonObject apiCallJsonObject) {
     StringBuilder result = new StringBuilder();
     apiCallJsonObject
@@ -134,7 +133,7 @@ public class ServiceWrapperClassGenerator {
     return result.toString();
   }
 
-  private static String getRestPathParamsFromEndPoint(String endpoint) {
+  private static String generateRestPathParamsFromEndPoint(String endpoint) {
     String[] arr = endpoint.split("/");
     String result = "";
     for (int i = 0; i < arr.length; i++) {
@@ -150,7 +149,7 @@ public class ServiceWrapperClassGenerator {
     return result;
   }
 
-  private static String getRestCall(String type, String params, String endpoint) {
+  private static String generateRestCall(String type, String params, String endpoint) {
     params = params.replaceAll("Object body,", "");
     String[] arr = endpoint.split("/");
     String result = "";
@@ -189,4 +188,5 @@ public class ServiceWrapperClassGenerator {
     }
     return result;
   }
+
 }
