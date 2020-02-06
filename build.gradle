@@ -9,6 +9,7 @@ buildscript {
 plugins {
     id 'com.bmuschko.nexus' version '2.3.1' apply false
     id "com.diffplug.gradle.spotless" version "3.26.1"
+
 }
 allprojects {
     group 'com.vertafore'
