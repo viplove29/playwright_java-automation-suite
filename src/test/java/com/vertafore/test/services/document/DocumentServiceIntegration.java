@@ -10,6 +10,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.vertafore.test.tasks.utilities.UpdateTheir;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
@@ -25,13 +27,14 @@ public class DocumentServiceIntegration {
 
   @Before
   public void setupActors() {
-    users.add(new TitanUser("liz", "LIZZY123", "LIZZY123"));
+    users.add(new TitanUser("donald donald", "Nguyen Company", "LIZZY123"));
     OnStage.setTheStage(JsonToActorsConverter.castOfAuthenticatedActors(users));
   }
 
   @Test
   public void documentServiceBrandingSetsConfigCorrectly() {
-    Actor currentActor = theActorCalled("liz");
+    Actor currentActor = theActorCalled("donald donald");
+    currentActor.attemptsTo(UpdateTheir.serviceTo("document"));
 
     // build metadata
     HashMap<String, String> metaData = new HashMap<>();
@@ -43,6 +46,13 @@ public class DocumentServiceIntegration {
 
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(
-        UseDocumentServiceTo.createBrandingUsingMultiPartFormPost(metaData, imageToUpload));
+        UseDocumentServiceTo.createABrandingUsingAMultiPartFromPost(metaData.toString(), imageToUpload.toString()));
+
+    // GET the /brandings
+    // tests CONFIG-SVC
+
+    // GET /bytes
+    // tests AWS S3 connectivity
+
   }
 }

@@ -2,14 +2,22 @@ package com.vertafore.test.services.form;
 
 import com.vertafore.test.actors.JsonToActorsConverter;
 import com.vertafore.test.models.TitanUser;
+//import com.vertafore.test.tasks.servicewrappers.accounting.UseAccountingServiceTo;
+import com.vertafore.test.tasks.utilities.UpdateTheir;
 import com.vertafore.test.utilities.ServiceWrapperAndModelClassGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
+import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
+import net.serenitybdd.screenplay.ensure.Ensure;
+import org.json.simple.parser.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 // JUNIT TEST ("step-definition"- like layer) for form-service integration tests
 @RunWith(SerenityRunner.class)
@@ -25,33 +33,17 @@ public class FormServiceIntegration {
   }
 
   @Test
-  public void testJonHasActiveJournal() {
-    //        Actor currentActor = theActorCalled("Jon Duncan");
-    //
-    //        currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"));
-    //
-    //        currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
-    //        int statusCode = SerenityRest.lastResponse().statusCode();
-    //        currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
-    //
-    //        String id = SerenityRest.lastResponse().getBody().jsonPath().getString("content.id");
-    //
-    //        currentActor.attemptsTo(UseAccountingServiceTo.deleteJournalById(id));
-    //        statusCode = SerenityRest.lastResponse().statusCode();
-    //        currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
-    //
-    //        HashMap<String, String> body = new HashMap<>();
-    //        body.put("label", "test accrual journal");
-    //        body.put("journalType", "ACCRUAL");
-    //        body.put("fiscalMonth", "4");
-    //
-    //
-    //
-    // currentActor.attemptsTo(UseAccountingServiceTo.createJournal(JsonHelper.serializeAsJson(body)));
-    //        statusCode = SerenityRest.lastResponse().statusCode();
-    //        currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
+  public void testJonHasActiveJournal() throws ParseException {
+//            Actor currentActor = theActorCalled("Jon Duncan");
+//
+//            currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"));
+//
+//            currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
+//            int statusCode = SerenityRest.lastResponse().statusCode();
+//            currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
+
 
     ServiceWrapperAndModelClassGenerator.generateServiceWrapperClasses();
-    ServiceWrapperAndModelClassGenerator.generateModelClasses();
+//        ServiceWrapperAndModelClassGenerator.generateModelClasses();
   }
 }

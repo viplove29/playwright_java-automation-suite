@@ -1,886 +1,30 @@
 package com.vertafore.test.utilities;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.JsonObject;
+import com.vertafore.core.util.JsonHelper;
+import io.restassured.response.Response;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
+import net.serenitybdd.rest.SerenityRest;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class ServiceWrapperAndModelClassGenerator {
 
-  static final String json =
-      "{\n"
-          + "\"swagger\": \"2.0\",\n"
-          + "\"info\": {\n"
-          + "\"description\": \"TODO: Please specify the description of this service\",\n"
-          + "\"version\": \"1\",\n"
-          + "\"title\": \"QuickBooks Integration Service Service API\"\n"
-          + "},\n"
-          + "\"host\": \"api.dev.titan.v4af.com\",\n"
-          + "\"basePath\": \"/quickbooks-integration\",\n"
-          + "\"tags\": [\n"
-          + "{\n"
-          + "\"name\": \"authorization-controller-v-1\",\n"
-          + "\"description\": \"Authorization Controller V 1\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"account-mapping-controller-v-1\",\n"
-          + "\"description\": \"Account Mapping Controller V 1\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"quickbooks-account-controller-v-1\",\n"
-          + "\"description\": \"Quickbooks Account Controller V 1\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"status-controller-v-1\",\n"
-          + "\"description\": \"Status Controller V 1\"\n"
-          + "}\n"
-          + "],\n"
-          + "\"paths\": {\n"
-          + "\"/quickbooks-integration/v1/{productId}/{tenantId}/entities/{entityId}/accounts/{accountId}/mapping\": {\n"
-          + "\"get\": {\n"
-          + "\"tags\": [\n"
-          + "\"account-mapping-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Get Account Mapping by Account ID\",\n"
-          + "\"description\": \"Retrieves the Account Mapping of an associated Account.\",\n"
-          + "\"operationId\": \"getAccountMappingUsingGET\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"accountId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the Account\",\n"
-          + "\"required\": true,\n"
-          + "\"type\": \"string\"\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/SingleResponseV1«AccountMappingV1»\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "},\n"
-          + "\"404\": {\n"
-          + "\"description\": \"Not Found\"\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"post\": {\n"
-          + "\"tags\": [\n"
-          + "\"account-mapping-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Create Account Mapping by Account ID\",\n"
-          + "\"description\": \"Creates an account mapping for the associated account.\",\n"
-          + "\"operationId\": \"createAccountMappingUsingPOST\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"accountId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the Account\",\n"
-          + "\"required\": true,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"in\": \"body\",\n"
-          + "\"name\": \"accountMapping\",\n"
-          + "\"description\": \"accountMapping\",\n"
-          + "\"required\": true,\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/AccountMappingV1\"\n"
-          + "}\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"201\": {\n"
-          + "\"description\": \"Created\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/SingleResponseV1«AccountMappingV1»\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "},\n"
-          + "\"404\": {\n"
-          + "\"description\": \"Not Found\"\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"patch\": {\n"
-          + "\"tags\": [\n"
-          + "\"account-mapping-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Update/Patch Account mapping by Account ID\",\n"
-          + "\"description\": \"Patch the Account mapping specified by the Account ID provided in the URI. The only field that can be updated is the `key` field. \",\n"
-          + "\"operationId\": \"updateAccountMappingUsingPATCH\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json-patch+json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"accountId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the Account\",\n"
-          + "\"required\": true,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"in\": \"body\",\n"
-          + "\"name\": \"patch\",\n"
-          + "\"description\": \"A JSON Patch to update an existing key in Account Mapping\",\n"
-          + "\"required\": true,\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/JsonPatch«AccountMappingV1»\"\n"
-          + "}\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/SingleResponseV1«AccountMappingV1»\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"204\": {\n"
-          + "\"description\": \"No Content\"\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"/quickbooks-integration/v1/{productId}/{tenantId}/entities/{entityId}/accounts{?pageSize,page}\": {\n"
-          + "\"get\": {\n"
-          + "\"tags\": [\n"
-          + "\"quickbooks-account-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Get all QuickBooks Accounts\",\n"
-          + "\"description\": \"Retrieves all Accounts from the QuickBooks API using existing Quickbooks authorization. Quickbooks authorization must be stored for this endpoint to work.\",\n"
-          + "\"operationId\": \"getQuickBooksAccountsUsingGET\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"pageSize\",\n"
-          + "\"in\": \"query\",\n"
-          + "\"description\": \"The maximum number of items to include in the response\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"page\",\n"
-          + "\"in\": \"query\",\n"
-          + "\"description\": \"The page of items to retrieve\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\"\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/PagedResponseV1«QuickbooksAccountV1,LimitOffsetPagingInfoV1»\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "},\n"
-          + "\"404\": {\n"
-          + "\"description\": \"Not Found\"\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"/quickbooks-integration/v1/{productId}/{tenantId}/entities/{entityId}/authorization\": {\n"
-          + "\"put\": {\n"
-          + "\"tags\": [\n"
-          + "\"authorization-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Store QuickBooks Credentials\",\n"
-          + "\"description\": \"Requests and stores credentials from QuickBooks, to be used for service operations.\",\n"
-          + "\"operationId\": \"putAuthorizationCredentialUsingPUT\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"in\": \"body\",\n"
-          + "\"name\": \"intuitInfo\",\n"
-          + "\"description\": \"intuitInfo\",\n"
-          + "\"required\": true,\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/QuickBooksInfoV1\"\n"
-          + "}\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/EmptyResponseV1\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"201\": {\n"
-          + "\"description\": \"Created\"\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "},\n"
-          + "\"404\": {\n"
-          + "\"description\": \"Not Found\"\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"delete\": {\n"
-          + "\"tags\": [\n"
-          + "\"authorization-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Delete QuickBooks Credentials\",\n"
-          + "\"description\": \"Deletes current QuickBooks credentials from the system.\",\n"
-          + "\"operationId\": \"deleteAuthorizationCredentialUsingDELETE\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/EmptyResponseV1\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"204\": {\n"
-          + "\"description\": \"No Content\"\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"/quickbooks-integration/v1/{productId}/{tenantId}/entities/{entityId}/authorization/connect-url\": {\n"
-          + "\"get\": {\n"
-          + "\"tags\": [\n"
-          + "\"authorization-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Get QuickBooks URL\",\n"
-          + "\"description\": \"Retrieves and formats the URL for UI to present a login flow.\",\n"
-          + "\"operationId\": \"connectToQuickBooksUsingGET\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/SingleResponseV1«string»\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "},\n"
-          + "\"404\": {\n"
-          + "\"description\": \"Not Found\"\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"/quickbooks-integration/v1/{productId}/{tenantId}/entities/{entityId}/authorization/status\": {\n"
-          + "\"get\": {\n"
-          + "\"tags\": [\n"
-          + "\"status-controller-v-1\"\n"
-          + "],\n"
-          + "\"summary\": \"Get QuickBooks Authorization Status.\",\n"
-          + "\"description\": \"Retrieves the status of the QuickBooks integration under the given tenant/entity combo.\",\n"
-          + "\"operationId\": \"retrieveQuickBooksIntegrationStatusUsingGET\",\n"
-          + "\"consumes\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"produces\": [\n"
-          + "\"application/json\"\n"
-          + "],\n"
-          + "\"parameters\": [\n"
-          + "{\n"
-          + "\"name\": \"productId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the product for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"tenantId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the tenant for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "{\n"
-          + "\"name\": \"entityId\",\n"
-          + "\"in\": \"path\",\n"
-          + "\"description\": \"ID of the entity for which the request is being made\",\n"
-          + "\"required\": false,\n"
-          + "\"type\": \"string\"\n"
-          + "}\n"
-          + "],\n"
-          + "\"responses\": {\n"
-          + "\"200\": {\n"
-          + "\"description\": \"OK\",\n"
-          + "\"schema\": {\n"
-          + "\"$ref\": \"#/definitions/SingleResponseV1«AuthorizationStatusV1»\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"401\": {\n"
-          + "\"description\": \"Unauthorized\"\n"
-          + "},\n"
-          + "\"403\": {\n"
-          + "\"description\": \"Forbidden\"\n"
-          + "},\n"
-          + "\"404\": {\n"
-          + "\"description\": \"Not Found\"\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"definitions\": {\n"
-          + "\"AccountMappingV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"createdOn\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"format\": \"date-time\",\n"
-          + "\"example\": \"1970-01-01T00:00:00.000Z\",\n"
-          + "\"description\": \"When the Account Mapping was created.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"mappedAccountCode\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"1111222333\",\n"
-          + "\"description\": \"Account number for the account in QuickBooks.\"\n"
-          + "},\n"
-          + "\"mappedAccountLabel\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"Tax Account\",\n"
-          + "\"description\": \"Name for the account in QuickBooks.\"\n"
-          + "},\n"
-          + "\"quickbooksAccountId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"12345\",\n"
-          + "\"description\": \"Mapping key.\"\n"
-          + "},\n"
-          + "\"status\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"OK\",\n"
-          + "\"description\": \"Account Mapping status\",\n"
-          + "\"enum\": [\n"
-          + "\"OK\",\n"
-          + "\"ERROR\"\n"
-          + "]\n"
-          + "},\n"
-          + "\"titanAccountId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The Account ID for the Account Mapping relation.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"updatedOn\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"format\": \"date-time\",\n"
-          + "\"example\": \"1970-01-01T00:00:00.000Z\",\n"
-          + "\"description\": \"When the Account Mapping was last modified.\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"AuthorizationStatusV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"required\": [\n"
-          + "\"message\",\n"
-          + "\"status\"\n"
-          + "],\n"
-          + "\"properties\": {\n"
-          + "\"message\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"This is a message.\",\n"
-          + "\"description\": \"The message accompanying the current status. May contain details from errors received from QuickBooks.\"\n"
-          + "},\n"
-          + "\"status\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"OK\",\n"
-          + "\"description\": \"The code indicating the status of the authorization.\",\n"
-          + "\"enum\": [\n"
-          + "\"OK\",\n"
-          + "\"NONE\",\n"
-          + "\"EXPIRED\",\n"
-          + "\"INVALID\"\n"
-          + "]\n"
-          + "}\n"
-          + "},\n"
-          + "\"description\": \"The body to use when retrieving the status of a QuickBooks authorization.\"\n"
-          + "},\n"
-          + "\"EmptyResponseV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"error\": {\n"
-          + "\"description\": \"This field will contain information about the error if one occurred\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/ErrorResponseV1\"\n"
-          + "},\n"
-          + "\"requestId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of this request.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"spanId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the span.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"traceId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the trace.\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"ErrorResponseV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"message\": {\n"
-          + "\"type\": \"string\"\n"
-          + "},\n"
-          + "\"status\": {\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\"\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"JsonPatch«AccountMappingV1»\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"description\": \"A JSON Patch (see http://jsonpatch.com/)\"\n"
-          + "},\n"
-          + "\"LimitOffsetPagingInfoV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"method\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The method of paging that this pagingInfo contains\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"numberOfElements\": {\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\",\n"
-          + "\"description\": \"The number of data elements in this response.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"page\": {\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\",\n"
-          + "\"description\": \"The page number of the response.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"pageSize\": {\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\",\n"
-          + "\"description\": \"The page size of this response.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"totalElements\": {\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\",\n"
-          + "\"description\": \"The total number of elements\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"totalPages\": {\n"
-          + "\"type\": \"integer\",\n"
-          + "\"format\": \"int32\",\n"
-          + "\"description\": \"The total number of pages, based on the pageSize and totalElements\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"PagedResponseV1«QuickbooksAccountV1,LimitOffsetPagingInfoV1»\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"content\": {\n"
-          + "\"type\": \"array\",\n"
-          + "\"description\": \"The data elements requested\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"items\": {\n"
-          + "\"$ref\": \"#/definitions/QuickbooksAccountV1\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"error\": {\n"
-          + "\"description\": \"This field will contain information about the error if one occurred\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/ErrorResponseV1\"\n"
-          + "},\n"
-          + "\"paging\": {\n"
-          + "\"description\": \"The paging method used\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/LimitOffsetPagingInfoV1\"\n"
-          + "},\n"
-          + "\"requestId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of this request.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"spanId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the span.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"traceId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the trace.\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"QuickBooksInfoV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"required\": [\n"
-          + "\"authorizationCode\",\n"
-          + "\"realmId\"\n"
-          + "],\n"
-          + "\"properties\": {\n"
-          + "\"authorizationCode\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"authorization_code\",\n"
-          + "\"description\": \"The authorization code Intuit has granted from the user successfully logging in. Can be exchanged for an auth token and refresh token\"\n"
-          + "},\n"
-          + "\"realmId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"123456748912\",\n"
-          + "\"description\": \"The Realm Id representing the company in QuickBooks.\"\n"
-          + "}\n"
-          + "},\n"
-          + "\"description\": \"The body to use when sending in the auth code for QuickBooks integration.\"\n"
-          + "},\n"
-          + "\"QuickbooksAccountV1\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"key\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"{ id: 45fd5f31-98e1-4315-8475-eff92631d3df }\",\n"
-          + "\"description\": \"Unique key of the Account.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"name\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"Accounts Payable (A/P)\",\n"
-          + "\"description\": \"Name of the Account\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"number\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"example\": \"1000000\",\n"
-          + "\"description\": \"Account Number\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "},\n"
-          + "\"description\": \"The account information from Quickbooks\"\n"
-          + "},\n"
-          + "\"SingleResponseV1«AccountMappingV1»\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"content\": {\n"
-          + "\"description\": \"The response data element\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/AccountMappingV1\"\n"
-          + "},\n"
-          + "\"error\": {\n"
-          + "\"description\": \"This field will contain information about the error if one occurred\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/ErrorResponseV1\"\n"
-          + "},\n"
-          + "\"requestId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of this request.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"spanId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the span.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"traceId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the trace.\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"SingleResponseV1«AuthorizationStatusV1»\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"content\": {\n"
-          + "\"description\": \"The response data element\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/AuthorizationStatusV1\"\n"
-          + "},\n"
-          + "\"error\": {\n"
-          + "\"description\": \"This field will contain information about the error if one occurred\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/ErrorResponseV1\"\n"
-          + "},\n"
-          + "\"requestId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of this request.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"spanId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the span.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"traceId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the trace.\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "},\n"
-          + "\"SingleResponseV1«string»\": {\n"
-          + "\"type\": \"object\",\n"
-          + "\"properties\": {\n"
-          + "\"content\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The response data element\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"error\": {\n"
-          + "\"description\": \"This field will contain information about the error if one occurred\",\n"
-          + "\"readOnly\": true,\n"
-          + "\"$ref\": \"#/definitions/ErrorResponseV1\"\n"
-          + "},\n"
-          + "\"requestId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of this request.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"spanId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the span.\",\n"
-          + "\"readOnly\": true\n"
-          + "},\n"
-          + "\"traceId\": {\n"
-          + "\"type\": \"string\",\n"
-          + "\"description\": \"The unique ID of the trace.\",\n"
-          + "\"readOnly\": true\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "}\n"
-          + "}";
+  static final Response response =
+      SerenityRest.get(
+          "https://api.dev.titan.v4af.com/accounting/v2/api-docs?group=accounting-service");
+  static final String json = response.getBody().asString();
 
   static final String SERVICE_WRAPPER_PACKAGE_AND_IMPORT_TEMPLATE =
       "package com.vertafore.test.tasks.servicewrappers.%s;\n\n"
@@ -916,59 +60,148 @@ public class ServiceWrapperAndModelClassGenerator {
   static final String IMPORT_TEMPLATE = "import %s;\n";
   static final String MODEL_DEFAULT_PATH = "./src/main/java/com/vertafore/test/models/%s/";
 
-  public static void generateServiceWrapperClasses() {
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Parameter {
+    public String name;
+    public String in;
+  }
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class ApiCallMethod {
+    public String type;
+    public String summary;
+    public String[] consumes;
+    public String endpointName;
+    public List<Parameter> parameters;
+    public String methodName;
+    public String methodArguments;
+    public String restParamMethodChain;
+  }
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Path {
+    public String endpoint;
+    public List<ApiCallMethod> apiCallMethods;
+  }
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Model{
+    public String name;
+    public List<Field> fields;
+  }
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class Field{
+    public String name;
+    public String type;
+    public boolean isRequired;
+  }
+
+  private static List<Path> convertPathsMapToPathsList(Map paths) {
+    List<Path> results = new ArrayList<>();
+    paths
+        .keySet()
+        .forEach(
+            p -> {
+              Path nextPath = new Path();
+              nextPath.endpoint = generateServiceWrapperEndpointFromPath((String) p);
+              nextPath.apiCallMethods = convertApiCallsMapToApiCallsList((Map) paths.get(p));
+              results.add(nextPath);
+            });
+    return results;
+  }
+
+  private static List<ApiCallMethod> convertApiCallsMapToApiCallsList(Map apiCalls) {
+    List<ApiCallMethod> results = new ArrayList<>();
+    apiCalls
+        .keySet()
+        .forEach(
+            ac -> {
+              Map call = (Map) apiCalls.get(ac);
+              ApiCallMethod nextApiCallMethod = new ApiCallMethod();
+
+              nextApiCallMethod.type = (String) ac;
+
+              nextApiCallMethod.summary = (String) call.get("summary");
+
+              nextApiCallMethod.endpointName =
+                  generateServiceWrapperConstantNameFromSummary(nextApiCallMethod.summary);
+
+              nextApiCallMethod.methodName =
+                  generateCamalCaseMethodNameFromSummary(nextApiCallMethod.summary);
+
+              //throws exception. fix when this is needed
+//              nextApiCallMethod.consumes = (String[]) call.get("consumes");
+
+              nextApiCallMethod.parameters =
+                  JsonHelper.deserializeJsonAsList(
+                      call.get("parameters").toString(), new TypeReference<>() {});
+
+              nextApiCallMethod.methodArguments =
+                  generateServiceWrapperMethodParams(nextApiCallMethod.parameters);
+
+              nextApiCallMethod.restParamMethodChain =
+                  generateRestParamsMethodChain(nextApiCallMethod.parameters);
+
+              results.add(nextApiCallMethod);
+            });
+    return results;
+  }
+
+  private static List<Model> convertModelsMapToModelsList(Map models){
+    List<Model> results = new ArrayList<>();
+    models.keySet().forEach(m -> {
+      Model nextModel = new Model();
+      nextModel.name = (String) m;
+      nextModel.fields = convertFieldsMapToFieldsList((Map) models.get(m));
+    });
+    return results;
+  }
+
+  private static List<Field> convertFieldsMapToFieldsList(Map fields) {
+    List<Field> results = new ArrayList<>();
+
+    return results;
+  }
+
+  public static void generateServiceWrapperClasses() throws ParseException {
 
     StringBuilder constantsResults = new StringBuilder();
     StringBuilder methodResults = new StringBuilder();
 
-    JsonObject swaggerJsonObject = new Gson().fromJson(json, JsonObject.class);
-    JsonObject pathsJsonObject = swaggerJsonObject.get("paths").getAsJsonObject();
+    JSONObject swaggerJson = (JSONObject) new JSONParser().parse(json);
 
-    Set<String> paths = pathsJsonObject.keySet();
+    String servicePath = (String) swaggerJson.get("basePath");
+    List<Path> paths = convertPathsMapToPathsList((Map) swaggerJson.get("paths"));
 
-    for (String path : paths) {
+    paths.forEach(
+        p -> {
+          p.apiCallMethods.forEach(
+              ac -> {
+                constantsResults.append(
+                    String.format(CONSTANT_TEMPLATE, ac.endpointName, p.endpoint));
 
-      JsonObject pathJsonObject = pathsJsonObject.getAsJsonObject(path);
-      Set<String> pathApiCalls = pathJsonObject.keySet();
+                String restCallMethodChain =
+                    String.format(
+                        REST_CALL_METHOD_CHAIN_TEMPLATE,
+                        ac.restParamMethodChain,
+                        ac.type,
+                        ac.endpointName);
 
-      for (String apiCall : pathApiCalls) {
+                methodResults.append(
+                    String.format(
+                        SERVICE_WRAPPER_METHOD_TEMPLATE,
+                        ac.methodName,
+                        ac.methodArguments,
+                        ac.summary,
+                        restCallMethodChain));
+              });
+        });
 
-        JsonObject apiCallJsonObject = pathJsonObject.getAsJsonObject(apiCall);
-
-        // variables for readability and reuse
-        String summary = apiCallJsonObject.get("summary").getAsString();
-        String endpointConstantValue = generateServiceWrapperEndpoint(path);
-        String endpointConstantName = generateServiceWrapperConstantName(summary);
-
-        constantsResults.append(
-            String.format(CONSTANT_TEMPLATE, endpointConstantName, endpointConstantValue));
-
-        // variables for readability
-        String methodName = generateCamalCaseMethodName(summary);
-        String methodArguments = generateServiceWrapperMethodParams(apiCallJsonObject);
-        String taskDescription = apiCallJsonObject.get("description").getAsString();
-        String restCallMethodChain =
-            String.format(
-                REST_CALL_METHOD_CHAIN_TEMPLATE,
-                generateRestParamsMethodChain(apiCallJsonObject),
-                apiCall,
-                endpointConstantName);
-
-        methodResults.append(
-            String.format(
-                SERVICE_WRAPPER_METHOD_TEMPLATE,
-                methodName,
-                methodArguments,
-                taskDescription,
-                restCallMethodChain));
-      }
-    }
-    String className =
-        generateServiceWrapperClassName(swaggerJsonObject.get("basePath").getAsString());
+    String className = generateServiceWrapperClassNameFromPath(servicePath);
     String packageAndImports =
         String.format(
-            SERVICE_WRAPPER_PACKAGE_AND_IMPORT_TEMPLATE,
-            generatePackageName(swaggerJsonObject.get("basePath").getAsString()));
+            SERVICE_WRAPPER_PACKAGE_AND_IMPORT_TEMPLATE, generatePackageNameFromPath(servicePath));
     String fileContent =
         packageAndImports
             + String.format(
@@ -977,9 +210,7 @@ public class ServiceWrapperAndModelClassGenerator {
                 constantsResults.toString() + "\n" + methodResults.toString());
 
     String basePath =
-        String.format(
-            SERVICE_WRAPPER_DEFAULT_PATH,
-            generatePackageName(swaggerJsonObject.get("basePath").getAsString()));
+        String.format(SERVICE_WRAPPER_DEFAULT_PATH, generatePackageNameFromPath(servicePath));
 
     generateBaseDirectory(basePath);
 
@@ -989,60 +220,90 @@ public class ServiceWrapperAndModelClassGenerator {
     writeUsingBufferedWriter(basePath, fileContent);
   }
 
-  public static void generateModelClasses() {
+  public static void generateModelClasses() throws ParseException {
+    //    JSONObject swaggerJson = (JSONObject) new JSONParser().parse(json);
+    //    String servicePath = (String) swaggerJson.get("basePath");
+    //
+    //    String basePath =
+    //        String.format(
+    //            MODEL_DEFAULT_PATH,
+    //            generatePackageNameFromPath(servicePath));
+    //
+    //    generateBaseDirectory(basePath);
+    //
+    //    Map models = (Map) swaggerJson.get("definitions");
+    //    models.keySet().stream()
+    //            .filter(m ->
+    // !((String)m).matches("JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
+    //            .forEach(m -> {
+    //
+    //              StringBuilder fieldResults = new StringBuilder();
+    //              StringBuilder setterGetterResults = new StringBuilder();
+    //              Map fields = (Map) getPropertyFromSimpleJson(swaggerJson, "definitions",
+    // (String) m, "properties");
+    //              fields.keySet().forEach(f -> {
+    //                String dataType = (String)
+    // generateModelFieldType(getPropertyFromSimpleJson(swaggerJson, "definitions", (String) m,
+    // "properties", (String) f);
+    //            fieldResults.append(String.format(MODEL_FIELD_TEMPLATE, dataType, f));
+    //
+    //            setterGetterResults
+    //                .append(generateModelGetterMethod(dataType, (String) f))
+    //                .append("\n")
+    //                .append(generateModelSetterMethod(dataType, (String) f));
+    //              });
+    //              String packageName = generatePackageNameFromPath(servicePath);
+    //      String fileContent = generateModelPackageAndImports(packageName,
+    // fieldResults.toString());
+    //      fileContent +=
+    //          String.format(
+    //              MODEL_CLASS_TEMPLATE,
+    //              m,
+    //              fieldResults.toString() + "\n" + setterGetterResults.toString());
+    //
+    //      String newPath = basePath + m + ".java";
+    //      generateBaseFile(newPath);
+    //      writeUsingBufferedWriter(newPath, fileContent);
+    //            });
 
-    JsonObject swaggerJsonObject = new Gson().fromJson(json, JsonObject.class);
-    JsonObject definitionsJsonObject = swaggerJsonObject.get("definitions").getAsJsonObject();
-
-    String basePath =
-        String.format(
-            MODEL_DEFAULT_PATH,
-            generatePackageName(swaggerJsonObject.get("basePath").getAsString()));
-
-    generateBaseDirectory(basePath);
-    Set<String> models = definitionsJsonObject.keySet();
-
-    for (String model : models) {
-      if (model.matches(
-          "JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*")) {
-        continue;
-      }
-      basePath =
-          String.format(
-              MODEL_DEFAULT_PATH,
-              generatePackageName(swaggerJsonObject.get("basePath").getAsString()));
-
-      StringBuilder fieldResults = new StringBuilder();
-      StringBuilder setterGetterResults = new StringBuilder();
-      JsonObject modelPropertiesJsonObject =
-          definitionsJsonObject.getAsJsonObject(model).getAsJsonObject("properties");
-      Set<String> fields = modelPropertiesJsonObject.keySet();
-
-      for (String field : fields) {
-
-        String dataType =
-            generateModelFieldType(modelPropertiesJsonObject.get(field).getAsJsonObject());
-        fieldResults.append(String.format(MODEL_FIELD_TEMPLATE, dataType, field));
-
-        setterGetterResults
-            .append(generateModelGetterMethod(dataType, field))
-            .append("\n")
-            .append(generateModelSetterMethod(dataType, field));
-      }
-      String packageName = generatePackageName(swaggerJsonObject.get("basePath").getAsString());
-      String fileContent = generateModelPackageAndImports(packageName, fieldResults.toString());
-      fileContent +=
-          String.format(
-              MODEL_CLASS_TEMPLATE,
-              model,
-              fieldResults.toString() + "\n" + setterGetterResults.toString());
-
-      basePath += model + ".java";
-      generateBaseFile(basePath);
-      writeUsingBufferedWriter(basePath, fileContent);
-
-      System.out.println(fileContent);
-    }
+    //    JsonObject swaggerJsonObject = new Gson().fromJson(json, JsonObject.class);
+    //    JsonObject definitionsJsonObject = swaggerJsonObject.get("definitions").getAsJsonObject();
+    //
+    //
+    //    Set<String> models = definitionsJsonObject.keySet();
+    //
+    //    for (String model : models) {
+    //      if (model.matches(
+    //
+    // "JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*")) {
+    //        continue;
+    //      }
+    //      basePath =
+    //          String.format(
+    //              MODEL_DEFAULT_PATH,
+    //              generatePackageName(swaggerJsonObject.get("basePath").getAsString()));
+    //
+    //      StringBuilder fieldResults = new StringBuilder();
+    //      StringBuilder setterGetterResults = new StringBuilder();
+    //      JsonObject modelPropertiesJsonObject =
+    //          definitionsJsonObject.getAsJsonObject(model).getAsJsonObject("properties");
+    //      Set<String> fields = modelPropertiesJsonObject.keySet();
+    //
+    //      for (String field : fields) {
+    //
+    //        String dataType =
+    //            generateModelFieldType(modelPropertiesJsonObject.get(field).getAsJsonObject());
+    //        fieldResults.append(String.format(MODEL_FIELD_TEMPLATE, dataType, field));
+    //
+    //        setterGetterResults
+    //            .append(generateModelGetterMethod(dataType, field))
+    //            .append("\n")
+    //            .append(generateModelSetterMethod(dataType, field));
+    //      }
+    //
+    //
+    //      System.out.println(fileContent);
+    //    }
   }
 
   private static String generateModelPackageAndImports(String packageName, String fieldResults) {
@@ -1073,13 +334,6 @@ public class ServiceWrapperAndModelClassGenerator {
         field,
         field,
         field);
-  }
-
-  private static String capitalizeString(String str) {
-    if (str.length() >= 2) {
-      return Character.toUpperCase(str.charAt(0)) + str.substring(1);
-    }
-    throw new IllegalArgumentException("could not capitalize string " + str);
   }
 
   private static String generateModelFieldType(JsonObject fieldJsonObject) {
@@ -1127,11 +381,11 @@ public class ServiceWrapperAndModelClassGenerator {
     return result;
   }
 
-  private static String generateServiceWrapperEndpoint(String path) {
+  private static String generateServiceWrapperEndpointFromPath(String path) {
     return path.replaceAll("^.*\\{entityId}", "");
   }
 
-  private static String generateServiceWrapperConstantName(String summary) {
+  private static String generateServiceWrapperConstantNameFromSummary(String summary) {
     return summary
         .toUpperCase()
         .trim()
@@ -1140,7 +394,7 @@ public class ServiceWrapperAndModelClassGenerator {
         .replaceAll("UPDATEPATCH", "PATCH");
   }
 
-  private static String generateCamalCaseMethodName(String summary) {
+  private static String generateCamalCaseMethodNameFromSummary(String summary) {
     StringBuilder result = new StringBuilder();
     String[] arr =
         summary
@@ -1149,97 +403,83 @@ public class ServiceWrapperAndModelClassGenerator {
             .replaceAll("Update/Patch", "patch")
             .replaceAll("[^A-z]", " ")
             .split("\\s");
-
-    Arrays.stream(arr)
-        .forEach(
-            word -> {
-              char firstChar = Character.toUpperCase(word.charAt(0));
-              String restOfWord = word.length() > 1 ? word.substring(1) : "";
-              result.append(firstChar).append(restOfWord);
-            });
-
+    result.append(capitalizeStringArrToString(arr));
     result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
     return result.toString().replaceAll("update/patch", "patch").replaceAll("\\.", "");
   }
 
-  private static String generateServiceWrapperMethodParams(JsonObject apiCallJsonObject) {
+  private static String generateServiceWrapperMethodParams(List<Parameter> params) {
     StringBuilder result = new StringBuilder();
-    apiCallJsonObject
-        .get("parameters")
-        .getAsJsonArray()
-        .forEach(
-            p -> {
-              JsonObject param = p.getAsJsonObject();
-              if (param.get("in").getAsString().equalsIgnoreCase("body")) {
-                result.append("Object body, ");
-              } else {
-                String paramName = param.get("name").getAsString();
-                boolean paramIsADefault =
-                    paramName.equalsIgnoreCase("productId")
-                        || paramName.equalsIgnoreCase("tenantId")
-                        || paramName.equalsIgnoreCase("entityId");
-
-                if (!paramIsADefault) {
-                  result.append("String ").append(paramName).append(", ");
-                }
-              }
-            });
+    params.forEach(
+        param -> {
+          if (param.name.matches("^(?!productId$|entityId$|tenantId$).*")) {
+            result.append(
+                param.in.equalsIgnoreCase("body")
+                    ? "Object body, "
+                    : "String " + param.name + ", ");
+          }
+        });
     return result.toString().replaceAll(", $", "").replaceAll("\"", "");
   }
 
-  private static String generateServiceWrapperClassName(String basePath) {
-    StringBuilder result = new StringBuilder();
+  private static String generateServiceWrapperClassNameFromPath(String path) {
+    String[] arr = path.toLowerCase().replaceAll("/", "").trim().split("[^A-z]+");
+    return capitalizeStringArrToString(arr);
+  }
 
-    String[] arr = basePath.toLowerCase().replaceAll("/", "").trim().split("[^A-z]+");
+  private static String generateRestParamsMethodChain(List<Parameter> params) {
+    StringBuilder result = new StringBuilder();
+    params
+        .stream()
+        .filter(p -> p.name.matches("^(?!productId$|entityId$|tenantId$).*"))
+        .forEach(
+            p -> {
+              // if body param, add body param method
+              if (p.in.equalsIgnoreCase("body")) {
+                result.append(BODY_TEMPLATE);
+              }
+              // if query param, add query param method
+              else if (p.in.equalsIgnoreCase("query")) {
+                result.append(String.format(QUERY_PARAM_TEMPLATE, p.name, p.name));
+              }
+              // else treat param as a path param
+              else {
+                result.append(String.format(PATH_PARAM_TEMPLATE, p.name, p.name));
+              }
+            });
+    return result.toString();
+  }
+
+  private static String generatePackageNameFromPath(String path) {
+    return path.replaceAll("[^A-z]+", "").toLowerCase();
+  }
+
+  private static String capitalizeStringArrToString(String[] arr) {
+    StringBuilder result = new StringBuilder();
     Arrays.stream(arr)
         .forEach(
             word -> {
-              char firstChar = Character.toUpperCase(word.charAt(0));
-              String restOfWord = word.length() > 1 ? word.substring(1) : "";
-              result.append(firstChar).append(restOfWord);
+              result.append(capitalizeString(word));
             });
-
     return result.toString();
   }
 
-  private static String generateRestParamsMethodChain(JsonObject apiCallJsonObject) {
-    StringBuilder result = new StringBuilder();
-    apiCallJsonObject
-        .get("parameters")
-        .getAsJsonArray()
-        .forEach(
-            p -> {
-              String paramName = p.getAsJsonObject().get("name").getAsString();
-
-              // for every param that isnt product, entity or tenant id...
-              if (paramName.matches("^(?!productId$|entityId$|tenantId$).*")) {
-
-                // if body param, add body param method
-                if (p.getAsJsonObject().get("in").getAsString().equalsIgnoreCase("body")) {
-                  result.append(BODY_TEMPLATE);
-                }
-                // if query param, add query param method
-                else if (p.getAsJsonObject().get("in").getAsString().equalsIgnoreCase("query")) {
-                  result.append(String.format(QUERY_PARAM_TEMPLATE, paramName, paramName));
-                }
-                // else treat param as a path param
-                else {
-                  result.append(String.format(PATH_PARAM_TEMPLATE, paramName, paramName));
-                }
-              }
-            });
-
-    return result.toString();
+  private static String capitalizeString(String str) {
+    if (str.isEmpty()) {
+      return str;
+    } else if (str.length() == 1) {
+      return Character.toUpperCase(str.charAt(0)) + "";
+    } else if (str.length() >= 2) {
+      return Character.toUpperCase(str.charAt(0)) + str.substring(1);
+    } else {
+      throw new IllegalArgumentException("could not capitalize string " + str);
+    }
   }
 
-  private static String generatePackageName(String basePath) {
-    return basePath.replaceAll("[^A-z]+", "").toLowerCase();
-  }
-
-  private static void generateBaseDirectory(String path) {
+  private static void generateBaseDirectory(String basePath) {
     boolean result;
-    String newPath = Paths.get(path).toAbsolutePath().normalize().toString();
-    File file = new File(newPath); // initialize File object and passing path as argument
+    String newPath = Paths.get(basePath).toAbsolutePath().normalize().toString();
+    File file = new File(newPath); // initialize File object and passing new path as argument
     try {
       result = file.mkdir();
       System.out.println(
@@ -1249,9 +489,9 @@ public class ServiceWrapperAndModelClassGenerator {
     }
   }
 
-  private static void generateBaseFile(String path) {
+  private static void generateBaseFile(String basePath) {
     boolean result;
-    String newPath = Paths.get(path).toAbsolutePath().normalize().toString();
+    String newPath = Paths.get(basePath).toAbsolutePath().normalize().toString();
     File file = new File(newPath); // initialize File object and passing path as argument
     try {
       result = file.createNewFile(); // makes a new file
