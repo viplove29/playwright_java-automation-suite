@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.rest.SerenityRest;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -41,7 +42,7 @@ public class ServiceWrapperAndModelClassGenerator {
 
   static final String REST_CALL_METHOD_CHAIN_TEMPLATE =
       "rest().with().%s%s%s(as(actor).toEndpoint(%s));";
-  static final String CONTENT_TYPE_TEMPLATE = "contentType(%s).";
+  static final String CONTENT_TYPE_TEMPLATE = "contentType(\"%s\").";
   static final String FORM_DATA_TEMPLATE_ = "multipart(\"%s\", %s).";
   static final String PATH_PARAM_TEMPLATE = "pathParam(\"%s\", %s).";
   static final String QUERY_PARAM_TEMPLATE = "queryParam(\"%s\", %s).";
@@ -393,7 +394,8 @@ public class ServiceWrapperAndModelClassGenerator {
               nextApiCallMethod.methodName =
                   generateCamalCaseMethodNameFromSummary(nextApiCallMethod.summary);
 
-              nextApiCallMethod.consumes = List.of(call.get("consumes")).get(0).toString();
+//              nextApiCallMethod.consumes = List.of(call.get("consumes")).get(0).toString();
+              nextApiCallMethod.consumes = (String) ((JSONArray) call.get("consumes")).get(0);
 
               nextApiCallMethod.parameters =
                   JsonHelper.deserializeJsonAsList(
