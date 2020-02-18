@@ -16,8 +16,8 @@ import net.serenitybdd.screenplay.actors.OnlineCast;
 
 public class JsonToActorsConverter {
 
-  private static final String PROJECT_ID = "481"; // localdev project id
-  private static final String PATH_TO_USERS = "data/svi/users.json"; // Path to user json file
+  private static final String PROJECT_ID = "1495"; // localdev project id
+  private static final String PATH_TO_USERS = "svi/users.json"; // Path to user json file
   private static final String DEFAULT_PASSWORD = "Password1!";
   private static final String DEFAULT_PRODUCT_ID = "AMS-WEB-UI";
   private static final String DEFAULT_BASE_URL = "https://api.dev.titan.v4af.com/";

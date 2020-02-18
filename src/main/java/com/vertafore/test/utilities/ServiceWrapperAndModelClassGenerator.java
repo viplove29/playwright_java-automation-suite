@@ -2,7 +2,6 @@ package com.vertafore.test.utilities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.google.gson.JsonObject;
 import com.vertafore.core.util.JsonHelper;
 import io.restassured.response.Response;
 import java.io.BufferedWriter;
@@ -94,8 +93,10 @@ public class ServiceWrapperAndModelClassGenerator {
   public static class Field{
     public String name;
     public String type;
-    public boolean isRequired;
+    public String format;
+    public String $ref;
   }
+
 
   private static List<Path> convertPathsMapToPathsList(Map paths) {
     List<Path> results = new ArrayList<>();
@@ -150,17 +151,30 @@ public class ServiceWrapperAndModelClassGenerator {
 
   private static List<Model> convertModelsMapToModelsList(Map models){
     List<Model> results = new ArrayList<>();
-    models.keySet().forEach(m -> {
-      Model nextModel = new Model();
-      nextModel.name = (String) m;
-      nextModel.fields = convertFieldsMapToFieldsList((Map) models.get(m));
+    models.keySet()
+            .stream()
+            .filter(m -> !((String)m).matches("JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
+            .forEach(m -> {
+                  Model nextModel = new Model();
+                  nextModel.name = (String) m;
+                  Map modelJson = (Map) models.get(m);
+                  nextModel.fields = convertFieldsMapToFieldsList((Map) modelJson.get("properties"));
+                  results.add(nextModel);
     });
     return results;
   }
 
   private static List<Field> convertFieldsMapToFieldsList(Map fields) {
     List<Field> results = new ArrayList<>();
-
+    fields.keySet().forEach(f -> {
+        Field nextField = new Field();
+        Map fieldJson = (Map) fields.get(f);
+        nextField.name = (String) f;
+        nextField.type = (String) fieldJson.get("type");
+        nextField.format = (String) fieldJson.get("format");
+        nextField.$ref = (String) (fieldJson.get("items") == null ? fieldJson.get("$ref") : ((Map)fieldJson.get("items")).get("$ref"));
+        results.add(nextField);
+    });
     return results;
   }
 
@@ -221,89 +235,45 @@ public class ServiceWrapperAndModelClassGenerator {
   }
 
   public static void generateModelClasses() throws ParseException {
-    //    JSONObject swaggerJson = (JSONObject) new JSONParser().parse(json);
-    //    String servicePath = (String) swaggerJson.get("basePath");
-    //
-    //    String basePath =
-    //        String.format(
-    //            MODEL_DEFAULT_PATH,
-    //            generatePackageNameFromPath(servicePath));
-    //
-    //    generateBaseDirectory(basePath);
-    //
-    //    Map models = (Map) swaggerJson.get("definitions");
-    //    models.keySet().stream()
-    //            .filter(m ->
-    // !((String)m).matches("JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
-    //            .forEach(m -> {
-    //
-    //              StringBuilder fieldResults = new StringBuilder();
-    //              StringBuilder setterGetterResults = new StringBuilder();
-    //              Map fields = (Map) getPropertyFromSimpleJson(swaggerJson, "definitions",
-    // (String) m, "properties");
-    //              fields.keySet().forEach(f -> {
-    //                String dataType = (String)
-    // generateModelFieldType(getPropertyFromSimpleJson(swaggerJson, "definitions", (String) m,
-    // "properties", (String) f);
-    //            fieldResults.append(String.format(MODEL_FIELD_TEMPLATE, dataType, f));
-    //
-    //            setterGetterResults
-    //                .append(generateModelGetterMethod(dataType, (String) f))
-    //                .append("\n")
-    //                .append(generateModelSetterMethod(dataType, (String) f));
-    //              });
-    //              String packageName = generatePackageNameFromPath(servicePath);
-    //      String fileContent = generateModelPackageAndImports(packageName,
-    // fieldResults.toString());
-    //      fileContent +=
-    //          String.format(
-    //              MODEL_CLASS_TEMPLATE,
-    //              m,
-    //              fieldResults.toString() + "\n" + setterGetterResults.toString());
-    //
-    //      String newPath = basePath + m + ".java";
-    //      generateBaseFile(newPath);
-    //      writeUsingBufferedWriter(newPath, fileContent);
-    //            });
+        JSONObject swaggerJson = (JSONObject) new JSONParser().parse(json);
+        String servicePath = (String) swaggerJson.get("basePath");
 
-    //    JsonObject swaggerJsonObject = new Gson().fromJson(json, JsonObject.class);
-    //    JsonObject definitionsJsonObject = swaggerJsonObject.get("definitions").getAsJsonObject();
-    //
-    //
-    //    Set<String> models = definitionsJsonObject.keySet();
-    //
-    //    for (String model : models) {
-    //      if (model.matches(
-    //
-    // "JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*")) {
-    //        continue;
-    //      }
-    //      basePath =
-    //          String.format(
-    //              MODEL_DEFAULT_PATH,
-    //              generatePackageName(swaggerJsonObject.get("basePath").getAsString()));
-    //
-    //      StringBuilder fieldResults = new StringBuilder();
-    //      StringBuilder setterGetterResults = new StringBuilder();
-    //      JsonObject modelPropertiesJsonObject =
-    //          definitionsJsonObject.getAsJsonObject(model).getAsJsonObject("properties");
-    //      Set<String> fields = modelPropertiesJsonObject.keySet();
-    //
-    //      for (String field : fields) {
-    //
-    //        String dataType =
-    //            generateModelFieldType(modelPropertiesJsonObject.get(field).getAsJsonObject());
-    //        fieldResults.append(String.format(MODEL_FIELD_TEMPLATE, dataType, field));
-    //
-    //        setterGetterResults
-    //            .append(generateModelGetterMethod(dataType, field))
-    //            .append("\n")
-    //            .append(generateModelSetterMethod(dataType, field));
-    //      }
-    //
-    //
-    //      System.out.println(fileContent);
-    //    }
+        String basePath =
+            String.format(
+                MODEL_DEFAULT_PATH,
+                generatePackageNameFromPath(servicePath));
+
+        generateBaseDirectory(basePath);
+        List<Model> models = convertModelsMapToModelsList((Map) swaggerJson.get("definitions"));
+        models.
+                forEach(m -> {
+                    StringBuilder fieldResults = new StringBuilder();
+                    StringBuilder setterGetterResults = new StringBuilder();
+
+                    //another forEach here soon
+                    m.fields.stream().forEach(f -> {
+                        String dataType = generateModelFieldType(f);
+                        fieldResults.append(String.format(MODEL_FIELD_TEMPLATE, dataType, f.name));
+                        setterGetterResults
+                                .append(generateModelGetterMethod(dataType, f.name))
+                                .append(generateModelSetterMethod(dataType, f.name))
+                                .append("\n");
+                    });
+
+                    String packageName = generatePackageNameFromPath(servicePath);
+                    String fileContent = generateModelPackageAndImports(packageName,
+                            fieldResults.toString());
+
+                    fileContent +=
+                            String.format(
+                                    MODEL_CLASS_TEMPLATE,
+                                    m.name,
+                                    fieldResults.toString() + "\n" + setterGetterResults.toString());
+
+                    String newPath = basePath  + m.name + ".java";
+                    generateBaseFile(newPath);
+                    writeUsingBufferedWriter(newPath, fileContent);
+                });
   }
 
   private static String generateModelPackageAndImports(String packageName, String fieldResults) {
@@ -336,47 +306,39 @@ public class ServiceWrapperAndModelClassGenerator {
         field);
   }
 
-  private static String generateModelFieldType(JsonObject fieldJsonObject) {
+  private static String generateModelFieldType(Field field) {
     String result = null;
-    String type =
-        fieldJsonObject.get("type") == null ? null : fieldJsonObject.get("type").getAsString();
-    String format =
-        fieldJsonObject.get("format") == null ? null : fieldJsonObject.get("format").getAsString();
-    boolean formatPresent = format != null && !format.isEmpty();
-    boolean typePresent = type != null && !type.isEmpty();
+    boolean formatPresent = field.format != null && !field.format.isEmpty();
+    boolean typePresent = field.type != null && !field.type.isEmpty();
 
     if (!typePresent) {
-      if (fieldJsonObject.get("$ref") != null) {
-        result = fieldJsonObject.get("$ref").getAsString().replace("#/definitions/", "");
+      if (field.$ref != null) {
+        result = field.$ref.replace("#/definitions/", "");
       }
-    } else if (type.equalsIgnoreCase("string")) {
-      if (formatPresent && format.equalsIgnoreCase("date-time")) {
+    } else if (field.type.equalsIgnoreCase("string")) {
+      if (formatPresent && field.format.equalsIgnoreCase("date-time")) {
         result = "Instant";
       } else {
         result = "String";
       }
-    } else if (type.equalsIgnoreCase("boolean")) {
+    } else if (field.type.equalsIgnoreCase("boolean")) {
       result = "Boolean";
-    } else if (type.equalsIgnoreCase("integer")) {
+    } else if (field.type.equalsIgnoreCase("integer")) {
       result = "Integer";
-    } else if (type.equalsIgnoreCase("number")) {
+    } else if (field.type.equalsIgnoreCase("number")) {
       result = "Double";
-    } else if (type.equalsIgnoreCase("array")) {
+    } else if (field.type.equalsIgnoreCase("array")) {
       result =
           "List<"
-              + fieldJsonObject
-                  .get("items")
-                  .getAsJsonObject()
-                  .get("$ref")
-                  .getAsString()
+              + field.$ref
                   .replaceAll("#/definitions/", "")
               + ">";
     } else {
       throw new IllegalArgumentException(
           "could not determine or have not set up logic to handle type: "
-              + type
+              + field.type
               + " or format: "
-              + format);
+              + field.format);
     }
     return result;
   }
