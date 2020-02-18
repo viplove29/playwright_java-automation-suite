@@ -43,7 +43,7 @@ public class FormServiceIntegration {
 //            currentActor.attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
 
 
-//    ServiceWrapperAndModelClassGenerator.generateServiceWrapperClasses();
+    ServiceWrapperAndModelClassGenerator.generateServiceWrapperClasses();
         ServiceWrapperAndModelClassGenerator.generateModelClasses();
   }
 }

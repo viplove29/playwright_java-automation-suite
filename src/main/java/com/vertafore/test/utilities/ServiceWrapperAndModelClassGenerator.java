@@ -97,87 +97,6 @@ public class ServiceWrapperAndModelClassGenerator {
     public String $ref;
   }
 
-
-  private static List<Path> convertPathsMapToPathsList(Map paths) {
-    List<Path> results = new ArrayList<>();
-    paths
-        .keySet()
-        .forEach(
-            p -> {
-              Path nextPath = new Path();
-              nextPath.endpoint = generateServiceWrapperEndpointFromPath((String) p);
-              nextPath.apiCallMethods = convertApiCallsMapToApiCallsList((Map) paths.get(p));
-              results.add(nextPath);
-            });
-    return results;
-  }
-
-  private static List<ApiCallMethod> convertApiCallsMapToApiCallsList(Map apiCalls) {
-    List<ApiCallMethod> results = new ArrayList<>();
-    apiCalls
-        .keySet()
-        .forEach(
-            ac -> {
-              Map call = (Map) apiCalls.get(ac);
-              ApiCallMethod nextApiCallMethod = new ApiCallMethod();
-
-              nextApiCallMethod.type = (String) ac;
-
-              nextApiCallMethod.summary = (String) call.get("summary");
-
-              nextApiCallMethod.endpointName =
-                  generateServiceWrapperConstantNameFromSummary(nextApiCallMethod.summary);
-
-              nextApiCallMethod.methodName =
-                  generateCamalCaseMethodNameFromSummary(nextApiCallMethod.summary);
-
-              //throws exception. fix when this is needed
-//              nextApiCallMethod.consumes = (String[]) call.get("consumes");
-
-              nextApiCallMethod.parameters =
-                  JsonHelper.deserializeJsonAsList(
-                      call.get("parameters").toString(), new TypeReference<>() {});
-
-              nextApiCallMethod.methodArguments =
-                  generateServiceWrapperMethodParams(nextApiCallMethod.parameters);
-
-              nextApiCallMethod.restParamMethodChain =
-                  generateRestParamsMethodChain(nextApiCallMethod.parameters);
-
-              results.add(nextApiCallMethod);
-            });
-    return results;
-  }
-
-  private static List<Model> convertModelsMapToModelsList(Map models){
-    List<Model> results = new ArrayList<>();
-    models.keySet()
-            .stream()
-            .filter(m -> !((String)m).matches("JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
-            .forEach(m -> {
-                  Model nextModel = new Model();
-                  nextModel.name = (String) m;
-                  Map modelJson = (Map) models.get(m);
-                  nextModel.fields = convertFieldsMapToFieldsList((Map) modelJson.get("properties"));
-                  results.add(nextModel);
-    });
-    return results;
-  }
-
-  private static List<Field> convertFieldsMapToFieldsList(Map fields) {
-    List<Field> results = new ArrayList<>();
-    fields.keySet().forEach(f -> {
-        Field nextField = new Field();
-        Map fieldJson = (Map) fields.get(f);
-        nextField.name = (String) f;
-        nextField.type = (String) fieldJson.get("type");
-        nextField.format = (String) fieldJson.get("format");
-        nextField.$ref = (String) (fieldJson.get("items") == null ? fieldJson.get("$ref") : ((Map)fieldJson.get("items")).get("$ref"));
-        results.add(nextField);
-    });
-    return results;
-  }
-
   public static void generateServiceWrapperClasses() throws ParseException {
 
     StringBuilder constantsResults = new StringBuilder();
@@ -284,7 +203,7 @@ public class ServiceWrapperAndModelClassGenerator {
     if (fieldResults.contains("List<")) {
       result.append(String.format(IMPORT_TEMPLATE, "java.util.List"));
     }
-    if (fieldResults.contains(" Instant ")) {
+    if (fieldResults.contains("Instant ")) {
       result.append(String.format(IMPORT_TEMPLATE, "java.time.Instant"));
     }
     return result.toString();
@@ -437,6 +356,86 @@ public class ServiceWrapperAndModelClassGenerator {
       throw new IllegalArgumentException("could not capitalize string " + str);
     }
   }
+
+    private static List<Path> convertPathsMapToPathsList(Map paths) {
+        List<Path> results = new ArrayList<>();
+        paths
+                .keySet()
+                .forEach(
+                        p -> {
+                            Path nextPath = new Path();
+                            nextPath.endpoint = generateServiceWrapperEndpointFromPath((String) p);
+                            nextPath.apiCallMethods = convertApiCallsMapToApiCallsList((Map) paths.get(p));
+                            results.add(nextPath);
+                        });
+        return results;
+    }
+
+    private static List<ApiCallMethod> convertApiCallsMapToApiCallsList(Map apiCalls) {
+        List<ApiCallMethod> results = new ArrayList<>();
+        apiCalls
+                .keySet()
+                .forEach(
+                        ac -> {
+                            Map call = (Map) apiCalls.get(ac);
+                            ApiCallMethod nextApiCallMethod = new ApiCallMethod();
+
+                            nextApiCallMethod.type = (String) ac;
+
+                            nextApiCallMethod.summary = (String) call.get("summary");
+
+                            nextApiCallMethod.endpointName =
+                                    generateServiceWrapperConstantNameFromSummary(nextApiCallMethod.summary);
+
+                            nextApiCallMethod.methodName =
+                                    generateCamalCaseMethodNameFromSummary(nextApiCallMethod.summary);
+
+                            //throws exception. fix when this is needed
+//              nextApiCallMethod.consumes = (String[]) call.get("consumes");
+
+                            nextApiCallMethod.parameters =
+                                    JsonHelper.deserializeJsonAsList(
+                                            call.get("parameters").toString(), new TypeReference<>() {});
+
+                            nextApiCallMethod.methodArguments =
+                                    generateServiceWrapperMethodParams(nextApiCallMethod.parameters);
+
+                            nextApiCallMethod.restParamMethodChain =
+                                    generateRestParamsMethodChain(nextApiCallMethod.parameters);
+
+                            results.add(nextApiCallMethod);
+                        });
+        return results;
+    }
+
+    private static List<Model> convertModelsMapToModelsList(Map models){
+        List<Model> results = new ArrayList<>();
+        models.keySet()
+                .stream()
+                .filter(m -> !((String)m).matches("JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
+                .forEach(m -> {
+                    Model nextModel = new Model();
+                    nextModel.name = (String) m;
+                    Map modelJson = (Map) models.get(m);
+                    nextModel.fields = convertFieldsMapToFieldsList((Map) modelJson.get("properties"));
+                    results.add(nextModel);
+                });
+        return results;
+    }
+
+    private static List<Field> convertFieldsMapToFieldsList(Map fields) {
+        List<Field> results = new ArrayList<>();
+        fields.keySet().forEach(f -> {
+            Field nextField = new Field();
+            Map fieldJson = (Map) fields.get(f);
+            nextField.name = (String) f;
+            nextField.type = (String) fieldJson.get("type");
+            nextField.format = (String) fieldJson.get("format");
+            nextField.$ref = (String) (fieldJson.get("items") == null ? fieldJson.get("$ref") : ((Map)fieldJson.get("items")).get("$ref"));
+            results.add(nextField);
+        });
+        return results;
+    }
 
   private static void generateBaseDirectory(String basePath) {
     boolean result;
