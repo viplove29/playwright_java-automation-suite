@@ -394,7 +394,6 @@ public class ServiceWrapperAndModelClassGenerator {
               nextApiCallMethod.methodName =
                   generateCamalCaseMethodNameFromSummary(nextApiCallMethod.summary);
 
-//              nextApiCallMethod.consumes = List.of(call.get("consumes")).get(0).toString();
               nextApiCallMethod.consumes = (String) ((JSONArray) call.get("consumes")).get(0);
 
               nextApiCallMethod.parameters =
