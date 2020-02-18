@@ -262,7 +262,7 @@ public class ServiceWrapperAndModelClassGenerator {
   }
 
   private static String generateServiceWrapperEndpointFromPath(String path) {
-    return path.replaceAll("^.*\\{entityId}", "");
+    return path.replaceAll("^.*\\{entityId}/", "");
   }
 
   private static String generateServiceWrapperConstantNameFromSummary(String summary) {
