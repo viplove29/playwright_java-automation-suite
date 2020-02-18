@@ -203,7 +203,7 @@ public class ServiceWrapperAndModelClassGenerator {
     if (fieldResults.contains("List<")) {
       result.append(String.format(IMPORT_TEMPLATE, "java.util.List"));
     }
-    if (fieldResults.contains("Instant ")) {
+    if (fieldResults.contains(" Instant ")) {
       result.append(String.format(IMPORT_TEMPLATE, "java.time.Instant"));
     }
     return result.toString();
