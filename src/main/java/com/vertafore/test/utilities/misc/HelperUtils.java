@@ -1,4 +1,4 @@
-package com.vertafore.test.tasks.utilities;
+package com.vertafore.test.utilities.misc;
 
 import java.io.File;
 import java.util.Objects;

@@ -13,7 +13,7 @@ plugins {
 }
 
 application{
-    mainClassName = 'com.vertafore.test.utilities.ServiceWrapperAndModelClassGenerator'
+    mainClassName = 'com.vertafore.test.utilities.classgenerator.ServiceWrapperGenerator'
 }
 
 allprojects {
@@ -100,8 +100,6 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
 }
-
-
 
 spotless {
     java {

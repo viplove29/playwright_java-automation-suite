@@ -2,11 +2,11 @@ package com.vertafore.test.services.document;
 
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
-import com.vertafore.test.actors.JsonToActorsConverter;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
-import com.vertafore.test.tasks.utilities.HelperUtils;
 import com.vertafore.test.tasks.utilities.UpdateTheir;
+import com.vertafore.test.utilities.actorextractor.JsonToActorsConverter;
+import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;

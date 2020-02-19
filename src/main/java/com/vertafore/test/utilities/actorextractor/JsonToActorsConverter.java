@@ -1,4 +1,4 @@
-package com.vertafore.test.actors;
+package com.vertafore.test.utilities.actorextractor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
