@@ -3,6 +3,7 @@ package com.vertafore.test.utilities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vertafore.core.util.JsonHelper;
+import groovyjarjarcommonscli.MissingArgumentException;
 import io.restassured.response.Response;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -24,7 +25,7 @@ public class ServiceWrapperAndModelClassGenerator {
   static final Response response =
       SerenityRest.get(
           "https://api.dev.titan.v4af.com/accounting/v2/api-docs?group=accounting-service");
-  static final String json = response.getBody().asString();
+  static String json = response.getBody().asString();
 
   static final String SERVICE_WRAPPER_PACKAGE_AND_IMPORT_TEMPLATE =
       "package com.vertafore.test.tasks.servicewrappers.%s;\n\n"
@@ -43,7 +44,7 @@ public class ServiceWrapperAndModelClassGenerator {
   static final String REST_CALL_METHOD_CHAIN_TEMPLATE =
       "rest().with().%s%s%s(as(actor).toEndpoint(%s));";
   static final String CONTENT_TYPE_TEMPLATE = "contentType(\"%s\").";
-  static final String FORM_DATA_TEMPLATE_ = "multipart(\"%s\", %s).";
+  static final String FORM_DATA_TEMPLATE_ = "multiPart(\"%s\", %s).";
   static final String PATH_PARAM_TEMPLATE = "pathParam(\"%s\", %s).";
   static final String QUERY_PARAM_TEMPLATE = "queryParam(\"%s\", %s).";
   static final String BODY_TEMPLATE = "body(body).";
@@ -67,6 +68,8 @@ public class ServiceWrapperAndModelClassGenerator {
   public static class Parameter {
     public String name;
     public String in;
+    public String required;
+    public String type;
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -101,22 +104,46 @@ public class ServiceWrapperAndModelClassGenerator {
     public String $ref;
   }
 
+  public static void main(String[] args) throws ParseException, MissingArgumentException {
+    if (args.length == 0) {
+      throw new MissingArgumentException("must provide service arguments when running this tasks");
+    }
+    for (String service : args) {
+      Response response =
+          SerenityRest.get(
+              "https://api.dev.titan.v4af.com/"
+                  + service
+                  + "/v2/api-docs?group="
+                  + service
+                  + "-service");
+      json = response.getBody().asString();
+      generateServiceWrapperClasses();
+      //      generateModelClasses();
+    }
+  }
+
   public static void generateServiceWrapperClasses() throws ParseException {
 
     StringBuilder constantsResults = new StringBuilder();
     StringBuilder methodResults = new StringBuilder();
+    StringBuilder importsResults = new StringBuilder();
 
     JSONObject swaggerJson = (JSONObject) new JSONParser().parse(json);
 
     String servicePath = (String) swaggerJson.get("basePath");
     List<Path> paths = convertPathsMapToPathsList((Map) swaggerJson.get("paths"));
 
+    importsResults.append(
+        String.format(
+            SERVICE_WRAPPER_PACKAGE_AND_IMPORT_TEMPLATE, generatePackageNameFromPath(servicePath)));
+
     paths.forEach(
         p -> {
           p.apiCallMethods.forEach(
               ac -> {
                 constantsResults.append(
-                    String.format(CONSTANT_TEMPLATE, ac.endpointName, p.endpoint));
+                    String.format(
+                        CONSTANT_TEMPLATE, ac.endpointName, p.endpoint.replaceAll("\\{\\?.*", "")));
 
                 String restCallMethodChain =
                     String.format(
@@ -133,15 +160,16 @@ public class ServiceWrapperAndModelClassGenerator {
                         ac.methodArguments,
                         ac.summary,
                         restCallMethodChain));
+
+                importsResults.append(
+                    generateServiceWrapperImports(importsResults.toString(), ac.parameters));
               });
         });
 
     String className = generateServiceWrapperClassNameFromPath(servicePath);
-    String packageAndImports =
-        String.format(
-            SERVICE_WRAPPER_PACKAGE_AND_IMPORT_TEMPLATE, generatePackageNameFromPath(servicePath));
+
     String fileContent =
-        packageAndImports
+        importsResults.toString()
             + String.format(
                 SERVICE_WRAPPER_CLASS_TEMPLATE,
                 className,
@@ -210,6 +238,20 @@ public class ServiceWrapperAndModelClassGenerator {
     if (fieldResults.contains(" Instant ")) {
       result.append(String.format(IMPORT_TEMPLATE, "java.time.Instant"));
     }
+    return result.toString();
+  }
+
+  private static String generateServiceWrapperImports(
+      String importsResults, List<Parameter> params) {
+    StringBuilder result = new StringBuilder();
+    params.forEach(
+        p -> {
+          if (p.type != null) {
+            if (p.type.equalsIgnoreCase("file") && !importsResults.contains("java.io.File;")) {
+              result.append(String.format(IMPORT_TEMPLATE, "java.io.File"));
+            }
+          }
+        });
     return result.toString();
   }
 
@@ -294,10 +336,13 @@ public class ServiceWrapperAndModelClassGenerator {
     params.forEach(
         param -> {
           if (param.name.matches("^(?!productId$|entityId$|tenantId$).*")) {
-            result.append(
-                param.in.equalsIgnoreCase("body")
-                    ? "Object body, "
-                    : "String " + param.name + ", ");
+            if (param.type != null && param.type.equalsIgnoreCase("file")) {
+              result.append("File file, ");
+            } else if (param.in.equalsIgnoreCase("body")) {
+              result.append("Object body, ");
+            } else {
+              result.append("String " + param.name + ", ");
+            }
           }
         });
     return result.toString().replaceAll(", $", "").replaceAll("\"", "");
@@ -400,6 +445,8 @@ public class ServiceWrapperAndModelClassGenerator {
                   JsonHelper.deserializeJsonAsList(
                       call.get("parameters").toString(), new TypeReference<>() {});
 
+              nextApiCallMethod.parameters.forEach(p -> System.out.println(p.type));
+
               nextApiCallMethod.methodArguments =
                   generateServiceWrapperMethodParams(nextApiCallMethod.parameters);
 
@@ -454,25 +501,20 @@ public class ServiceWrapperAndModelClassGenerator {
   }
 
   private static void generateBaseDirectory(String basePath) {
-    boolean result;
     String newPath = Paths.get(basePath).toAbsolutePath().normalize().toString();
     File file = new File(newPath); // initialize File object and passing new path as argument
     try {
-      result = file.mkdir();
-      System.out.println(
-          result ? "directory successfully created" : "directory already exists at location");
+      file.mkdir();
     } catch (Exception e) {
       e.printStackTrace(); // prints exception if any
     }
   }
 
   private static void generateBaseFile(String basePath) {
-    boolean result;
     String newPath = Paths.get(basePath).toAbsolutePath().normalize().toString();
     File file = new File(newPath); // initialize File object and passing path as argument
     try {
-      result = file.createNewFile(); // makes a new file
-      System.out.println(result ? "file successfully created" : "file already exists at location");
+      file.createNewFile(); // makes a new file
     } catch (Exception e) {
       e.printStackTrace(); // prints exception if any
     }

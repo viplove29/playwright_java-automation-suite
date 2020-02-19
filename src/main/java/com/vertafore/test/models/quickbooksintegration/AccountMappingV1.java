@@ -6,21 +6,13 @@ import java.time.Instant;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountMappingV1 {
 
-  private Instant createdOn;
   private String mappedAccountCode;
-  private String mappedAccountLabel;
   private String quickbooksAccountId;
-  private String status;
   private String titanAccountId;
+  private String mappedAccountLabel;
   private Instant updatedOn;
-
-  public Instant getCreatedOn() {
-    return this.createdOn;
-  }
-
-  public void setCreatedOn(Instant createdOn) {
-    this.createdOn = createdOn;
-  }
+  private Instant createdOn;
+  private String status;
 
   public String getMappedAccountCode() {
     return this.mappedAccountCode;
@@ -28,14 +20,6 @@ public class AccountMappingV1 {
 
   public void setMappedAccountCode(String mappedAccountCode) {
     this.mappedAccountCode = mappedAccountCode;
-  }
-
-  public String getMappedAccountLabel() {
-    return this.mappedAccountLabel;
-  }
-
-  public void setMappedAccountLabel(String mappedAccountLabel) {
-    this.mappedAccountLabel = mappedAccountLabel;
   }
 
   public String getQuickbooksAccountId() {
@@ -46,14 +30,6 @@ public class AccountMappingV1 {
     this.quickbooksAccountId = quickbooksAccountId;
   }
 
-  public String getStatus() {
-    return this.status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
   public String getTitanAccountId() {
     return this.titanAccountId;
   }
@@ -62,11 +38,35 @@ public class AccountMappingV1 {
     this.titanAccountId = titanAccountId;
   }
 
+  public String getMappedAccountLabel() {
+    return this.mappedAccountLabel;
+  }
+
+  public void setMappedAccountLabel(String mappedAccountLabel) {
+    this.mappedAccountLabel = mappedAccountLabel;
+  }
+
   public Instant getUpdatedOn() {
     return this.updatedOn;
   }
 
   public void setUpdatedOn(Instant updatedOn) {
     this.updatedOn = updatedOn;
+  }
+
+  public Instant getCreatedOn() {
+    return this.createdOn;
+  }
+
+  public void setCreatedOn(Instant createdOn) {
+    this.createdOn = createdOn;
+  }
+
+  public String getStatus() {
+    return this.status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 }

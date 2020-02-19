@@ -9,8 +9,13 @@ buildscript {
 plugins {
     id 'com.bmuschko.nexus' version '2.3.1' apply false
     id "com.diffplug.gradle.spotless" version "3.26.1"
-
+    id 'application'
 }
+
+application{
+    mainClassName = 'com.vertafore.test.utilities.ServiceWrapperAndModelClassGenerator'
+}
+
 allprojects {
     group 'com.vertafore'
     version '0.0.3-SNAPSHOT'
@@ -103,7 +108,6 @@ spotless {
         googleJavaFormat('1.6')
     }
 }
-
 
 test.finalizedBy(aggregate)
 qtestsync.shouldRunAfter(aggregate)

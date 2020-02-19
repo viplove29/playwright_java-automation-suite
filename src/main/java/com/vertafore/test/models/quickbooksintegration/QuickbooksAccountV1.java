@@ -5,16 +5,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuickbooksAccountV1 {
 
-  private String key;
-  private String name;
   private String number;
+  private String name;
+  private String key;
 
-  public String getKey() {
-    return this.key;
+  public String getNumber() {
+    return this.number;
   }
 
-  public void setKey(String key) {
-    this.key = key;
+  public void setNumber(String number) {
+    this.number = number;
   }
 
   public String getName() {
@@ -25,11 +25,11 @@ public class QuickbooksAccountV1 {
     this.name = name;
   }
 
-  public String getNumber() {
-    return this.number;
+  public String getKey() {
+    return this.key;
   }
 
-  public void setNumber(String number) {
-    this.number = number;
+  public void setKey(String key) {
+    this.key = key;
   }
 }

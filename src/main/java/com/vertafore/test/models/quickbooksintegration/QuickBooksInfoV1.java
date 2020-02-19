@@ -5,16 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class QuickBooksInfoV1 {
 
-  private String authorizationCode;
   private String realmId;
-
-  public String getAuthorizationCode() {
-    return this.authorizationCode;
-  }
-
-  public void setAuthorizationCode(String authorizationCode) {
-    this.authorizationCode = authorizationCode;
-  }
+  private String authorizationCode;
 
   public String getRealmId() {
     return this.realmId;
@@ -22,5 +14,13 @@ public class QuickBooksInfoV1 {
 
   public void setRealmId(String realmId) {
     this.realmId = realmId;
+  }
+
+  public String getAuthorizationCode() {
+    return this.authorizationCode;
+  }
+
+  public void setAuthorizationCode(String authorizationCode) {
+    this.authorizationCode = authorizationCode;
   }
 }
