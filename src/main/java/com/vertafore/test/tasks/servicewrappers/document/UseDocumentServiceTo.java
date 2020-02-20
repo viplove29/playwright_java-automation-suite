@@ -1,10 +1,9 @@
 package com.vertafore.test.tasks.servicewrappers.document;
 
-import static com.vertafore.test.abilities.CallTitanApi.as;
-import static net.serenitybdd.rest.SerenityRest.rest;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
-
+import static com.vertafore.test.abilities.CallTitanApi.as;
+import static net.serenitybdd.rest.SerenityRest.rest;
 import java.io.File;
 
 public class UseDocumentServiceTo {
@@ -289,5 +288,7 @@ public class UseDocumentServiceTo {
 			}
 		);
 	}
+
+
 
 }

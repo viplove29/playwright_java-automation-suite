@@ -1,10 +1,9 @@
 package com.vertafore.test.tasks.servicewrappers.quickbooksintegration;
 
-import static com.vertafore.test.abilities.CallTitanApi.as;
-import static net.serenitybdd.rest.SerenityRest.rest;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
-
+import static com.vertafore.test.abilities.CallTitanApi.as;
+import static net.serenitybdd.rest.SerenityRest.rest;
 
 public class UseQuickbooksIntegrationServiceTo {
 
@@ -88,5 +87,7 @@ public class UseQuickbooksIntegrationServiceTo {
 			}
 		);
 	}
+
+
 
 }
