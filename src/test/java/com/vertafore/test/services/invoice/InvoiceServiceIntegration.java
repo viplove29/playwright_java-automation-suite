@@ -43,26 +43,95 @@ public class InvoiceServiceIntegration {
                     "\t\"journalType\": \"ACCRUAL\",\n" +
                     "\t\"fiscalMonth\": 4\n" +
                     "}";
-//            currentActor.attemptsTo(UseAccountingServiceTo.createJournal());
+            currentActor.attemptsTo(UseAccountingServiceTo.createJournal(journal));
         }
 
         currentActor.attemptsTo(UpdateTheir.serviceTo("customer"));
-        //add customer request body
-//        currentActor.attemptsTo(UseCustomerServiceTo.createCustomerUsingPost());
+        String customer = "{\n" +
+                "    \"name\": {\n" +
+                "      \"familyName\": \"Sunshine\",\n" +
+                "      \"givenName\": \"Johnny\",\n" +
+                "      \"middleName\": \"\"\n" +
+                "    },\n" +
+                "        \"type\": \"Personal\",\n" +
+                "    \"currentStatus\": \"PROSPECT\"\n" +
+                "  }";
+        currentActor.attemptsTo(UseCustomerServiceTo.createCustomerUsingPost(customer));
 
         currentActor.attemptsTo(UpdateTheir.serviceTo("policy"));
-        //add policy request body
-//        currentActor.attemptsTo(UsePolicyServiceTo.createPolicyUsingPost());
+        String policy = "{\n" +
+                "    \"policyNumber\": \"AcctAction-Test\",\n" +
+                "    \"policyStatus\": \"ACTIVE\",\n" +
+                "    \"customerId\": \"{{policyEntityId}}\",\n" +
+                "    \"effectiveDate\": \"1970-01-01\",\n" +
+                "    \"expirationDate\": \"1970-01-01\",\n" +
+                "    \"exposureGroupId\": {\n" +
+                "        \"id\": \"{{exposureGroupId}}\",\n" +
+                "        \"productId\": \"string\",\n" +
+                "        \"tenantId\": \"string\",\n" +
+                "        \"entityId\": \"string\"\n" +
+                "    },\n" +
+                "    \"carrierId\": \"10000000760001\",\n" +
+                "    \"premium\": 141,\n" +
+                "    \"namedInsureds\": [\n" +
+                "    ],\n" +
+                "    \"policyProductLinesOfBusiness\": [\n" +
+                "        {\n" +
+                "            \"productLineOfBusinessId\": {\n" +
+                "                \"id\": \"lobID\",\n" +
+                "                \"tenantId\": \"VERTAFORE\",\n" +
+                "                \"entityId\": \"VERTAFORE\"\n" +
+                "            },\n" +
+                "            \"productLineOfCoverageId\": {\n" +
+                "                \"id\": \"locID\",\n" +
+                "                \"tenantId\": \"VERTAFORE\",\n" +
+                "                \"entityId\": \"VERTAFORE\"\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"billingType\": \"AGENCY\",\n" +
+                "    \"agencyCommissionType\": \"PERCENTAGE\",\n" +
+                "    \"agencyCommission\": 0.20\n" +
+                "}";
+        currentActor.attemptsTo(UsePolicyServiceTo.createPolicyUsingPost(policy));
 
         currentActor.attemptsTo(UpdateTheir.serviceTo("invoice"));
+
         //add policy id, charge body and filter params?
-//        currentActor.attemptsTo(UseInvoiceServiceTo.getApplicablePolicyChargesUsingGet());
-//        currentActor.attemptsTo(UseInvoiceServiceTo.createInvoiceUsingPost());
+        currentActor.attemptsTo(UseInvoiceServiceTo.getApplicablePolicyChargesUsingGet("id", "1", "50"));
+
+        String invoice = "{\n" +
+                "\t\"policyId\": \"{{policyId}}\",\n" +
+                "\t\"currencyCode\": \"USD\",\n" +
+                "\t\"notes\": \"This is an invoice to test the accounting actions feature.\",\n" +
+                "\t\"dueDate\": \"1978-01-01T00:00:00.000Z\",\n" +
+                "\t\"status\": \"POSTED\",\n" +
+                "\t\"invoiceContact\": {\n" +
+                "\t\t\"recipientName\": \"Dogan Insurance Agency\",\n" +
+                "\t\t\"streetAddress\": \"100 Universal City Plaza\",\n" +
+                "\t\t\"streetAddress2\": \"#201\",\n" +
+                "\t\t\"city\": \"Hollywood\",\n" +
+                "\t\t\"state\": \"CA\",\n" +
+                "\t\t\"postalCode\": \"91608\"\n" +
+                "\t},\n" +
+                "\t\"lineItems\": [\n" +
+                "\t\t{\n" +
+                "\t\t\t\"chargeIds\": [{\n" +
+                "\t\t\t\t\"tenantId\": \"RISK123\",\n" +
+                "\t\t\t\t\"entityId\": \"RISK123\",\n" +
+                "\t\t\t\t\"id\":\"{{premiumChargeId}}\"\n" +
+                "\t\t\t}],\n" +
+                "\t\t\t\"amount\": 1200,\n" +
+                "\t\t\t\"description\": \"Policy Premium\"\n" +
+                "\t\t}\n" +
+                "\t]\n" +
+                "}";
+        currentActor.attemptsTo(UseInvoiceServiceTo.createInvoiceUsingPost(invoice));
         currentActor.attemptsTo(Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
 
 
         //add journal id and delete journal after test
-        //        currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"), UseAccountingServiceTo.deleteJournalById());
+        currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"), UseAccountingServiceTo.deleteJournalById());
 
     }
 }
