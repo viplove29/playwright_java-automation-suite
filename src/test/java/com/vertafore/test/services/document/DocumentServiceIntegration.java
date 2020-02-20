@@ -44,13 +44,13 @@ public class DocumentServiceIntegration {
     File imageToUpload = new HelperUtils().getFileByFileName("doge", ".jpg");
 
     // send off multi-part post request to branding controller on doc-svc
-    currentActor.attemptsTo(
-        UseDocumentServiceTo.createABrandingUsingAMultiPartFromPost(
-            metaData.toString(), imageToUpload));
+//    currentActor.attemptsTo(
+//        UseDocumentServiceTo.createABrandingUsingAMultiPartFromPost(
+//            metaData.toString(), imageToUpload));
 
     // GET the /brandings
     // tests CONFIG-SVC
-    currentActor.attemptsTo(UseDocumentServiceTo.getsTheMetadataOfTheBrandings());
+//    currentActor.attemptsTo(UseDocumentServiceTo.getsTheMetadataOfTheBrandings());
     //
     //    ArrayList<JsonNode> contentList = SerenityRest.lastResponse().jsonPath().get("content");
     //

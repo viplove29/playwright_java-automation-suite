@@ -59,6 +59,7 @@ public class ServiceWrapperGenerator extends ClassGenerator {
     public String methodName;
     public String methodArguments;
     public String restParamMethodChain;
+    public String operationId;
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -165,12 +166,14 @@ public class ServiceWrapperGenerator extends ClassGenerator {
 
               nextApiCallMethod.restVerb = (String) ac;
 
+              nextApiCallMethod.operationId = (String) call.get("operationId");
+
               nextApiCallMethod.summary = (String) call.get("summary");
 
               nextApiCallMethod.endpointName =
-                  generateEndpointConstantName(nextApiCallMethod.summary);
+                  generateEndpointConstantName(nextApiCallMethod.operationId);
 
-              nextApiCallMethod.methodName = generateMethodName(nextApiCallMethod.summary);
+              nextApiCallMethod.methodName = generateMethodName(nextApiCallMethod.operationId);
 
               nextApiCallMethod.consumes = (String) ((JSONArray) call.get("consumes")).get(0);
 
@@ -183,6 +186,7 @@ public class ServiceWrapperGenerator extends ClassGenerator {
 
               nextApiCallMethod.restParamMethodChain =
                   generateRestParamsMethodChain(nextApiCallMethod.parameters);
+
 
               results.add(nextApiCallMethod);
             });
@@ -203,30 +207,34 @@ public class ServiceWrapperGenerator extends ClassGenerator {
   }
 
   private static String generateEndpointConstantValue(String path) {
-    return path.replaceAll("^.*\\{entityId}/", "").replaceAll("\\{\\?.*", "");
+    return path
+            .replaceAll("^.*\\{entityId}/", "")
+            .replaceAll("\\{\\?.*", "");
   }
 
-  private static String generateEndpointConstantName(String summary) {
-    return summary
-        .toUpperCase()
-        .trim()
-        .replaceAll("[^A-z_ ]+", "")
-        .replaceAll("\\s", "_")
-        .replaceAll("UPDATEPATCH", "PATCH");
+  private static String generateEndpointConstantName(String operationId) {
+      StringBuilder result = new StringBuilder();
+      String[] words = operationId.split("(?=\\p{Upper})");
+
+      for(int i = 0; i < words.length; i++) {
+          result.append(words[i].toUpperCase() + (i != words.length - 1 ? "_" : ""));
+      }
+      // find way to replace these with regex above that will not split the all caps Verbs
+      return result.toString()
+              .replaceAll("P_U_T", "PUT")
+              .replaceAll("P_O_S_T", "POST")
+              .replaceAll("G_E_T", "GET")
+              .replaceAll("P_A_T_C_H", "PATCH")
+              .replaceAll("D_E_L_E_T_E", "DELETE");
   }
 
-  private static String generateMethodName(String summary) {
-    StringBuilder result = new StringBuilder();
-    String[] arr =
-        summary
-            .toLowerCase()
-            .trim()
-            .replaceAll("Update/Patch", "patch")
-            .replaceAll("[^A-z]", " ")
-            .split("\\s");
-    result.append(capitalizeStringArrToString(arr));
-    result.setCharAt(0, Character.toLowerCase(result.charAt(0)));
-    return result.toString().replaceAll("update/patch", "patch").replaceAll("\\.", "");
+  private static String generateMethodName(String operationId) {
+    return operationId
+            .replaceAll("GET", "Get")
+            .replaceAll("PUT", "Put")
+            .replaceAll("POST", "Post")
+            .replaceAll("DELETE", "Delete")
+            .replaceAll("PATCH", "Patch");
   }
 
   private static String generateMethodArguments(List<Parameter> params) {
@@ -247,7 +255,11 @@ public class ServiceWrapperGenerator extends ClassGenerator {
   }
 
   private static String generateClassName(String path) {
-    String[] arr = path.toLowerCase().replaceAll("/", "").trim().split("[^A-z]+");
+    String[] arr = path
+                    .toLowerCase()
+                    .replaceAll("/", "")
+                    .trim()
+                    .split("[^A-z]+");
     return capitalizeStringArrToString(arr);
   }
 
