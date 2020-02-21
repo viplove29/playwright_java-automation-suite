@@ -111,7 +111,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable GetDocumentVersionsUsingGet(String id, String pageSize, String page) {
+  public static Performable getDocumentVersionsUsingGet(String id, String pageSize, String page) {
     return Task.where(
         "{0} Get all of the metadata for a specific document",
         actor -> {
@@ -246,7 +246,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable GetBrandingsUsingGet() {
+  public static Performable getBrandingsUsingGet() {
     return Task.where(
         "{0} Gets the metadata of the brandings",
         actor -> {
@@ -330,7 +330,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable GetSignaturesUsingGet() {
+  public static Performable getSignaturesUsingGet() {
     return Task.where(
         "{0} Gets the metadata of the signatures",
         actor -> {
@@ -410,7 +410,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable GetDocumentVersionByIdUsingGet(String documentId, String id) {
+  public static Performable getDocumentVersionByIdUsingGet(String documentId, String id) {
     return Task.where(
         "{0} Get all of the metadata for a specific document by version",
         actor -> {

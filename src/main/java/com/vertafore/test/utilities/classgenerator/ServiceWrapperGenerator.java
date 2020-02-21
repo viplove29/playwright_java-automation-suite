@@ -240,10 +240,10 @@ public class ServiceWrapperGenerator {
     String controllerNameInCamelCase =
         CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, controllerName);
 
-    // change casing of first letter of operationId
-    operationId = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
-
     if (!operationId.toLowerCase().contains(controllerNameInCamelCase.toLowerCase())) {
+      // change casing of first letter of operationId (get --> Get)
+      operationId = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
+      // add back in the controller to the beginning of the method
       operationId = controllerNameInCamelCase + operationId;
     }
 
