@@ -7,7 +7,6 @@ import static net.serenitybdd.screenplay.Tasks.instrumented;
 import com.vertafore.test.abilities.ConfigureHeaders;
 import com.vertafore.test.abilities.ConfigurePathParams;
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -24,7 +23,6 @@ public class ConfigureParamsAndHeaders implements Task {
         new RequestSpecBuilder()
             .addHeaders(theHeadersOf(actor))
             .addPathParams(thePathParamsOf(actor))
-            .setContentType(ContentType.JSON)
             .build();
 
     SerenityRest.setDefaultRequestSpecification(reqSpec);
