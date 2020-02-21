@@ -57,12 +57,13 @@ public class InvoiceServiceIntegration {
                 "    \"currentStatus\": \"PROSPECT\"\n" +
                 "  }";
         currentActor.attemptsTo(UseCustomerServiceTo.createCustomerUsingPost(customer));
+        String customerId = SerenityRest.lastResponse().getBody().jsonPath().get("content.id");
 
         currentActor.attemptsTo(UpdateTheir.serviceTo("policy"));
-        String policy = "{\n" +
+        String policy = String.format("{\n" +
                 "    \"policyNumber\": \"AcctAction-Test\",\n" +
                 "    \"policyStatus\": \"ACTIVE\",\n" +
-                "    \"customerId\": \"{{policyEntityId}}\",\n" +
+                "    \"customerId\": \"%s\",\n" +
                 "    \"effectiveDate\": \"1970-01-01\",\n" +
                 "    \"expirationDate\": \"1970-01-01\",\n" +
                 "    \"exposureGroupId\": {\n" +
@@ -92,16 +93,18 @@ public class InvoiceServiceIntegration {
                 "    \"billingType\": \"AGENCY\",\n" +
                 "    \"agencyCommissionType\": \"PERCENTAGE\",\n" +
                 "    \"agencyCommission\": 0.20\n" +
-                "}";
+                "}", customerId);
         currentActor.attemptsTo(UsePolicyServiceTo.createPolicyUsingPost(policy));
 
         currentActor.attemptsTo(UpdateTheir.serviceTo("invoice"));
-
-        //add policy id, charge body and filter params?
-        currentActor.attemptsTo(UseInvoiceServiceTo.getApplicablePolicyChargesUsingGet("id", "1", "50"));
-
-        String invoice = "{\n" +
-                "\t\"policyId\": \"{{policyId}}\",\n" +
+//
+//        //add policy id, charge body and filter params?
+        String policyId = (String) SerenityRest.lastResponse().getBody().jsonPath().get("content.id");
+        currentActor.attemptsTo(UseInvoiceServiceTo.getApplicablePolicyChargesUsingGet(policyId, "1", "50"));
+//
+        String chargeId = (String) SerenityRest.lastResponse().getBody().jsonPath().getList("content").get(0);
+        String invoice = String.format("{\n" +
+                "\t\"policyId\": \"%s\",\n" +
                 "\t\"currencyCode\": \"USD\",\n" +
                 "\t\"notes\": \"This is an invoice to test the accounting actions feature.\",\n" +
                 "\t\"dueDate\": \"1978-01-01T00:00:00.000Z\",\n" +
@@ -119,19 +122,19 @@ public class InvoiceServiceIntegration {
                 "\t\t\t\"chargeIds\": [{\n" +
                 "\t\t\t\t\"tenantId\": \"RISK123\",\n" +
                 "\t\t\t\t\"entityId\": \"RISK123\",\n" +
-                "\t\t\t\t\"id\":\"{{premiumChargeId}}\"\n" +
+                "\t\t\t\t\"id\":\"%s\"\n" +
                 "\t\t\t}],\n" +
                 "\t\t\t\"amount\": 1200,\n" +
                 "\t\t\t\"description\": \"Policy Premium\"\n" +
                 "\t\t}\n" +
                 "\t]\n" +
-                "}";
+                "}", policyId, chargeId);
         currentActor.attemptsTo(UseInvoiceServiceTo.createInvoiceUsingPost(invoice));
         currentActor.attemptsTo(Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
 
 
         //add journal id and delete journal after test
-        currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"), UseAccountingServiceTo.deleteJournalById());
+//        currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"), UseAccountingServiceTo.deleteJournalById());
 
     }
 }
