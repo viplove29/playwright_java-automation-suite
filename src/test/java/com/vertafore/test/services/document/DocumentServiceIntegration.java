@@ -5,6 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
+import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
 import com.vertafore.test.tasks.utilities.UpdateTheir;
 import com.vertafore.test.utilities.actorextractor.JsonToActorsConverter;
 import com.vertafore.test.utilities.misc.HelperUtils;
@@ -50,7 +51,8 @@ public class DocumentServiceIntegration {
 
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(
-        UseDocumentServiceTo.createUsingPost(JsonHelper.serializeAsJson(metaData), imageToUpload));
+        UseDocumentServiceTo.brandingCreateUsingPost(
+            JsonHelper.serializeAsJson(metaData), imageToUpload));
     checkStatusForSuccess();
 
     Map postResponse =
@@ -62,11 +64,11 @@ public class DocumentServiceIntegration {
     checkStatusForSuccess();
     //    // GET /bytes
     //    // tests AWS S3 connectivity
-    currentActor.attemptsTo(UseDocumentServiceTo.getImageUsingGet(id, "original"));
+    currentActor.attemptsTo(UseDocumentServiceTo.brandingGetImageUsingGet(id, "original"));
     checkStatusForSuccess();
 
     // DELETE IT TO CLEAN UP:
-    currentActor.attemptsTo(UseDocumentServiceTo.deleteByIdUsingDelete(id));
+    currentActor.attemptsTo(UseDocumentServiceTo.brandingDeleteByIdUsingDelete(id));
     checkStatusForSuccess();
   }
 
