@@ -4,6 +4,7 @@ import static com.vertafore.test.utilities.classgenerator.ClassBuilder.capitaliz
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.google.common.base.CaseFormat;
 import com.vertafore.core.util.JsonHelper;
 import groovyjarjarcommonscli.MissingArgumentException;
 import io.restassured.response.Response;
@@ -71,6 +72,7 @@ public class ServiceWrapperGenerator {
     public String methodArguments;
     public String restParamMethodChain;
     public String operationId;
+    public String controller;
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -164,12 +166,15 @@ public class ServiceWrapperGenerator {
 
               nextApiCallMethod.operationId = (String) call.get("operationId");
 
+              nextApiCallMethod.controller = (String) ((JSONArray) call.get("tags")).get(0);
+
               nextApiCallMethod.summary = (String) call.get("summary");
 
               nextApiCallMethod.endpointName =
                   generateEndpointConstantName(nextApiCallMethod.operationId);
 
-              nextApiCallMethod.methodName = generateMethodName(nextApiCallMethod.operationId);
+              nextApiCallMethod.methodName =
+                  generateMethodName(nextApiCallMethod.operationId, nextApiCallMethod.controller);
 
               nextApiCallMethod.consumes = (String) ((JSONArray) call.get("consumes")).get(0);
 
@@ -218,6 +223,7 @@ public class ServiceWrapperGenerator {
     for (int i = 0; i < words.length; i++) {
       result.append(words[i].toUpperCase() + (i != words.length - 1 ? "_" : ""));
     }
+
     // find way to replace these with regex above that will not split the all caps Verbs
     return result
         .toString()
@@ -228,13 +234,26 @@ public class ServiceWrapperGenerator {
         .replaceAll("D_E_L_E_T_E", "DELETE");
   }
 
-  private String generateMethodName(String operationId) {
+  private String generateMethodName(String operationId, String controllerNameFromSwagger) {
+    String controllerName =
+        controllerNameFromSwagger.substring(0, controllerNameFromSwagger.length() - 15);
+    String controllerNameInCamelCase =
+        CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, controllerName);
+
+    // change casing of first letter of operationId
+    operationId = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
+
+    if (!operationId.toLowerCase().contains(controllerNameInCamelCase.toLowerCase())) {
+      operationId = controllerNameInCamelCase + operationId;
+    }
+
     return operationId
         .replaceAll("GET", "Get")
         .replaceAll("PUT", "Put")
         .replaceAll("POST", "Post")
         .replaceAll("DELETE", "Delete")
-        .replaceAll("PATCH", "Patch");
+        .replaceAll("PATCH", "Patch")
+        .replaceAll("_.$", "");
   }
 
   private String generateMethodArguments(List<Parameter> params) {

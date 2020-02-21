@@ -43,7 +43,7 @@ public class UseDocumentServiceTo {
   private static final String GET_DOCUMENT_VERSION_BY_ID_USING_GET =
       "documents/{documentId}/versions/{id}";
 
-  public static Performable downloadByIdsUsingGet(String filter, String ids) {
+  public static Performable bytesDownloadByIdsUsingGet(String filter, String ids) {
     return Task.where(
         "{0} Retrieves the bytes for the specified paths. Will return a zip file if more than one is given.",
         actor -> {
@@ -56,7 +56,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getHierarchyUsingGet(String filter, String path) {
+  public static Performable folderContentsGetHierarchyUsingGet(String filter, String path) {
     return Task.where(
         "{0} Gets the hierarchy for a path.",
         actor -> {
@@ -69,7 +69,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable updateUsingPut_1(String document, File file, String id) {
+  public static Performable documentUpdateUsingPut(String document, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Updates a document.",
@@ -84,7 +84,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable createUsingPost_1(String document, File file) {
+  public static Performable documentCreateUsingPost(String document, File file) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Create a file using a multi-part form POST.",
@@ -98,7 +98,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getImageUsingGet(String id, String imageType) {
+  public static Performable brandingGetImageUsingGet(String id, String imageType) {
     return Task.where(
         "{0} Retrieves the bytes for the specified branding.",
         actor -> {
@@ -111,7 +111,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getDocumentVersionsUsingGet(String id, String pageSize, String page) {
+  public static Performable GetDocumentVersionsUsingGet(String id, String pageSize, String page) {
     return Task.where(
         "{0} Get all of the metadata for a specific document",
         actor -> {
@@ -125,7 +125,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable createUsingPost_2(Object body) {
+  public static Performable folderCreateUsingPost(Object body) {
     return Task.where(
         "{0} Creates a folder.",
         actor -> {
@@ -137,7 +137,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable searchUsingGet(
+  public static Performable folderContentsSearchUsingGet(
       String searchTerm,
       String nodeType,
       String path,
@@ -160,7 +160,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable createUsingPost_3(String signature, File file) {
+  public static Performable signatureCreateUsingPost(String signature, File file) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Create a signature using a multi-part from POST",
@@ -174,7 +174,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getContentsUsingGet(
+  public static Performable folderContentsGetContentsUsingGet(
       String searchTerm,
       String nodeType,
       String pageSize,
@@ -197,7 +197,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getByIdUsingGet_1(String id) {
+  public static Performable documentGetByIdUsingGet(String id) {
     return Task.where(
         "{0} Gets the metadata of the document for the given ID.",
         actor -> {
@@ -209,7 +209,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable deleteByIdUsingDelete_1(String id) {
+  public static Performable documentDeleteByIdUsingDelete(String id) {
     return Task.where(
         "{0} Deletes a document by ID.",
         actor -> {
@@ -221,7 +221,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getImagesUsingGet(String imageType) {
+  public static Performable brandingGetImagesUsingGet(String imageType) {
     return Task.where(
         "{0} Gets images content per context.",
         actor -> {
@@ -233,7 +233,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getImageUsingGet_1(String id, String imageType) {
+  public static Performable signatureGetImageUsingGet(String id, String imageType) {
     return Task.where(
         "{0} Retrieves the bytes for the specified signature.",
         actor -> {
@@ -246,7 +246,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getBrandingsUsingGet() {
+  public static Performable GetBrandingsUsingGet() {
     return Task.where(
         "{0} Gets the metadata of the brandings",
         actor -> {
@@ -257,7 +257,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getUsingGet(String id) {
+  public static Performable folderGetUsingGet(String id) {
     return Task.where(
         "{0} Gets a folder with the specified ID (metadata only).",
         actor -> {
@@ -269,7 +269,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable updateUsingPut_2(String id, Object body) {
+  public static Performable folderUpdateUsingPut(String id, Object body) {
     return Task.where(
         "{0} Updates a folder",
         actor -> {
@@ -282,7 +282,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getByIdUsingGet(String id) {
+  public static Performable brandingGetByIdUsingGet(String id) {
     return Task.where(
         "{0} Gets the metadata of the branding for the given ID.",
         actor -> {
@@ -294,7 +294,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable deleteByIdUsingDelete(String id) {
+  public static Performable brandingDeleteByIdUsingDelete(String id) {
     return Task.where(
         "{0} Deletes a branding by ID.",
         actor -> {
@@ -306,7 +306,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getByIdUsingGet_2(String id) {
+  public static Performable signatureGetByIdUsingGet(String id) {
     return Task.where(
         "{0} Gets the metadata of the signature for the given ID.",
         actor -> {
@@ -318,7 +318,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable deleteByIdUsingDelete_2(String id) {
+  public static Performable signatureDeleteByIdUsingDelete(String id) {
     return Task.where(
         "{0} Deletes a signature by ID.",
         actor -> {
@@ -330,7 +330,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getSignaturesUsingGet() {
+  public static Performable GetSignaturesUsingGet() {
     return Task.where(
         "{0} Gets the metadata of the signatures",
         actor -> {
@@ -341,7 +341,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable deleteUsingDelete(String id) {
+  public static Performable folderDeleteUsingDelete(String id) {
     return Task.where(
         "{0} Deletes a single folder by path.",
         actor -> {
@@ -353,7 +353,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable updateUsingPut_3(String signature, File file, String id) {
+  public static Performable signatureUpdateUsingPut(String signature, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Updates a signature.",
@@ -368,7 +368,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable updateUsingPut(String branding, File file, String id) {
+  public static Performable brandingUpdateUsingPut(String branding, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Updates a branding.",
@@ -383,7 +383,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable createUsingPost(String branding, File file) {
+  public static Performable brandingCreateUsingPost(String branding, File file) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Create a branding using a multi-part from POST",
@@ -397,7 +397,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable downloadByVersionUsingGet(String documentId, String versionId) {
+  public static Performable bytesDownloadByVersionUsingGet(String documentId, String versionId) {
     return Task.where(
         "{0} Retrieves the bytes for the specified document and version.",
         actor -> {
@@ -410,7 +410,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable getDocumentVersionByIdUsingGet(String documentId, String id) {
+  public static Performable GetDocumentVersionByIdUsingGet(String documentId, String id) {
     return Task.where(
         "{0} Get all of the metadata for a specific document by version",
         actor -> {

@@ -96,7 +96,7 @@ dependencies {
     implementation 'com.vertafore.core:foundation:10.0.1'
     // logging
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.26'
+//    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '0.9.26'
     // Service wrapper/model generator util
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
