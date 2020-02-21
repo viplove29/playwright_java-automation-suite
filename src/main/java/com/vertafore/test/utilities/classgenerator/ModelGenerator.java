@@ -1,17 +1,17 @@
-//package com.vertafore.test.utilities.classgenerator;
+// package com.vertafore.test.utilities.classgenerator;
 //
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-//import groovyjarjarcommonscli.MissingArgumentException;
-//import io.restassured.response.Response;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Map;
-//import net.serenitybdd.rest.SerenityRest;
-//import org.json.simple.JSONObject;
-//import org.json.simple.parser.JSONParser;
-//import org.json.simple.parser.ParseException;
+// import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+// import groovyjarjarcommonscli.MissingArgumentException;
+// import io.restassured.response.Response;
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.Map;
+// import net.serenitybdd.rest.SerenityRest;
+// import org.json.simple.JSONObject;
+// import org.json.simple.parser.JSONParser;
+// import org.json.simple.parser.ParseException;
 //
-//public class ModelGenerator {
+// public class ModelGenerator {
 //
 //  static final String MODEL_CLASS_TEMPLATE =
 //      "\n@JsonInclude(JsonInclude.Include.NON_NULL)\n";
@@ -37,7 +37,8 @@
 //
 //  public static void main(String[] args) throws ParseException, MissingArgumentException {
 //    if (args.length == 0) {
-//      throw new MissingArgumentException("must provide service arguments when running this tasks");
+//      throw new MissingArgumentException("must provide service arguments when running this
+// tasks");
 //    }
 //    for (String service : args) {
 //      Response response = SerenityRest.get(String.format(SWAGGER_API_URL, service, service));
@@ -160,7 +161,8 @@
 //            m ->
 //                !((String) m)
 //                    .matches(
-//                        "JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
+//
+// "JsonPatch.*|LimitOffsetPagingInfoV1.*|PagedResponseV1.*|SingleResponseV1.*|EmptyResponseV1.*|ErrorResponseV1.*"))
 //        .forEach(
 //            m -> {
 //              Model nextModel = new Model();
@@ -192,4 +194,4 @@
 //            });
 //    return results;
 //  }
-//}
+// }

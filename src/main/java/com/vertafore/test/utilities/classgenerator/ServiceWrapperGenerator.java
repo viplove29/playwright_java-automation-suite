@@ -1,11 +1,12 @@
 package com.vertafore.test.utilities.classgenerator;
 
+import static com.vertafore.test.utilities.classgenerator.ClassBuilder.capitalizeStringArrToString;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vertafore.core.util.JsonHelper;
 import groovyjarjarcommonscli.MissingArgumentException;
 import io.restassured.response.Response;
-
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,39 +17,40 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import static com.vertafore.test.utilities.classgenerator.ClassBuilder.capitalizeStringArrToString;
-
-public class ServiceWrapperGenerator{
+public class ServiceWrapperGenerator {
 
   private static final String SWAGGER_API_URL =
-            "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service";
+      "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service";
 
   private final String BASE_PACKAGE_PATH = "com.vertafore.test.tasks.servicewrappers.%s";
 
   private final String[] DEFAULT_IMPORTS = {
-          "net.serenitybdd.screenplay.Performable",
-          "net.serenitybdd.screenplay.Task"
+    "net.serenitybdd.screenplay.Performable", "net.serenitybdd.screenplay.Task"
   };
 
   private final String[] DEFAULT_STATIC_IMPORTS = {
-          "com.vertafore.test.abilities.CallTitanApi.as",
-          "net.serenitybdd.rest.SerenityRest.rest"
+    "com.vertafore.test.abilities.CallTitanApi.as", "net.serenitybdd.rest.SerenityRest.rest"
   };
 
   private final String CLASS_NAME_TEMPLATE = "Use%sServiceTo";
   private final String METHOD_DEFINITION_TEMPLATE =
       "return Task.where(\n\t\t\"{0} %s\", \n\t\t\tactor -> {\n\t\t\t\t%s\n\t\t\t}\n\t\t);";
 
+  private final String GET_FILE_MIME_TYPE =
+      "String mime = URLConnection.guessContentTypeFromName(file.getName());";
+
+  private final String BEFORE_RETURN_STATEMENT = "%s";
+
   private final String REST_CALL_METHOD_CHAIN_TEMPLATE =
       "rest().with().%s%s%s(as(actor).toEndpoint(%s));";
   private final String CONTENT_TYPE_TEMPLATE = "contentType(\"%s\").";
-  private final String FORM_DATA_TEMPLATE_ = "multiPart(\"%s\", %s).";
+  private final String FORM_DATA_TEMPLATE_ = "multiPart(\"%s\", %s %s).";
   private final String PATH_PARAM_TEMPLATE = "pathParam(\"%s\", %s).";
   private final String QUERY_PARAM_TEMPLATE = "queryParam(\"%s\", %s).";
   private final String BODY_TEMPLATE = "body(body).";
 
-  private final String DEFAULT_BASE_PATH = "./src/main/java/com/vertafore/test/tasks/servicewrappers/%s";
-
+  private final String DEFAULT_BASE_PATH =
+      "./src/main/java/com/vertafore/test/tasks/servicewrappers/%s";
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static class Parameter {
@@ -106,26 +108,32 @@ public class ServiceWrapperGenerator{
         p -> {
           p.apiCallMethods.forEach(
               ac -> {
-                  classBuilder.addPrivateStaticFinalStringField(ac.endpointName, p.endpoint);
+                classBuilder.addPrivateStaticFinalStringField(ac.endpointName, p.endpoint);
 
-                    String restCallMethodChain =
-                        String.format(
-                            REST_CALL_METHOD_CHAIN_TEMPLATE,
-                            String.format(CONTENT_TYPE_TEMPLATE, ac.consumes),
-                            ac.restParamMethodChain,
-                            ac.restVerb,
-                            ac.endpointName);
+                String restCallMethodChain =
+                    String.format(
+                        REST_CALL_METHOD_CHAIN_TEMPLATE,
+                        String.format(CONTENT_TYPE_TEMPLATE, ac.consumes),
+                        ac.restParamMethodChain,
+                        ac.restVerb,
+                        ac.endpointName);
 
-                    classBuilder.addPublicStaticMethod(
-                            "Performable",
-                            ac.methodName,
-                            ac.methodArguments,
-                            String.format(METHOD_DEFINITION_TEMPLATE, ac.summary, restCallMethodChain));
-                    classBuilder.addCollectionOfImportStatements(generateImportPaths(ac.parameters));
+                String beforeReturnStatement = generateBeforeReturnStatementCode(ac);
 
+                classBuilder.addPublicStaticMethod(
+                    "Performable",
+                    ac.methodName,
+                    ac.methodArguments,
+                    beforeReturnStatement,
+                    String.format(METHOD_DEFINITION_TEMPLATE, ac.summary, restCallMethodChain));
+                classBuilder.addCollectionOfImportStatements(generateImportPaths(ac.parameters));
               });
         });
-    String path = Paths.get(String.format(DEFAULT_BASE_PATH, packageName)).toAbsolutePath().normalize().toString();
+    String path =
+        Paths.get(String.format(DEFAULT_BASE_PATH, packageName))
+            .toAbsolutePath()
+            .normalize()
+            .toString();
     classBuilder.generateClassAt(path);
   }
 
@@ -175,7 +183,6 @@ public class ServiceWrapperGenerator{
               nextApiCallMethod.restParamMethodChain =
                   generateRestParamsMethodChain(nextApiCallMethod.parameters);
 
-
               results.add(nextApiCallMethod);
             });
     return results;
@@ -187,45 +194,47 @@ public class ServiceWrapperGenerator{
 
   private List<String> generateImportPaths(List<Parameter> params) {
     List<String> result = new ArrayList<>();
-    params.stream()
-            .filter( p -> p.type != null)
-            .forEach(p -> {
-                if (p.type.equalsIgnoreCase("file")) {
-                    result.add("java.io.File");
-                }
+    params
+        .stream()
+        .filter(p -> p.type != null)
+        .forEach(
+            p -> {
+              if (p.type.equalsIgnoreCase("file")) {
+                result.add("java.io.File");
+                result.add("java.net.URLConnection");
+              }
             });
     return result;
   }
 
   private String generateEndpointConstantValue(String path) {
-    return "\"" + path
-            .replaceAll("^.*\\{entityId}/", "")
-            .replaceAll("\\{\\?.*", "") + "\"";
+    return "\"" + path.replaceAll("^.*\\{entityId}/", "").replaceAll("\\{\\?.*", "") + "\"";
   }
 
   private String generateEndpointConstantName(String operationId) {
-      StringBuilder result = new StringBuilder();
-      String[] words = operationId.split("(?=\\p{Upper})");
+    StringBuilder result = new StringBuilder();
+    String[] words = operationId.split("(?=\\p{Upper})");
 
-      for(int i = 0; i < words.length; i++) {
-          result.append(words[i].toUpperCase() + (i != words.length - 1 ? "_" : ""));
-      }
-      // find way to replace these with regex above that will not split the all caps Verbs
-      return result.toString()
-              .replaceAll("P_U_T", "PUT")
-              .replaceAll("P_O_S_T", "POST")
-              .replaceAll("G_E_T", "GET")
-              .replaceAll("P_A_T_C_H", "PATCH")
-              .replaceAll("D_E_L_E_T_E", "DELETE");
+    for (int i = 0; i < words.length; i++) {
+      result.append(words[i].toUpperCase() + (i != words.length - 1 ? "_" : ""));
+    }
+    // find way to replace these with regex above that will not split the all caps Verbs
+    return result
+        .toString()
+        .replaceAll("P_U_T", "PUT")
+        .replaceAll("P_O_S_T", "POST")
+        .replaceAll("G_E_T", "GET")
+        .replaceAll("P_A_T_C_H", "PATCH")
+        .replaceAll("D_E_L_E_T_E", "DELETE");
   }
 
   private String generateMethodName(String operationId) {
     return operationId
-            .replaceAll("GET", "Get")
-            .replaceAll("PUT", "Put")
-            .replaceAll("POST", "Post")
-            .replaceAll("DELETE", "Delete")
-            .replaceAll("PATCH", "Patch");
+        .replaceAll("GET", "Get")
+        .replaceAll("PUT", "Put")
+        .replaceAll("POST", "Post")
+        .replaceAll("DELETE", "Delete")
+        .replaceAll("PATCH", "Patch");
   }
 
   private String generateMethodArguments(List<Parameter> params) {
@@ -246,11 +255,7 @@ public class ServiceWrapperGenerator{
   }
 
   private String generateClassName(String path) {
-    String[] arr = path
-                    .toLowerCase()
-                    .replaceAll("/", "")
-                    .trim()
-                    .split("[^A-z]+");
+    String[] arr = path.toLowerCase().replaceAll("/", "").trim().split("[^A-z]+");
     return capitalizeStringArrToString(arr);
   }
 
@@ -271,7 +276,12 @@ public class ServiceWrapperGenerator{
               }
               // handle formData
               else if (p.in.equalsIgnoreCase("formData")) {
-                result.append(String.format(FORM_DATA_TEMPLATE_, p.name, p.name));
+                if (p.type.equalsIgnoreCase("file")) {
+                  result.append(String.format(FORM_DATA_TEMPLATE_, p.name, p.name, ", mime"));
+                } else {
+                  result.append(String.format(FORM_DATA_TEMPLATE_, p.name, p.name, ""));
+                }
+
               }
               // else treat param as a path param
               else {
@@ -279,5 +289,13 @@ public class ServiceWrapperGenerator{
               }
             });
     return result.toString();
+  }
+
+  private String generateBeforeReturnStatementCode(ApiCallMethod apiCallMethod) {
+    String result = "";
+    if (apiCallMethod.consumes.contains("multipart")) {
+      result = String.format(BEFORE_RETURN_STATEMENT, GET_FILE_MIME_TYPE);
+    }
+    return result;
   }
 }

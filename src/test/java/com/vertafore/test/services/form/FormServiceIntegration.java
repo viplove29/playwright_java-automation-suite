@@ -38,8 +38,7 @@ public class FormServiceIntegration {
     currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"));
 
     currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
-    currentActor.attemptsTo(Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
-
-
+    currentActor.attemptsTo(
+        Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
   }
 }

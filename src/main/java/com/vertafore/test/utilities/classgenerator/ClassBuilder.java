@@ -15,7 +15,7 @@ public class ClassBuilder {
   private final String IMPORT_STATEMENT_TEMPLATE = "import %s%s;\n";
   private final String CLASS_TEMPLATE = "public class %s {\n\n%s\n}";
   private final String FIELD_TEMPLATE = "\t%s %s%s%s %s = %s;\n";
-  private final String METHOD_TEMPLATE = "\t%s %s%s %s(%s){\n\t\t%s\n\t}\n\n";
+  private final String METHOD_TEMPLATE = "\t%s %s%s %s(%s){\n\t\t%s%s\n\t}\n\n";
 
   private List<String> imports = new ArrayList<>();
   private List<String> fields = new ArrayList<>();
@@ -24,7 +24,7 @@ public class ClassBuilder {
   private String className;
   private String packagePath;
 
-  public ClassBuilder(String packagePath, String className){
+  public ClassBuilder(String packagePath, String className) {
     setPackagePath(packagePath);
     setClassName(className);
   }
@@ -65,23 +65,35 @@ public class ClassBuilder {
     return packagePath;
   }
 
-  public void setPackagePath(String packagePath){
+  public void setPackagePath(String packagePath) {
     this.packagePath = packagePath;
   }
 
-  public void removeMethod(String method){ methods.remove(method); }
+  public void removeMethod(String method) {
+    methods.remove(method);
+  }
 
-  public void removeField(String field){ fields.remove(field); }
+  public void removeField(String field) {
+    fields.remove(field);
+  }
 
-  public void removeImport(String importStatement){ imports.remove(importStatement); }
+  public void removeImport(String importStatement) {
+    imports.remove(importStatement);
+  }
 
-  public void clearImports(){ imports.clear(); }
+  public void clearImports() {
+    imports.clear();
+  }
 
-  public void clearMethods(){ methods.clear(); }
+  public void clearMethods() {
+    methods.clear();
+  }
 
-  public void clearFields(){ fields.clear(); }
+  public void clearFields() {
+    fields.clear();
+  }
 
-  public void clearAll(){
+  public void clearAll() {
     clearFields();
     clearImports();
     clearMethods();
@@ -89,68 +101,115 @@ public class ClassBuilder {
     packagePath = null;
   }
 
-  public void generateClassAt(String path){
+  public void generateClassAt(String path) {
     String fullPath = path + "/" + className + ".java";
     generateBaseDirectory(path);
     generateBaseFile(fullPath);
     writeUsingBufferedWriter(fullPath, generateFileContent());
   }
 
-  public String generateFileContent(){
+  public String generateFileContent() {
     StringBuilder result = new StringBuilder();
     result.append(String.format(PACKAGE_TEMPLATE, packagePath));
     result.append(generateStringFromList(imports));
-    result.append( String.format(CLASS_TEMPLATE, className, generateStringFromList(fields) + generateStringFromList(methods)));
+    result.append(
+        String.format(
+            CLASS_TEMPLATE,
+            className,
+            generateStringFromList(fields) + generateStringFromList(methods)));
     return result.toString();
   }
 
-  public void addMethod(String accessLevel, boolean isStatic, String returnType, String methodName, String methodArguments, String methodDefinition){
-    methods.add(String.format(METHOD_TEMPLATE, accessLevel, isStatic ? "static " : "", returnType, methodName, methodArguments, methodDefinition));
-  }
-  public void addField(String accessLevel, boolean isStatic, boolean isFinal, String dataType, String fieldName, String dataValue){
-    fields.add(String.format(FIELD_TEMPLATE, accessLevel, isStatic ? "static " : "", isFinal ? "final ": "", dataType, fieldName, dataValue));
+  public void addMethod(
+      String accessLevel,
+      boolean isStatic,
+      String returnType,
+      String methodName,
+      String methodArguments,
+      String beforeReturnStatement,
+      String methodDefinition) {
+    methods.add(
+        String.format(
+            METHOD_TEMPLATE,
+            accessLevel,
+            isStatic ? "static " : "",
+            returnType,
+            methodName,
+            methodArguments,
+            beforeReturnStatement,
+            methodDefinition));
   }
 
-  public void addImport(boolean isStatic, String path){
+  public void addField(
+      String accessLevel,
+      boolean isStatic,
+      boolean isFinal,
+      String dataType,
+      String fieldName,
+      String dataValue) {
+    fields.add(
+        String.format(
+            FIELD_TEMPLATE,
+            accessLevel,
+            isStatic ? "static " : "",
+            isFinal ? "final " : "",
+            dataType,
+            fieldName,
+            dataValue));
+  }
+
+  public void addImport(boolean isStatic, String path) {
     String currentImports = generateStringFromList(imports);
-    if(!currentImports.contains(path)){
+    if (!currentImports.contains(path)) {
       imports.add(String.format(IMPORT_STATEMENT_TEMPLATE, isStatic ? "static " : "", path));
     }
   }
 
-  public void addPublicStaticMethod(String returnType, String methodName, String methodArguments, String methodDefinition){
-    addMethod("public", true, returnType, methodName, methodArguments, methodDefinition);
+  public void addPublicStaticMethod(
+      String returnType,
+      String methodName,
+      String methodArguments,
+      String beforeReturnStatement,
+      String methodDefinition) {
+    addMethod(
+        "public",
+        true,
+        returnType,
+        methodName,
+        methodArguments,
+        beforeReturnStatement,
+        methodDefinition);
   }
 
-  public void addPrivateStaticFinalStringField(String constantName, String constantValue){
+  public void addPrivateStaticFinalStringField(String constantName, String constantValue) {
     addField("private", true, true, "String", constantName, constantValue);
   }
 
-  public void addImportStatement(String importPath){
+  public void addImportStatement(String importPath) {
     addImport(false, importPath);
   }
 
-  public void addStaticImportStatement(String importPath){
+  public void addStaticImportStatement(String importPath) {
     addImport(true, importPath);
   }
 
-  public void addArrayOfImportStatements(String[] imports){
+  public void addArrayOfImportStatements(String[] imports) {
     Arrays.stream(imports).forEach(this::addImportStatement);
   }
 
-  public void addCollectionOfStaticImportStatements(Collection<String> collection){
+  public void addCollectionOfStaticImportStatements(Collection<String> collection) {
     collection.forEach(this::addStaticImportStatement);
   }
 
-  public void addArrayOfStaticImportStatements(String[] imports){
+  public void addArrayOfStaticImportStatements(String[] imports) {
     Arrays.stream(imports).forEach(this::addStaticImportStatement);
   }
 
-  public void addCollectionOfImportStatements(Collection<String> collection){
+  public void addCollectionOfImportStatements(Collection<String> collection) {
     collection.forEach(this::addImportStatement);
   }
 
-  public void printFileContent(){
+  public void printFileContent() {
     System.out.println(generateFileContent());
   }
 
@@ -195,7 +254,7 @@ public class ClassBuilder {
     }
   }
 
-  public String generateStringFromList(List<String> list){
+  public String generateStringFromList(List<String> list) {
     StringBuilder result = new StringBuilder();
     list.forEach(result::append);
     return result.append("\n").toString();
@@ -222,5 +281,4 @@ public class ClassBuilder {
       throw new IllegalArgumentException("could not capitalize string " + str);
     }
   }
-
 }
