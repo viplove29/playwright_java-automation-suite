@@ -62,6 +62,7 @@ public class DocumentServiceIntegration {
     // tests CONFIG-SVC
     currentActor.attemptsTo(UseDocumentServiceTo.getBrandingsUsingGet());
     checkStatusForSuccess();
+
     //    // GET /bytes
     //    // tests AWS S3 connectivity
     currentActor.attemptsTo(UseDocumentServiceTo.brandingGetImageUsingGet(id, "original"));

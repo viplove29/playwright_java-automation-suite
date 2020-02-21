@@ -16,31 +16,30 @@ public class UseDocumentServiceTo {
   private static final String CREATE_USING_POST_1 = "documents";
   private static final String GET_IMAGE_USING_GET = "brandings/{id}/bytes";
   private static final String GET_DOCUMENT_VERSIONS_USING_GET = "documents/{id}/versions";
-  private static final String CREATE_USING_POST_2 = "/document/v1/{productId}/{tenantId}/entities/";
+  private static final String CREATE_USING_POST_2 = "folders";
   private static final String SEARCH_USING_GET = "search?filter=byPathAndSearchTerm";
   private static final String CREATE_USING_POST_3 = "signatures";
   private static final String GET_CONTENTS_USING_GET = "contents?filter=byPath";
-  private static final String GET_BY_ID_USING_GET_1 = "documents/";
-  private static final String DELETE_BY_ID_USING_DELETE_1 = "documents/";
+  private static final String GET_BY_ID_USING_GET_1 = "documents/{id}";
+  private static final String DELETE_BY_ID_USING_DELETE_1 = "documents/{id}";
   private static final String GET_IMAGES_USING_GET = "brandings/bytes";
   private static final String GET_IMAGE_USING_GET_1 = "signatures/{id}/bytes";
-  private static final String GET_BRANDINGS_USING_GET =
-      "/document/v1/{productId}/{tenantId}/entities/";
-  private static final String GET_USING_GET = "folders/";
-  private static final String UPDATE_USING_PUT_2 = "folders/";
-  private static final String GET_BY_ID_USING_GET = "brandings/";
-  private static final String DELETE_BY_ID_USING_DELETE = "brandings/";
-  private static final String GET_BY_ID_USING_GET_2 = "signatures/";
-  private static final String DELETE_BY_ID_USING_DELETE_2 = "signatures/";
-  private static final String GET_SIGNATURES_USING_GET =
-      "/document/v1/{productId}/{tenantId}/entities/";
-  private static final String DELETE_USING_DELETE = "folders/";
+  private static final String GET_BRANDINGS_USING_GET = "brandings";
+  private static final String GET_USING_GET = "folders/{id}/";
+  private static final String UPDATE_USING_PUT_2 = "folders/{id}/";
+  private static final String GET_BY_ID_USING_GET = "brandings/{id}";
+  private static final String DELETE_BY_ID_USING_DELETE = "brandings/{id}";
+  private static final String GET_BY_ID_USING_GET_2 = "signatures/{id}";
+  private static final String DELETE_BY_ID_USING_DELETE_2 = "signatures/{id}";
+  private static final String GET_SIGNATURES_USING_GET = "signatures";
+  private static final String DELETE_USING_DELETE = "folders/{id}";
   private static final String UPDATE_USING_PUT_3 = "signatures/{id}";
   private static final String UPDATE_USING_PUT = "brandings/{id}";
   private static final String CREATE_USING_POST = "brandings";
-  private static final String DOWNLOAD_BY_VERSION_USING_GET = "bytes/{documentId}/versions/";
+  private static final String DOWNLOAD_BY_VERSION_USING_GET =
+      "bytes/{documentId}/versions/{versionId}";
   private static final String GET_DOCUMENT_VERSION_BY_ID_USING_GET =
-      "documents/{documentId}/versions/";
+      "documents/{documentId}/versions/{id}";
 
   public static Performable bytesDownloadByIdsUsingGet(String filter, String ids) {
     return Task.where(

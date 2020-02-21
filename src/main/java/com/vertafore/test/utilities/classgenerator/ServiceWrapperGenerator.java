@@ -213,11 +213,11 @@ public class ServiceWrapperGenerator {
   }
 
   private String generateEndpointConstantValue(String path) {
-    int filterIndex = path.lastIndexOf("{");
-    String pathMinusFilterParams = path.substring(0, filterIndex);
-    return "\""
-        + pathMinusFilterParams.replaceAll("^.*\\{entityId}/", "").replaceAll("\\{\\?.*", "")
-        + "\"";
+    if (path.contains("filter")) {
+      int filterIndex = path.lastIndexOf("{");
+      path = path.substring(0, filterIndex);
+    }
+    return "\"" + path.replaceAll("^.*\\{entityId}/", "").replaceAll("\\{\\?.*", "") + "\"";
   }
 
   private String generateEndpointConstantName(String operationId) {
