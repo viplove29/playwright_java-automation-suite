@@ -3,6 +3,10 @@ package com.vertafore.test.services.invoice;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.test.models.TitanUser;
+import com.vertafore.test.tasks.servicewrappers.accounting.UseAccountingServiceTo;
+import com.vertafore.test.tasks.servicewrappers.customer.UseCustomerServiceTo;
+import com.vertafore.test.tasks.servicewrappers.invoice.UseInvoiceServiceTo;
+import com.vertafore.test.tasks.servicewrappers.policy.UsePolicyServiceTo;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfUsers;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +25,15 @@ public class InvoiceServiceIntegration {
   public void setupActors() {
     users.add(new TitanUser("Have Everything", "Testing all permissions", "TESTALL"));
     users.add(new TitanUser("Jon Duncan", "Risk Advisors LLC", "RISK123"));
-    OnStage.setTheStage(BuildCastOfUsers.castOfAuthenticatedActors(users));
+    OnStage.setTheStage(BuildCastOfUsers.buildCastOfAuthenticatedUsers(users));
   }
 
   @Test
   public void testCreatingChargePolicyThenInvoice() {
     Actor currentActor = theActorCalled("Jon Duncan");
 
-    currentActor.attemptsTo(UpdateTheir.serviceTo("accounting"));
-    currentActor.attemptsTo(UseAccountingServiceTo.getActiveJournal());
+    currentActor.attemptsTo(
+        UseAccountingServiceTo.getActiveJournalUsingGetOnTheJournalController());
     if (SerenityRest.lastResponse().statusCode() == 404) {
       String journal =
           "{\n"
@@ -37,10 +41,10 @@ public class InvoiceServiceIntegration {
               + "\t\"journalType\": \"ACCRUAL\",\n"
               + "\t\"fiscalMonth\": 4\n"
               + "}";
-      currentActor.attemptsTo(UseAccountingServiceTo.createJournal(journal));
+      currentActor.attemptsTo(
+          UseAccountingServiceTo.createJournalUsingPostOnTheJournalController(journal));
     }
 
-    currentActor.attemptsTo(UpdateTheir.serviceTo("customer"));
     String customer =
         "{\n"
             + "    \"name\": {\n"
@@ -51,10 +55,10 @@ public class InvoiceServiceIntegration {
             + "        \"type\": \"Personal\",\n"
             + "    \"currentStatus\": \"PROSPECT\"\n"
             + "  }";
-    currentActor.attemptsTo(UseCustomerServiceTo.createCustomerUsingPost(customer));
+    currentActor.attemptsTo(
+        UseCustomerServiceTo.createCustomerUsingPostOnTheCustomerController(customer));
     String customerId = SerenityRest.lastResponse().getBody().jsonPath().get("content.id");
 
-    currentActor.attemptsTo(UpdateTheir.serviceTo("policy"));
     String policy =
         String.format(
             "{\n"
@@ -92,14 +96,13 @@ public class InvoiceServiceIntegration {
                 + "    \"agencyCommission\": 0.20\n"
                 + "}",
             customerId);
-    currentActor.attemptsTo(UsePolicyServiceTo.createPolicyUsingPost(policy));
-
-    currentActor.attemptsTo(UpdateTheir.serviceTo("invoice"));
+    currentActor.attemptsTo(UsePolicyServiceTo.createPolicyUsingPostOnThePolicyController(policy));
     //
     //        //add policy id, charge body and filter params?
     String policyId = (String) SerenityRest.lastResponse().getBody().jsonPath().get("content.id");
     currentActor.attemptsTo(
-        UseInvoiceServiceTo.getApplicablePolicyChargesUsingGet(policyId, "1", "50"));
+        UseInvoiceServiceTo.getApplicablePolicyChargesUsingGetOnTheChargeController(
+            policyId, "1", "50"));
     //
     String chargeId =
         (String) SerenityRest.lastResponse().getBody().jsonPath().getList("content").get(0);
@@ -132,7 +135,8 @@ public class InvoiceServiceIntegration {
                 + "\t]\n"
                 + "}",
             policyId, chargeId);
-    currentActor.attemptsTo(UseInvoiceServiceTo.createInvoiceUsingPost(invoice));
+    currentActor.attemptsTo(
+        UseInvoiceServiceTo.createInvoiceUsingPostOnTheInvoiceController(invoice));
     currentActor.attemptsTo(
         Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
 

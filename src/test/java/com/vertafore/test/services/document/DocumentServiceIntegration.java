@@ -5,6 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
+import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
@@ -30,14 +31,13 @@ public class DocumentServiceIntegration {
 
   @Before
   public void setupActors() {
-    users.add(new TitanUser("donald@lizzy123.com", "Nguyen Company", "LIZZY123"));
-    OnStage.setTheStage(BuildCastOfUsers.castOfAuthenticatedActors(users));
+    users.add(new TitanUser("donald@lizzy123.com", "LIZZY123", "LIZZY123"));
+    OnStage.setTheStage(BuildCastOfUsers.buildCastOfAuthenticatedUsers(users));
   }
 
   @Test
   public void documentServiceBrandingSetsConfigCorrectly() throws IOException {
-    Actor currentActor = theActorCalled("donald donald");
-    currentActor.attemptsTo(UpdateTheir.serviceTo("document"));
+    Actor currentActor = theActorCalled("donald@lizzy123.com");
 
     // build metadata
     Map<String, String> metaData = new HashMap<>();
@@ -49,7 +49,7 @@ public class DocumentServiceIntegration {
 
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(
-        UseDocumentServiceTo.brandingCreateUsingPost(
+        UseDocumentServiceTo.createUsingPostOnTheBrandingController(
             JsonHelper.serializeAsJson(metaData), imageToUpload));
     checkStatusForSuccess();
 
@@ -58,16 +58,17 @@ public class DocumentServiceIntegration {
     String id = postResponse.get("id").toString();
     // GET the /brandings
     // tests CONFIG-SVC
-    currentActor.attemptsTo(UseDocumentServiceTo.getBrandingsUsingGet());
+    currentActor.attemptsTo(UseDocumentServiceTo.getBrandingsUsingGetOnTheBrandingController());
     checkStatusForSuccess();
 
     //    // GET /bytes
     //    // tests AWS S3 connectivity
-    currentActor.attemptsTo(UseDocumentServiceTo.brandingGetImageUsingGet(id, "original"));
+    currentActor.attemptsTo(
+        UseDocumentServiceTo.getImageUsingGetOnTheBrandingController(id, "original"));
     checkStatusForSuccess();
 
     // DELETE IT TO CLEAN UP:
-    currentActor.attemptsTo(UseDocumentServiceTo.brandingDeleteByIdUsingDelete(id));
+    currentActor.attemptsTo(UseDocumentServiceTo.deleteByIdUsingDeleteOnTheBrandingController(id));
     checkStatusForSuccess();
   }
 
