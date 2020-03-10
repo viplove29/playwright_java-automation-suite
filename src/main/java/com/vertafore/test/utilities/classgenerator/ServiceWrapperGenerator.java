@@ -228,17 +228,16 @@ public class ServiceWrapperGenerator {
   }
 
   private String generateMethodName(String operationId, String tag, String summary) {
-    summary = WordUtils.capitalizeFully(summary);
     String controllerName = "";
-    // we have to normalize the tag name b/c different services name it differently.
-    // most have -controller in it, auth does not.
+    // we have to normalize the tag name to get the name of the controller
     if (tag.contains("-controller-v-1")) {
       controllerName = tag.replaceAll("-controller-v-1", "");
       controllerName = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, controllerName);
     } else {
+      // because some services don't have -controller-v-1 but instead have 'Realm Management'
+      // we have to format the name of the controller
       String controllerNameToFormat = WordUtils.capitalizeFully(tag);
       controllerName = controllerNameToFormat.replaceAll("\\s+", "");
-      System.out.println(controllerName);
     }
     String result =
         operationId
@@ -248,12 +247,15 @@ public class ServiceWrapperGenerator {
             .replaceAll("DELETE", "Delete")
             .replaceAll("PATCH", "Patch");
 
-    //    if (result.contains("_1") || result.contains("_2") || result.contains("_3")) {
+    // if our operationId contains _1 or _2... then the Endpoint Constant name should be
+    // the summary formatted. This prevents endpoints being named the same thing
+    // and from being named getUsingGet_1/getUsingGet_2
     if (result.matches(".*[_]\\d.*")) {
       result =
           WordUtils.capitalizeFully(summary)
               .replaceAll(" ", "")
               .replaceAll("\\.", "")
+              .replaceAll("\\'", "")
               .replaceAll("\\-", "");
       System.out.println(result);
     }
