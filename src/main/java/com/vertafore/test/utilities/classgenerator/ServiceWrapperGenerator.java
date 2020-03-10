@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.rest.SerenityRest;
+import org.apache.commons.text.WordUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,11 +27,9 @@ public class ServiceWrapperGenerator {
   private final String BASE_PACKAGE_PATH = "com.vertafore.test.tasks.servicewrappers.%s";
 
   private final String[] DEFAULT_IMPORTS = {
-    "net.serenitybdd.screenplay.Performable", "net.serenitybdd.screenplay.Task"
-  };
-
-  private final String[] DEFAULT_STATIC_IMPORTS = {
-    "com.vertafore.test.abilities.CallTitanApi.as", "net.serenitybdd.rest.SerenityRest.rest"
+    "net.serenitybdd.screenplay.Performable",
+    "net.serenitybdd.screenplay.Task",
+    "com.vertafore.test.abilities.CallTitanApi"
   };
 
   private final String CLASS_NAME_TEMPLATE = "Use%sServiceTo";
@@ -43,7 +42,7 @@ public class ServiceWrapperGenerator {
   private final String BEFORE_RETURN_STATEMENT = "%s";
 
   private final String REST_CALL_METHOD_CHAIN_TEMPLATE =
-      "rest().with().%s%s%s(as(actor).toEndpoint(%s));";
+      "CallTitanApi.asActorUsingService(actor, THIS_SERVICE).%s%s%s(%s);";
   private final String CONTENT_TYPE_TEMPLATE = "contentType(\"%s\").";
   private final String FORM_DATA_TEMPLATE_ = "multiPart(\"%s\", %s %s).";
   private final String PATH_PARAM_TEMPLATE = "pathParam(\"%s\", %s).";
@@ -72,7 +71,7 @@ public class ServiceWrapperGenerator {
     public String methodArguments;
     public String restParamMethodChain;
     public String operationId;
-    public String controller;
+    public String tag;
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
@@ -104,7 +103,8 @@ public class ServiceWrapperGenerator {
     ClassBuilder classBuilder = new ClassBuilder(packagePath, className);
 
     classBuilder.addArrayOfImportStatements(DEFAULT_IMPORTS);
-    classBuilder.addArrayOfStaticImportStatements(DEFAULT_STATIC_IMPORTS);
+    classBuilder.addPrivateStaticFinalStringField(
+        "THIS_SERVICE", "\"" + servicePath.replaceAll("/", "") + "\"");
 
     paths.forEach(
         p -> {
@@ -166,15 +166,18 @@ public class ServiceWrapperGenerator {
 
               nextApiCallMethod.operationId = (String) call.get("operationId");
 
-              nextApiCallMethod.controller = (String) ((JSONArray) call.get("tags")).get(0);
-
               nextApiCallMethod.summary = (String) call.get("summary");
 
-              nextApiCallMethod.endpointName =
-                  generateEndpointConstantName(nextApiCallMethod.operationId);
+              nextApiCallMethod.tag = (String) ((JSONArray) call.get("tags")).get(0);
 
               nextApiCallMethod.methodName =
-                  generateMethodName(nextApiCallMethod.operationId, nextApiCallMethod.controller);
+                  generateMethodName(
+                      nextApiCallMethod.operationId,
+                      nextApiCallMethod.tag,
+                      nextApiCallMethod.summary);
+
+              nextApiCallMethod.endpointName =
+                  generateEndpointConstantName(nextApiCallMethod.methodName);
 
               nextApiCallMethod.consumes = (String) ((JSONArray) call.get("consumes")).get(0);
 
@@ -220,44 +223,42 @@ public class ServiceWrapperGenerator {
     return "\"" + path.replaceAll("^.*\\{entityId}/", "").replaceAll("\\{\\?.*", "") + "\"";
   }
 
-  private String generateEndpointConstantName(String operationId) {
-    StringBuilder result = new StringBuilder();
-    String[] words = operationId.split("(?=\\p{Upper})");
-
-    for (int i = 0; i < words.length; i++) {
-      result.append(words[i].toUpperCase() + (i != words.length - 1 ? "_" : ""));
-    }
-
-    // find way to replace these with regex above that will not split the all caps Verbs
-    return result
-        .toString()
-        .replaceAll("P_U_T", "PUT")
-        .replaceAll("P_O_S_T", "POST")
-        .replaceAll("G_E_T", "GET")
-        .replaceAll("P_A_T_C_H", "PATCH")
-        .replaceAll("D_E_L_E_T_E", "DELETE");
+  private String generateEndpointConstantName(String methodName) {
+    return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, methodName);
   }
 
-  private String generateMethodName(String operationId, String controllerNameFromSwagger) {
-    String controllerName =
-        controllerNameFromSwagger.substring(0, controllerNameFromSwagger.length() - 15);
-    String controllerNameInCamelCase =
-        CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, controllerName);
+  private String generateMethodName(String operationId, String tag, String summary) {
+    summary = WordUtils.capitalizeFully(summary);
+    String controllerName = "";
+    // we have to normalize the tag name b/c different services name it differently.
+    // most have -controller in it, auth does not.
+    if (tag.contains("-controller-v-1")) {
+      controllerName = tag.replaceAll("-controller-v-1", "");
+      controllerName = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, controllerName);
+    } else {
+      String controllerNameToFormat = WordUtils.capitalizeFully(tag);
+      controllerName = controllerNameToFormat.replaceAll("\\s+", "");
+      System.out.println(controllerName);
+    }
+    String result =
+        operationId
+            .replaceAll("GET", "Get")
+            .replaceAll("PUT", "Put")
+            .replaceAll("POST", "Post")
+            .replaceAll("DELETE", "Delete")
+            .replaceAll("PATCH", "Patch");
 
-    if (!operationId.toLowerCase().contains(controllerNameInCamelCase.toLowerCase())) {
-      // change casing of first letter of operationId (get --> Get)
-      operationId = operationId.substring(0, 1).toUpperCase() + operationId.substring(1);
-      // add back in the controller to the beginning of the method
-      operationId = controllerNameInCamelCase + operationId;
+    //    if (result.contains("_1") || result.contains("_2") || result.contains("_3")) {
+    if (result.matches(".*[_]\\d.*")) {
+      result =
+          WordUtils.capitalizeFully(summary)
+              .replaceAll(" ", "")
+              .replaceAll("\\.", "")
+              .replaceAll("\\-", "");
+      System.out.println(result);
     }
 
-    return operationId
-        .replaceAll("GET", "Get")
-        .replaceAll("PUT", "Put")
-        .replaceAll("POST", "Post")
-        .replaceAll("DELETE", "Delete")
-        .replaceAll("PATCH", "Patch")
-        .replaceAll("_.$", "");
+    return result + "OnThe" + controllerName + "Controller";
   }
 
   private String generateMethodArguments(List<Parameter> params) {

@@ -7,6 +7,7 @@ public class Authenticate implements Ability {
 
   private final String username;
   private final String password;
+  private String authToken = null;
 
   private Authenticate(String username, String password) {
     this.username = username;
@@ -34,5 +35,17 @@ public class Authenticate implements Ability {
   // returns password if actor has the ability
   public static String passwordForAuthenticatedActor(Actor actor) {
     return Authenticate.as(actor).password;
+  }
+
+  private void setToken(String newToken) {
+    this.authToken = newToken;
+  }
+
+  public static void theNewAuthTokenOf(Actor actor, String newToken) {
+    Authenticate.as(actor).setToken(newToken);
+  }
+
+  public static String theAuthTokenOf(Actor actor) {
+    return Authenticate.as(actor).authToken;
   }
 }

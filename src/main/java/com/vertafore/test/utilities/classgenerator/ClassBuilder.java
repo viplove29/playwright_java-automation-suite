@@ -128,7 +128,7 @@ public class ClassBuilder {
       String methodArguments,
       String beforeReturnStatement,
       String methodDefinition) {
-    methods.add(
+    String newMethod =
         String.format(
             METHOD_TEMPLATE,
             accessLevel,
@@ -137,7 +137,10 @@ public class ClassBuilder {
             methodName,
             methodArguments,
             beforeReturnStatement,
-            methodDefinition));
+            methodDefinition);
+    if (!methods.contains(newMethod)) {
+      methods.add(newMethod);
+    }
   }
 
   public void addField(
@@ -147,7 +150,7 @@ public class ClassBuilder {
       String dataType,
       String fieldName,
       String dataValue) {
-    fields.add(
+    String newField =
         String.format(
             FIELD_TEMPLATE,
             accessLevel,
@@ -155,7 +158,10 @@ public class ClassBuilder {
             isFinal ? "final " : "",
             dataType,
             fieldName,
-            dataValue));
+            dataValue);
+    if (!fields.contains(newField)) {
+      fields.add(newField);
+    }
   }
 
   public void addImport(boolean isStatic, String path) {

@@ -3,9 +3,7 @@ package com.vertafore.test.services.form;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.tasks.servicewrappers.accounting.UseAccountingServiceTo;
-import com.vertafore.test.tasks.utilities.UpdateTheir;
-import com.vertafore.test.utilities.actorextractor.JsonToActorsConverter;
+import com.vertafore.test.utilities.actorextractor.BuildCastOfUsers;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -28,7 +26,7 @@ public class FormServiceIntegration {
   public void setupActors() {
     users.add(new TitanUser("Have Everything", "Testing all permissions", "TESTALL"));
     users.add(new TitanUser("Jon Duncan", "Risk Advisors LLC", "RISK123"));
-    OnStage.setTheStage(JsonToActorsConverter.castOfAuthenticatedActors(users));
+    OnStage.setTheStage(BuildCastOfUsers.castOfAuthenticatedActors(users));
   }
 
   @Test

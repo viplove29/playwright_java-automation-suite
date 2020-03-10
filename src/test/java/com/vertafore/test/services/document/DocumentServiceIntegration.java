@@ -5,9 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
-import com.vertafore.test.tasks.utilities.UpdateTheir;
-import com.vertafore.test.utilities.actorextractor.JsonToActorsConverter;
+import com.vertafore.test.utilities.actorextractor.BuildCastOfUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
 import java.io.IOException;
@@ -32,8 +30,8 @@ public class DocumentServiceIntegration {
 
   @Before
   public void setupActors() {
-    users.add(new TitanUser("donald donald", "Nguyen Company", "LIZZY123"));
-    OnStage.setTheStage(JsonToActorsConverter.castOfAuthenticatedActors(users));
+    users.add(new TitanUser("donald@lizzy123.com", "Nguyen Company", "LIZZY123"));
+    OnStage.setTheStage(BuildCastOfUsers.castOfAuthenticatedActors(users));
   }
 
   @Test
