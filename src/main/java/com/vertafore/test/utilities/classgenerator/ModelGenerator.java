@@ -1,3 +1,5 @@
+// WIP tool for generating models automatically for each service from Swagger.
+
 // package com.vertafore.test.utilities.classgenerator;
 //
 // import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

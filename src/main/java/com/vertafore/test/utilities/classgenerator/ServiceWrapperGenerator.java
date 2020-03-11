@@ -254,7 +254,6 @@ public class ServiceWrapperGenerator {
       result = StringUtils.lowerCaseFirst(capitalizeAndCleanString(summary));
     }
 
-    System.out.println(result + "OnThe" + controllerName + "Controller");
     return result + "OnThe" + controllerName + "Controller";
   }
 
