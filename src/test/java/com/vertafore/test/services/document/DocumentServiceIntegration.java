@@ -1,7 +1,7 @@
 package com.vertafore.test.services.document;
 
+import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
-import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
@@ -18,12 +18,10 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
-import net.serenitybdd.screenplay.ensure.Ensure;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-// JUNIT TEST ("step-definition"- like layer) for form-service integration tests
 @RunWith(SerenityRunner.class)
 public class DocumentServiceIntegration {
 
@@ -70,10 +68,5 @@ public class DocumentServiceIntegration {
     // DELETE IT TO CLEAN UP:
     currentActor.attemptsTo(UseDocumentServiceTo.deleteByIdUsingDeleteOnTheBrandingController(id));
     checkStatusForSuccess();
-  }
-
-  private void checkStatusForSuccess() {
-    theActorInTheSpotlight()
-        .attemptsTo(Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
   }
 }

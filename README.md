@@ -19,7 +19,7 @@ Each test is just a JUnit test and does not have a corresponding feature file or
 
 This project has a tool to build service-wrappers into Java Classes for you by using a gradle task.
 
-The hope is that as API's change the tool will be responsible for updating our 'service-wrapper' to 
+The hope is that as api's change the tool will be responsible for updating our 'service-wrapper' to 
 interact with each backend service. 
 
 to use it:
@@ -35,7 +35,7 @@ This command will reach out to swagger in dev-master then parse the whole API an
 
 ## General Test Setup
 
-This project uses Junit and Serenity Screenplay to run and write integration tests. Some tools for setup and talking to Titan API's 
+This project uses JUnit and Serenity Screenplay to run and write integration tests. Some tools for setup and talking to Titan api's 
 have already been configured.
 
 To write a new test here are some basic setup information
@@ -47,7 +47,7 @@ We need to build our `cast` of actors for the test so we use a @Before hook at t
 - entity name
 for the actor(s) that we want to use for the test.
 Then we `setTheStage` with the actors we just built.
-This before hook will run before each Junit test making sure our actors are fresh.
+This before hook will run before each JUnit test making sure our actors are fresh.
 
 `````
 @RunWith(SerenityRunner.class)
@@ -71,6 +71,8 @@ public class DocumentServiceIntegration {
 
 Next we just need to write our tests.
 Each test should have the JUnit `@Test` annotation.
+
+
 To get access to the actor you need use the `theActorCalled`
  and give it the username of the actor that you want to use.
 
@@ -88,4 +90,6 @@ The performable we pass will be the service-wrapper Class and Method that are au
 
 Serenity gives access to an easy way to see our last response using:
 `SerenityRest.lastResponse()`
+
+Which gives you access to things like '.getStatusCode()'
 
