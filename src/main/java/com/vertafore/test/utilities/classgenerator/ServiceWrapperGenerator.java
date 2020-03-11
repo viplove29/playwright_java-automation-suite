@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import liquibase.util.StringUtils;
 import net.serenitybdd.rest.SerenityRest;
 import org.apache.commons.text.WordUtils;
 import org.json.simple.JSONArray;
@@ -250,7 +251,7 @@ public class ServiceWrapperGenerator {
     // the summary formatted. This prevents endpoints being named the same thing
     // and from being named getUsingGet_1/getUsingGet_2
     if (result.matches(".*[_]\\d.*")) {
-      result = capitalizeAndCleanString(summary);
+      result = StringUtils.lowerCaseFirst(capitalizeAndCleanString(summary));
     }
 
     System.out.println(result + "OnThe" + controllerName + "Controller");
@@ -301,7 +302,6 @@ public class ServiceWrapperGenerator {
                 } else {
                   result.append(String.format(FORM_DATA_TEMPLATE_, p.name, p.name, ""));
                 }
-
               }
               // else treat param as a path param
               else {

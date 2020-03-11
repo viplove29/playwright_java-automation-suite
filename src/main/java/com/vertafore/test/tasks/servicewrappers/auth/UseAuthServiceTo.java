@@ -38,9 +38,9 @@ public class UseAuthServiceTo {
       "authenticationsettings";
   private static final String CREATE_OR_UPDATE_USING_PUT_ON_THE_AUTHENTICATION_SETTINGS_CONTROLLER =
       "authenticationsettings";
-  private static final String ASSIGNA_ROLETOA_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER =
+  private static final String ASSIGN_A_ROLE_TO_A_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER =
       "role-assignments";
-  private static final String REVOKEA_ROLEFROMA_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER =
+  private static final String REVOKE_A_ROLE_FROM_A_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER =
       "role-assignments";
   private static final String CREATE_OR_UPDATE_TENANT_USING_PUT_ON_THE_TENANTS_CONTROLLER =
       "tenants/{tenantIdToModify}";
@@ -76,7 +76,7 @@ public class UseAuthServiceTo {
       "groups/{groupId}";
   private static final String GET_TENANT_USING_GET_ON_THE_TENANTS_CONTROLLER =
       "tenants/{tenantIdToRetrieve}";
-  private static final String GET_AUTH_GROUPS_ON_THE_GROUPS_CONTROLLER = "groups";
+  private static final String GET_AUTHGROUPS_ON_THE_GROUPS_CONTROLLER = "groups";
   private static final String BULK_CREATE_USER_USING_POST_ON_THE_USERS_CONTROLLER = "users/bulk";
   private static final String DELETE_TENANT_USING_DELETE_ON_THE_TENANTS_CONTROLLER =
       "tenants/{tenantIdToDelete}";
@@ -84,7 +84,7 @@ public class UseAuthServiceTo {
       "users/{userId}/deactivate";
   private static final String GET_ROLE_LOOKUP_BY_ID_USING_GET_ON_THE_ROLES_CONTROLLER =
       "roles/{id}?lookupBy=id";
-  private static final String FIND_SERVICE_ROLE_ON_THE_SERVICE_ROLES_CONTROLLER =
+  private static final String FIND_SERVICEROLE_ON_THE_SERVICE_ROLES_CONTROLLER =
       "services/{serviceName}/roles/{name}";
   private static final String CREATE_PRODUCT_USING_PUT_ON_THE_PRODUCTS_CONTROLLER =
       "products/{productIdToCreate}";
@@ -351,25 +351,25 @@ public class UseAuthServiceTo {
         });
   }
 
-  public static Performable AssignaRoletoaUserOnTheRoleAssignmentsController(Object body) {
+  public static Performable assignARoleToAUserOnTheRoleAssignmentsController(Object body) {
     return Task.where(
         "{0} Assign a Role to a User",
         actor -> {
           CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .body(body)
-              .post(ASSIGNA_ROLETOA_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER);
+              .post(ASSIGN_A_ROLE_TO_A_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER);
         });
   }
 
-  public static Performable RevokeaRolefromaUserOnTheRoleAssignmentsController(Object body) {
+  public static Performable revokeARoleFromAUserOnTheRoleAssignmentsController(Object body) {
     return Task.where(
         "{0} Revoke a Role from a User",
         actor -> {
           CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .body(body)
-              .delete(REVOKEA_ROLEFROMA_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER);
+              .delete(REVOKE_A_ROLE_FROM_A_USER_ON_THE_ROLE_ASSIGNMENTS_CONTROLLER);
         });
   }
 
@@ -601,7 +601,7 @@ public class UseAuthServiceTo {
         });
   }
 
-  public static Performable GetAuthGroupsOnTheGroupsController(String pageSize, String page) {
+  public static Performable getAuthgroupsOnTheGroupsController(String pageSize, String page) {
     return Task.where(
         "{0} Get AuthGroups",
         actor -> {
@@ -609,7 +609,7 @@ public class UseAuthServiceTo {
               .contentType("application/json")
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
-              .get(GET_AUTH_GROUPS_ON_THE_GROUPS_CONTROLLER);
+              .get(GET_AUTHGROUPS_ON_THE_GROUPS_CONTROLLER);
         });
   }
 
@@ -659,7 +659,7 @@ public class UseAuthServiceTo {
         });
   }
 
-  public static Performable FindServiceRoleOnTheServiceRolesController(
+  public static Performable findServiceroleOnTheServiceRolesController(
       String serviceName, String name) {
     return Task.where(
         "{0} Find ServiceRole",
@@ -668,7 +668,7 @@ public class UseAuthServiceTo {
               .contentType("application/json")
               .pathParam("serviceName", serviceName)
               .pathParam("name", name)
-              .get(FIND_SERVICE_ROLE_ON_THE_SERVICE_ROLES_CONTROLLER);
+              .get(FIND_SERVICEROLE_ON_THE_SERVICE_ROLES_CONTROLLER);
         });
   }
 
