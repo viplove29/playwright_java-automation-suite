@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.rest.SerenityRest;
-import org.apache.commons.text.WordUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -236,8 +235,7 @@ public class ServiceWrapperGenerator {
     } else {
       // because some services don't have -controller-v-1 but instead have 'Realm Management'
       // we have to format the name of the controller
-      String controllerNameToFormat = WordUtils.capitalizeFully(tag);
-      controllerName = controllerNameToFormat.replaceAll("\\s+", "");
+      controllerName = capitalizeAndCleanString(tag);
     }
     String result =
         operationId
@@ -251,15 +249,10 @@ public class ServiceWrapperGenerator {
     // the summary formatted. This prevents endpoints being named the same thing
     // and from being named getUsingGet_1/getUsingGet_2
     if (result.matches(".*[_]\\d.*")) {
-      result =
-          WordUtils.capitalizeFully(summary)
-              .replaceAll(" ", "")
-              .replaceAll("\\.", "")
-              .replaceAll("\\'", "")
-              .replaceAll("\\-", "");
-      System.out.println(result);
+      result = capitalizeAndCleanString(summary);
     }
 
+    System.out.println(result + "OnThe" + controllerName + "Controller");
     return result + "OnThe" + controllerName + "Controller";
   }
 
@@ -323,5 +316,17 @@ public class ServiceWrapperGenerator {
       result = String.format(BEFORE_RETURN_STATEMENT, GET_FILE_MIME_TYPE);
     }
     return result;
+  }
+
+  private String capitalizeAndCleanString(String stringToClean) {
+    return stringToClean
+        // remove whitespace
+        .replaceAll("\\s+", "")
+        // remove periods
+        .replaceAll("\\.", "")
+        // remove apostrophes
+        .replaceAll("'", "")
+        // remove hyphens
+        .replaceAll("\\-", "");
   }
 }
