@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.rest.SerenityRest;
+import org.apache.commons.text.WordUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -319,7 +320,7 @@ public class ServiceWrapperGenerator {
   }
 
   private String capitalizeAndCleanString(String stringToClean) {
-    return stringToClean
+    return WordUtils.capitalizeFully(stringToClean)
         // remove whitespace
         .replaceAll("\\s+", "")
         // remove periods
