@@ -110,7 +110,7 @@ public class UseCarrierUpdateIngestionServiceTo {
   }
 
   public static Performable
-      GetCarrierTransactionByTransactiontypeOnTheCarrierUpdateIngestionController(
+      getCarrierTransactionByTransactiontypeOnTheCarrierUpdateIngestionController(
           String transactionType, String pageSize, String page, String filter) {
     return Task.where(
         "{0} Get Carrier Transaction by TransactionType",

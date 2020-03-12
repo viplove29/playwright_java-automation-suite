@@ -327,6 +327,6 @@ public class ServiceWrapperGenerator {
         // remove apostrophes
         .replaceAll("'", "")
         // remove hyphens
-        .replaceAll("\\-", "");
+        .replaceAll("-", "");
   }
 }

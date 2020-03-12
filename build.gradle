@@ -9,6 +9,7 @@ buildscript {
 plugins {
     id 'com.bmuschko.nexus' version '2.3.1' apply false
     id "com.diffplug.gradle.spotless" version "3.26.1"
+    // this runs the swagger-service-wrapper generator
     id 'application'
 }
 
@@ -65,7 +66,6 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             cacheChangingModulesFor 0, 'seconds'
-            force "io.cucumber:cucumber-core:4.8.0"
         }
     }
 
@@ -75,12 +75,9 @@ allprojects {
     }
 }
 
-
-
 dependencies {
     // Serenity
     implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.90'
-    implementation group: 'net.serenity-bdd', name: 'serenity-cucumber4', version: '1.0.30'
     implementation group: 'net.serenity-bdd', name: 'serenity-model', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-screenplay', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-rest-assured', version: '2.0.90'
@@ -88,10 +85,6 @@ dependencies {
     implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-rest', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-ensure', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.90'
-    // Cucumber
-    implementation group: 'io.cucumber', name: 'cucumber-core', version: '4.8.0'
-    implementation group: 'io.cucumber', name: 'cucumber-junit', version: '4.8.0'
-    implementation group: 'io.cucumber', name: 'cucumber-java', version: '4.8.0'
     // Vertafore
     implementation 'com.vertafore.core:foundation:10.0.1'
     // logging

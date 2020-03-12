@@ -94,7 +94,7 @@ public class BuildCastOfUsers {
               .orElseThrow(
                   () ->
                       new IllegalArgumentException(
-                          "could not find user with display name: " + userName));
+                          "could not find user with username: " + userName));
 
       cast.actorNamed(
           userName,

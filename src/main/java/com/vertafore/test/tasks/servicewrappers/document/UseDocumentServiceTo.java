@@ -82,7 +82,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable UpdatesADocumentOnTheDocumentController(
+  public static Performable updatesADocumentOnTheDocumentController(
       String document, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
@@ -97,7 +97,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable CreateAFileUsingAMultipartFormPostOnTheDocumentController(
+  public static Performable createAFileUsingAMultipartFormPostOnTheDocumentController(
       String document, File file) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
@@ -137,7 +137,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable CreatesAFolderOnTheFolderController(Object body) {
+  public static Performable createsAFolderOnTheFolderController(Object body) {
     return Task.where(
         "{0} Creates a folder.",
         actor -> {
@@ -170,7 +170,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable CreateASignatureUsingAMultipartFromPostOnTheSignatureController(
+  public static Performable createASignatureUsingAMultipartFromPostOnTheSignatureController(
       String signature, File file) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
@@ -206,7 +206,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable GetsTheMetadataOfTheDocumentForTheGivenIdOnTheDocumentController(
+  public static Performable getsTheMetadataOfTheDocumentForTheGivenIdOnTheDocumentController(
       String id) {
     return Task.where(
         "{0} Gets the metadata of the document for the given ID.",
@@ -218,7 +218,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable DeletesADocumentByIdOnTheDocumentController(String id) {
+  public static Performable deletesADocumentByIdOnTheDocumentController(String id) {
     return Task.where(
         "{0} Deletes a document by ID.",
         actor -> {
@@ -240,7 +240,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable RetrievesTheBytesForTheSpecifiedSignatureOnTheSignatureController(
+  public static Performable retrievesTheBytesForTheSpecifiedSignatureOnTheSignatureController(
       String id, String imageType) {
     return Task.where(
         "{0} Retrieves the bytes for the specified signature.",
@@ -274,7 +274,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable UpdatesAFolderOnTheFolderController(String id, Object body) {
+  public static Performable updatesAFolderOnTheFolderController(String id, Object body) {
     return Task.where(
         "{0} Updates a folder",
         actor -> {
@@ -308,7 +308,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable GetsTheMetadataOfTheSignatureForTheGivenIdOnTheSignatureController(
+  public static Performable getsTheMetadataOfTheSignatureForTheGivenIdOnTheSignatureController(
       String id) {
     return Task.where(
         "{0} Gets the metadata of the signature for the given ID.",
@@ -320,7 +320,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable DeletesASignatureByIdOnTheSignatureController(String id) {
+  public static Performable deletesASignatureByIdOnTheSignatureController(String id) {
     return Task.where(
         "{0} Deletes a signature by ID.",
         actor -> {
@@ -352,7 +352,7 @@ public class UseDocumentServiceTo {
         });
   }
 
-  public static Performable UpdatesASignatureOnTheSignatureController(
+  public static Performable updatesASignatureOnTheSignatureController(
       String signature, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
