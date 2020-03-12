@@ -116,7 +116,7 @@ Serenity gives access to an easy way to see our last response using:
 `SerenityRest.lastResponse()`
 Where you're welcome to deserialize the response or pull properties off and validate against.
 
-Which gives you access to things like `.getStatusCode()`, which makes asserting against status codes
+`lastResponse()` also has `.getStatusCode()`, making asserts against status codes
 straightforward.
 
 ### Reports
