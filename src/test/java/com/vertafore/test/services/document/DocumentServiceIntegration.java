@@ -4,9 +4,10 @@ import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSucces
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.core.util.JsonHelper;
+import com.vertafore.test.abilities.HaveTitanContext;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
-import com.vertafore.test.utilities.actorextractor.BuildCastOfUsers;
+import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
 import java.io.IOException;
@@ -30,12 +31,14 @@ public class DocumentServiceIntegration {
   @Before
   public void setupActors() {
     users.add(new TitanUser("donald@lizzy123.com", "LIZZY123", "LIZZY123"));
-    OnStage.setTheStage(BuildCastOfUsers.buildCastOfAuthenticatedUsers(users));
+    OnStage.setTheStage(BuildCastOfTitanUsers.loadAndAuthenticate(users));
   }
 
   @Test
   public void documentServiceBrandingSetsConfigCorrectly() throws IOException {
     Actor currentActor = theActorCalled("donald@lizzy123.com");
+
+    HaveTitanContext.theNewProductOf(currentActor, "FORM-ADMIN-WEB-UI");
 
     // build metadata
     Map<String, String> metaData = new HashMap<>();

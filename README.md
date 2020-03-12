@@ -1,6 +1,6 @@
 # titan-integration-tests
 
-## Where to write tests
+## Where to Write Tests
 
 This project uses JUnit to compose tests there is no cucumber/gherkin in this repo.
 
@@ -40,7 +40,7 @@ This command will reach out to swagger in dev-master then parse the whole API an
 ## General Test Setup
 
 Some tools for setup and talking to Titan api's( like feeding the service/tenant/entity...) into the path have already been configured.
-
+As we add on 3rd party & non Titan API's we will need to build more tools to easily feed tokens/auth/domains/etc into.
 
 Each class that holds integration tests must have the `@RunWith(SerenityRunner.class`) annotation.
 
@@ -48,8 +48,14 @@ We need to build our `cast` of actors for the test so we use a `@Before` hook at
 - username
 - tenant name
 - entity name
-for the actor(s) that we want to use for the test.
+
+For the actor(s) that we want to use for the test.
+
 Then we `setTheStage` with the actors we just built.
+Right now this project is sets the cast using the class
+`BuildCastOfTitanUsers` where we access the method `loadAndAuthenticate` and pass it a list of Titan Users.
+ 
+ This method will handle logging in and preparing the actor for the test.
 This before hook will run before each JUnit test making sure our actors are fresh.
 
 Example:
@@ -62,7 +68,7 @@ public class DocumentServiceIntegration {
   @Before
   public void setupActors() {
     users.add(new TitanUser("donald@lizzy123.com", "LIZZY123", "LIZZY123"));
-    OnStage.setTheStage(BuildCastOfUsers.buildCastOfAuthenticatedUsers(users));
+    OnStage.setTheStage(BuildCastOfTitanUsers.loadAndAuthenticate(users));
   }
 
   @Test
@@ -93,8 +99,22 @@ This example doesn't take any parameters, but a different endpoint that requires
     currentActor.attemptsTo(
         UseDocumentServiceTo.getImageUsingGetOnTheBrandingController(id, "original"));
 ```
+
+What about being able to configure path-params inside of the test?
+```
+    Actor currentActor = theActorCalled("donald@lizzy123.com");
+
+    HaveTitanContext.theNewProductOf(currentActor, "FORM-ADMIN-WEB-UI");
+```
+`HaveTitanContext` has a variety of methods to set things like tenant/entity/product/domain.
+
+In this example, the default product is loaded as AMS-WEB-UI but for the test
+we overrode that with the product of "FORM-ADMIN-WEB-UI" for each request in the test body.
+
+#### Getting The Last Request Sent
 Serenity gives access to an easy way to see our last response using:
 `SerenityRest.lastResponse()`
+Where you're welcome to deserialize the response or pull properties off and validate against.
 
 Which gives you access to things like `.getStatusCode()`, which makes asserting against status codes
 straightforward.

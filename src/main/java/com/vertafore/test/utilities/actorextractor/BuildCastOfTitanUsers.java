@@ -12,7 +12,7 @@ import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 
-public class BuildCastOfUsers {
+public class BuildCastOfTitanUsers {
 
   private static final String PROJECT_ID = "1495"; // data project id
   private static final String PATH_TO_USERS = "svi/users.json"; // Path to user json file
@@ -35,7 +35,7 @@ public class BuildCastOfUsers {
 
   // builds cast using static password
   // if it fails then we call out to local-dev
-  public static OnlineCast buildCastOfAuthenticatedUsers(List<TitanUser> actorsData) {
+  public static OnlineCast loadAndAuthenticate(List<TitanUser> actorsData) {
     OnlineCast cast = new OnlineCast();
     boolean authFailure = false;
 
