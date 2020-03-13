@@ -3,7 +3,7 @@ package com.vertafore.test.services.document;
 import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
-import com.vertafore.core.util.JsonHelper;
+import com.google.gson.JsonObject;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
@@ -11,7 +11,6 @@ import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -38,9 +37,9 @@ public class DocumentServiceIntegration {
     Actor currentActor = theActorCalled("donald@lizzy123.com");
 
     // build metadata
-    Map<String, String> metaData = new HashMap<>();
-    metaData.put("name", "brandingTestName");
-    metaData.put("description", "brandingTestDescription");
+    JsonObject metaData = new JsonObject();
+    metaData.addProperty("name", "brandingTestName");
+    metaData.addProperty("description", "brandingTestDescription");
 
     // get file
     File imageToUpload = new HelperUtils().getFileByFileName("doge", ".jpg");
@@ -48,7 +47,7 @@ public class DocumentServiceIntegration {
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(
         UseDocumentServiceTo.createUsingPostOnTheBrandingController(
-            JsonHelper.serializeAsJson(metaData), imageToUpload));
+            metaData.toString(), imageToUpload));
     checkStatusForSuccess();
 
     Map postResponse =
