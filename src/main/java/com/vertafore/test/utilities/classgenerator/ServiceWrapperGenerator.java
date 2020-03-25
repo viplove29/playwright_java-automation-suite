@@ -101,7 +101,6 @@ public class ServiceWrapperGenerator {
     public String restVerb;
     public String summary;
     public String consumes;
-    public String endpointName;
     public List<Parameter> parameters;
     public String methodName;
     public String methodArguments;
@@ -154,7 +153,6 @@ public class ServiceWrapperGenerator {
         p -> {
           p.apiCallMethods.forEach(
               ac -> {
-                classBuilder.addPrivateStaticFinalStringField(ac.endpointName, p.endpoint);
 
                 String restCallMethodChain =
                     String.format(
@@ -162,7 +160,7 @@ public class ServiceWrapperGenerator {
                         String.format(CONTENT_TYPE_TEMPLATE, ac.consumes),
                         ac.restParamMethodChain,
                         ac.restVerb,
-                        ac.endpointName);
+                        p.endpoint);
 
                 String beforeReturnStatement = generateBeforeReturnStatementCode(ac);
 
@@ -219,9 +217,6 @@ public class ServiceWrapperGenerator {
                       nextApiCallMethod.operationId,
                       nextApiCallMethod.tag,
                       nextApiCallMethod.summary);
-
-              nextApiCallMethod.endpointName =
-                  generateEndpointConstantName(nextApiCallMethod.methodName);
 
               nextApiCallMethod.consumes = (String) ((JSONArray) call.get("consumes")).get(0);
 
