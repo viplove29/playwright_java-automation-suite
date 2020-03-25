@@ -27,6 +27,39 @@ public class ServiceWrapperGenerator {
   private static final String SWAGGER_API_URL =
       "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service";
 
+  private static String[] ALL_SERVICES = {"accounting",
+          "alert",
+          "auth",
+          "carrier",
+          "carrier-update-ingestion",
+          "claim",
+          "commission",
+          "communication",
+          "company",
+          "config",
+          "contact",
+          "customer",
+          "document",
+          "event",
+          "exposure",
+          "form",
+          "file-intake",
+          "invoice",
+          "license",
+          "notification",
+          "opportunity",
+          "policy",
+          "product",
+          "question",
+          "quickbooks-integration",
+          "rating-data",
+          "rating",
+          "render",
+          "report",
+          "schedule",
+          "small-agency-ams-web-orchestration",
+          "to-do"};
+
   private final String BASE_PACKAGE_PATH = "com.vertafore.test.tasks.servicewrappers.%s";
 
   private final String[] DEFAULT_IMPORTS = {
@@ -87,7 +120,10 @@ public class ServiceWrapperGenerator {
     if (args.length == 0) {
       throw new MissingArgumentException("must provide service arguments when running this tasks");
     }
-    for (String service : args) {
+    String[] services = args.length == 1 && args[0].equalsIgnoreCase("all") ? ALL_SERVICES : args;
+
+    for (String service : services) {
+        System.out.println("next service: " + service + "\n");
       Response response = SerenityRest.get(String.format(SWAGGER_API_URL, service, service));
       new ServiceWrapperGenerator().generateServiceWrapperClass(response.getBody().asString());
     }
