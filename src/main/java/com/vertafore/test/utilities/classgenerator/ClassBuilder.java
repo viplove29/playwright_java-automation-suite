@@ -16,10 +16,12 @@ public class ClassBuilder {
   private final String CLASS_TEMPLATE = "public class %s {\n\n%s\n}";
   private final String FIELD_TEMPLATE = "\t%s %s%s%s %s = %s;\n";
   private final String METHOD_TEMPLATE = "\t%s %s%s %s(%s){\n\t\t%s%s\n\t}\n\n";
+  private final String CLASS_DOCUMENTATION_TEMPLATE = "/**\n%s\n*/\n";
 
   private List<String> imports = new ArrayList<>();
   private List<String> fields = new ArrayList<>();
   private List<String> methods = new ArrayList<>();
+  private List<String> classDocumentationLines = new ArrayList<>();
 
   private String className;
   private String packagePath;
@@ -69,6 +71,14 @@ public class ClassBuilder {
     this.packagePath = packagePath;
   }
 
+  public List<String> getClassDocumentationLines() {
+    return classDocumentationLines;
+  }
+
+  public void setClassDocumentationLines(List<String> classDocumentationLines) {
+    this.classDocumentationLines = classDocumentationLines;
+  }
+
   public void removeMethod(String method) {
     methods.remove(method);
   }
@@ -79,6 +89,10 @@ public class ClassBuilder {
 
   public void removeImport(String importStatement) {
     imports.remove(importStatement);
+  }
+
+  public void removeClassDocumentationLine(String line){
+    classDocumentationLines.remove(line);
   }
 
   public void clearImports() {
@@ -93,10 +107,13 @@ public class ClassBuilder {
     fields.clear();
   }
 
+  public void clearClassDocumentation(){classDocumentationLines.clear();}
+
   public void clearAll() {
     clearFields();
     clearImports();
     clearMethods();
+    clearClassDocumentation();
     className = null;
     packagePath = null;
   }
@@ -112,6 +129,11 @@ public class ClassBuilder {
     StringBuilder result = new StringBuilder();
     result.append(String.format(PACKAGE_TEMPLATE, packagePath));
     result.append(generateStringFromList(imports));
+    if(!classDocumentationLines.isEmpty()){
+      StringBuilder documentation = new StringBuilder();
+      classDocumentationLines.forEach(documentation::append);
+      result.append(String.format(CLASS_DOCUMENTATION_TEMPLATE, documentation.toString()));
+    }
     result.append(
         String.format(
             CLASS_TEMPLATE,
@@ -169,6 +191,10 @@ public class ClassBuilder {
     if (!currentImports.contains(path)) {
       imports.add(String.format(IMPORT_STATEMENT_TEMPLATE, isStatic ? "static " : "", path));
     }
+  }
+
+  public void addClassDocumentationLine(String line){
+    classDocumentationLines.add("* " + line + "\n");
   }
 
   public void addPublicStaticMethod(

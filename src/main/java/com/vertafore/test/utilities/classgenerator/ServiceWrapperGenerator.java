@@ -9,6 +9,8 @@ import com.vertafore.core.util.JsonHelper;
 import groovyjarjarcommonscli.MissingArgumentException;
 import io.restassured.response.Response;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +104,11 @@ public class ServiceWrapperGenerator {
     String packagePath = String.format(BASE_PACKAGE_PATH, packageName);
 
     ClassBuilder classBuilder = new ClassBuilder(packagePath, className);
+
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+
+    classBuilder.addClassDocumentationLine("This class was automatically generated on " + dtf.format(now));
 
     classBuilder.addArrayOfImportStatements(DEFAULT_IMPORTS);
     classBuilder.addPrivateStaticFinalStringField(
@@ -271,6 +278,7 @@ public class ServiceWrapperGenerator {
             }
           }
         });
+
     return result.toString().replaceAll(", $", "").replaceAll("\"", "");
   }
 
