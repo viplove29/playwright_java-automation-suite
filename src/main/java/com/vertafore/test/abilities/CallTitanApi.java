@@ -29,7 +29,7 @@ public class CallTitanApi implements Ability {
   }
 
   public static RequestSpecification asActorUsingService(Actor actor, String thisService) {
-    String cookies = (System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
+    String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
     return rest()
             .header("Vertafore-Authorization", theAuthTokenOf(actor))
             .baseUri(theDomainURIOf(actor))
