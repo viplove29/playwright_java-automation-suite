@@ -37,7 +37,7 @@ public class GetTitanAuthToken implements Performable {
     accessToken = SerenityRest.lastResponse().getBody().jsonPath().getString("content.accessToken");
 
     if (accessToken == null || accessToken.isEmpty()) {
-      throw new IllegalArgumentException(
+      throw new RuntimeException(
           "Could not log in with username: "
               + user.getUsername()
               + " and password: "

@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ClassBuilder {
 
@@ -18,10 +20,10 @@ public class ClassBuilder {
   private final String METHOD_TEMPLATE = "\t%s %s%s %s(%s){\n\t\t%s%s\n\t}\n\n";
   private final String CLASS_DOCUMENTATION_TEMPLATE = "/**\n%s\n*/\n";
 
-  private List<String> imports = new ArrayList<>();
-  private List<String> fields = new ArrayList<>();
-  private List<String> methods = new ArrayList<>();
-  private List<String> classDocumentationLines = new ArrayList<>();
+  private Set<String> imports = new HashSet<>();
+  private Set<String> fields = new HashSet<>();
+  private Set<String> methods = new HashSet<>();
+  private Set<String> classDocumentationLines = new HashSet<>();
 
   private String className;
   private String packagePath;
@@ -31,27 +33,27 @@ public class ClassBuilder {
     setClassName(className);
   }
 
-  public List<String> getImports() {
+  public Set<String> getImports() {
     return imports;
   }
 
-  public void setImports(List<String> imports) {
+  public void setImports(Set<String> imports) {
     this.imports = imports;
   }
 
-  public List<String> getFields() {
+  public Set<String> getFields() {
     return fields;
   }
 
-  public void setFields(List<String> fields) {
+  public void setFields(Set<String> fields) {
     this.fields = fields;
   }
 
-  public List<String> getMethods() {
+  public Set<String> getMethods() {
     return methods;
   }
 
-  public void setMethods(List<String> methods) {
+  public void setMethods(Set<String> methods) {
     this.methods = methods;
   }
 
@@ -71,11 +73,11 @@ public class ClassBuilder {
     this.packagePath = packagePath;
   }
 
-  public List<String> getClassDocumentationLines() {
+  public Set<String> getClassDocumentationLines() {
     return classDocumentationLines;
   }
 
-  public void setClassDocumentationLines(List<String> classDocumentationLines) {
+  public void setClassDocumentationLines(Set<String> classDocumentationLines) {
     this.classDocumentationLines = classDocumentationLines;
   }
 
@@ -160,9 +162,7 @@ public class ClassBuilder {
             methodArguments,
             beforeReturnStatement,
             methodDefinition);
-    if (!methods.contains(newMethod)) {
       methods.add(newMethod);
-    }
   }
 
   public void addField(
@@ -181,9 +181,8 @@ public class ClassBuilder {
             dataType,
             fieldName,
             dataValue);
-    if (!fields.contains(newField)) {
       fields.add(newField);
-    }
+
   }
 
   public void addImport(boolean isStatic, String path) {
@@ -286,7 +285,7 @@ public class ClassBuilder {
     }
   }
 
-  public String generateStringFromList(List<String> list) {
+  public String generateStringFromList(Set<String> list) {
     StringBuilder result = new StringBuilder();
     list.forEach(result::append);
     return result.append("\n").toString();

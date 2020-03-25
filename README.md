@@ -25,6 +25,10 @@ to use it:
 
 ``gradle run --args='{SERVICE-NAME}'`` (you can generate multiple wrappers at the same time by adding a space)
 
+To generate all services run:
+
+``gradle run --args='all'``
+
 To generate a whole Java class to interact with Auth-Service and Document-Service run:
 
 ``gradle run --args='auth document'``
@@ -110,6 +114,15 @@ What about being able to configure path-params inside of the test?
 
 In this example, the default product is loaded as AMS-WEB-UI but for the test
 we overrode that with the product of "FORM-ADMIN-WEB-UI" for each request in the test body.
+
+## Using branches
+Use these arguments for gradle task used for running test:
+
+Single service
+`-Dcookies="{SERVICE_NAME}={BRANCH_NAME}"`
+ 
+Multiple services - seperated by ;
+`-Dcookies="form-service=US9999-add-aods;opportunity-service=US1111-add-new-thing"`
 
 #### Getting The Last Request Sent
 Serenity gives access to an easy way to see our last response using:

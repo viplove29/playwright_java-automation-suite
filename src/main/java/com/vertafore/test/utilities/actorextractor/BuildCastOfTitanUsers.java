@@ -14,7 +14,7 @@ import net.serenitybdd.screenplay.actors.OnlineCast;
 
 public class BuildCastOfTitanUsers {
 
-  private static final String PROJECT_ID = "1495"; // data project id
+  private static final String DATA_PROJECT_ID = "1495"; // data project id
   private static final String PATH_TO_USERS = "svi/users.json"; // Path to user json file
   private static final String DEFAULT_PASSWORD = "Password1!";
   private static final String DEFAULT_PRODUCT_ID = "AMS-WEB-UI";
@@ -64,7 +64,7 @@ public class BuildCastOfTitanUsers {
   }
 
   private static OnlineCast buildAuthenticatedCastFromLocalDev(List<TitanUser> actorsData) {
-    String json = ExtractAll.titanUsers(PROJECT_ID, PATH_TO_USERS);
+    String json = ExtractAll.titanUsers(DATA_PROJECT_ID, PATH_TO_USERS);
 
     List<JsonTenants> jsonUsers = JsonHelper.deserializeJsonAsList(json, new TypeReference<>() {});
 

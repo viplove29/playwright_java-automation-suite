@@ -27,7 +27,8 @@ public class ServiceWrapperGenerator {
   private static final String SWAGGER_API_URL =
       "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service";
 
-  private static String[] ALL_SERVICES = {"accounting",
+  private static String[] ALL_SERVICES = {
+          "accounting",
           "alert",
           "auth",
           "carrier",
@@ -40,7 +41,6 @@ public class ServiceWrapperGenerator {
           "contact",
           "customer",
           "document",
-          "event",
           "exposure",
           "form",
           "file-intake",
