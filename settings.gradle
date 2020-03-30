@@ -1,15 +1,24 @@
 pluginManagement {
-    gradle.ext.nexusConfiguration = {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace.startsWith('com.vertafore')) {
+                useModule("${requested.id.namespace}:${requested.id.name}:${requested.version}")
+            }
+        }
+    }
+    repositories {
         maven {
-            url 'https://nexus.util.v4af.com/repository/libs-snapshot'
+            url System.env.MAVEN_REPO_URI ?: 'https://nexus-int.util.v4af.com/repository/libs-snapshot'
             credentials {
                 username 'vf_dependencies'
                 password 'vfDepReadOnly201711'
             }
         }
     }
-
-    repositories(gradle.nexusConfiguration)
 }
 
 rootProject.name = 'integration-tests'
+gradle.rootProject {
+    version = '0.0.3'
+    group = 'com.vertafore'
+}
