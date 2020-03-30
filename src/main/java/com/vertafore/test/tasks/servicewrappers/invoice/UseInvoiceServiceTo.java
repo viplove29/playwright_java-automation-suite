@@ -1,145 +1,121 @@
 package com.vertafore.test.tasks.servicewrappers.invoice;
 
-import static com.vertafore.test.abilities.CallTitanApi.as;
-import static net.serenitybdd.rest.SerenityRest.rest;
-
+import com.vertafore.test.abilities.CallTitanApi;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
 
+/** This class was automatically generated on 2020/03/30 11:16:56 */
 public class UseInvoiceServiceTo {
 
-  private static final String GET_INVOICE_SETTINGS_USING_GET = "setting-groups/invoices";
-  private static final String SET_INVOICE_SETTINGS_USING_PUT = "setting-groups/invoices";
-  private static final String GET_INVOICE_PAYMENTS_USING_GET = "invoice-payments";
-  private static final String GET_INVOICE_PAYMENT_BY_IDS_USING_GET =
-      "invoice-payments?filter=byIds{&ids,pageSize,page}";
-  private static final String PATCH_CHARGE_USING_PATCH = "charges/{chargeId}";
-  private static final String GET_CHARGE_USING_GET = "charges/{chargeId}";
-  private static final String CREATE_INVOICE_PAYMENT_USING_POST = "invoice-payments";
-  private static final String SEARCH_FOR_INVOICES_USING_GET =
-      "invoices?filter=bySearchTerm{&searchTerm,statuses,sortField,isDescending,pageSize,page}";
-  private static final String GET_INVOICE_PAYMENT_USING_GET = "invoice-payments/{id}";
-  private static final String DELETE_INVOICE_PAYMENT_USING_DELETE = "invoice-payments/{id}";
-  private static final String UPDATE_INVOICE_PAYMENT_USING_PUT = "invoice-payments/{id}";
-  private static final String GET_INVOICE_BY_IDS_USING_GET =
-      "invoices?filter=byIds{&ids,pageSize,page}";
-  private static final String FORMAT_INVOICE_LINE_ITEM_USING_POST = "invoice-line-item";
-  private static final String CREATE_INVOICE_USING_POST = "invoices";
-  private static final String DELETE_CHARGE_USING_DELETE = "charges/{id}";
-  private static final String GET_CHARGES_USING_GET =
-      "charges?sortField=TITLE{&searchTerm,status,isSystemCharge,isDescending,pageSize,page}";
-  private static final String GET_INVOICES_USING_GET = "invoices";
-  private static final String GET_INVOICE_PAYMENTS_BY_INVOICE_ID_USING_GET =
-      "invoices/{id}/invoice-payments";
-  private static final String GET_INVOICE_USING_GET = "invoices/{id}";
-  private static final String DELETE_INVOICE_USING_DELETE = "invoices/{id}";
-  private static final String CREATE_CUSTOMER_INVOICE_RENDER_USING_POST =
-      "invoices/{id}/customer-invoices";
-  private static final String RETRIEVE_STORED_CUSTOMER_INVOICE_USING_GET =
-      "invoices/{id}/customer-invoices";
-  private static final String GET_BASIC_INVOICE_INFO_USING_GET = "invoices/basic-info";
-  private static final String GET_APPLICABLE_POLICY_CHARGES_USING_GET =
-      "charges/policy-charges/{policyId}";
-  private static final String GET_PAYMENT_PRIORITY_SETTINGS_USING_GET =
-      "setting-groups/payment-priority";
-  private static final String SET_PAYMENT_PRIORITY_SETTINGS_USING_PUT =
-      "setting-groups/payment-priority";
-  private static final String GET_THRESHOLD_SETTINGS_USING_GET = "setting-groups/thresholds";
-  private static final String SET_THRESHOLD_SETTINGS_USING_PUT = "setting-groups/thresholds";
-  private static final String CREATE_CHARGE_USING_POST = "charges";
-  private static final String GET_LATE_FEES_SETTINGS_USING_GET = "setting-groups/late-fees";
-  private static final String SET_LATE_FEE_SETTINGS_USING_PUT = "setting-groups/late-fees";
+  private static final String THIS_SERVICE = "invoice";
 
-  public static Performable getInvoiceSettingsUsingGet() {
+  public static Performable getBasicInvoiceInfoUsingGetOnTheInvoiceController(String policyId) {
     return Task.where(
-        "{0} Get invoice settings",
+        "{0} Generate basic invoice info",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .get(as(actor).toEndpoint(GET_INVOICE_SETTINGS_USING_GET));
+              .queryParam("policyId", policyId)
+              .get("invoices/basic-info");
         });
   }
 
-  public static Performable setInvoiceSettingsUsingPut(Object body) {
+  public static Performable setPaymentPrioritySettingsUsingPutOnTheSettingsController(Object body) {
     return Task.where(
-        "{0} Set invoice settings",
+        "{0} Set payment priority settings",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .body(body)
-              .put(as(actor).toEndpoint(SET_INVOICE_SETTINGS_USING_PUT));
+              .put("setting-groups/payment-priority");
         });
   }
 
-  public static Performable getInvoicePaymentsUsingGet(String pageSize, String page) {
-    return Task.where(
-        "{0} Retrieve Invoice Payments for all Invoices",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_INVOICE_PAYMENTS_USING_GET));
-        });
-  }
-
-  public static Performable getInvoicePaymentByIdsUsingGet(
+  public static Performable getInvoiceByIdsUsingGetOnTheInvoiceController(
       String ids, String pageSize, String page, String filter) {
     return Task.where(
-        "{0} Retrieve Invoice Payments by IDs",
+        "{0} Get Invoices by IDs",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("ids", ids)
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
               .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(GET_INVOICE_PAYMENT_BY_IDS_USING_GET));
+              .get("invoices?filter=byIds");
         });
   }
 
-  public static Performable patchChargeUsingPatch(String chargeId, Object body) {
+  public static Performable createPaymentUsingPostOnThePaymentsController(Object body) {
     return Task.where(
-        "{0} Patch Charge",
+        "{0} Create Payment",
         actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("chargeId", chargeId)
-              .body(body)
-              .patch(as(actor).toEndpoint(PATCH_CHARGE_USING_PATCH));
-        });
-  }
-
-  public static Performable getChargeUsingGet(String chargeId) {
-    return Task.where(
-        "{0} Get Charge By ID",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("chargeId", chargeId)
-              .get(as(actor).toEndpoint(GET_CHARGE_USING_GET));
-        });
-  }
-
-  public static Performable createInvoicePaymentUsingPost(Object body) {
-    return Task.where(
-        "{0} Create Invoice Payment",
-        actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .body(body)
-              .post(as(actor).toEndpoint(CREATE_INVOICE_PAYMENT_USING_POST));
+              .post("payments");
         });
   }
 
-  public static Performable searchForInvoicesUsingGet(
+  public static Performable createInvoiceUsingPostOnTheInvoiceController(Object body) {
+    return Task.where(
+        "{0} Create Invoice",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .body(body)
+              .post("invoices");
+        });
+  }
+
+  public static Performable getPaymentsUsingGetOnThePaymentsController(
+      String pageSize, String page) {
+    return Task.where(
+        "{0} Retrieve Payments for all Invoices",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .get("payments");
+        });
+  }
+
+  public static Performable updatePaymentUsingPutOnThePaymentsController(String id, Object body) {
+    return Task.where(
+        "{0} Replace Payment",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .body(body)
+              .put("payments/{id}");
+        });
+  }
+
+  public static Performable createCustomerInvoiceRenderUsingPostOnTheInvoiceController(String id) {
+    return Task.where(
+        "{0} Generate Customer Invoice",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .post("invoices/{id}/customer-invoices");
+        });
+  }
+
+  public static Performable retrieveStoredCustomerInvoiceUsingGetOnTheInvoiceController(String id) {
+    return Task.where(
+        "{0} Retrieve Customer Invoice",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .get("invoices/{id}/customer-invoices");
+        });
+  }
+
+  public static Performable searchForInvoicesUsingGetOnTheInvoiceController(
       String searchTerm,
       String statuses,
       String sortField,
@@ -150,8 +126,7 @@ public class UseInvoiceServiceTo {
     return Task.where(
         "{0} Search for Invoices",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("searchTerm", searchTerm)
               .queryParam("statuses", statuses)
@@ -160,103 +135,219 @@ public class UseInvoiceServiceTo {
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
               .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(SEARCH_FOR_INVOICES_USING_GET));
+              .get("invoices?filter=bySearchTerm");
         });
   }
 
-  public static Performable getInvoicePaymentUsingGet(String id) {
+  public static Performable getLateFeesSettingsUsingGetOnTheSettingsController() {
     return Task.where(
-        "{0} Retrieve Invoice Payment",
+        "{0} Get late fees settings",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_INVOICE_PAYMENT_USING_GET));
+              .get("setting-groups/late-fees");
         });
   }
 
-  public static Performable deleteInvoicePaymentUsingDelete(String id) {
-    return Task.where(
-        "{0} Delete Invoice Payment",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_INVOICE_PAYMENT_USING_DELETE));
-        });
-  }
-
-  public static Performable updateInvoicePaymentUsingPut(String id, Object body) {
-    return Task.where(
-        "{0} Replace Invoice Payment",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .body(body)
-              .put(as(actor).toEndpoint(UPDATE_INVOICE_PAYMENT_USING_PUT));
-        });
-  }
-
-  public static Performable getInvoiceByIdsUsingGet(
-      String ids, String pageSize, String page, String filter) {
-    return Task.where(
-        "{0} Get Invoices by IDs",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("ids", ids)
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(GET_INVOICE_BY_IDS_USING_GET));
-        });
-  }
-
-  public static Performable formatInvoiceLineItemUsingPost(Object body) {
+  public static Performable formatInvoiceLineItemUsingPostOnTheChargeController(Object body) {
     return Task.where(
         "{0} Provides logic to specially format an invoice line item.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .body(body)
-              .post(as(actor).toEndpoint(FORMAT_INVOICE_LINE_ITEM_USING_POST));
+              .post("invoice-line-item");
         });
   }
 
-  public static Performable createInvoiceUsingPost(Object body) {
+  public static Performable getInvoicesUsingGetOnTheInvoiceController(
+      String pageSize, String page) {
     return Task.where(
-        "{0} Create Invoice",
+        "{0} Get all Invoices",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .body(body)
-              .post(as(actor).toEndpoint(CREATE_INVOICE_USING_POST));
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .get("invoices");
         });
   }
 
-  public static Performable deleteChargeUsingDelete(String id) {
+  public static Performable deletePaymentUsingDeleteOnThePaymentsController(String id) {
+    return Task.where(
+        "{0} Delete Payment",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .delete("payments/{id}");
+        });
+  }
+
+  public static Performable setInvoiceSettingsUsingPutOnTheSettingsController(Object body) {
+    return Task.where(
+        "{0} Set invoice settings",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .body(body)
+              .put("setting-groups/invoices");
+        });
+  }
+
+  public static Performable patchChargeUsingPatchOnTheChargeController(
+      String chargeId, Object body) {
+    return Task.where(
+        "{0} Patch Charge",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("chargeId", chargeId)
+              .body(body)
+              .patch("charges/{chargeId}");
+        });
+  }
+
+  public static Performable getInvoiceSettingsUsingGetOnTheSettingsController() {
+    return Task.where(
+        "{0} Get invoice settings",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .get("setting-groups/invoices");
+        });
+  }
+
+  public static Performable getApplicablePolicyChargesUsingGetOnTheChargeController(
+      String policyId, String pageSize, String page) {
+    return Task.where(
+        "{0} Retrieve a list of all Charges applicable to a Policy",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("policyId", policyId)
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .get("charges/policy-charges/{policyId}");
+        });
+  }
+
+  public static Performable createChargeUsingPostOnTheChargeController(Object body) {
+    return Task.where(
+        "{0} Create Charge",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .body(body)
+              .post("charges");
+        });
+  }
+
+  public static Performable deleteChargeUsingDeleteOnTheChargeController(String id) {
     return Task.where(
         "{0} Delete Charge",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_CHARGE_USING_DELETE));
+              .delete("charges/{id}");
         });
   }
 
-  public static Performable getChargesUsingGet(
+  public static Performable deleteInvoiceUsingDeleteOnTheInvoiceController(String id) {
+    return Task.where(
+        "{0} Delete invoice",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .delete("invoices/{id}");
+        });
+  }
+
+  public static Performable getChargeUsingGetOnTheChargeController(String chargeId) {
+    return Task.where(
+        "{0} Get Charge By ID",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("chargeId", chargeId)
+              .get("charges/{chargeId}");
+        });
+  }
+
+  public static Performable getPaymentUsingGetOnThePaymentsController(String id) {
+    return Task.where(
+        "{0} Retrieve Payment",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .get("payments/{id}");
+        });
+  }
+
+  public static Performable getInvoiceUsingGetOnTheInvoiceController(String id) {
+    return Task.where(
+        "{0} Get Invoice by ID",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .get("invoices/{id}");
+        });
+  }
+
+  public static Performable updateChargeUsingPutOnTheChargeController(
+      String chargeId, Object body) {
+    return Task.where(
+        "{0} Update Charge",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("chargeId", chargeId)
+              .body(body)
+              .put("charges/{chargeId}");
+        });
+  }
+
+  public static Performable getThresholdSettingsUsingGetOnTheSettingsController() {
+    return Task.where(
+        "{0} Get threshold settings",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .get("setting-groups/thresholds");
+        });
+  }
+
+  public static Performable setThresholdSettingsUsingPutOnTheSettingsController(Object body) {
+    return Task.where(
+        "{0} Set threshold settings",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .body(body)
+              .put("setting-groups/thresholds");
+        });
+  }
+
+  public static Performable setLateFeeSettingsUsingPutOnTheSettingsController(Object body) {
+    return Task.where(
+        "{0} Set late fee settings",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .body(body)
+              .put("setting-groups/late-fees");
+        });
+  }
+
+  public static Performable getChargesUsingGetOnTheChargeController(
       String searchTerm,
       String status,
       String isSystemCharge,
+      String isArchived,
       String sortField,
       String isDescending,
       String pageSize,
@@ -264,201 +355,57 @@ public class UseInvoiceServiceTo {
     return Task.where(
         "{0} Retrieve a list of all Charges",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("searchTerm", searchTerm)
               .queryParam("status", status)
               .queryParam("isSystemCharge", isSystemCharge)
+              .queryParam("isArchived", isArchived)
               .queryParam("sortField", sortField)
               .queryParam("isDescending", isDescending)
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_CHARGES_USING_GET));
+              .get(
+                  "charges?sortField=TITLE{&searchTerm,status,isSystemCharge,isArchived,isDescending,pageSize,page}");
         });
   }
 
-  public static Performable getInvoicesUsingGet(String pageSize, String page) {
-    return Task.where(
-        "{0} Get all Invoices",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_INVOICES_USING_GET));
-        });
-  }
-
-  public static Performable getInvoicePaymentsByInvoiceIdUsingGet(
-      String id, String pageSize, String page) {
-    return Task.where(
-        "{0} Retrieve Invoice Payments for Invoice",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_INVOICE_PAYMENTS_BY_INVOICE_ID_USING_GET));
-        });
-  }
-
-  public static Performable getInvoiceUsingGet(String id) {
-    return Task.where(
-        "{0} Get Invoice by ID",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_INVOICE_USING_GET));
-        });
-  }
-
-  public static Performable deleteInvoiceUsingDelete(String id) {
-    return Task.where(
-        "{0} Delete invoice",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_INVOICE_USING_DELETE));
-        });
-  }
-
-  public static Performable createCustomerInvoiceRenderUsingPost(String id) {
-    return Task.where(
-        "{0} Generate Customer Invoice",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .post(as(actor).toEndpoint(CREATE_CUSTOMER_INVOICE_RENDER_USING_POST));
-        });
-  }
-
-  public static Performable retrieveStoredCustomerInvoiceUsingGet(String id) {
-    return Task.where(
-        "{0} Retrieve Customer Invoice",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(RETRIEVE_STORED_CUSTOMER_INVOICE_USING_GET));
-        });
-  }
-
-  public static Performable getBasicInvoiceInfoUsingGet(String policyId) {
-    return Task.where(
-        "{0} Generate basic invoice info",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("policyId", policyId)
-              .get(as(actor).toEndpoint(GET_BASIC_INVOICE_INFO_USING_GET));
-        });
-  }
-
-  public static Performable getApplicablePolicyChargesUsingGet(
-      String policyId, String pageSize, String page) {
-    return Task.where(
-        "{0} Retrieve a list of all Charges applicable to a Policy",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("policyId", policyId)
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_APPLICABLE_POLICY_CHARGES_USING_GET));
-        });
-  }
-
-  public static Performable getPaymentPrioritySettingsUsingGet() {
+  public static Performable getPaymentPrioritySettingsUsingGetOnTheSettingsController() {
     return Task.where(
         "{0} Get payment priority setting",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .get(as(actor).toEndpoint(GET_PAYMENT_PRIORITY_SETTINGS_USING_GET));
+              .get("setting-groups/payment-priority");
         });
   }
 
-  public static Performable setPaymentPrioritySettingsUsingPut(Object body) {
+  public static Performable getPaymentByIdsUsingGetOnThePaymentsController(
+      String ids, String pageSize, String page, String filter) {
     return Task.where(
-        "{0} Set payment priority settings",
+        "{0} Retrieve Payments by IDs",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .body(body)
-              .put(as(actor).toEndpoint(SET_PAYMENT_PRIORITY_SETTINGS_USING_PUT));
+              .queryParam("ids", ids)
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .queryParam("filter", filter)
+              .get("payments?filter=byIds");
         });
   }
 
-  public static Performable getThresholdSettingsUsingGet() {
+  public static Performable getPaymentsByInvoiceIdUsingGetOnThePaymentsController(
+      String id, String pageSize, String page) {
     return Task.where(
-        "{0} Get threshold settings",
+        "{0} Retrieve Payments for Invoice",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .get(as(actor).toEndpoint(GET_THRESHOLD_SETTINGS_USING_GET));
-        });
-  }
-
-  public static Performable setThresholdSettingsUsingPut(Object body) {
-    return Task.where(
-        "{0} Set threshold settings",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .body(body)
-              .put(as(actor).toEndpoint(SET_THRESHOLD_SETTINGS_USING_PUT));
-        });
-  }
-
-  public static Performable createChargeUsingPost(Object body) {
-    return Task.where(
-        "{0} Create Charge",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .body(body)
-              .post(as(actor).toEndpoint(CREATE_CHARGE_USING_POST));
-        });
-  }
-
-  public static Performable getLateFeesSettingsUsingGet() {
-    return Task.where(
-        "{0} Get late fees settings",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .get(as(actor).toEndpoint(GET_LATE_FEES_SETTINGS_USING_GET));
-        });
-  }
-
-  public static Performable setLateFeeSettingsUsingPut(Object body) {
-    return Task.where(
-        "{0} Set late fee settings",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .body(body)
-              .put(as(actor).toEndpoint(SET_LATE_FEE_SETTINGS_USING_PUT));
+              .pathParam("id", id)
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .get("invoices/{id}/payments");
         });
   }
 }

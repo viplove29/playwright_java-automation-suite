@@ -4,10 +4,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ClassBuilder {
 
@@ -16,10 +16,12 @@ public class ClassBuilder {
   private final String CLASS_TEMPLATE = "public class %s {\n\n%s\n}";
   private final String FIELD_TEMPLATE = "\t%s %s%s%s %s = %s;\n";
   private final String METHOD_TEMPLATE = "\t%s %s%s %s(%s){\n\t\t%s%s\n\t}\n\n";
+  private final String CLASS_DOCUMENTATION_TEMPLATE = "/**\n%s\n*/\n";
 
-  private List<String> imports = new ArrayList<>();
-  private List<String> fields = new ArrayList<>();
-  private List<String> methods = new ArrayList<>();
+  private Set<String> imports = new HashSet<>();
+  private Set<String> fields = new HashSet<>();
+  private Set<String> methods = new HashSet<>();
+  private Set<String> classDocumentationLines = new HashSet<>();
 
   private String className;
   private String packagePath;
@@ -29,27 +31,27 @@ public class ClassBuilder {
     setClassName(className);
   }
 
-  public List<String> getImports() {
+  public Set<String> getImports() {
     return imports;
   }
 
-  public void setImports(List<String> imports) {
+  public void setImports(Set<String> imports) {
     this.imports = imports;
   }
 
-  public List<String> getFields() {
+  public Set<String> getFields() {
     return fields;
   }
 
-  public void setFields(List<String> fields) {
+  public void setFields(Set<String> fields) {
     this.fields = fields;
   }
 
-  public List<String> getMethods() {
+  public Set<String> getMethods() {
     return methods;
   }
 
-  public void setMethods(List<String> methods) {
+  public void setMethods(Set<String> methods) {
     this.methods = methods;
   }
 
@@ -69,6 +71,14 @@ public class ClassBuilder {
     this.packagePath = packagePath;
   }
 
+  public Set<String> getClassDocumentationLines() {
+    return classDocumentationLines;
+  }
+
+  public void setClassDocumentationLines(Set<String> classDocumentationLines) {
+    this.classDocumentationLines = classDocumentationLines;
+  }
+
   public void removeMethod(String method) {
     methods.remove(method);
   }
@@ -79,6 +89,10 @@ public class ClassBuilder {
 
   public void removeImport(String importStatement) {
     imports.remove(importStatement);
+  }
+
+  public void removeClassDocumentationLine(String line) {
+    classDocumentationLines.remove(line);
   }
 
   public void clearImports() {
@@ -93,10 +107,15 @@ public class ClassBuilder {
     fields.clear();
   }
 
+  public void clearClassDocumentation() {
+    classDocumentationLines.clear();
+  }
+
   public void clearAll() {
     clearFields();
     clearImports();
     clearMethods();
+    clearClassDocumentation();
     className = null;
     packagePath = null;
   }
@@ -112,6 +131,11 @@ public class ClassBuilder {
     StringBuilder result = new StringBuilder();
     result.append(String.format(PACKAGE_TEMPLATE, packagePath));
     result.append(generateStringFromList(imports));
+    if (!classDocumentationLines.isEmpty()) {
+      StringBuilder documentation = new StringBuilder();
+      classDocumentationLines.forEach(documentation::append);
+      result.append(String.format(CLASS_DOCUMENTATION_TEMPLATE, documentation.toString()));
+    }
     result.append(
         String.format(
             CLASS_TEMPLATE,
@@ -128,7 +152,7 @@ public class ClassBuilder {
       String methodArguments,
       String beforeReturnStatement,
       String methodDefinition) {
-    methods.add(
+    String newMethod =
         String.format(
             METHOD_TEMPLATE,
             accessLevel,
@@ -137,7 +161,8 @@ public class ClassBuilder {
             methodName,
             methodArguments,
             beforeReturnStatement,
-            methodDefinition));
+            methodDefinition);
+    methods.add(newMethod);
   }
 
   public void addField(
@@ -147,7 +172,7 @@ public class ClassBuilder {
       String dataType,
       String fieldName,
       String dataValue) {
-    fields.add(
+    String newField =
         String.format(
             FIELD_TEMPLATE,
             accessLevel,
@@ -155,7 +180,8 @@ public class ClassBuilder {
             isFinal ? "final " : "",
             dataType,
             fieldName,
-            dataValue));
+            dataValue);
+    fields.add(newField);
   }
 
   public void addImport(boolean isStatic, String path) {
@@ -163,6 +189,10 @@ public class ClassBuilder {
     if (!currentImports.contains(path)) {
       imports.add(String.format(IMPORT_STATEMENT_TEMPLATE, isStatic ? "static " : "", path));
     }
+  }
+
+  public void addClassDocumentationLine(String line) {
+    classDocumentationLines.add("* " + line + "\n");
   }
 
   public void addPublicStaticMethod(
@@ -254,7 +284,7 @@ public class ClassBuilder {
     }
   }
 
-  public String generateStringFromList(List<String> list) {
+  public String generateStringFromList(Set<String> list) {
     StringBuilder result = new StringBuilder();
     list.forEach(result::append);
     return result.append("\n").toString();

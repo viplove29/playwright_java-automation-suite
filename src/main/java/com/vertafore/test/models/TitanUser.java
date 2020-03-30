@@ -1,24 +1,24 @@
 package com.vertafore.test.models;
 
 public class TitanUser {
-  private String displayName;
+  private String userName;
   private String entityName;
-  private String tenantId;
+  private String tenantName;
 
-  public TitanUser(String displayName, String entityName, String tenantId) {
-    this.displayName = displayName;
+  public TitanUser(String userName, String entityName, String tenantName) {
+    this.userName = userName;
     this.entityName = entityName;
-    this.tenantId = tenantId;
+    this.tenantName = tenantName;
   }
 
   public TitanUser() {}
 
-  public String getDisplayName() {
-    return displayName;
+  public String getUserName() {
+    return userName;
   }
 
-  public void setDisplayName(String displayName) {
-    this.displayName = displayName;
+  public void setUserNameName(String userName) {
+    this.userName = userName;
   }
 
   public String getEntityName() {
@@ -29,11 +29,11 @@ public class TitanUser {
     this.entityName = entityName;
   }
 
-  public String getTenantId() {
-    return tenantId;
+  public String getTenantName() {
+    return tenantName;
   }
 
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
+  public void setTenantName(String tenantName) {
+    this.tenantName = tenantName;
   }
 }

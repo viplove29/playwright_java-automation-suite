@@ -1,19 +1,23 @@
 package com.vertafore.test.abilities;
 
+import static com.vertafore.test.abilities.Authenticate.theAuthTokenOf;
+import static com.vertafore.test.abilities.HaveTitanContext.theDomainURIOf;
+import static com.vertafore.test.abilities.HaveTitanContext.theEntityIdOf;
+import static com.vertafore.test.abilities.HaveTitanContext.theProductIdOf;
+import static com.vertafore.test.abilities.HaveTitanContext.theTenantIdOf;
+import static net.serenitybdd.rest.SerenityRest.rest;
+
+import io.restassured.specification.RequestSpecification;
+import java.util.Map;
 import net.serenitybdd.screenplay.Ability;
 import net.serenitybdd.screenplay.Actor;
 
 public class CallTitanApi implements Ability {
 
-  private final String BASE_URL;
-  private final String CONTEXT = "{service}/v1/{productId}/{tenantId}/entities/{entityId}/";
+  private CallTitanApi() {}
 
-  private CallTitanApi(String baseUrl) {
-    this.BASE_URL = baseUrl + CONTEXT;
-  }
-
-  public static CallTitanApi atBaseUrl(String baseURL) {
-    return new CallTitanApi(baseURL);
+  public static CallTitanApi asAuthenticatedUser() {
+    return new CallTitanApi();
   }
 
   public static CallTitanApi as(Actor actor) {
@@ -24,8 +28,18 @@ public class CallTitanApi implements Ability {
     return actor.abilityTo(CallTitanApi.class);
   }
 
-  // resolve returns the fully hydrated URL ready to be appended by any service url.
-  public String toEndpoint(String path) {
-    return BASE_URL + path;
+  public static RequestSpecification asActorUsingService(Actor actor, String thisService) {
+    String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
+    return rest()
+        .header("Vertafore-Authorization", theAuthTokenOf(actor))
+        .baseUri(theDomainURIOf(actor))
+        .basePath("{service}/v1/{product}/{tenant}/entities/{entity}/")
+        .cookie(cookies)
+        .pathParams(
+            Map.of(
+                "service", thisService,
+                "product", theProductIdOf(actor),
+                "tenant", theTenantIdOf(actor),
+                "entity", theEntityIdOf(actor)));
   }
 }

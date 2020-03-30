@@ -1,160 +1,51 @@
 package com.vertafore.test.tasks.servicewrappers.policy;
 
-import static com.vertafore.test.abilities.CallTitanApi.as;
-import static net.serenitybdd.rest.SerenityRest.rest;
-
+import com.vertafore.test.abilities.CallTitanApi;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
 
+/** This class was automatically generated on 2020/03/30 11:16:59 */
 public class UsePolicyServiceTo {
 
-  private static final String GET_POLICIES_BY_IDS_USING_GET =
-      "policies?filter=byIds{&pageSize,page,ids}";
-  private static final String GET_POLICIES_BY_CONTEXTUAL_IDS_USING_GET =
-      "policies?filter=byContextualIds{&pageSize,page,ids}";
-  private static final String GET_POLICY_BY_ID_USING_GET = "policies/{id}";
-  private static final String DELETE_POLICY_USING_DELETE = "policies/{id}";
-  private static final String GET_POLICIES_BY_STATUSES_USING_GET =
-      "policies?filter=byStatuses{&pageSize,page,statuses,customerId}";
-  private static final String CREATE_POLICY_USING_POST = "policies";
-  private static final String UPDATE_POLICY_VERSION_USING_PATCH =
-      "policies/{policyId}/versions/{versionId}";
-  private static final String GET_POLICY_VERSION_USING_GET =
-      "policies/{policyId}/versions/{versionId}";
-  private static final String GET_ALL_VERSIONS_BY_POLICY_ID_USING_GET = "policies/{id}/versions";
-  private static final String SEARCH_POLICIES_USING_GET = "policies";
-  private static final String GET_CARRIERS_FOR_ALL_POLICIES_USING_GET = "policies/carriers";
-  private static final String CREATE_POLICY_VERSION_USING_POST = "policies/{policyId}/versions";
+  private static final String THIS_SERVICE = "policy";
 
-  public static Performable getPoliciesByIdsUsingGet(
-      String pageSize, String page, String ids, String filter) {
-    return Task.where(
-        "{0} Get policies by IDs.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .queryParam("ids", ids)
-              .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(GET_POLICIES_BY_IDS_USING_GET));
-        });
-  }
-
-  public static Performable getPoliciesByContextualIdsUsingGet(
-      String pageSize, String page, String ids, String filter) {
-    return Task.where(
-        "{0} Get policies by contextual IDs.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .queryParam("ids", ids)
-              .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(GET_POLICIES_BY_CONTEXTUAL_IDS_USING_GET));
-        });
-  }
-
-  public static Performable getPolicyByIdUsingGet(String id) {
-    return Task.where(
-        "{0} Get a specific policy.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_POLICY_BY_ID_USING_GET));
-        });
-  }
-
-  public static Performable deletePolicyUsingDelete(String id) {
-    return Task.where(
-        "{0} Delete a policy.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_POLICY_USING_DELETE));
-        });
-  }
-
-  public static Performable getPoliciesByStatusesUsingGet(
-      String pageSize, String page, String statuses, String customerId, String filter) {
-    return Task.where(
-        "{0} Get policies by statuses.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .queryParam("statuses", statuses)
-              .queryParam("customerId", customerId)
-              .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(GET_POLICIES_BY_STATUSES_USING_GET));
-        });
-  }
-
-  public static Performable createPolicyUsingPost(Object body) {
-    return Task.where(
-        "{0} Create a policy.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .body(body)
-              .post(as(actor).toEndpoint(CREATE_POLICY_USING_POST));
-        });
-  }
-
-  public static Performable updatePolicyVersionUsingPatch(
+  public static Performable updatePolicyVersionUsingPatchOnThePolicyVersionController(
       Object body, String policyId, String versionId) {
     return Task.where(
         "{0} Update a policy version",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json-patch+json")
               .body(body)
               .pathParam("policyId", policyId)
               .pathParam("versionId", versionId)
-              .patch(as(actor).toEndpoint(UPDATE_POLICY_VERSION_USING_PATCH));
+              .patch("policies/{policyId}/versions/{versionId}");
         });
   }
 
-  public static Performable getPolicyVersionUsingGet(String policyId, String versionId) {
+  public static Performable createPolicyUsingPostOnThePolicyController(Object body) {
     return Task.where(
-        "{0} Get a policy version.",
+        "{0} Create a policy.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .pathParam("policyId", policyId)
-              .pathParam("versionId", versionId)
-              .get(as(actor).toEndpoint(GET_POLICY_VERSION_USING_GET));
+              .body(body)
+              .post("policies");
         });
   }
 
-  public static Performable getAllVersionsByPolicyIdUsingGet(
-      String id, String pageSize, String page) {
+  public static Performable getPolicyByIdUsingGetOnThePolicyController(String id) {
     return Task.where(
-        "{0} Get policy versions for a policy.",
+        "{0} Get a specific policy.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
-              .queryParam("pageSize", pageSize)
-              .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_ALL_VERSIONS_BY_POLICY_ID_USING_GET));
+              .get("policies/{id}");
         });
   }
 
-  public static Performable searchPoliciesUsingGet(
+  public static Performable searchPoliciesUsingGetOnThePolicyController(
       String hideCancelled,
       String sortField,
       String isDescending,
@@ -166,8 +57,7 @@ public class UsePolicyServiceTo {
     return Task.where(
         "{0} Get policies.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("hideCancelled", hideCancelled)
               .queryParam("sortField", sortField)
@@ -177,33 +67,117 @@ public class UsePolicyServiceTo {
               .queryParam("customerId", customerId)
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
-              .get(as(actor).toEndpoint(SEARCH_POLICIES_USING_GET));
+              .get("policies");
         });
   }
 
-  public static Performable getCarriersForAllPoliciesUsingGet(String pageSize, String page) {
+  public static Performable getPoliciesByIdsUsingGetOnThePolicyController(
+      String pageSize, String page, String ids, String filter) {
     return Task.where(
-        "{0} Get carriers for policies.",
+        "{0} Get policies by IDs.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_CARRIERS_FOR_ALL_POLICIES_USING_GET));
+              .queryParam("ids", ids)
+              .queryParam("filter", filter)
+              .get("policies?filter=byIds");
         });
   }
 
-  public static Performable createPolicyVersionUsingPost(String policyId, Object body) {
+  public static Performable getCarriersForAllPoliciesUsingGetOnThePolicyController(
+      String pageSize, String page) {
+    return Task.where(
+        "{0} Get carriers for policies.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .get("policies/carriers");
+        });
+  }
+
+  public static Performable deletePolicyUsingDeleteOnThePolicyController(String id) {
+    return Task.where(
+        "{0} Delete a policy.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .delete("policies/{id}");
+        });
+  }
+
+  public static Performable getPoliciesByContextualIdsUsingGetOnThePolicyController(
+      String pageSize, String page, String ids, String filter) {
+    return Task.where(
+        "{0} Get policies by contextual IDs.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .queryParam("ids", ids)
+              .queryParam("filter", filter)
+              .get("policies?filter=byContextualIds");
+        });
+  }
+
+  public static Performable getPoliciesByStatusesUsingGetOnThePolicyController(
+      String pageSize, String page, String statuses, String customerId, String filter) {
+    return Task.where(
+        "{0} Get policies by statuses.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .queryParam("statuses", statuses)
+              .queryParam("customerId", customerId)
+              .queryParam("filter", filter)
+              .get("policies?filter=byStatuses");
+        });
+  }
+
+  public static Performable getPolicyVersionUsingGetOnThePolicyVersionController(
+      String policyId, String versionId) {
+    return Task.where(
+        "{0} Get a policy version.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("policyId", policyId)
+              .pathParam("versionId", versionId)
+              .get("policies/{policyId}/versions/{versionId}");
+        });
+  }
+
+  public static Performable createPolicyVersionUsingPostOnThePolicyVersionController(
+      String policyId, Object body) {
     return Task.where(
         "{0} Create policy version",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("policyId", policyId)
               .body(body)
-              .post(as(actor).toEndpoint(CREATE_POLICY_VERSION_USING_POST));
+              .post("policies/{policyId}/versions");
+        });
+  }
+
+  public static Performable getAllVersionsByPolicyIdUsingGetOnThePolicyVersionController(
+      String id, String pageSize, String page) {
+    return Task.where(
+        "{0} Get policy versions for a policy.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .queryParam("pageSize", pageSize)
+              .queryParam("page", page)
+              .get("policies/{id}/versions");
         });
   }
 }

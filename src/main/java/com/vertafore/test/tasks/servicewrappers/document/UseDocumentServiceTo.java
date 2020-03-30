@@ -1,141 +1,158 @@
 package com.vertafore.test.tasks.servicewrappers.document;
 
-import static com.vertafore.test.abilities.CallTitanApi.as;
-import static net.serenitybdd.rest.SerenityRest.rest;
-
+import com.vertafore.test.abilities.CallTitanApi;
 import java.io.File;
 import java.net.URLConnection;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.Task;
 
+/** This class was automatically generated on 2020/03/30 11:16:52 */
 public class UseDocumentServiceTo {
 
-  private static final String DOWNLOAD_BY_IDS_USING_GET = "bytes?filter=byIds";
-  private static final String GET_HIERARCHY_USING_GET = "hierarchy?filter=byPath";
-  private static final String UPDATE_USING_PUT_1 = "documents/{id}";
-  private static final String CREATE_USING_POST_1 = "documents";
-  private static final String GET_IMAGE_USING_GET = "brandings/{id}/bytes";
-  private static final String GET_DOCUMENT_VERSIONS_USING_GET = "documents/{id}/versions";
-  private static final String CREATE_USING_POST_2 = "folders";
-  private static final String SEARCH_USING_GET = "search?filter=byPathAndSearchTerm";
-  private static final String CREATE_USING_POST_3 = "signatures";
-  private static final String GET_CONTENTS_USING_GET = "contents?filter=byPath";
-  private static final String GET_BY_ID_USING_GET_1 = "documents/{id}";
-  private static final String DELETE_BY_ID_USING_DELETE_1 = "documents/{id}";
-  private static final String GET_IMAGES_USING_GET = "brandings/bytes";
-  private static final String GET_IMAGE_USING_GET_1 = "signatures/{id}/bytes";
-  private static final String GET_BRANDINGS_USING_GET = "brandings";
-  private static final String GET_USING_GET = "folders/{id}/";
-  private static final String UPDATE_USING_PUT_2 = "folders/{id}/";
-  private static final String GET_BY_ID_USING_GET = "brandings/{id}";
-  private static final String DELETE_BY_ID_USING_DELETE = "brandings/{id}";
-  private static final String GET_BY_ID_USING_GET_2 = "signatures/{id}";
-  private static final String DELETE_BY_ID_USING_DELETE_2 = "signatures/{id}";
-  private static final String GET_SIGNATURES_USING_GET = "signatures";
-  private static final String DELETE_USING_DELETE = "folders/{id}";
-  private static final String UPDATE_USING_PUT_3 = "signatures/{id}";
-  private static final String UPDATE_USING_PUT = "brandings/{id}";
-  private static final String CREATE_USING_POST = "brandings";
-  private static final String DOWNLOAD_BY_VERSION_USING_GET =
-      "bytes/{documentId}/versions/{versionId}";
-  private static final String GET_DOCUMENT_VERSION_BY_ID_USING_GET =
-      "documents/{documentId}/versions/{id}";
+  private static final String THIS_SERVICE = "document";
 
-  public static Performable bytesDownloadByIdsUsingGet(String filter, String ids) {
+  public static Performable deletesADocumentByIdOnTheDocumentController(String id) {
     return Task.where(
-        "{0} Retrieves the bytes for the specified paths. Will return a zip file if more than one is given.",
+        "{0} Deletes a document by ID.",
         actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("filter", filter)
-              .queryParam("ids", ids)
-              .get(as(actor).toEndpoint(DOWNLOAD_BY_IDS_USING_GET));
-        });
-  }
-
-  public static Performable folderContentsGetHierarchyUsingGet(String filter, String path) {
-    return Task.where(
-        "{0} Gets the hierarchy for a path.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("filter", filter)
-              .queryParam("path", path)
-              .get(as(actor).toEndpoint(GET_HIERARCHY_USING_GET));
-        });
-  }
-
-  public static Performable documentUpdateUsingPut(String document, File file, String id) {
-    String mime = URLConnection.guessContentTypeFromName(file.getName());
-    return Task.where(
-        "{0} Updates a document.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("multipart/form-data")
-              .queryParam("document", document)
-              .multiPart("file", file, mime)
-              .pathParam("id", id)
-              .put(as(actor).toEndpoint(UPDATE_USING_PUT_1));
-        });
-  }
-
-  public static Performable documentCreateUsingPost(String document, File file) {
-    String mime = URLConnection.guessContentTypeFromName(file.getName());
-    return Task.where(
-        "{0} Create a file using a multi-part form POST.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("multipart/form-data")
-              .queryParam("document", document)
-              .multiPart("file", file, mime)
-              .post(as(actor).toEndpoint(CREATE_USING_POST_1));
-        });
-  }
-
-  public static Performable brandingGetImageUsingGet(String id, String imageType) {
-    return Task.where(
-        "{0} Retrieves the bytes for the specified branding.",
-        actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
-              .queryParam("imageType", imageType)
-              .get(as(actor).toEndpoint(GET_IMAGE_USING_GET));
+              .delete("documents/{id}");
         });
   }
 
-  public static Performable getDocumentVersionsUsingGet(String id, String pageSize, String page) {
+  public static Performable createASignatureUsingAMultipartFromPostOnTheSignatureController(
+      String signature, File file) {
+    String mime = URLConnection.guessContentTypeFromName(file.getName());
+    return Task.where(
+        "{0} Create a signature using a multi-part from POST",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("multipart/form-data")
+              .queryParam("signature", signature)
+              .multiPart("file", file, mime)
+              .post("signatures");
+        });
+  }
+
+  public static Performable getSignaturesUsingGetOnTheSignatureController() {
+    return Task.where(
+        "{0} Gets the metadata of the signatures",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .get("signatures");
+        });
+  }
+
+  public static Performable getDocumentVersionsUsingGetOnTheVersionController(
+      String id, String pageSize, String page) {
     return Task.where(
         "{0} Get all of the metadata for a specific document",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
-              .get(as(actor).toEndpoint(GET_DOCUMENT_VERSIONS_USING_GET));
+              .get("documents/{id}/versions");
         });
   }
 
-  public static Performable folderCreateUsingPost(Object body) {
+  public static Performable downloadByIdsUsingGetOnTheBytesController(String filter, String ids) {
     return Task.where(
-        "{0} Creates a folder.",
+        "{0} Retrieves the bytes for the specified paths. Will return a zip file if more than one is given.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .body(body)
-              .post(as(actor).toEndpoint(CREATE_USING_POST_2));
+              .queryParam("filter", filter)
+              .queryParam("ids", ids)
+              .get("bytes?filter=byIds");
         });
   }
 
-  public static Performable folderContentsSearchUsingGet(
+  public static Performable createUsingPostOnTheBrandingController(String branding, File file) {
+    String mime = URLConnection.guessContentTypeFromName(file.getName());
+    return Task.where(
+        "{0} Create a branding using a multi-part from POST",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("multipart/form-data")
+              .queryParam("branding", branding)
+              .multiPart("file", file, mime)
+              .post("brandings");
+        });
+  }
+
+  public static Performable retrievesTheBytesForTheSpecifiedSignatureOnTheSignatureController(
+      String id, String imageType) {
+    return Task.where(
+        "{0} Retrieves the bytes for the specified signature.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .queryParam("imageType", imageType)
+              .get("signatures/{id}/bytes");
+        });
+  }
+
+  public static Performable createAFileUsingAMultipartFormPostOnTheDocumentController(
+      String document, File file) {
+    String mime = URLConnection.guessContentTypeFromName(file.getName());
+    return Task.where(
+        "{0} Create a file using a multi-part form POST.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("multipart/form-data")
+              .queryParam("document", document)
+              .multiPart("file", file, mime)
+              .post("documents");
+        });
+  }
+
+  public static Performable updatesADocumentOnTheDocumentController(
+      String document, File file, String id) {
+    String mime = URLConnection.guessContentTypeFromName(file.getName());
+    return Task.where(
+        "{0} Updates a document.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("multipart/form-data")
+              .queryParam("document", document)
+              .multiPart("file", file, mime)
+              .pathParam("id", id)
+              .put("documents/{id}");
+        });
+  }
+
+  public static Performable getImageUsingGetOnTheBrandingController(String id, String imageType) {
+    return Task.where(
+        "{0} Retrieves the bytes for the specified branding.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .queryParam("imageType", imageType)
+              .get("brandings/{id}/bytes");
+        });
+  }
+
+  public static Performable getHierarchyUsingGetOnTheFolderContentsController(
+      String filter, String path) {
+    return Task.where(
+        "{0} Gets the hierarchy for a path.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .queryParam("filter", filter)
+              .queryParam("path", path)
+              .get("hierarchy?filter=byPath");
+        });
+  }
+
+  public static Performable searchUsingGetOnTheFolderContentsController(
       String searchTerm,
       String nodeType,
       String path,
@@ -145,8 +162,7 @@ public class UseDocumentServiceTo {
     return Task.where(
         "{0} Search Nodes by Name",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("searchTerm", searchTerm)
               .queryParam("nodeType", nodeType)
@@ -154,25 +170,68 @@ public class UseDocumentServiceTo {
               .queryParam("pageSize", pageSize)
               .queryParam("page", page)
               .queryParam("filter", filter)
-              .get(as(actor).toEndpoint(SEARCH_USING_GET));
+              .get("search?filter=byPathAndSearchTerm");
         });
   }
 
-  public static Performable signatureCreateUsingPost(String signature, File file) {
-    String mime = URLConnection.guessContentTypeFromName(file.getName());
+  public static Performable getUsingGetOnTheFolderController(String id) {
     return Task.where(
-        "{0} Create a signature using a multi-part from POST",
+        "{0} Gets a folder with the specified ID (metadata only).",
         actor -> {
-          rest()
-              .with()
-              .contentType("multipart/form-data")
-              .queryParam("signature", signature)
-              .multiPart("file", file, mime)
-              .post(as(actor).toEndpoint(CREATE_USING_POST_3));
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .get("folders/{id}/");
         });
   }
 
-  public static Performable folderContentsGetContentsUsingGet(
+  public static Performable getDocumentVersionByIdUsingGetOnTheVersionController(
+      String documentId, String id) {
+    return Task.where(
+        "{0} Get all of the metadata for a specific document by version",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("documentId", documentId)
+              .pathParam("id", id)
+              .get("documents/{documentId}/versions/{id}");
+        });
+  }
+
+  public static Performable createsAFolderOnTheFolderController(Object body) {
+    return Task.where(
+        "{0} Creates a folder.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .body(body)
+              .post("folders");
+        });
+  }
+
+  public static Performable deleteUsingDeleteOnTheFolderController(String id) {
+    return Task.where(
+        "{0} Deletes a single folder by path.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .delete("folders/{id}");
+        });
+  }
+
+  public static Performable getImagesUsingGetOnTheBrandingController(String imageType) {
+    return Task.where(
+        "{0} Gets images content per context.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .queryParam("imageType", imageType)
+              .get("brandings/bytes");
+        });
+  }
+
+  public static Performable getContentsUsingGetOnTheFolderContentsController(
       String searchTerm,
       String nodeType,
       String pageSize,
@@ -182,8 +241,7 @@ public class UseDocumentServiceTo {
     return Task.where(
         "{0} Gets the contents of a path.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .queryParam("searchTerm", searchTerm)
               .queryParam("nodeType", nodeType)
@@ -191,233 +249,129 @@ public class UseDocumentServiceTo {
               .queryParam("page", page)
               .queryParam("filter", filter)
               .queryParam("path", path)
-              .get(as(actor).toEndpoint(GET_CONTENTS_USING_GET));
+              .get("contents?filter=byPath");
         });
   }
 
-  public static Performable documentGetByIdUsingGet(String id) {
-    return Task.where(
-        "{0} Gets the metadata of the document for the given ID.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_BY_ID_USING_GET_1));
-        });
-  }
-
-  public static Performable documentDeleteByIdUsingDelete(String id) {
-    return Task.where(
-        "{0} Deletes a document by ID.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_BY_ID_USING_DELETE_1));
-        });
-  }
-
-  public static Performable brandingGetImagesUsingGet(String imageType) {
-    return Task.where(
-        "{0} Gets images content per context.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .queryParam("imageType", imageType)
-              .get(as(actor).toEndpoint(GET_IMAGES_USING_GET));
-        });
-  }
-
-  public static Performable signatureGetImageUsingGet(String id, String imageType) {
-    return Task.where(
-        "{0} Retrieves the bytes for the specified signature.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .queryParam("imageType", imageType)
-              .get(as(actor).toEndpoint(GET_IMAGE_USING_GET_1));
-        });
-  }
-
-  public static Performable getBrandingsUsingGet() {
-    return Task.where(
-        "{0} Gets the metadata of the brandings",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .get(as(actor).toEndpoint(GET_BRANDINGS_USING_GET));
-        });
-  }
-
-  public static Performable folderGetUsingGet(String id) {
-    return Task.where(
-        "{0} Gets a folder with the specified ID (metadata only).",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_USING_GET));
-        });
-  }
-
-  public static Performable folderUpdateUsingPut(String id, Object body) {
-    return Task.where(
-        "{0} Updates a folder",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .body(body)
-              .put(as(actor).toEndpoint(UPDATE_USING_PUT_2));
-        });
-  }
-
-  public static Performable brandingGetByIdUsingGet(String id) {
-    return Task.where(
-        "{0} Gets the metadata of the branding for the given ID.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_BY_ID_USING_GET));
-        });
-  }
-
-  public static Performable brandingDeleteByIdUsingDelete(String id) {
-    return Task.where(
-        "{0} Deletes a branding by ID.",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_BY_ID_USING_DELETE));
-        });
-  }
-
-  public static Performable signatureGetByIdUsingGet(String id) {
+  public static Performable getsTheMetadataOfTheSignatureForTheGivenIdOnTheSignatureController(
+      String id) {
     return Task.where(
         "{0} Gets the metadata of the signature for the given ID.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_BY_ID_USING_GET_2));
+              .get("signatures/{id}");
         });
   }
 
-  public static Performable signatureDeleteByIdUsingDelete(String id) {
+  public static Performable deleteByIdUsingDeleteOnTheBrandingController(String id) {
     return Task.where(
-        "{0} Deletes a signature by ID.",
+        "{0} Deletes a branding by ID.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_BY_ID_USING_DELETE_2));
+              .delete("brandings/{id}");
         });
   }
 
-  public static Performable getSignaturesUsingGet() {
+  public static Performable updatesAFolderOnTheFolderController(String id, Object body) {
     return Task.where(
-        "{0} Gets the metadata of the signatures",
+        "{0} Updates a folder",
         actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .get(as(actor).toEndpoint(GET_SIGNATURES_USING_GET));
-        });
-  }
-
-  public static Performable folderDeleteUsingDelete(String id) {
-    return Task.where(
-        "{0} Deletes a single folder by path.",
-        actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
               .pathParam("id", id)
-              .delete(as(actor).toEndpoint(DELETE_USING_DELETE));
+              .body(body)
+              .put("folders/{id}/");
         });
   }
 
-  public static Performable signatureUpdateUsingPut(String signature, File file, String id) {
+  public static Performable getBrandingsUsingGetOnTheBrandingController() {
+    return Task.where(
+        "{0} Gets the metadata of the brandings",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .get("brandings");
+        });
+  }
+
+  public static Performable getsTheMetadataOfTheDocumentForTheGivenIdOnTheDocumentController(
+      String id) {
+    return Task.where(
+        "{0} Gets the metadata of the document for the given ID.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .get("documents/{id}");
+        });
+  }
+
+  public static Performable updatesASignatureOnTheSignatureController(
+      String signature, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Updates a signature.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("multipart/form-data")
               .queryParam("signature", signature)
               .multiPart("file", file, mime)
               .pathParam("id", id)
-              .put(as(actor).toEndpoint(UPDATE_USING_PUT_3));
+              .put("signatures/{id}");
         });
   }
 
-  public static Performable brandingUpdateUsingPut(String branding, File file, String id) {
+  public static Performable downloadByVersionUsingGetOnTheBytesController(
+      String documentId, String versionId) {
+    return Task.where(
+        "{0} Retrieves the bytes for the specified document and version.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("documentId", documentId)
+              .pathParam("versionId", versionId)
+              .get("bytes/{documentId}/versions/{versionId}");
+        });
+  }
+
+  public static Performable deletesASignatureByIdOnTheSignatureController(String id) {
+    return Task.where(
+        "{0} Deletes a signature by ID.",
+        actor -> {
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
+              .contentType("application/json")
+              .pathParam("id", id)
+              .delete("signatures/{id}");
+        });
+  }
+
+  public static Performable updateUsingPutOnTheBrandingController(
+      String branding, File file, String id) {
     String mime = URLConnection.guessContentTypeFromName(file.getName());
     return Task.where(
         "{0} Updates a branding.",
         actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("multipart/form-data")
               .queryParam("branding", branding)
               .multiPart("file", file, mime)
               .pathParam("id", id)
-              .put(as(actor).toEndpoint(UPDATE_USING_PUT));
+              .put("brandings/{id}");
         });
   }
 
-  public static Performable brandingCreateUsingPost(String branding, File file) {
-    String mime = URLConnection.guessContentTypeFromName(file.getName());
+  public static Performable getByIdUsingGetOnTheBrandingController(String id) {
     return Task.where(
-        "{0} Create a branding using a multi-part from POST",
+        "{0} Gets the metadata of the branding for the given ID.",
         actor -> {
-          rest()
-              .with()
-              .contentType("multipart/form-data")
-              .queryParam("branding", branding)
-              .multiPart("file", file, mime)
-              .post(as(actor).toEndpoint(CREATE_USING_POST));
-        });
-  }
-
-  public static Performable bytesDownloadByVersionUsingGet(String documentId, String versionId) {
-    return Task.where(
-        "{0} Retrieves the bytes for the specified document and version.",
-        actor -> {
-          rest()
-              .with()
+          CallTitanApi.asActorUsingService(actor, THIS_SERVICE)
               .contentType("application/json")
-              .pathParam("documentId", documentId)
-              .pathParam("versionId", versionId)
-              .get(as(actor).toEndpoint(DOWNLOAD_BY_VERSION_USING_GET));
-        });
-  }
-
-  public static Performable getDocumentVersionByIdUsingGet(String documentId, String id) {
-    return Task.where(
-        "{0} Get all of the metadata for a specific document by version",
-        actor -> {
-          rest()
-              .with()
-              .contentType("application/json")
-              .pathParam("documentId", documentId)
               .pathParam("id", id)
-              .get(as(actor).toEndpoint(GET_DOCUMENT_VERSION_BY_ID_USING_GET));
+              .get("brandings/{id}");
         });
   }
 }
