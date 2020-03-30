@@ -4,11 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ClassBuilder {
@@ -93,7 +91,7 @@ public class ClassBuilder {
     imports.remove(importStatement);
   }
 
-  public void removeClassDocumentationLine(String line){
+  public void removeClassDocumentationLine(String line) {
     classDocumentationLines.remove(line);
   }
 
@@ -109,7 +107,9 @@ public class ClassBuilder {
     fields.clear();
   }
 
-  public void clearClassDocumentation(){classDocumentationLines.clear();}
+  public void clearClassDocumentation() {
+    classDocumentationLines.clear();
+  }
 
   public void clearAll() {
     clearFields();
@@ -131,7 +131,7 @@ public class ClassBuilder {
     StringBuilder result = new StringBuilder();
     result.append(String.format(PACKAGE_TEMPLATE, packagePath));
     result.append(generateStringFromList(imports));
-    if(!classDocumentationLines.isEmpty()){
+    if (!classDocumentationLines.isEmpty()) {
       StringBuilder documentation = new StringBuilder();
       classDocumentationLines.forEach(documentation::append);
       result.append(String.format(CLASS_DOCUMENTATION_TEMPLATE, documentation.toString()));
@@ -162,7 +162,7 @@ public class ClassBuilder {
             methodArguments,
             beforeReturnStatement,
             methodDefinition);
-      methods.add(newMethod);
+    methods.add(newMethod);
   }
 
   public void addField(
@@ -181,8 +181,7 @@ public class ClassBuilder {
             dataType,
             fieldName,
             dataValue);
-      fields.add(newField);
-
+    fields.add(newField);
   }
 
   public void addImport(boolean isStatic, String path) {
@@ -192,7 +191,7 @@ public class ClassBuilder {
     }
   }
 
-  public void addClassDocumentationLine(String line){
+  public void addClassDocumentationLine(String line) {
     classDocumentationLines.add("* " + line + "\n");
   }
 

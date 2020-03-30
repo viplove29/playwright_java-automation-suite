@@ -28,37 +28,38 @@ public class ServiceWrapperGenerator {
       "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service";
 
   private static String[] ALL_SERVICES = {
-          "accounting",
-          "alert",
-          "auth",
-          "carrier",
-          "carrier-update-ingestion",
-          "claim",
-          "commission",
-          "communication",
-          "company",
-          "config",
-          "contact",
-          "customer",
-          "document",
-          "exposure",
-          "form",
-          "file-intake",
-          "invoice",
-          "license",
-          "notification",
-          "opportunity",
-          "policy",
-          "product",
-          "question",
-          "quickbooks-integration",
-          "rating-data",
-          "rating",
-          "render",
-          "report",
-          "schedule",
-          "small-agency-ams-web-orchestration",
-          "to-do"};
+    "accounting",
+    "alert",
+    "auth",
+    "carrier",
+    "carrier-update-ingestion",
+    "claim",
+    "commission",
+    "communication",
+    "company",
+    "config",
+    "contact",
+    "customer",
+    "document",
+    "exposure",
+    "form",
+    "file-intake",
+    "invoice",
+    "license",
+    "notification",
+    "opportunity",
+    "policy",
+    "product",
+    "question",
+    "quickbooks-integration",
+    "rating-data",
+    "rating",
+    "render",
+    "report",
+    "schedule",
+    "small-agency-ams-web-orchestration",
+    "to-do"
+  };
 
   private final String BASE_PACKAGE_PATH = "com.vertafore.test.tasks.servicewrappers.%s";
 
@@ -122,7 +123,7 @@ public class ServiceWrapperGenerator {
     String[] services = args.length == 1 && args[0].equalsIgnoreCase("all") ? ALL_SERVICES : args;
 
     for (String service : services) {
-        System.out.println("next service: " + service + "\n");
+      System.out.println("next service: " + service + "\n");
       Response response = SerenityRest.get(String.format(SWAGGER_API_URL, service, service));
       new ServiceWrapperGenerator().generateServiceWrapperClass(response.getBody().asString());
     }
@@ -143,7 +144,8 @@ public class ServiceWrapperGenerator {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     LocalDateTime now = LocalDateTime.now();
 
-    classBuilder.addClassDocumentationLine("This class was automatically generated on " + dtf.format(now));
+    classBuilder.addClassDocumentationLine(
+        "This class was automatically generated on " + dtf.format(now));
 
     classBuilder.addArrayOfImportStatements(DEFAULT_IMPORTS);
     classBuilder.addPrivateStaticFinalStringField(
@@ -153,7 +155,6 @@ public class ServiceWrapperGenerator {
         p -> {
           p.apiCallMethods.forEach(
               ac -> {
-
                 String restCallMethodChain =
                     String.format(
                         REST_CALL_METHOD_CHAIN_TEMPLATE,
@@ -336,9 +337,11 @@ public class ServiceWrapperGenerator {
               // handle formData
               else if (p.in.equalsIgnoreCase("formData")) {
                 if (p.type.equalsIgnoreCase("file")) {
-                  result.append(String.format(FORM_DATA_TEMPLATE_, p.name, p.name, ", mime"));
+                  result.append(
+                      String.format(FORM_DATA_TEMPLATE_, p.name.toLowerCase(), p.name, ", mime"));
                 } else {
-                  result.append(String.format(FORM_DATA_TEMPLATE_, p.name, p.name, ""));
+                  result.append(
+                      String.format(FORM_DATA_TEMPLATE_, p.name.toLowerCase(), p.name, ""));
                 }
               }
               // else treat param as a path param
