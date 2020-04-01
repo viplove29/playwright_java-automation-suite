@@ -9,13 +9,13 @@ buildscript {
 plugins {
     id 'com.bmuschko.nexus' version '2.3.1' apply false
     id "com.diffplug.gradle.spotless" version "3.26.1"
-    // this runs the swagger-service-wrapper generator
-    id 'application'
+    // swagger code-gen gradle plugin
+    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
-application{
-    mainClassName = 'com.vertafore.test.utilities.classgenerator.ServiceWrapperGenerator'
-}
+//application{
+//    mainClassName = 'com.vertafore.test.utilities.classgenerator.ServiceWrapperGenerator'
+//}
 
 allprojects {
     group 'com.vertafore'
@@ -29,6 +29,9 @@ allprojects {
     targetCompatibility = 1.11
 
     repositories(gradle.nexusConfiguration)
+    repositories {
+        jcenter()
+    }
 
     // Publish
     apply plugin: 'com.bmuschko.nexus'
@@ -93,6 +96,22 @@ dependencies {
     // Service wrapper/model generator util
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    // swagger code-gen
+    swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.2'             // Swagger Codegen V2
+    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
+    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'     // or OpenAPI Generator
+
+}
+
+swaggerSources {
+    generateServiceWrapper {
+        inputFile = file('authservice.json')
+        code {
+            language = 'java'
+            templateDir = file('templates')
+            components = ['models', 'apis']
+        }
+    }
 }
 
 spotless {
