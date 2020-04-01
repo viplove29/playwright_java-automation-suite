@@ -110,6 +110,7 @@ swaggerSources {
             language = 'java'
             templateDir = file('templates')
             components = ['models', 'apis']
+            configFile = file('config.json')
         }
     }
 }
@@ -124,3 +125,9 @@ test.finalizedBy(aggregate)
 qtestsync.shouldRunAfter(aggregate)
 
 gradle.startParameter.continueOnFailure = true
+
+
+// Configure compile task dependency and source
+compileJava.dependsOn swaggerSources.generateServiceWrapper.code
+//sourceSets.main.java.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}/src/main/java"
+//sourceSets.main.resources.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}/src/main/resources"
