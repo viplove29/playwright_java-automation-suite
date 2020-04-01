@@ -1,11 +1,4 @@
 pluginManagement {
-    resolutionStrategy {
-        eachPlugin {
-            if (requested.id.namespace.startsWith('com.vertafore')) {
-                useModule("${requested.id.namespace}:${requested.id.name}:${requested.version}")
-            }
-        }
-    }
     repositories {
         maven {
             url System.env.MAVEN_REPO_URI ?: 'https://nexus-int.util.v4af.com/repository/libs-snapshot'
