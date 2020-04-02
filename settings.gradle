@@ -13,7 +13,3 @@ pluginManagement {
 }
 
 rootProject.name = 'integration-tests'
-gradle.rootProject {
-    version = '0.0.3'
-    group = 'com.vertafore'
-}

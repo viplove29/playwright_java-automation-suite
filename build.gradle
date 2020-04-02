@@ -1,3 +1,4 @@
+
 buildscript {
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.90")
@@ -42,9 +43,10 @@ allprojects {
 
     nexus {
         sign = false
-        repositoryUrl = 'https://nexus-int.util.v4af.com/repository/libs-release-local'
-        snapshotRepositoryUrl = 'https://nexus-int.util.v4af.com/repository/libs-snapshot'
+        repositoryUrl = 'https://nexus.util.v4af.com/repository/libs-release-local/'
+        snapshotRepositoryUrl = 'https://nexus.util.v4af.com/repository/libs-snapshot-local/'
     }
+
 
     task sourceJar(type: Jar, dependsOn: classes) {
         classifier 'sources'
