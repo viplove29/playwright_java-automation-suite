@@ -42,8 +42,8 @@ allprojects {
 
     nexus {
         sign = false
-        repositoryUrl = 'https://nexus.util.v4af.com/repository/libs-release-local/'
-        snapshotRepositoryUrl = 'https://nexus.util.v4af.com/repository/libs-snapshot-local/'
+        repositoryUrl = 'https://nexus-int.util.v4af.com/repository/libs-release-local'
+        snapshotRepositoryUrl = 'https://nexus-int.util.v4af.com/repository/libs-snapshot'
     }
 
     task sourceJar(type: Jar, dependsOn: classes) {
