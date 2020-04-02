@@ -1,0 +1,7 @@
+{
+  "modelPackage":"modelPackage",
+  "apiPackage": "apiPackage",
+  "invokerPackage": "invokerPackage",
+  "sourceFolder" : "../../src/main/java/com/vertafore/test/tasks/codegen/auth",
+  "localVariablePrefix" : "localVariablePrefix"
+}
