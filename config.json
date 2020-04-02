@@ -1,0 +1,6 @@
+{
+  "sourceFolder": "/didyouputyourselfhere",
+  "modelPackage": "yolo.model",
+  "apiPackage": "api.yolo",
+  "invokerPackage": "invokeme"
+}
