@@ -10,7 +10,9 @@ package {{package}};
 
   {{#operation}}
 public Performable {{operationId}}({{>method_parameters}}) {
-Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
+// POST BODY
+{{>post_body}}
+
 {{>path_parameters}}
 
   String path = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
@@ -26,7 +28,7 @@ Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/
     .asActorUsingService(actor, THIS_SERVICE)
       .contentType(contentTypes)
       .queryParams(queryParams)
-      .body(postBody)
+{{#allParams}}{{#isBodyParam}}.body(postBody){{/isBodyParam}}{{/allParams}}
       .formParams(formParams)
     .{{httpMethod}}("{{path}}");
     });
