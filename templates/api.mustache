@@ -3,15 +3,15 @@ package {{package}};
 {{> import_statements}}
 
 {{#operations}}
-  public class Use{{classname}}To {
+  public class {{classname}} {
   String BASE_PATH_FULL = "{{basePath}}";
 
   {{#operation}}
 public Performable {{operationId}}({{>method_parameters}}) {
 {{>post_body}}
-  final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
+  final HashMap<String, String> queryParams = new HashMap<String, String>();
   final HttpHeaders headerParams = new HttpHeaders();
-  final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+  final HashMap<String, Object> formParams = new HashMap<String, Object>();
 {{>query_parameters}}
 {{>form_parameters}}
 {{>consumes}}
@@ -24,7 +24,8 @@ String path = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buil
       .contentType(contentTypes.toString())
       .queryParams(queryParams){{#allParams}}{{#isBodyParam}}.body(postBody){{/isBodyParam}}{{/allParams}}
       .formParams(formParams)
-    .{{httpMethod}}(path);
+.{{httpMethod}}(path);
+{{#lowercase}}{{httpMethod}}{{/lowercase}}
     });
     }
   {{/operation}}

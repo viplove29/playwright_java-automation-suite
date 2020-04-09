@@ -5,7 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.tasks.servicewrappers.document.UseDocumentServiceTo;
+import com.vertafore.test.servicewrappers.CustomApiGeneratorName;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;

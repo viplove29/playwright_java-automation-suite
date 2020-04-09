@@ -7,6 +7,8 @@ buildscript {
 }
 
 plugins {
+    id 'groovy'
+    id 'maven-publish'
     id 'com.bmuschko.nexus' version '2.3.1' apply false
     id "com.diffplug.gradle.spotless" version "3.26.1"
     // swagger code-gen gradle plugin
@@ -84,6 +86,7 @@ configurations {
 }
 
 dependencies {
+    implementation localGroovy()
     // Serenity
     implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.90'
     implementation group: 'net.serenity-bdd', name: 'serenity-model', version: '2.0.90'
@@ -103,19 +106,22 @@ dependencies {
 
     // swagger code-gen
     swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.2'             // Swagger Codegen V2
+    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
     swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
     swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'     // or OpenAPI Generator
-
+    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
+        swaggerCodegen project('generators')
 }
 
 swaggerSources {
     generateServiceWrapper {
         inputFile = file('authservice.json')
         code {
-            language = 'spring'
+            language = 'generators.ScreenPlay'
             templateDir = file('templates')
             components = ['models', 'apis']
             configFile = file('config.json')
+//            outputDir = file('outputDirectoryHere')
 //            dependsOn validation
         }
     }
@@ -134,8 +140,10 @@ qtestsync.shouldRunAfter(aggregate)
 
 gradle.startParameter.continueOnFailure = true
 
+swaggerSources*.code*.dependsOn 'generators:jar'
 
+build.dependsOn generateSwaggerCode
 // Configure compile task dependency and source
-//compileJava.dependsOn swaggerSources.generateServiceWrapper.code
-//sourceSets.main.java.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}/src/main/java"
-//sourceSets.main.resources.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}/src/main/resources"
+compileJava.dependsOn swaggerSources.generateServiceWrapper.code
+sourceSets.main.java.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}"
+sourceSets.main.resources.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}/src/main/resources"
