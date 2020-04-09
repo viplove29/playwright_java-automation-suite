@@ -78,6 +78,11 @@ allprojects {
     }
 }
 
+configurations {
+    swaggerCodegenV2
+    swaggerCodegenV3
+}
+
 dependencies {
     // Serenity
     implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.90'
@@ -107,13 +112,16 @@ swaggerSources {
     generateServiceWrapper {
         inputFile = file('authservice.json')
         code {
-            language = 'java'
+            language = 'spring'
             templateDir = file('templates')
             components = ['models', 'apis']
             configFile = file('config.json')
+//            dependsOn validation
         }
     }
 }
+
+
 
 spotless {
     java {
