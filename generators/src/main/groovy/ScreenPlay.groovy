@@ -1,12 +1,13 @@
 package generators;
 
-import io.swagger.codegen.*;
+import io.swagger.codegen.*
+import io.swagger.codegen.languages.SpringCodegen;
 import io.swagger.models.properties.*;
 
 import java.util.*;
 import java.io.File;
 
-public class ScreenPlay extends DefaultCodegen implements CodegenConfig {
+public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
     // source folder where to write the files
     protected String sourceFolder = "";
@@ -48,16 +49,14 @@ public class ScreenPlay extends DefaultCodegen implements CodegenConfig {
     public ScreenPlay() {
         super();
 
-        outputFolder = "generated-code/servicewrappers";
+        outputFolder = "";
 
-        // no model
-        modelTemplateFiles.clear();
         apiTemplateFiles.put("api.mustache", ".java");
 
         //	supportingFiles.add(new SupportingFile("build.mustache", "", "build.gradle"));
         //	supportingFiles.add(new SupportingFile("plugin.mustache", (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "SparkServerPlugin.java"));
 
-        embeddedTemplateDir = templateDir = "spark";
+//        embeddedTemplateDir = templateDir = "spark";
 
         apiPackage = "com.vertafore.test.tasks.codegen.api";
         modelPackage = "com.vertafore.test.tasks.codegen.model";
@@ -128,7 +127,7 @@ public class ScreenPlay extends DefaultCodegen implements CodegenConfig {
      * instantiated
      */
     public String modelFileFolder() {
-        return outputFolder + "/" + sourceFolder + "/" + modelPackage().replace('.', File.separatorChar);
+        return outputFolder + "/" + sourceFolder + "/" + modelPackage();
     }
 
     /**
