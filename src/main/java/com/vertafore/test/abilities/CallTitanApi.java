@@ -2,13 +2,9 @@ package com.vertafore.test.abilities;
 
 import static com.vertafore.test.abilities.Authenticate.theAuthTokenOf;
 import static com.vertafore.test.abilities.HaveTitanContext.theDomainURIOf;
-import static com.vertafore.test.abilities.HaveTitanContext.theEntityIdOf;
-import static com.vertafore.test.abilities.HaveTitanContext.theProductIdOf;
-import static com.vertafore.test.abilities.HaveTitanContext.theTenantIdOf;
 import static net.serenitybdd.rest.SerenityRest.rest;
 
 import io.restassured.specification.RequestSpecification;
-import java.util.Map;
 import net.serenitybdd.screenplay.Ability;
 import net.serenitybdd.screenplay.Actor;
 

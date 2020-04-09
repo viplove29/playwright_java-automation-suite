@@ -145,19 +145,19 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
      *
      * @return a string value used as the `dataType` field for model templates, `returnType` for api templates
      */
-    @Override
-    public String getTypeDeclaration(Property p) {
-        if (p instanceof ArrayProperty) {
-            ArrayProperty ap = (ArrayProperty) p;
-            Property inner = ap.getItems();
-            return getSwaggerType(p) + "[" + getTypeDeclaration(inner) + "]";
-        } else if (p instanceof MapProperty) {
-            MapProperty mp = (MapProperty) p;
-            Property inner = mp.getAdditionalProperties();
-            return getSwaggerType(p) + "[String, " + getTypeDeclaration(inner) + "]";
-        }
-        return super.getTypeDeclaration(p);
-    }
+//    @Override
+//    public String getTypeDeclaration(Property p) {
+//        if (p instanceof ArrayProperty) {
+//            ArrayProperty ap = (ArrayProperty) p;
+//            Property inner = ap.getItems();
+//            return getSwaggerType(p) + "[" + getTypeDeclaration(inner) + "]";
+//        } else if (p instanceof MapProperty) {
+//            MapProperty mp = (MapProperty) p;
+//            Property inner = mp.getAdditionalProperties();
+//            return getSwaggerType(p) + "[String, " + getTypeDeclaration(inner) + "]";
+//        }
+//        return super.getTypeDeclaration(p);
+//    }
 
     /**
      * Optional - swagger type conversion.  This is used to map swagger types in a `Property` into
@@ -166,18 +166,18 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
      * @return a string value of the type or complex model for this property
      * @see io.swagger.models.properties.Property
      */
-    @Override
-    public String getSwaggerType(Property p) {
-        String swaggerType = super.getSwaggerType(p);
-        String type = null;
-        if (typeMapping.containsKey(swaggerType)) {
-            type = typeMapping.get(swaggerType);
-            if (languageSpecificPrimitives.contains(type))
-                return toModelName(type);
-        } else
-            type = swaggerType;
-        return toModelName(type);
-    }
+//    @Override
+//    public String getSwaggerType(Property p) {
+//        String swaggerType = super.getSwaggerType(p);
+//        String type = null;
+//        if (typeMapping.containsKey(swaggerType)) {
+//            type = typeMapping.get(swaggerType);
+//            if (languageSpecificPrimitives.contains(type))
+//                return toModelName(type);
+//        } else
+//            type = swaggerType;
+//        return toModelName(type);
+//    }
 
     @Override
     public Map<String, Object> postProcessOperations(Map<String, Object> operations) {
@@ -198,6 +198,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
     @Override
     public String toApiName(String name) {
-        return "CustomApiGeneratorName";
+        return name;
     }
 }

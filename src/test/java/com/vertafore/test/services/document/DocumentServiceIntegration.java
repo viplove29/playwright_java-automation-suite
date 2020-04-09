@@ -26,11 +26,11 @@ import org.junit.runner.RunWith;
 public class DocumentServiceIntegration {
 
   private List<TitanUser> users;
-  private CustomApiGeneratorName api;
+  private auth AuthApi;
 
-  public DocumentServiceIntegration(List<TitanUser> users, CustomApiGeneratorName api) {
+  public DocumentServiceIntegration(List<TitanUser> users, auth api) {
     this.users = users;
-    this.api = new CustomApiGeneratorName();
+    this.AuthApi = new auth();
   }
 
   @Before
@@ -48,6 +48,8 @@ public class DocumentServiceIntegration {
     Map<String, String> metaData = new HashMap<>();
     metaData.put("name", "brandingTestName");
     metaData.put("description", "brandingTestDescription");
+
+    AuthApi.ActivateUserUsingPOST()
 
     // get file
     File imageToUpload = new HelperUtils().getFileByFileName("doge", ".jpg");
