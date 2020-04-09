@@ -28,18 +28,11 @@ public class CallTitanApi implements Ability {
     return actor.abilityTo(CallTitanApi.class);
   }
 
-  public static RequestSpecification asActorUsingService(Actor actor, String thisService) {
+  public static RequestSpecification asActorUsingService(Actor actor) {
     String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
     return rest()
         .header("Vertafore-Authorization", theAuthTokenOf(actor))
         .baseUri(theDomainURIOf(actor))
-        .basePath("{service}/v1/{product}/{tenant}/entities/{entity}/")
-        .cookie(cookies)
-        .pathParams(
-            Map.of(
-                "service", thisService,
-                "product", theProductIdOf(actor),
-                "tenant", theTenantIdOf(actor),
-                "entity", theEntityIdOf(actor)));
+        .cookie(cookies);
   }
 }

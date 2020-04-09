@@ -1,0 +1,9 @@
+final String[] contentTypes = {
+{{#hasConsumes}}
+  {{#consumes}}
+    "{{{mediaType}}}"
+    {{#hasMore}},
+    {{/hasMore}}
+  {{/consumes}}
+{{/hasConsumes}}
+};

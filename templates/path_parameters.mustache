@@ -1,0 +1,7 @@
+{{#hasPathParams}}
+  // create path and map variables
+  final Map<String, Object> uriVariables = new HashMap<String, Object>();
+  {{#pathParams}}
+    uriVariables.put("{{baseName}}", {{{paramName}}});
+  {{/pathParams}}
+{{/hasPathParams}}

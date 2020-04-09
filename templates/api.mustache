@@ -5,32 +5,26 @@ package {{package}};
 {{#operations}}
   public class Use{{classname}}To {
   String BASE_PATH_FULL = "{{basePath}}";
-  int lastSlash = BASE_PATH_FULL.lastIndexOf("/");
-  String THIS_SERVICE = BASE_PATH_FULL.substring(lastSlash);
 
   {{#operation}}
 public Performable {{operationId}}({{>method_parameters}}) {
-// POST BODY
 {{>post_body}}
-
-{{>path_parameters}}
-
-  String path = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
   final MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<String, String>();
   final HttpHeaders headerParams = new HttpHeaders();
   final MultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
 {{>query_parameters}}
 {{>form_parameters}}
 {{>consumes}}
     return Task.where("{0}  {{summary}}", actor -> {
+{{>path_parameters}}
+String path = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
+
     CallTitanApi
-    .asActorUsingService(actor, THIS_SERVICE)
-      .contentType(contentTypes)
-      .queryParams(queryParams)
-{{#allParams}}{{#isBodyParam}}.body(postBody){{/isBodyParam}}{{/allParams}}
+    .asActorUsingService(actor)
+      .contentType(contentTypes.toString())
+      .queryParams(queryParams){{#allParams}}{{#isBodyParam}}.body(postBody){{/isBodyParam}}{{/allParams}}
       .formParams(formParams)
-    .{{httpMethod}}("{{path}}");
+    .{{httpMethod}}(path);
     });
     }
   {{/operation}}
