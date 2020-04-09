@@ -5,7 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.servicewrappers.CustomApiGeneratorName;
+import com.vertafore.test.servicewrappers.*;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
@@ -25,12 +25,19 @@ import org.junit.runner.RunWith;
 @RunWith(SerenityRunner.class)
 public class DocumentServiceIntegration {
 
-  private List<TitanUser> users = new ArrayList<>();
+  private List<TitanUser> users;
+  private CustomApiGeneratorName api;
+
+  public DocumentServiceIntegration(List<TitanUser> users, CustomApiGeneratorName api) {
+    this.users = users;
+    this.api = new CustomApiGeneratorName();
+  }
 
   @Before
   public void setupActors() {
     users.add(new TitanUser("donald@lizzy123.com", "LIZZY123", "LIZZY123"));
     OnStage.setTheStage(BuildCastOfTitanUsers.loadAndAuthenticate(users));
+
   }
 
   @Test
@@ -56,7 +63,7 @@ public class DocumentServiceIntegration {
     String id = postResponse.get("id").toString();
     // GET the /brandings
     // tests CONFIG-SVC
-    currentActor.attemptsTo(UseDocumentServiceTo.getBrandingsUsingGetOnTheBrandingController());
+    currentActor.attemptsTo(CustomApiGeneratorName.getBrandingsUsingGetOnTheBrandingController());
     checkStatusForSuccess();
 
     //    // GET /bytes
