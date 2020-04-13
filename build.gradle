@@ -105,11 +105,12 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
     // swagger code-gen
-    swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.2'             // Swagger Codegen V2
-    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
-    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
-    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.3.4'     // or OpenAPI Generator
-    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
+//    swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.2'             // Swagger Codegen V2
+//    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
+//    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
+    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.1.1'     // or OpenAPI Generator
+    implementation 'org.openapitools:openapi-generator-cli:3.1.1'
+//    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
         swaggerCodegen project('generators')
 }
 

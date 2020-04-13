@@ -1,7 +1,9 @@
 package generators;
 
-import io.swagger.codegen.*
-import io.swagger.codegen.languages.SpringCodegen;
+import org.openapitools.codegen.*;
+import org.openapitools.codegen.languages.SpringCodegen;
+
+
 import io.swagger.models.properties.*;
 
 import java.util.*;
@@ -20,7 +22,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
      * Configures the type of generator.
      *
      * @return the CodegenType for this generator
-     * @see io.swagger.codegen.CodegenType
      */
     public CodegenType getTag() {
         return CodegenType.CLIENT;
@@ -139,50 +140,10 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         return outputFolder + "/" + sourceFolder + "/" + apiPackage();
     }
 
-    /**
-     * Optional - type declaration.  This is a String which is used by the templates to instantiate your
-     * types.  There is typically special handling for different property types
-     *
-     * @return a string value used as the `dataType` field for model templates, `returnType` for api templates
-     */
-//    @Override
-//    public String getTypeDeclaration(Property p) {
-//        if (p instanceof ArrayProperty) {
-//            ArrayProperty ap = (ArrayProperty) p;
-//            Property inner = ap.getItems();
-//            return getSwaggerType(p) + "[" + getTypeDeclaration(inner) + "]";
-//        } else if (p instanceof MapProperty) {
-//            MapProperty mp = (MapProperty) p;
-//            Property inner = mp.getAdditionalProperties();
-//            return getSwaggerType(p) + "[String, " + getTypeDeclaration(inner) + "]";
-//        }
-//        return super.getTypeDeclaration(p);
-//    }
-
-    /**
-     * Optional - swagger type conversion.  This is used to map swagger types in a `Property` into
-     * either language specific types via `typeMapping` or into complex models if there is not a mapping.
-     *
-     * @return a string value of the type or complex model for this property
-     * @see io.swagger.models.properties.Property
-     */
-//    @Override
-//    public String getSwaggerType(Property p) {
-//        String swaggerType = super.getSwaggerType(p);
-//        String type = null;
-//        if (typeMapping.containsKey(swaggerType)) {
-//            type = typeMapping.get(swaggerType);
-//            if (languageSpecificPrimitives.contains(type))
-//                return toModelName(type);
-//        } else
-//            type = swaggerType;
-//        return toModelName(type);
-//    }
-
     @Override
-    public Map<String, Object> postProcessOperations(Map<String, Object> operations) {
-        Map<String, Object> objs = (Map<String, Object>) operations.get("operations");
-        List<CodegenOperation> ops = (List<CodegenOperation>) objs.get("operation");
+    Map<String, Object> postProcessOperationsWithModels(Map<String, Object> objs, List<Object> allModels) {
+        Map<String, Object> endpoints = (Map<String, Object>) objs.get("operations");
+        List<CodegenOperation> ops = (List<CodegenOperation>) endpoints.get("operation");
         for (CodegenOperation op : ops) {
             // Convert httpMethod to lower case, e.g. "get", "post"
             op.httpMethod = op.httpMethod.toLowerCase();
@@ -190,10 +151,9 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             // Change path parameters {var} to :var
             op.path = op.path.replaceAll("\\{", ":");
             op.path = op.path.replaceAll("\\}", "");
-
-            op.operationId = camelize(op.operationId);
         }
-        return operations;
+
+        return super.postProcessOperationsWithModels(endpoints, allModels)
     }
 
     @Override

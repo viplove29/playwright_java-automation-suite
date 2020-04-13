@@ -24,7 +24,8 @@ public class CallTitanApi implements Ability {
     return actor.abilityTo(CallTitanApi.class);
   }
 
-  public static RequestSpecification asActorUsingService(Actor actor) {
+  // manages cookies, base URI, and Header for each request.
+  public static RequestSpecification asUser(Actor actor) {
     String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
     return rest()
         .header("Vertafore-Authorization", theAuthTokenOf(actor))

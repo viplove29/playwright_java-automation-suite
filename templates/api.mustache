@@ -8,10 +8,12 @@ package {{package}};
 
   {{#operation}}
 public Performable {{operationId}}({{>method_parameters}}) {
-{{>post_body}}
-  final HashMap<String, String> queryParams = new HashMap<String, String>();
+Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
+
+  final HashMap<String, Object> queryParams = new HashMap<String, Object>();
   final HttpHeaders headerParams = new HttpHeaders();
-  final HashMap<String, Object> formParams = new HashMap<String, Object>();
+  final LinkedMultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
+
 {{>query_parameters}}
 {{>form_parameters}}
 {{>consumes}}
@@ -20,14 +22,13 @@ public Performable {{operationId}}({{>method_parameters}}) {
 String path = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
 
     CallTitanApi
-    .asActorUsingService(actor)
-      .contentType(contentTypes.toString())
+    .asUser(actor)
+      .contentType(Arrays.toString(contentTypes))
       .queryParams(queryParams){{#allParams}}{{#isBodyParam}}.body(postBody){{/isBodyParam}}{{/allParams}}
       .formParams(formParams)
 .{{httpMethod}}(path);
-{{#lowercase}}{{httpMethod}}{{/lowercase}}
-    });
-    }
+});
+}
   {{/operation}}
 {{/operations}}
 }
