@@ -1,10 +1,14 @@
-package generators;
+package generators
 
+import io.swagger.v3.oas.models.OpenAPI
+import io.swagger.v3.oas.models.Operation
+import io.swagger.v3.oas.models.PathItem;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.SpringCodegen;
 
 
-import io.swagger.models.properties.*;
+import io.swagger.models.properties.*
+import org.openapitools.codegen.utils.URLPathUtils;
 
 import java.util.*;
 import java.io.File;
@@ -148,9 +152,15 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             // Convert httpMethod to lower case, e.g. "get", "post"
             op.httpMethod = op.httpMethod.toLowerCase();
 
+            // replace all '{?' -> end of path string with "" to remove query strings from path
+            op.path = op.path.replaceAll(	'\\{[\\?].*$', "");
+            // replace all '?' -> end of path string with "" to remove query strings from path
+            op.path = op.path.replaceAll(	'[\\?].*$', "");
             // Change path parameters {var} to :var
-            op.path = op.path.replaceAll("\\{", ":");
-            op.path = op.path.replaceAll("\\}", "");
+//            op.path = op.path.replaceAll("\\{", ":");
+//            op.path = op.path.replaceAll("\\}", "");
+
+
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)
@@ -161,3 +171,4 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         return name;
     }
 }
+

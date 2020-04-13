@@ -1,6 +1,6 @@
 {{#hasFormParams}}
   {{#formParams}}if ({{paramName}} != null)
-  {{localVariablePrefix}}formParams.add("{{baseName}}", {{#isFile}}new FileSystemResource({{paramName}}){{/isFile}}{{^isFile}}{{paramName}}{{/isFile}});
+   formParams.add("{{baseName}}", {{#isFile}}new FileSystemResource((File){{paramName}}){{/isFile}}{{^isFile}}{{paramName}}{{/isFile}});
   {{#hasMore}}
   {{/hasMore}}
   {{/formParams}}
