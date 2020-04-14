@@ -180,19 +180,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
         }
 
-
-        // remove models that suck
-//        for (Object mod : allModels) {
-//
-//            println(mod)
-//
-//            if (mod["description"] == "ObjectNode.java"){
-//                println("MODEL TO REMOVE OBJECTNODE ---->>>>>>>> " + mod["description"])
-//                allModels.remove(mod.key)
-//            }
-//        }
-
-
         return super.postProcessOperationsWithModels(endpoints, allModels)
     }
 
