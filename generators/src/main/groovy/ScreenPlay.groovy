@@ -32,7 +32,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
     protected String sourceFolder = "";
     protected String apiVersion = "1.0.0";
 
-    protected String basePackage = "com.vertafore.test.tasks.servicewrappers";
+//    protected String basePackage = "com.vertafore.test.tasks.servicewrappers";
     protected String baseName = "ServiceWrapperPlugin";
 
     /**

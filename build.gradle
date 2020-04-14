@@ -85,8 +85,11 @@ allprojects {
 spotless {
     java {
         googleJavaFormat('1.6')
+        spotlessJavaApply
+        removeUnusedImports()
     }
 }
+
 test.finalizedBy(aggregate)
 gradle.startParameter.continueOnFailure = true
 
@@ -144,8 +147,8 @@ task getTitanApiSwaggerJson {
     SERVICES.each{ service ->
         def pathToConfigFile = "swaggerjson/${service}/${service}-config.json"
         def configJson =  new HashMap<String,String>();
-        configJson.put("modelPackage", "com/vertafore/test/models." + service.toString())
-        configJson.put("apiPackage", "com/vertafore/test/servicewrappers/" + service.toString())
+        configJson.put("modelPackage", "com.vertafore.test.models." + service.toString())
+        configJson.put("apiPackage", "com.vertafore.test.servicewrappers")
         configJson.put("validateSpec", "false")
 
         new File( pathToConfigFile ).write new Gson().toJson(configJson)
@@ -217,6 +220,10 @@ swaggerSources*.code*.dependsOn clean
 
 // on every build we run generate codegen
 build.dependsOn generateSwaggerCode
+
+// run spotlessApply task to remove unused imports that
+// could potentially break builds.
+compileJava.dependsOn spotlessApply
 
 // on every compile we run out codegen
 compileJava.dependsOn swaggerSources*.code

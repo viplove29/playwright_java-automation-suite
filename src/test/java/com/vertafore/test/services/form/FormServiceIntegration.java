@@ -5,7 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
 import com.vertafore.test.abilities.HaveTitanContext;
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.servicewrappers.*;
+import com.vertafore.test.servicewrappers.form;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class FormServiceIntegration {
     form formApi = new form();
 
     formActor.attemptsTo(
-        formApi.searchForFormTemplatesUsingGET(
+        formApi.searchForFormTemplatesUsingGetOnTheFormTemplateController(
             productId,
             tenantId,
             entityId,

@@ -1,1 +1,1 @@
-{"apiPackage":"com/vertafore/test/servicewrappers/document","validateSpec":"false","modelPackage":"com/vertafore/test/models.document"}
+{"apiPackage":"com.vertafore.test.servicewrappers","validateSpec":"false","modelPackage":"com.vertafore.test.models.document"}

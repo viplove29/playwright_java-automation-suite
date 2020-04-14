@@ -2,8 +2,8 @@ package {{package}};
 
 import java.util.Objects;
 {{#imports}}import {{import}};
+import com.fasterxml.jackson.databind.node.ObjectNode;
 {{/imports}}
-import org.openapitools.jackson.nullable.JsonNullable;
 {{#serializableModel}}
   import java.io.Serializable;
 {{/serializableModel}}
