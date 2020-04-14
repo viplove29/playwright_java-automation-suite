@@ -105,8 +105,8 @@ dependencies {
     // Vertafore
     implementation 'com.vertafore.core:foundation:10.0.1'
     // openAPI
-    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.1.1'
-    implementation 'org.openapitools:openapi-generator-cli:3.1.1'
+    swaggerCodegen 'org.openapitools:openapi-generator-cli:4.3.0'
+    implementation 'org.openapitools:openapi-generator-cli:4.3.0'
 
     // swaggerCodeGen needs the custom generator we have in /generators
     swaggerCodegen project('generators')
@@ -161,6 +161,13 @@ task getTitanApiSwaggerJson {
  * templates
  *
  * see: https://github.com/int128/gradle-swagger-generator-plugin#use-multiple-sources
+ *
+ *
+ * to find all the remote templates for java spring in openAPI:
+ * https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator/src/main/resources/JavaSpring
+ *
+ *
+ *
  */
 
 SERVICES.each {    service ->

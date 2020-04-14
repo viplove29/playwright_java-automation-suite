@@ -1,18 +1,28 @@
 package generators
 
+import com.fasterxml.jackson.databind.JavaType
 import com.google.common.base.CaseFormat
 import groovyjarjarantlr.StringUtils
+import io.swagger.converter.ModelConverter
+import io.swagger.converter.ModelConverterContext
+import io.swagger.converter.ModelConverters
+import io.swagger.models.Model
+import io.swagger.v3.core.converter.AnnotatedType
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
+import io.swagger.v3.oas.models.media.ObjectSchema
+import io.swagger.v3.oas.models.media.Schema
 import org.apache.commons.lang3.text.WordUtils;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.SpringCodegen;
 
 
 import io.swagger.models.properties.*
-import org.openapitools.codegen.utils.URLPathUtils;
+import org.openapitools.codegen.utils.URLPathUtils
 
+import java.lang.annotation.Annotation
+import java.lang.reflect.Type;
 import java.util.*;
 import java.io.File;
 
@@ -166,9 +176,32 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
             // clean and normalize the operationId to remove duplicates and unhelpful names.
             op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
+
+
         }
 
+
+        // remove models that suck
+//        for (Object mod : allModels) {
+//
+//            println(mod)
+//
+//            if (mod["description"] == "ObjectNode.java"){
+//                println("MODEL TO REMOVE OBJECTNODE ---->>>>>>>> " + mod["description"])
+//                allModels.remove(mod.key)
+//            }
+//        }
+
+
         return super.postProcessOperationsWithModels(endpoints, allModels)
+    }
+
+    @Override
+    Map<String, Object> updateAllModels(Map<String, Object> objs) {
+        if(objs.containsKey("ObjectNode")){
+            objs.remove("ObjectNode")
+        }
+        return super.updateAllModels(objs)
     }
 
     @Override

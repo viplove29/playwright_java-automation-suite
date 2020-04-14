@@ -1,20 +1,13 @@
 package com.vertafore.test.services.document;
 
-import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 
-import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
-import com.vertafore.test.utilities.misc.HelperUtils;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import org.junit.Before;
