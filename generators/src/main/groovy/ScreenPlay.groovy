@@ -1,8 +1,11 @@
 package generators
 
+import com.google.common.base.CaseFormat
+import groovyjarjarantlr.StringUtils
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
-import io.swagger.v3.oas.models.PathItem;
+import io.swagger.v3.oas.models.PathItem
+import org.apache.commons.lang3.text.WordUtils;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.SpringCodegen;
 
@@ -50,6 +53,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
     public String getHelp() {
         return "Generates screenplay service-wrappers for Titan";
     }
+
 
     public ScreenPlay() {
         super();
@@ -122,10 +126,10 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                 "api.mustache"));
     }
 
-    @Override
-    public String escapeReservedWord(String name) {
-        return "_" + name;
-    }
+//    @Override
+//    public String escapeReservedWord(String name) {
+//        return "_" + name;
+//    }
 
     /**
      * Location to write model files.  You can use the modelPackage() as defined when the class is
@@ -159,6 +163,9 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             // Change path parameters {var} to :var
 //            op.path = op.path.replaceAll("\\{", ":");
 //            op.path = op.path.replaceAll("\\}", "");
+
+            // clean and normalize the operationId to remove duplicates and unhelpful names.
+            op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)
@@ -167,6 +174,48 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
     @Override
     public String toApiName(String name) {
         return name;
+    }
+
+    private String generateMethodName(String operationId, Object tag, String summary) {
+        String rawControllerName = tag.name ? tag.name : tag.description;
+                String controllerName = "";
+                // we have to normalize the tag name to get the name of the controller
+                if (rawControllerName.contains("-controller-v-1")) {
+                    controllerName = rawControllerName.replace("-controller-v-1", "");
+                    controllerName = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, controllerName);
+                } else {
+                    // because some services don't have -controller-v-1 but instead have 'Realm Management'
+                    // we have to format the name of the controller
+                    controllerName = capitalizeAndCleanString(rawControllerName);
+                }
+                String result =
+                        operationId
+                                .replaceAll("GET", "Get")
+                                .replaceAll("PUT", "Put")
+                                .replaceAll("POST", "Post")
+                                .replaceAll("DELETE", "Delete")
+                                .replaceAll("PATCH", "Patch");
+
+                // if our operationId contains _1 or _2... then the Endpoint Constant name should be
+                // the summary formatted. This prevents endpoints being named the same thing
+                // and from being named getUsingGet_1/getUsingGet_2
+                if (result.matches(".*\\d.*")) {
+                    result = capitalizeAndCleanString(summary).charAt(0).toLowerCase()
+                }
+
+                return result + "OnThe" + controllerName + "Controller";
+            }
+
+    private String capitalizeAndCleanString(String stringToClean) {
+        return WordUtils.capitalizeFully(stringToClean)
+        // remove whitespace
+                .replaceAll("\\s+", "")
+        // remove periods
+                .replaceAll("\\.", "")
+        // remove apostrophes
+                .replaceAll("'", "")
+        // remove hyphens
+                .replaceAll("-", "");
     }
 }
 
