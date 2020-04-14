@@ -1,14 +1,9 @@
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
 
 buildscript {
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.90")
         classpath("com.diffplug.spotless:spotless-plugin-gradle:3.26.1")
-        classpath('com.vertafore.autotest:qtest-serenity:1.0.1')
     }
 }
 
@@ -17,19 +12,22 @@ plugins {
     id 'maven-publish'
     id 'com.bmuschko.nexus' version '2.3.1' apply false
     id "com.diffplug.gradle.spotless" version "3.26.1"
-    // swagger code-gen gradle plugin
+
+    /**
+     swagger code-gen gradle plugin (necessary to run generateSwaggerCode )
+     https://github.com/int128/gradle-swagger-generator-plugin
+
+     while we are using 'swagger-code-gen' we are using the openAPI to do the actual code generation.
+     */
+
     id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
-//application{
-//    mainClassName = 'com.vertafore.test.utilities.classgenerator.ServiceWrapperGenerator'
-//}
 
 allprojects {
     group 'com.vertafore'
     version '0.0.3-SNAPSHOT'
 
-    apply plugin: 'com.vertafore.gradle.qtest.QTestSerenityPlugin'
     apply plugin: 'java-library'
     apply plugin: 'net.serenity-bdd.aggregator'
 
@@ -72,26 +70,28 @@ allprojects {
             }
         }
     }
-
     // Make Gradle use the latest version of SNAPSHOT artifacts (no caching)
     configurations.all {
         resolutionStrategy {
             cacheChangingModulesFor 0, 'seconds'
         }
     }
-
     test {
         systemProperties System.properties
         systemProperties.remove("java.endorsed.dirs")
     }
 }
 
-configurations {
-    swaggerCodegenV2
-    swaggerCodegenV3
+spotless {
+    java {
+        googleJavaFormat('1.6')
+    }
 }
+test.finalizedBy(aggregate)
+gradle.startParameter.continueOnFailure = true
 
 dependencies {
+    // necessary for building & compiling our custom generator in /generators.
     implementation localGroovy()
     // Serenity
     implementation group: 'net.serenity-bdd', name: 'serenity-core', version: '2.0.90'
@@ -104,22 +104,30 @@ dependencies {
     implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.0.90'
     // Vertafore
     implementation 'com.vertafore.core:foundation:10.0.1'
-    // Service wrapper/model generator util
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-
-    // swagger code-gen
-//    swaggerCodegen 'io.swagger:swagger-codegen-cli:2.4.2'             // Swagger Codegen V2
-//    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
-//    swaggerCodegen 'io.swagger.codegen.v3:swagger-codegen-cli:3.0.5'  // or Swagger Codegen V3
-    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.1.1'     // or OpenAPI Generator
+    // openAPI
+    swaggerCodegen 'org.openapitools:openapi-generator-cli:3.1.1'
     implementation 'org.openapitools:openapi-generator-cli:3.1.1'
-//    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
-        swaggerCodegen project('generators')
+
+    // swaggerCodeGen needs the custom generator we have in /generators
+    swaggerCodegen project('generators')
 }
 
-// list of services
+/**
+ * Codegen configuration starts here.
+ */
+
+/**
+ * List of all services being built.
+ */
 final List<String> SERVICES = List.of("form", "document");
 
+
+/**
+ * This task reaches out to the swagger for each service and write a json file.
+ *
+ * Once we have each file we write another json file for configuring the paths of where each
+ * service code-gen should be stored in the name space.
+ */
 task getTitanApiSwaggerJson {
     def headers = [ Accept: 'application/json' ]
     // url to get swagger json from
@@ -136,70 +144,72 @@ task getTitanApiSwaggerJson {
     SERVICES.each{ service ->
         def pathToConfigFile = "swaggerjson/${service}/${service}-config.json"
         def configJson =  new HashMap<String,String>();
-        configJson.put("modelPackage", "com.vertafore.test.models." + service.toString())
-        configJson.put("apiPackage", "com.vertafore.test.servicewrappers." + service.toString())
+        configJson.put("modelPackage", "com/vertafore/test/models." + service.toString())
+        configJson.put("apiPackage", "com/vertafore/test/servicewrappers/" + service.toString())
         configJson.put("validateSpec", "false")
 
         new File( pathToConfigFile ).write new Gson().toJson(configJson)
     }
 
 }
+/**
+ * This task builds our swaggerSources task that our plugin
+ * uses to go get our compiled generators/src/main/groovyScreenPlay.groovy
+ * custom codegen class that extends SpringCodeGen.
+ *
+ * we then configure where to find the input json file and where to look for any
+ * templates
+ *
+ * see: https://github.com/int128/gradle-swagger-generator-plugin#use-multiple-sources
+ */
 
-// swagger sources task, looks through each service in the SERVICES array and creates a 'swaggerSources' task.
 SERVICES.each {    service ->
     def pathToConfigFile = "swaggerjson/${service}/${service}-config.json"
-
-
-
     def pathToJson = "swaggerjson/${service}/${service}-service.json"
     def outputPath = "${buildDir}/${service}"
-
     // create a new swaggerSources task
     def ss = swaggerSources.create(service)
     // put the path for the input file
-    ss.inputFile = file(pathToJson);
-    // configure the settings
-    ss.code {
-        language = 'generators.ScreenPlay'
-        templateDir = file('templates')
-        components = ['models', 'apis']
-        configFile = file(pathToConfigFile)
-        outputDir = file(outputPath)
-    }
-    }
-
-    spotless {
-        java {
-            googleJavaFormat('1.6')
-        }
-    }
-
-    test.finalizedBy(aggregate)
-    qtestsync.shouldRunAfter(aggregate)
-
-    gradle.startParameter.continueOnFailure = true
-
-
-// used to build the generator class before the code gen runs.
-    swaggerSources*.code*.dependsOn 'generators:jar'
-swaggerSources*.code*.dependsOn 'getTitanApiSwaggerJson'
-
-// on every build we run generate codegen
-    build.dependsOn generateSwaggerCode
-
-// on every compile we run out codegen
-    compileJava.dependsOn swaggerSources*.code
-
-// add generated code into our src/main class path so it can be consumed in our tests.
-    SERVICES.each { service ->
-        sourceSets {
-            main {
-                java {
-                    srcDir "$buildDir/${service}"
-                }
-                resources {
-                    srcDir "$buildDir/${service}/src/main/resources"
-                }
+        ss.inputFile = file(pathToJson);
+        // configure the settings
+            ss.code {
+                language = 'generators.ScreenPlay'
+                templateDir = file('templates')
+                components = ['models', 'apis']
+                configFile = file(pathToConfigFile)
+                outputDir = file(outputPath)
+            }
+}
+/**
+ * After code-gen has happened and they are in our /build folder
+ * we put the classes in our source-sets to be consumed by our Junit tests
+ */
+SERVICES.each { service ->
+    sourceSets {
+        main {
+            java {
+                srcDir "$buildDir/${service}"
+            }
+            resources {
+                srcDir "$buildDir/${service}/src/main/resources"
             }
         }
     }
+}
+
+// used to build the generator class before the generateSwaggerCode runs.
+swaggerSources*.code*.dependsOn 'generators:jar'
+
+// used to build the JSON files from gitlab of services
+// class before the generateSwaggerCode runs.
+swaggerSources*.code*.dependsOn 'getTitanApiSwaggerJson'
+
+// makes sure when you run ./gradlew generateSwaggerCode
+// that build cache has been cleared out.
+swaggerSources*.code*.dependsOn clean
+
+// on every build we run generate codegen
+build.dependsOn generateSwaggerCode
+
+// on every compile we run out codegen
+compileJava.dependsOn swaggerSources*.code

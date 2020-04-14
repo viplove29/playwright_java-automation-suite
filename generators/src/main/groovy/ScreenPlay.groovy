@@ -60,8 +60,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
         outputFolder = "";
 
-        apiTemplateFiles.put("api.mustache", ".java");
-
         //	supportingFiles.add(new SupportingFile("build.mustache", "", "build.gradle"));
         //	supportingFiles.add(new SupportingFile("plugin.mustache", (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "SparkServerPlugin.java"));
 
@@ -112,6 +110,8 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         additionalProperties.put("baseName", baseName);
 
         /**
+         *      commenting out for now, this is happening in our build.gradle config.
+         *
          * Supporting Files.  You can write single files for the generator with the
          * entire object tree available.  If the input file has a suffix of `.mustache
          * it will be processed by the template engine.  Otherwise, it will be copied
@@ -120,12 +120,12 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
          "",                                                       // the destination folder, relative `outputFolder`
          "myFile.sample")                                          // the output file
          );*/
-
-        supportingFiles.add(new SupportingFile("api.mustache",   // the input template or file
-                "/templates",                                                       // the destination folder, relative `outputFolder`
-                "api.mustache"));
     }
 
+    /**
+     *      commenting out for now
+     *
+    */
 //    @Override
 //    public String escapeReservedWord(String name) {
 //        return "_" + name;
@@ -156,13 +156,13 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             // Convert httpMethod to lower case, e.g. "get", "post"
             op.httpMethod = op.httpMethod.toLowerCase();
 
+            // This is a hack to normalize our paths from swagger - we put query strings in the paths
+            // and that is a violation of swagger/openAPI spec. So this removes them.
+
             // replace all '{?' -> end of path string with "" to remove query strings from path
             op.path = op.path.replaceAll(	'\\{[\\?].*$', "");
             // replace all '?' -> end of path string with "" to remove query strings from path
             op.path = op.path.replaceAll(	'[\\?].*$', "");
-            // Change path parameters {var} to :var
-//            op.path = op.path.replaceAll("\\{", ":");
-//            op.path = op.path.replaceAll("\\}", "");
 
             // clean and normalize the operationId to remove duplicates and unhelpful names.
             op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
@@ -202,7 +202,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                 if (result.matches(".*\\d.*")) {
                     def cleanedSummary = capitalizeAndCleanString(summary)
                     result = WordUtils.uncapitalize(cleanedSummary);
-                    println("RESULT ---------> " + result)
                 }
 
                 return result + "OnThe" + controllerName + "Controller";
