@@ -63,8 +63,8 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
 //        embeddedTemplateDir = templateDir = "spark";
 
-        apiPackage = "com.vertafore.test.tasks.codegen.api";
-        modelPackage = "com.vertafore.test.tasks.codegen.model";
+//        apiPackage = "com.vertafore.test.tasks.codegen.api";
+//        modelPackage = "com.vertafore.test.tasks.codegen.model";
 
         setReservedWordsLowerCase(
                 Arrays.asList(
@@ -159,8 +159,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             // Change path parameters {var} to :var
 //            op.path = op.path.replaceAll("\\{", ":");
 //            op.path = op.path.replaceAll("\\}", "");
-
-
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)

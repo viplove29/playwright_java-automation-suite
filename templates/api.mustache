@@ -19,14 +19,14 @@ Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/
 {{>consumes}}
     return Task.where("{0}  {{summary}}", actor -> {
 {{>path_parameters}}
-String path = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
+String hydratedPath = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
 
     CallTitanApi
     .asUser(actor)
       .contentType(Arrays.toString(contentTypes))
       .queryParams(queryParams){{#allParams}}{{#isBodyParam}}.body(postBody){{/isBodyParam}}{{/allParams}}
       .formParams(formParams)
-.{{httpMethod}}(path);
+.{{httpMethod}}(hydratedPath);
 });
 }
   {{/operation}}

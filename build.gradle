@@ -1,3 +1,9 @@
+import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
 buildscript {
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.0.90")
@@ -111,37 +117,89 @@ dependencies {
         swaggerCodegen project('generators')
 }
 
-swaggerSources {
-    generateServiceWrapper {
-        inputFile = file('formservice.json')
-        code {
-            language = 'generators.ScreenPlay'
-            templateDir = file('templates')
-            components = ['models', 'apis']
-            configFile = file('config.json')
-//            outputDir = file('outputDirectoryHere')
-//            dependsOn validation
+// list of services
+final List<String> SERVICES = List.of("form", "document");
+
+task getTitanApiSwaggerJson {
+    def headers = [ Accept: 'application/json' ]
+    // url to get swagger json from
+    def rawUrl = "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service"
+    // loop over each service, and write a JSON file of each service to swaggerjson/service/service-name.json
+    SERVICES.each{ service ->
+        def path = "swaggerjson/%s/%s-service.json"
+        def hydratedPath = String.format(path, service, service)
+        def hydratedUrl = String.format(rawUrl, service, service)
+        def jsonText = new URL( hydratedUrl ).getText( requestProperties: headers )
+        new File( hydratedPath ).write jsonText
+    }
+    // build config file for each service
+    SERVICES.each{ service ->
+        def pathToConfigFile = "swaggerjson/${service}/${service}-config.json"
+        def configJson =  new HashMap<String,String>();
+        configJson.put("modelPackage", "com.vertafore.test.models." + service.toString())
+        configJson.put("apiPackage", "com.vertafore.test.servicewrappers." + service.toString())
+        configJson.put("validateSpec", "false")
+
+        new File( pathToConfigFile ).write new Gson().toJson(configJson)
+    }
+
+}
+
+// swagger sources task, looks through each service in the SERVICES array and creates a 'swaggerSources' task.
+SERVICES.each {    service ->
+    def pathToConfigFile = "swaggerjson/${service}/${service}-config.json"
+
+
+
+    def pathToJson = "swaggerjson/${service}/${service}-service.json"
+    def outputPath = "${buildDir}/${service}"
+
+    // create a new swaggerSources task
+    def ss = swaggerSources.create(service)
+    // put the path for the input file
+    ss.inputFile = file(pathToJson);
+    // configure the settings
+    ss.code {
+        language = 'generators.ScreenPlay'
+        templateDir = file('templates')
+        components = ['models', 'apis']
+        configFile = file(pathToConfigFile)
+        outputDir = file(outputPath)
+    }
+    }
+
+    spotless {
+        java {
+            googleJavaFormat('1.6')
         }
     }
-}
+
+    test.finalizedBy(aggregate)
+    qtestsync.shouldRunAfter(aggregate)
+
+    gradle.startParameter.continueOnFailure = true
 
 
+// used to build the generator class before the code gen runs.
+    swaggerSources*.code*.dependsOn 'generators:jar'
+swaggerSources*.code*.dependsOn 'getTitanApiSwaggerJson'
 
-spotless {
-    java {
-        googleJavaFormat('1.6')
+// on every build we run generate codegen
+    build.dependsOn generateSwaggerCode
+
+// on every compile we run out codegen
+    compileJava.dependsOn swaggerSources*.code
+
+// add generated code into our src/main class path so it can be consumed in our tests.
+    SERVICES.each { service ->
+        sourceSets {
+            main {
+                java {
+                    srcDir "$buildDir/${service}"
+                }
+                resources {
+                    srcDir "$buildDir/${service}/src/main/resources"
+                }
+            }
+        }
     }
-}
-
-test.finalizedBy(aggregate)
-qtestsync.shouldRunAfter(aggregate)
-
-gradle.startParameter.continueOnFailure = true
-
-swaggerSources*.code*.dependsOn 'generators:jar'
-
-build.dependsOn generateSwaggerCode
-// Configure compile task dependency and source
-compileJava.dependsOn swaggerSources.generateServiceWrapper.code
-sourceSets.main.java.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}"
-sourceSets.main.resources.srcDir "${swaggerSources.generateServiceWrapper.code.outputDir}/src/main/resources"

@@ -1,7 +1,5 @@
 {
   "modelPackage":"com.vertafore.test.models",
   "apiPackage": "com.vertafore.test.servicewrappers",
-  "invokerPackage": "invokerPackage",
-  "localVariablePrefix" : "localVariablePrefix",
   "validateSpec": false
 }
