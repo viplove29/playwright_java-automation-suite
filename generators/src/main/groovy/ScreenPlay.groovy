@@ -200,7 +200,9 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                 // the summary formatted. This prevents endpoints being named the same thing
                 // and from being named getUsingGet_1/getUsingGet_2
                 if (result.matches(".*\\d.*")) {
-                    result = capitalizeAndCleanString(summary).charAt(0).toLowerCase()
+                    def cleanedSummary = capitalizeAndCleanString(summary)
+                    result = WordUtils.uncapitalize(cleanedSummary);
+                    println("RESULT ---------> " + result)
                 }
 
                 return result + "OnThe" + controllerName + "Controller";
