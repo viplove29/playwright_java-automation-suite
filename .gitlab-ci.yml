@@ -20,7 +20,8 @@ build:
     - schedules
   script:
     - chmod +x gradlew
-    - ./gradlew --build-cache build testClasses -x test -x spotlessJava
+    - ./gradlew generateSwaggerCode
+    - ./gradlew --build-cache build testClasses -x test
   cache:
     key: "$CI_COMMIT_REF_NAME"
     paths:
