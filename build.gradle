@@ -223,8 +223,8 @@ build.dependsOn generateSwaggerCode
 
 // run spotlessApply task to remove unused imports that
 // could potentially break builds.
-compileJava.dependsOn spotlessApply
-build.dependsOn spotlessApply
+compileJava.dependsOn spotless
+build.dependsOn spotless
 
 // on every compile we run out codegen
 compileJava.dependsOn swaggerSources*.code
