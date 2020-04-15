@@ -21,6 +21,7 @@ build:
   script:
     - chmod +x gradlew
     - ./gradlew generateSwaggerCode
+    - ./gradlew removeUnusedImportsTask
     - ./gradlew --build-cache build testClasses -x test
   cache:
     key: "$CI_COMMIT_REF_NAME"
