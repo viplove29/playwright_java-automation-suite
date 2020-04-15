@@ -86,6 +86,12 @@ spotless {
     java {
         googleJavaFormat('1.6')
         spotlessJavaApply
+    }
+}
+
+task removeUnusedImportsTask {
+    spotless.java{
+        spotlessJavaApply
         removeUnusedImports()
     }
 }
@@ -223,8 +229,8 @@ build.dependsOn generateSwaggerCode
 
 // run spotlessApply task to remove unused imports that
 // could potentially break builds.
-compileJava.dependsOn spotless
-build.dependsOn spotless
+compileJava.dependsOn removeUnusedImportsTask
+build.dependsOn removeUnusedImportsTask
 
 // on every compile we run out codegen
 compileJava.dependsOn swaggerSources*.code
