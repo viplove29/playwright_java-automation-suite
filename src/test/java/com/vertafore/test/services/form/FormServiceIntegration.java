@@ -30,10 +30,12 @@ public class FormServiceIntegration {
   }
 
   @Test
-  public void formServiceTest() throws IOException {
+  public void searchFormTemplatesReturnsFormTemplates() throws IOException {
     Actor formActor = theActorCalled("titan.support1@vertafore.com");
 
+    // change the product of formActor from default to "FORM-ADMIN-WEB-UI"
     HaveTitanContext.theNewProductOf(formActor, "FORM-ADMIN-WEB-UI");
+
     String productId = HaveTitanContext.theProductIdOf(formActor);
     String entityId = HaveTitanContext.theEntityIdOf(formActor);
     String tenantId = HaveTitanContext.theTenantIdOf(formActor);
@@ -45,16 +47,16 @@ public class FormServiceIntegration {
             productId,
             tenantId,
             entityId,
-            "name",
+            "work",
             "bySearchTerm",
+            100,
             1,
-            3,
             null,
             null,
+            "NAME",
             null,
             null,
-            null,
-            null,
+            true,
             null,
             null,
             null,

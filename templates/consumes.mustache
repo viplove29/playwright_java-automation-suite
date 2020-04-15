@@ -1,9 +1,1 @@
-final String[] contentTypes = {
-{{#hasConsumes}}
-  {{#consumes}}
-    "{{{mediaType}}}"
-    {{#hasMore}},
-    {{/hasMore}}
-  {{/consumes}}
-{{/hasConsumes}}
-};
+final String contentType = {{#hasConsumes}}{{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}}{{/hasConsumes}}{{^hasConsumes}}"*/*"{{/hasConsumes}};

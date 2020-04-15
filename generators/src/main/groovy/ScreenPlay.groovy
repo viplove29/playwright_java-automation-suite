@@ -118,6 +118,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         additionalProperties.put("apiVersion", apiVersion);
         additionalProperties.put("basePackage", basePackage);
         additionalProperties.put("baseName", baseName);
+        singleContentTypes = true;
 
         /**
          *      commenting out for now, this is happening in our build.gradle config.
@@ -156,6 +157,13 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
     @Override
     public String apiFileFolder() {
         return outputFolder + "/" + sourceFolder + "/" + apiPackage();
+    }
+
+    @Override
+    void processOpts() {
+        super.processOpts()
+        this.typeMapping.put("file", "File");
+        this.importMapping.put("File", "java.io.File");
     }
 
     @Override
