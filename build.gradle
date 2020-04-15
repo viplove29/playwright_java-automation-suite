@@ -86,15 +86,16 @@ spotless {
     java {
         googleJavaFormat('1.6')
         spotlessJavaApply
-    }
-}
-
-task removeUnusedImportsTask {
-    spotless.java{
-        spotlessJavaApply
         removeUnusedImports()
     }
 }
+//
+//task removeUnusedImportsTask {
+//    spotless.java{
+//        spotlessJavaApply
+//        removeUnusedImports()
+//    }
+//}
 
 test.finalizedBy(aggregate)
 gradle.startParameter.continueOnFailure = true
@@ -229,8 +230,8 @@ build.dependsOn generateSwaggerCode
 
 // run spotlessApply task to remove unused imports that
 // could potentially break builds.
-compileJava.dependsOn removeUnusedImportsTask
-build.dependsOn removeUnusedImportsTask
+compileJava.dependsOn spotlessJavaApply
+build.dependsOn spotlessJavaApply
 
 // on every compile we run out codegen
 compileJava.dependsOn swaggerSources*.code
