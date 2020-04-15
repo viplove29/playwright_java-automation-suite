@@ -89,13 +89,6 @@ spotless {
         removeUnusedImports()
     }
 }
-//
-//task removeUnusedImportsTask {
-//    spotless.java{
-//        spotlessJavaApply
-//        removeUnusedImports()
-//    }
-//}
 
 test.finalizedBy(aggregate)
 gradle.startParameter.continueOnFailure = true
