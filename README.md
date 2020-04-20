@@ -16,30 +16,18 @@ Each integration test is a JUnit test and does not have a corresponding feature 
 
 ## How to Generate Service-Wrappers 
 
-This project has a tool to build Titan service-wrappers into Java Classes using a gradle task.
+This project has a tool to build Titan Service Wrappers and Models into Java Classes using a gradle task.
 
-As our Titan api's change the tool will be responsible for updating our 'service-wrapper' to 
+As our Titan api's change the tool will be responsible for updating our 'service-wrapper' & models to 
 interact with each backend service. 
 
 to use it:
 
-``gradle run --args='{SERVICE-NAME}'`` (you can generate multiple wrappers at the same time by adding a space)
+``./gradlew generateSwaggerCode``
 
-To generate all services run:
+note: you may need to run ./gradlew spotlessJavaApply to clean unused imports that may break the build.
 
-``gradle run --args='all'``
-
-To generate a whole Java class to interact with Auth-Service and Document-Service run:
-
-``gradle run --args='auth document'``
-
-This command will reach out to swagger in dev-master then parse the whole API and output your class named
-
-`UseAuthServiceTo` and `UseDocumentServiceTo `in the correct folder path for you.
-
- 
- If you already have the class then it will be overwritten, and if there are errors in compiling the classes they will need to be deleted before the task is run again.
-
+This command will reach out to swagger in dev-master then parse the whole API and output your class and models into your /build folder and into the source sets for use by your JUnit tests.
 
 ## General Test Setup
 
