@@ -5,20 +5,18 @@ import net.serenitybdd.screenplay.Actor;
 
 public class HaveTitanContext implements Ability {
 
-  private String domain = null;
   private String product = null;
   private String tenant = null;
   private String entity = null;
 
-  private HaveTitanContext(String domainURI, String productId, String tenantId, String entityId) {
-    this.domain = domainURI;
+  private HaveTitanContext(String productId, String tenantId, String entityId) {
     this.product = productId;
     this.tenant = tenantId;
     this.entity = entityId;
   }
 
-  public static HaveTitanContext of(String domain, String product, String tenant, String entity) {
-    return new HaveTitanContext(domain, product, tenant, entity);
+  public static HaveTitanContext of(String product, String tenant, String entity) {
+    return new HaveTitanContext(product, tenant, entity);
   }
 
   public static HaveTitanContext as(Actor actor) {
@@ -28,18 +26,6 @@ public class HaveTitanContext implements Ability {
     } else {
       return actor.abilityTo(HaveTitanContext.class);
     }
-  }
-
-  public static String theDomainURIOf(Actor actor) {
-    return HaveTitanContext.as(actor).domain;
-  }
-
-  private void setDomain(String newDomain) {
-    this.domain = newDomain;
-  }
-
-  public static void theNewDomainURIOf(Actor actor, String newDomain) {
-    HaveTitanContext.as(actor).setDomain(newDomain);
   }
 
   public static String theProductIdOf(Actor actor) {

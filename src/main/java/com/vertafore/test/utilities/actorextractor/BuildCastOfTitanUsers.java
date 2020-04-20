@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.abilities.Authenticate;
-import com.vertafore.test.abilities.CallTitanApi;
 import com.vertafore.test.abilities.HaveTitanContext;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.tasks.GetTitanAuthToken;
 import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.actors.OnlineCast;
+import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 
 public class BuildCastOfTitanUsers {
 
@@ -44,11 +44,19 @@ public class BuildCastOfTitanUsers {
       String tenantName = singleActor.getTenantName();
       String userName = singleActor.getUserName();
 
+      //      // handle cookies being passed in at run-time via system properties
+      //      String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies")
+      // : "";
+      // handle different domains being passed in at run-time via system properties, default to dev
+      // master.
+      String domain =
+          System.getProperty("baseUrl") != null ? System.getProperty("baseUrl") : DEFAULT_BASE_URL;
+
       cast.actorNamed(
           userName,
           Authenticate.with(userName, DEFAULT_PASSWORD),
-          HaveTitanContext.of(DEFAULT_BASE_URL, DEFAULT_PRODUCT_ID, tenantName, entityName),
-          CallTitanApi.asAuthenticatedUser());
+          HaveTitanContext.of(DEFAULT_PRODUCT_ID, tenantName, entityName),
+          CallAnApi.at(domain));
       cast.getActors().forEach(actor -> actor.attemptsTo(GetTitanAuthToken.forActor()));
 
       if (SerenityRest.lastResponse().getStatusCode() != 200) {
@@ -96,11 +104,16 @@ public class BuildCastOfTitanUsers {
                       new IllegalArgumentException(
                           "could not find user with username: " + userName));
 
+      // handle different domains being passed in at run-time via system properties, default to dev
+      // master.
+      String domain =
+          System.getProperty("baseUrl") != null ? System.getProperty("baseUrl") : DEFAULT_BASE_URL;
+
       cast.actorNamed(
           userName,
           Authenticate.with(foundUser.username, foundUser.password),
-          HaveTitanContext.of(DEFAULT_BASE_URL, DEFAULT_PRODUCT_ID, tenantName, entityName),
-          CallTitanApi.asAuthenticatedUser());
+          HaveTitanContext.of(DEFAULT_PRODUCT_ID, tenantName, entityName),
+          CallAnApi.at(domain));
       cast.getActors().forEach(actor -> actor.attemptsTo(GetTitanAuthToken.forActor()));
     }
     return cast;

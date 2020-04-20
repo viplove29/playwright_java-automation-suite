@@ -13,7 +13,8 @@ import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.media.ObjectSchema
 import io.swagger.v3.oas.models.media.Schema
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.lang3.text.WordUtils
+import org.codehaus.groovy.runtime.StringGroovyMethods;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.SpringCodegen;
 
@@ -171,8 +172,8 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         Map<String, Object> endpoints = (Map<String, Object>) objs.get("operations");
         List<CodegenOperation> ops = (List<CodegenOperation>) endpoints.get("operation");
         for (CodegenOperation op : ops) {
-            // Convert httpMethod to lower case, e.g. "get", "post"
-            op.httpMethod = op.httpMethod.toLowerCase();
+            // Convert httpMethod from "GET" to "Get" to use in serenity-screenplay static ex: "Get" methods.
+            op.httpMethod = op.httpMethod.toLowerCase().capitalize();
 
             // This is a hack to normalize our paths from swagger - we put query strings in the paths
             // and that is a violation of swagger/openAPI spec. So this removes them.
@@ -184,8 +185,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
             // clean and normalize the operationId to remove duplicates and unhelpful names.
             op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
-
-
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)

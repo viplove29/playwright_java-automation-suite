@@ -2,12 +2,7 @@ plugins {
     id 'groovy'
 }
 
-repositories {
-    jcenter()
-}
-
 dependencies {
     implementation localGroovy()
-//    implementation 'io.swagger:swagger-codegen-cli:2.4.2'
     implementation 'org.openapitools:openapi-generator-cli:4.3.0'
 }
