@@ -200,7 +200,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
     @Override
     public String toApiName(String name) {
-        return name;
+        return "Use" + name.capitalize() + "To";
     }
 
     private String generateMethodName(String operationId, Object tag, String summary) {

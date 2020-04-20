@@ -2,10 +2,11 @@ package com.vertafore.test.services.form;
 
 import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.abilities.HaveTitanContext;
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.servicewrappers.form;
+import com.vertafore.test.servicewrappers.UseFormTo;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class FormServiceIntegration {
     String entityId = HaveTitanContext.theEntityIdOf(formActor);
     String tenantId = HaveTitanContext.theTenantIdOf(formActor);
 
-    form formApi = new form();
+    UseFormTo formApi = new UseFormTo();
 
     formActor.attemptsTo(
         formApi.searchForFormTemplatesUsingGetOnTheFormTemplateController(
@@ -62,6 +63,8 @@ public class FormServiceIntegration {
             null,
             null));
     SerenityRest.lastResponse().prettyPrint();
+
+    formActor.should(seeThatResponse(res -> res.statusCode(200)));
     checkStatusForSuccess();
   }
 }

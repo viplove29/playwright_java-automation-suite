@@ -11,9 +11,7 @@ public Performable {{operationId}}({{>method_parameters}}) {
 Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
 
   final HashMap<String, Object> queryParams = new HashMap<String, Object>();
-  final HttpHeaders headerParams = new HttpHeaders();
   final LinkedMultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
 
 {{>query_parameters}}
 {{>form_parameters}}

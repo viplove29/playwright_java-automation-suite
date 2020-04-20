@@ -6,7 +6,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.abilities.HaveTitanContext;
 import com.vertafore.test.models.TitanUser;
-import com.vertafore.test.servicewrappers.document;
+import com.vertafore.test.servicewrappers.UseDocumentTo;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
 import java.io.File;
@@ -42,7 +42,7 @@ public class DocumentServiceIntegration {
     String entityId = HaveTitanContext.theEntityIdOf(currentActor);
     String tenantId = HaveTitanContext.theTenantIdOf(currentActor);
 
-    document documentApi = new document();
+    UseDocumentTo documentApi = new UseDocumentTo();
 
     // build metadata
     Map<String, String> metaData = new HashMap<>();
