@@ -33,8 +33,7 @@ String cookies = System.getProperty("cookies") != null ? System.getProperty("coo
         request -> request.queryParams(queryParams){{#allParams}}{{#isBodyParam}},
         request -> request.body(postBody){{/isBodyParam}}{{/allParams}}{{#formParams}},{{#isFile}}
         request -> request.multiPart("file", {{paramName}}, mime)  {{/isFile}}{{/formParams}}
-));
-
+)).performAs(actor);
 });
 }
   {{/operation}}
