@@ -16,7 +16,7 @@ import net.serenitybdd.screenplay.rest.interactions.Post;
 // This class is deliberately built seperate from UseAuthServiceTo because we need this getToken
 // endpoint for set-up and this allows us to build the UseAuthServiceTo
 public class GetTitanAuthToken implements Performable {
-  private static final String TOKEN_PATH = "auth/v1/token/";
+  private static final String TOKEN_PATH = "/auth/v1/token/";
 
   @Override
   public <T extends Actor> void performAs(T actor) {

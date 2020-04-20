@@ -18,7 +18,7 @@ public class BuildCastOfTitanUsers {
   private static final String PATH_TO_USERS = "svi/users.json"; // Path to user json file
   private static final String DEFAULT_PASSWORD = "Password1!";
   private static final String DEFAULT_PRODUCT_ID = "AMS-WEB-UI";
-  private static final String DEFAULT_BASE_URL = "https://api.dev.titan.v4af.com/";
+  private static final String DEFAULT_BASE_URL = "https://api.dev.titan.v4af.com";
 
   @JsonIgnoreProperties(ignoreUnknown = true)
   public static class JsonTenants {
