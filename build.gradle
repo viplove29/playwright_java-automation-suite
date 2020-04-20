@@ -55,6 +55,7 @@ allprojects {
         snapshotRepositoryUrl = 'https://nexus.util.v4af.com/repository/libs-snapshot-local/'
     }
 
+
     task sourceJar(type: Jar, dependsOn: classes) {
         classifier 'sources'
         from sourceSets.main.allSource
