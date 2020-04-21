@@ -165,6 +165,8 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         super.processOpts()
         this.typeMapping.put("file", "File");
         this.importMapping.put("File", "java.io.File");
+//        this.typeMapping.put("file", "MultipartFile")
+//        this.importMapping.put("MultipartFile", "org.springframework.web.multipart.MultipartFile")
     }
 
     @Override
@@ -195,11 +197,17 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         if(objs.containsKey("ObjectNode")){
             objs.remove("ObjectNode")
         }
+        else if (objs.containsKey("JsonNode")){
+                objs.remove("JsonNode")
+            }
         return super.updateAllModels(objs)
     }
 
     @Override
     public String toApiName(String name) {
+        if (name.contains("-")){
+            name = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, name);
+        }
         return "Use" + name.capitalize() + "To";
     }
 
@@ -228,8 +236,9 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                 // and from being named getUsingGet_1/getUsingGet_2
                 if (result.matches(".*\\d.*")) {
                     def cleanedSummary = capitalizeAndCleanString(summary)
-                    result = WordUtils.uncapitalize(cleanedSummary);
+                    controllerName = WordUtils.uncapitalize(cleanedSummary);
                 }
+
 
                 return result + "OnThe" + controllerName + "Controller";
             }

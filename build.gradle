@@ -105,6 +105,7 @@ dependencies {
     implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.1'
     // Vertafore
     implementation 'com.vertafore.core:foundation:11.0.0-SNAPSHOT'
+    implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
     // openAPI
     swaggerCodegen 'org.openapitools:openapi-generator-cli:4.3.0'
     implementation 'org.openapitools:openapi-generator-cli:4.3.0'
@@ -120,7 +121,39 @@ dependencies {
 /**
  * List of all services being built.
  */
-final List<String> SERVICES = List.of("form", "document");
+final List<String> SERVICES = List.of(
+        "accounting",
+        "alert",
+        "auth",
+        "carrier",
+        "carrier-update-ingestion",
+        "claim",
+        "commission",
+        "communication",
+        "company",
+        "config",
+        "contact",
+        "customer",
+        "document",
+        "exposure",
+        "form",
+        "file-intake",
+        "invoice",
+        "license",
+        "notification",
+        "opportunity",
+        "policy",
+        "product",
+//        "question",
+//        "quickbooks-integration",
+//        "rating-data",
+//        "rating",
+//        "render",
+//        "report",
+//        "schedule",
+//        "small-agency-ams-web-orchestration",
+//        "to-do"
+);
 
 
 /**
