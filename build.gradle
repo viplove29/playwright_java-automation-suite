@@ -144,15 +144,15 @@ final List<String> SERVICES = List.of(
         "opportunity",
         "policy",
         "product",
-//        "question",
-//        "quickbooks-integration",
-//        "rating-data",
-//        "rating",
-//        "render",
-//        "report",
-//        "schedule",
-//        "small-agency-ams-web-orchestration",
-//        "to-do"
+        "pin-access",
+        "question",
+        "quickbooks-integration",
+        "rating-data",
+//        "rating", models break on import - wrong ENUMS in service
+        "render",
+        "report",
+        "schedule",
+        "to-do"
 );
 
 
@@ -186,6 +186,7 @@ task getTitanApiSwaggerJson {
     }
 
 }
+
 /**
  * This task builds our swaggerSources task that our plugin
  * uses to go get our compiled generators/src/main/groovyScreenPlay.groovy
@@ -225,18 +226,21 @@ SERVICES.each {    service ->
  * After code-gen has happened and they are in our /build folder
  * we put the classes in our source-sets to be consumed by our Junit tests
  */
-SERVICES.each { service ->
-    sourceSets {
-        main {
-            java {
-                srcDir "$buildDir/${service}"
-            }
-            resources {
-                srcDir "$buildDir/${service}/src/main/resources"
+task addGeneratedCodeToSourceSets{
+    SERVICES.each { service ->
+        sourceSets {
+            main {
+                java {
+                    srcDir "$buildDir/${service}"
+                }
+                resources {
+                    srcDir "$buildDir/${service}/src/main/resources"
+                }
             }
         }
     }
 }
+
 
 // used to build the generator class before the generateSwaggerCode runs.
 swaggerSources*.code*.dependsOn 'generators:jar'
@@ -259,3 +263,5 @@ build.dependsOn spotlessJavaApply
 
 // on every compile we run out codegen
 compileJava.dependsOn swaggerSources*.code
+compileJava.dependsOn 'addGeneratedCodeToSourceSets'
+

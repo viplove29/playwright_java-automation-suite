@@ -1,7 +1,0 @@
-{{#hasFormParams}}{{#formParams}}{{^isFile}}
-  if ({{paramName}} != null)
-  formParams.add("{{baseName}}", {{paramName}});
-  {{#hasMore}}{{/hasMore}}{{/isFile}}{{/formParams}}{{/hasFormParams}}
-{{#formParams}}{{#isFile}}
-  // necessary for document-svc branding, need the content type of file on multipart request
-  String mime = URLConnection.guessContentTypeFromName({{paramName}}.getName());{{/isFile}}{{/formParams}}

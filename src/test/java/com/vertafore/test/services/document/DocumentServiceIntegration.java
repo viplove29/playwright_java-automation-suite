@@ -19,13 +19,9 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @RunWith(SerenityRunner.class)
 public class DocumentServiceIntegration {
@@ -59,11 +55,7 @@ public class DocumentServiceIntegration {
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(
         documentApi.createUsingPostOnTheBrandingController(
-            productId,
-            tenantId,
-            entityId,
-            imgToMultipartFile,
-            JsonHelper.serializeAsJson(metaData)));
+            productId, tenantId, entityId, imageToUpload, JsonHelper.serializeAsJson(metaData)));
 
     Map postResponse =
         (Map) SerenityRest.lastResponse().getBody().jsonPath().getList("content").get(0);

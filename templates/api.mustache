@@ -9,29 +9,28 @@ package {{package}};
   {{#operation}}
 public Performable {{operationId}}({{>method_parameters}}) {
 Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
-  final HashMap<String, Object> queryParams = new HashMap<String, Object>();
-  final LinkedMultiValueMap<String, Object> formParams = new LinkedMultiValueMap<String, Object>();
-
+   HashMap<String, Object> queryParams = new HashMap<String, Object>();
 {{>query_parameters}}
-{{>form_parameters}}
+
 {{>consumes}}
     return Task.where("{0}  {{summary}}", actor -> {
 {{>path_parameters}}
 String hydratedPath = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
 String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
+
 {{httpMethod}}
 .to(hydratedPath)
 .with(List.of(
-request -> request.contentType(contentType),
-request -> request.cookie(cookies),
-request -> request.header("Vertafore-Authorization", theAuthTokenOf(actor)),
-request -> request.queryParams(queryParams){{#allParams}}{{#isBodyParam}},
-request -> request.body(postBody){{/isBodyParam}}{{/allParams}}{{#formParams}},{{#isFile}}
-  request -> request.multiPart("file", {{paramName}}, mime)  {{/isFile}}{{/formParams}}
+req -> req.contentType(contentType),
+req -> req.header("Cookie",cookies),
+req -> req.header("Vertafore-Authorization", theAuthTokenOf(actor)),
+{{#hasFormParams}}{{#formParams}}
+  req -> req.multiPart("{{baseName}}", {{paramName}}{{#isFile}}, URLConnection.guessContentTypeFromName({{paramName}}.getName()){{/isFile}}),{{#hasMore}}{{/hasMore}}{{/formParams}}{{/hasFormParams}}
+  req -> req.queryParams(queryParams){{#allParams}}{{#isBodyParam}},
+  req -> req.body(postBody){{/isBodyParam}}{{/allParams}}
 )).performAs(actor);
 });
 }
-
   {{/operation}}
 {{/operations}}
 }
