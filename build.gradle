@@ -241,7 +241,6 @@ task addGeneratedCodeToSourceSets{
     }
 }
 
-
 // used to build the generator class before the generateSwaggerCode runs.
 swaggerSources*.code*.dependsOn 'generators:jar'
 
@@ -254,7 +253,7 @@ swaggerSources*.code*.dependsOn 'getTitanApiSwaggerJson'
 swaggerSources*.code*.dependsOn clean
 
 // on every build we run generate codegen
-build.dependsOn generateSwaggerCode
+//build.dependsOn generateSwaggerCode
 
 // run spotlessApply task to remove unused imports that
 // could potentially break builds.
@@ -262,6 +261,6 @@ compileJava.dependsOn spotlessJavaApply
 build.dependsOn spotlessJavaApply
 
 // on every compile we run out codegen
-compileJava.dependsOn swaggerSources*.code
+//compileJava.dependsOn swaggerSources*.code
 compileJava.dependsOn 'addGeneratedCodeToSourceSets'
 
