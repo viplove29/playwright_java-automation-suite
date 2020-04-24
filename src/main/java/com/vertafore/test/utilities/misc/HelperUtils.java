@@ -18,7 +18,7 @@ public class HelperUtils {
   }
 
   public static void checkStatusForSuccess() {
-    theActorInTheSpotlight()
-        .attemptsTo(Ensure.that(SerenityRest.lastResponse().statusCode()).isBetween(200, 299));
+    int statusCode = SerenityRest.lastResponse().statusCode();
+    theActorInTheSpotlight().attemptsTo(Ensure.that(statusCode).isBetween(200, 299));
   }
 }

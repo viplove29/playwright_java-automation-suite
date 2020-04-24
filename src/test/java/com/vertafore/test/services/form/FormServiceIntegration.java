@@ -1,6 +1,5 @@
 package com.vertafore.test.services.form;
 
-import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
@@ -64,7 +63,9 @@ public class FormServiceIntegration {
             null));
     SerenityRest.lastResponse().prettyPrint();
 
-    formActor.should(seeThatResponse(res -> res.statusCode(200)));
-    checkStatusForSuccess();
+    formActor.should(
+        seeThatResponse(
+            "This request is testing that query params were formatted correctly in the rest call",
+            res -> res.statusCode(200)));
   }
 }

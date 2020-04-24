@@ -135,6 +135,7 @@ final List<String> SERVICES = List.of(
         "contact",
         "customer",
         "document",
+        "download",
         "exposure",
         "form",
         "file-intake",
@@ -155,7 +156,6 @@ final List<String> SERVICES = List.of(
         "to-do"
 );
 
-
 /**
  * This task reaches out to the swagger for each service and write a json file.
  *
@@ -167,13 +167,20 @@ task getTitanApiSwaggerJson {
     // url to get swagger json from
     def rawUrl = "https://api.dev.titan.v4af.com/%s/v2/api-docs?group=%s-service"
     // loop over each service, and write a JSON file of each service to swaggerjson/service/service-name.json
-    SERVICES.each{ service ->
-        def path = "swaggerjson/%s/%s-service.json"
-        def hydratedPath = String.format(path, service, service)
-        def hydratedUrl = String.format(rawUrl, service, service)
-        def jsonText = new URL( hydratedUrl ).getText( requestProperties: headers )
-        new File( hydratedPath ).write jsonText
-    }
+        SERVICES.each{ service ->
+            def path = "swaggerjson/%s/%s-service.json"
+            def hydratedPath = String.format(path, service, service)
+            def hydratedUrl = String.format(rawUrl, service, service)
+            def jsonText = new URL( hydratedUrl ).getText( requestProperties: headers )
+            // if the json response has swagger json elements in it - write a new file.
+            // Otherwise (the json response, was not successful)
+            // the code-generator will use the json that has been committed already.
+            if (jsonText.contains("swagger") && jsonText.contains(service)){
+                new File( hydratedPath ).write jsonText
+            } else {
+                logger.warn("Swagger Json could not be accessed - using saved swagger json for codegenerator for: $service")
+            }
+        }
     // build config file for each service
     SERVICES.each{ service ->
         def pathToConfigFile = "swaggerjson/${service}/${service}-config.json"
@@ -260,7 +267,6 @@ swaggerSources*.code*.dependsOn clean
 compileJava.dependsOn spotlessJavaApply
 build.dependsOn spotlessJavaApply
 
-// on every compile we run out codegen
 //compileJava.dependsOn swaggerSources*.code
 compileJava.dependsOn 'addGeneratedCodeToSourceSets'
 

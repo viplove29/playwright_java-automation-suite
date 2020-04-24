@@ -8,9 +8,7 @@ import net.serenitybdd.screenplay.rest.interactions.RestInteraction;
 import net.thucydides.core.annotations.Step;
 
 /**
- * Perform a GET query on a given REST resource
- *
- * <p>this class overwrites the Get from serenity-screenplay-rest to add a 'to' method so that it is
+ * this class overwrites the Get from serenity-screenplay-rest to add a 'to' method so that it is
  * standardized and all verbs can go Verb.to()
  */
 public class Get extends RestInteraction {

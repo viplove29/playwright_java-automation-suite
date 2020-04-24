@@ -2,10 +2,12 @@ package com.vertafore.test.services.document;
 
 import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.abilities.HaveTitanContext;
 import com.vertafore.test.models.TitanUser;
+import com.vertafore.test.models.document.LogoV1;
 import com.vertafore.test.servicewrappers.UseDocumentTo;
 import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import com.vertafore.test.utilities.misc.HelperUtils;
@@ -16,14 +18,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
+import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import net.thucydides.core.annotations.WithTag;
+import net.thucydides.core.annotations.WithTags;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
+@WithTags({
+  @WithTag("titan"),
+  @WithTag("aws"),
+})
 public class DocumentServiceIntegration {
 
   private List<TitanUser> users = new ArrayList<>();
@@ -35,6 +43,7 @@ public class DocumentServiceIntegration {
   }
 
   @Test
+  @WithTag("aws")
   public void documentServiceBrandingSetsConfigCorrectly() throws IOException {
     Actor currentActor = theActorCalled("donald@lizzy123.com");
 
@@ -49,35 +58,48 @@ public class DocumentServiceIntegration {
     metaData.put("name", "brandingTestName");
     metaData.put("description", "brandingTestDescription");
 
-    // get file
+    // get branding image to upload
     File imageToUpload = new HelperUtils().getFileByFileName("doge", ".jpg");
 
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(
         documentApi.createUsingPostOnTheBrandingController(
             productId, tenantId, entityId, imageToUpload, JsonHelper.serializeAsJson(metaData)));
+    checkStatusForSuccess();
 
-    Map postResponse =
-        (Map) SerenityRest.lastResponse().getBody().jsonPath().getList("content").get(0);
-    String id = postResponse.get("id").toString();
+    String brandingId =
+        LastResponse.received()
+            .answeredBy(currentActor)
+            .getBody()
+            .jsonPath()
+            .getList("content", LogoV1.class)
+            .get(0)
+            .getId();
 
-    //    // GET the /brandings
-    //    // tests CONFIG-SVC
+    // GET the /brandings
     currentActor.attemptsTo(
         documentApi.getBrandingsUsingGetOnTheBrandingController(productId, tenantId, entityId));
-    checkStatusForSuccess();
-    //
-    //    //    // GET /bytes
-    //    //    // tests AWS S3 connectivity
+
+    currentActor.should(
+        seeThatResponse(
+            "Getting the brandings back tests config-svc set correctly",
+            res -> res.statusCode(200)));
+
+    // GET /bytes
     currentActor.attemptsTo(
         documentApi.getImageUsingGetOnTheBrandingController(
-            productId, tenantId, entityId, id, "original"));
-    checkStatusForSuccess();
+            productId, tenantId, entityId, brandingId, "original"));
 
-    //    // DELETE IT TO CLEAN UP:
+    currentActor.should(
+        seeThatResponse(
+            "Getting the bytes back tests AWS S3 connectivity", res -> res.statusCode(200)));
+
+    // DELETE IT TO CLEAN UP:
     currentActor.attemptsTo(
         documentApi.deleteByIdUsingDeleteOnTheBrandingController(
-            productId, tenantId, entityId, id));
-    checkStatusForSuccess();
+            productId, tenantId, entityId, brandingId));
+
+    currentActor.should(
+        seeThatResponse("Deleting branding, for cleanup.", res -> res.statusCode(200)));
   }
 }

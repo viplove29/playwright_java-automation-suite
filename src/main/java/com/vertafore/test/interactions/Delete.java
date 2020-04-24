@@ -8,10 +8,8 @@ import net.serenitybdd.screenplay.rest.interactions.RestInteraction;
 import net.thucydides.core.annotations.Step;
 
 /**
- * Put something to a REST resource. This is a simple interaction class suitable for simple queries.
- *
- * <p>this class overwrites the Delete from serenity-screenplay-rest to add a 'to' method so that it
- * is standardized and all verbs can go Verb.to()
+ * this class overwrites the Delete from serenity-screenplay-rest to add a 'to' method so that it is
+ * standardized and all verbs can go Verb.to()
  */
 public class Delete extends RestInteraction {
 
