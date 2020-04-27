@@ -181,3 +181,28 @@ To access the reports locally, after running the test go to
 
 Open the index.html in your browser and you will see the report. When you find your
 test results you can click on each step that happened and even each request/response that was sent. Each request sent off will be annotated with the 'summary' from swagger, hopefully making clear what was happening on each request that was sent in the test.
+
+
+## Helpful Links & Resources
+
+#### [Swagger Editor](https://editor.swagger.io/)
+ - This helpful swagger tool allows us to paste swagger json and lint/validate it. Or convert it to openAPI v3. Very helpful in debugging special edge-case
+things in writing our templates.
+
+
+#### [OpenAPI templates/mustache files](https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator/src/main/resources)
+ - This is where all the remote templates live for code-generation. There are a variety of 
+templates here and is helpful to see how other templates are organized. You will also need to
+download these and override them to do any customization.
+
+#### [Spring Code Generator Class](https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/java/org/openapitools/codegen/languages/SpringCodegen.java)
+ - This is the Spring Code Generator that we extend from in this project.
+ - [All Generator Classes](https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/java/org/openapitools/codegen/languages) This is where all the remote language specific code generator classes live.
+
+#### [Gradle Swagger Plugin](https://github.com/int128/gradle-swagger-generator-plugin)
+ - This is the plugin used to coordinate jarring up the custom code-gen class and running the
+command `./gradlew generateSwaggerCode`. I found it easier to use than the official openAPI generator gradle plugin.
+We are still using OPENAPI though, so this plugin is really only used to make gradle
+scripting easier.
+
+
