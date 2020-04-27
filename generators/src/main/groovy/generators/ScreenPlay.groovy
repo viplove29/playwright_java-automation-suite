@@ -1,31 +1,10 @@
 package generators
 
-import com.fasterxml.jackson.databind.JavaType
 import com.google.common.base.CaseFormat
-import groovyjarjarantlr.StringUtils
-import io.swagger.converter.ModelConverter
-import io.swagger.converter.ModelConverterContext
-import io.swagger.converter.ModelConverters
-import io.swagger.models.Model
-import io.swagger.v3.core.converter.AnnotatedType
-import io.swagger.v3.oas.models.OpenAPI
-import io.swagger.v3.oas.models.Operation
-import io.swagger.v3.oas.models.PathItem
-import io.swagger.v3.oas.models.media.ObjectSchema
-import io.swagger.v3.oas.models.media.Schema
 import org.apache.commons.lang3.text.WordUtils
-import org.codehaus.groovy.runtime.StringGroovyMethods;
 import org.openapitools.codegen.*;
 import org.openapitools.codegen.languages.SpringCodegen;
 
-
-import io.swagger.models.properties.*
-import org.openapitools.codegen.utils.URLPathUtils
-
-import java.lang.annotation.Annotation
-import java.lang.reflect.Type;
-import java.util.*;
-import java.io.File;
 
 public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
@@ -65,19 +44,10 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         return "Generates screenplay service-wrappers for Titan";
     }
 
-
     public ScreenPlay() {
         super();
 
         outputFolder = "";
-
-        //	supportingFiles.add(new SupportingFile("build.mustache", "", "build.gradle"));
-        //	supportingFiles.add(new SupportingFile("plugin.mustache", (sourceFolder + File.separator + basePackage).replace(".", java.io.File.separator), "SparkServerPlugin.java"));
-
-//        embeddedTemplateDir = templateDir = "spark";
-
-//        apiPackage = "com.vertafore.test.tasks.codegen.api";
-//        modelPackage = "com.vertafore.test.tasks.codegen.model";
 
         setReservedWordsLowerCase(
                 Arrays.asList(
@@ -165,8 +135,6 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         super.processOpts()
         this.typeMapping.put("file", "File");
         this.importMapping.put("File", "java.io.File");
-//        this.typeMapping.put("file", "MultipartFile")
-//        this.importMapping.put("MultipartFile", "org.springframework.web.multipart.MultipartFile")
     }
 
     @Override

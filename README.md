@@ -120,6 +120,60 @@ Where you're welcome to deserialize the response or pull properties off and vali
 `lastResponse()` also has `.getStatusCode()`, making asserts against status codes
 straightforward.
 
+We can also use the serenity-screenplay-rest libraries to write these asserts fluently.
+Ex:
+```
+    currentActor.should(
+        seeThatResponse("Create Branding response is successful", res -> res.statusCode(201)));
+```
+This example asserts that the last response was a 201, and it will be annotated in the reports
+with the string we provide. If the response is *not* a 201 then the test will fail.
+
+##### What about getting getting properties off of a response?
+Having all of our models from each service in the project make it easy to cast responses and get properties.
+Here is an example:
+```
+    String brandingId =
+        LastResponse.received()
+            .answeredBy(currentActor)
+            .getBody()
+            .jsonPath()
+            .getList("content", LogoV1.class)
+            .get(0)
+            .getId();
+```
+
+### Running Tests Selectively
+We might not want to run all the tests each time, but target tests instead.
+Maybe we want to only run the test suite to hit titan to titan 
+tests.
+Or maybe we only want to run tests that reach out to 3rd parties.
+Here is how we would set our runners.
+  ```
+@RunWith(SerenityRunner.class)
+@WithTags({
+      @WithTag("titan"),
+      @WithTag("3rdParty"),
+})
+public class TestClass {
+
+  @Test
+  @WithTag("important") 
+  public Performable testingImportantThings(){...}
+
+  @Test
+  @WithTag("smallstuff") 
+  public Performable testingSmallStuff(){...}
+  ```
+
+So, at run-time we pass in `-Dtags="{tagName}" `
+
+EX:
+passing in `-Dtags="titan" ` or `-Dtags="3rdParty"` would make the whole `TestClass` run.
+
+passing in `-Dtags="important" `  would only cause `testingImportantThings` to run.
+  
+
 ### Reports
 After each run, Serenity outputs some pretty reports.
 To access the reports locally, after running the test go to 

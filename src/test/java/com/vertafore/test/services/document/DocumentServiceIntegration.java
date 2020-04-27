@@ -1,6 +1,5 @@
 package com.vertafore.test.services.document;
 
-import static com.vertafore.test.utilities.misc.HelperUtils.checkStatusForSuccess;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
@@ -65,7 +64,9 @@ public class DocumentServiceIntegration {
     currentActor.attemptsTo(
         documentApi.createUsingPostOnTheBrandingController(
             productId, tenantId, entityId, imageToUpload, JsonHelper.serializeAsJson(metaData)));
-    checkStatusForSuccess();
+
+    currentActor.should(
+        seeThatResponse("Create Branding response is successful", res -> res.statusCode(201)));
 
     String brandingId =
         LastResponse.received()

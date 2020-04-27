@@ -11,8 +11,6 @@ public class TitanUser {
     this.tenantName = tenantName;
   }
 
-  public TitanUser() {}
-
   public String getUserName() {
     return userName;
   }
