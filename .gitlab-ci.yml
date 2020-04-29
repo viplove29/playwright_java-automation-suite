@@ -1,8 +1,6 @@
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   ENVIRONMENT_BASE_URI: "https://api.dev.titan.v4af.com"
-  TITANAUTHGEN_USERNAME: "SerenityBootstrap3"
-  TITANAUTHGEN_PASSWORD: "P@ssword!3"
 
 image: openjdk:11-jdk-slim
 
