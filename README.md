@@ -30,10 +30,6 @@ note: you may need to run ./gradlew spotlessJavaApply to clean unused imports th
 This command will reach out to swagger in dev-master then parse the whole API and output your class and models into your /build folder and into the source sets for use by your JUnit tests.
 
 ## General Test Setup
-
-Some tools for setup and talking to Titan api's( like feeding the service/tenant/entity...) into the path have already been configured.
-As we add on 3rd party & non Titan API's we will need to build more tools to easily feed tokens/auth/domains/etc into.
-
 Each class that holds integration tests must have the `@RunWith(SerenityRunner.class`) annotation.
 
 We need to build our `cast` of actors for the test so we use a `@Before` hook at the top of the class and we give it:

@@ -1,4 +1,4 @@
-package com.vertafore.test.utilities.actorextractor;
+package com.vertafore.test.actor.titan;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -44,11 +44,6 @@ public class BuildCastOfTitanUsers {
       String tenantName = singleActor.getTenantName();
       String userName = singleActor.getUserName();
 
-      //      // handle cookies being passed in at run-time via system properties
-      //      String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies")
-      // : "";
-      // handle different domains being passed in at run-time via system properties, default to dev
-      // master.
       String domain =
           System.getProperty("baseUrl") != null ? System.getProperty("baseUrl") : DEFAULT_BASE_URL;
 

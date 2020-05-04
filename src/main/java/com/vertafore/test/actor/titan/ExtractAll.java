@@ -1,4 +1,4 @@
-package com.vertafore.test.utilities.actorextractor;
+package com.vertafore.test.actor.titan;
 
 import static net.serenitybdd.rest.SerenityRest.rest;
 

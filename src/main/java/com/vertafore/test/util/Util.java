@@ -1,4 +1,4 @@
-package com.vertafore.test.utilities.misc;
+package com.vertafore.test.util;
 
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 
@@ -7,8 +7,7 @@ import java.util.Objects;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.ensure.Ensure;
 
-public class HelperUtils {
-  // generic method to find resources to upload
+public class Util {
   public File getFileByFileName(String fileName, String fileExtension) {
 
     return new File(

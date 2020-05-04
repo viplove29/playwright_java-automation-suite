@@ -5,11 +5,11 @@ import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeT
 
 import com.vertafore.core.util.JsonHelper;
 import com.vertafore.test.abilities.HaveTitanContext;
+import com.vertafore.test.actor.titan.BuildCastOfTitanUsers;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.models.document.LogoV1;
 import com.vertafore.test.servicewrappers.UseDocumentTo;
-import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
-import com.vertafore.test.utilities.misc.HelperUtils;
+import com.vertafore.test.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class DocumentServiceIntegration {
     metaData.put("description", "brandingTestDescription");
 
     // get branding image to upload
-    File imageToUpload = new HelperUtils().getFileByFileName("doge", ".jpg");
+    File imageToUpload = new Util().getFileByFileName("doge", ".jpg");
 
     // send off multi-part post request to branding controller on doc-svc
     currentActor.attemptsTo(

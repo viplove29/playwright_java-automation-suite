@@ -4,9 +4,9 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.abilities.HaveTitanContext;
+import com.vertafore.test.actor.titan.BuildCastOfTitanUsers;
 import com.vertafore.test.models.TitanUser;
 import com.vertafore.test.servicewrappers.UseFormTo;
-import com.vertafore.test.utilities.actorextractor.BuildCastOfTitanUsers;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

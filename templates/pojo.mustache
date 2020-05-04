@@ -4,10 +4,7 @@
   @ApiModel(description = "{{{description}}}"){{/description}}
 {{>generatedAnnotation}}
 public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}}{{^parent}}{{#hateoas}}extends RepresentationModel<{{classname}}> {{/hateoas}}{{/parent}} {{#serializableModel}}implements Serializable{{/serializableModel}} {
-{{#serializableModel}}
-  private static final long serialVersionUID = 1L;
 
-{{/serializableModel}}
 {{#vars}}
   {{#isEnum}}
     {{^isContainer}}

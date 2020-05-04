@@ -22,8 +22,8 @@ String cookies = System.getProperty("cookies") != null ? System.getProperty("coo
 .to(hydratedPath)
 .with(List.of(
 req -> req.contentType(contentType),
-req -> req.header("Cookie",cookies),
-req -> req.header("Vertafore-Authorization", theAuthTokenOf(actor)),
+req -> req.cookie(cookies),
+req -> req.header("Authorization", "Bearer " + theAuthTokenOf(actor)),
 {{#hasFormParams}}{{#formParams}}
   req -> req.multiPart("{{baseName}}", {{paramName}}{{#isFile}}, URLConnection.guessContentTypeFromName({{paramName}}.getName()){{/isFile}}),{{#hasMore}}{{/hasMore}}{{/formParams}}{{/hasFormParams}}
   req -> req.queryParams(queryParams){{#allParams}}{{#isBodyParam}},
