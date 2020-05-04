@@ -6,7 +6,6 @@ image: openjdk:11-jdk-slim
 
 stages:
   - build
-  - deploy
   - test
   - report
 
@@ -50,25 +49,6 @@ codequality:
     paths: [codeclimate.html]
   except:
     - triggers
-
-deploy:
-  stage: deploy
-  except:
-    - triggers
-    - schedules
-  script:
-    - echo "nexusUsername = ${NEXUS_USERNAME}" > ${GRADLE_USER_HOME}/gradle.properties
-    - echo "nexusPassword = ${NEXUS_PASSWORD}" >> ${GRADLE_USER_HOME}/gradle.properties
-    - ./gradlew addGeneratedCodeToSourceSets
-    - ./gradlew --build-cache sourceJar uploadArchives
-    - rm ${GRADLE_USER_HOME}/gradle.properties
-  only:
-    - master
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: pull
-    paths:
-      - .gradle
 
 # .after_tests:
 #   after_script:
