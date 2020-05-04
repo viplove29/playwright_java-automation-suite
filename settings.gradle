@@ -13,3 +13,5 @@ pluginManagement {
 }
 
 rootProject.name = 'integration-tests'
+include 'generators'
+

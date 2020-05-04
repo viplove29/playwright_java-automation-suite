@@ -1,0 +1,34 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.io.File;
+
+import java.net.URLConnection;
+
+
+import net.serenitybdd.screenplay.rest.interactions.Post;
+import net.serenitybdd.screenplay.rest.interactions.Put;
+import net.serenitybdd.screenplay.rest.interactions.Patch;
+import com.vertafore.test.interactions.Get;
+import com.vertafore.test.interactions.Delete;
+
+import io.restassured.builder.MultiPartSpecBuilder;
+
+import static com.vertafore.test.abilities.Authenticate.theAuthTokenOf;
+
+
+import net.serenitybdd.screenplay.Performable;
+import net.serenitybdd.screenplay.Task;
+import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+{{#imports}}import {{import}};
+{{/imports}}

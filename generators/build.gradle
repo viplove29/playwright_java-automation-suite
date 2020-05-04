@@ -1,0 +1,8 @@
+plugins {
+    id 'groovy'
+}
+
+dependencies {
+    implementation localGroovy()
+    implementation 'org.openapitools:openapi-generator-cli:4.3.0'
+}

@@ -1,0 +1,8 @@
+{{#hasQueryParams}}
+  {{#queryParams}}
+    if ({{paramName}} != null) {
+    queryParams.put("{{baseName}}",{{paramName}});
+    }
+
+  {{/queryParams}}
+{{/hasQueryParams}}

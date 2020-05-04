@@ -1,0 +1,36 @@
+package {{package}};
+
+{{> import_statements}}
+
+{{#operations}}
+  public class {{classname}} {
+  String BASE_PATH_FULL = "{{basePath}}";
+
+  {{#operation}}
+public Performable {{operationId}}({{>method_parameters}}) {
+Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
+   HashMap<String, Object> queryParams = new HashMap<String, Object>();
+{{>query_parameters}}
+
+{{>consumes}}
+    return Task.where("{0}  {{summary}}", actor -> {
+{{>path_parameters}}
+String hydratedPath = UriComponentsBuilder.fromPath("{{{path}}}"){{#hasPathParams}}.buildAndExpand(uriVariables){{/hasPathParams}}{{^hasPathParams}}.build(){{/hasPathParams}}.toUriString();
+String cookies = System.getProperty("cookies") != null ? System.getProperty("cookies") : "";
+
+{{httpMethod}}
+.to(hydratedPath)
+.with(List.of(
+req -> req.contentType(contentType),
+req -> req.cookie(cookies),
+req -> req.header("Authorization", "Bearer " + theAuthTokenOf(actor)),
+{{#hasFormParams}}{{#formParams}}
+  req -> req.multiPart("{{baseName}}", {{paramName}}{{#isFile}}, URLConnection.guessContentTypeFromName({{paramName}}.getName()){{/isFile}}),{{#hasMore}}{{/hasMore}}{{/formParams}}{{/hasFormParams}}
+  req -> req.queryParams(queryParams){{#allParams}}{{#isBodyParam}},
+  req -> req.body(postBody){{/isBodyParam}}{{/allParams}}
+)).performAs(actor);
+});
+}
+  {{/operation}}
+{{/operations}}
+}
