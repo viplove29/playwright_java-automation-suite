@@ -59,6 +59,7 @@ deploy:
   script:
     - echo "nexusUsername = ${NEXUS_USERNAME}" > ${GRADLE_USER_HOME}/gradle.properties
     - echo "nexusPassword = ${NEXUS_PASSWORD}" >> ${GRADLE_USER_HOME}/gradle.properties
+    - ./gradlew addGeneratedCodeToSourceSets
     - ./gradlew --build-cache sourceJar uploadArchives
     - rm ${GRADLE_USER_HOME}/gradle.properties
   only:
