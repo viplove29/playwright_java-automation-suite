@@ -20,6 +20,7 @@ build:
     - chmod +x gradlew
     - ./gradlew generateSwaggerCode
     - ./gradlew spotlessJavaApply
+    - ./gradlew addGeneratedCodeToSourceSets
     - ./gradlew --build-cache build testClasses -x test
   cache:
     key: "$CI_COMMIT_REF_NAME"
