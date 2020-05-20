@@ -1,4 +1,4 @@
-# titan-integration-tests
+# EMS-integration-tests
 
 ## Where to Write Tests
 
@@ -18,7 +18,7 @@ Each integration test is a JUnit test and does not have a corresponding feature 
 
 This project has a tool to build Titan Service Wrappers and Models into Java Classes using a gradle task.
 
-As our Titan api's change the tool will be responsible for updating our 'service-wrapper' & models to 
+As our EMS api changes the tool will be responsible for updating our 'service-wrapper' & models to 
 interact with each backend service. 
 
 to use it:
