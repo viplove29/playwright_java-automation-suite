@@ -1,1 +1,1 @@
-final String contentType = {{#hasConsumes}}{{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}}{{/hasConsumes}}{{^hasConsumes}}"*/*"{{/hasConsumes}};
+final List<String> contentType = List.of({{#hasConsumes}}{{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}}{{/hasConsumes}}{{^hasConsumes}}"*/*"{{/hasConsumes}});

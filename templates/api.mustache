@@ -7,6 +7,20 @@ package {{package}};
   String BASE_PATH_FULL = "{{basePath}}";
 
   {{#operation}}
+
+
+/**
+* {{httpMethod}} {{{path}}}{{#summary}} : {{.}}{{/summary}}
+{{#notes}}
+* {{.}}
+{{/notes}}
+*
+* Params:
+{{#allParams}}
+* {{dataType}}, {{paramName}}: {{description}}{{#required}} (required){{/required}}{{^required}} (optional{{#defaultValue}}, default to {{.}}{{/defaultValue}}){{/required}}
+{{/allParams}}
+*
+*/
 public Performable {{operationId}}({{>method_parameters}}) {
 Object postBody = {{#bodyParam}}{{paramName}}{{/bodyParam}}{{^bodyParam}}null{{/bodyParam}};
    HashMap<String, Object> queryParams = new HashMap<String, Object>();
@@ -21,7 +35,7 @@ String cookies = System.getProperty("cookies") != null ? System.getProperty("coo
 {{httpMethod}}
 .to(hydratedPath)
 .with(List.of(
-req -> req.contentType(contentType),
+req -> req.contentType(String.valueOf(contentType)),
 req -> req.cookie(cookies),
 req -> req.header("Authorization", "Bearer " + theAuthTokenOf(actor)),
 {{#hasFormParams}}{{#formParams}}
