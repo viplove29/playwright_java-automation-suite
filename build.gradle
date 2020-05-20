@@ -1,6 +1,16 @@
+import com.gargoylesoftware.htmlunit.HttpMethod
 import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
+import com.google.gson.stream.JsonReader
+import jdk.dynalink.Operation
+
+//import io.swagger.v3.parser.OpenAPIV3Parser;
+
 import java.nio.file.Files
 import java.nio.file.Paths
+
 
 buildscript {
     dependencies {
@@ -113,41 +123,40 @@ dependencies {
  */
 
 /**
- * List of all Titan Services
+ * List of all EMS Services
  */
 final List<String> SERVICES = List.of(
-        "accounting",
-        "alert",
-        "auth",
-        "carrier",
-        "carrier-update-ingestion",
-        "claim",
-        "commission",
-        "communication",
-        "company",
-        "config",
-        "contact",
-        "customer",
-        "document",
-        "download",
-        "exposure",
-        "form",
-        "file-intake",
-        "invoice",
-        "license",
-        "notification",
-        "opportunity",
-        "policy",
-        "product",
-        "pin-access",
-        "question",
-        "quickbooks-integration",
-        "rating-data",
-        // "rating", models break on import - wrong ENUMS in service
-        "render",
-        "report",
-        "schedule",
-        "to-do",
+//        "activities",
+//        "acord-form-mapping",
+//        "agency",
+//        "authentication",
+//        "bank-accounts",
+//        "business-units",
+//        "companies",
+//        "sms",
+//        "customers",
+//        "download",
+//        "e-forms",
+//        "error-logs",
+//        "features",
+//        "health-check",
+//        "invoices",
+//        "lines-of-business",
+//        "messages",
+//        "outbound-notification-service",
+//        "policies",
+//        "sms-configuration",
+//        "submissions",
+//        "suspenses",
+//        "titan",
+//        "underwriters",
+//        "user-permissions",
+//        "utility",
+//        "vendors",
+//        "vmb-messages",
+//        "web-service-logs",
+        "ems"
+
 );
 
 /**
@@ -155,7 +164,7 @@ final List<String> SERVICES = List.of(
  *
  * Once we have each json api spec we write another json file configuring the paths for packages
  */
-task getTitanApiSwaggerJson {
+task getEMSApiSwaggerJson {
     // loop over each service, and write a JSON file of each service to swaggerjson/service/service-name.json
     SERVICES.each {
         service ->
@@ -164,12 +173,43 @@ task getTitanApiSwaggerJson {
                 mkdir("swaggerjson/${service}")
             }
             def swaggerJsonResponse = new URL(
-                    "https://api.dev.titan.v4af.com/${service}/v2/api-docs?group=${service}-service")
+                    "https://botd-ams360dev1.devop.vertafore.com/ems/swagger/v1")
                     .getText(requestProperties: [Accept: 'application/json'])
+
+
             // if the json response has swagger json elements in it - write a new file.
             // Otherwise the code-generator will use the json that has been committed/saved.
             if (swaggerJsonResponse.contains("swagger") && swaggerJsonResponse.contains(service)) {
+
+//                Swagger swagger = new SwaggerParser().read(swaggerJsonResponse)
+//
+//                List<Map<String,Object>>  finalResult=new ArrayList<>();
+//                Map<String, Model>  definitions = swagger.getDefinitions();
+//                // loop all the available paths of the swagger for each service
+//                while(swagger.getPaths.contains(service)){
+//                    swagger.getPaths().keySet().forEach(group->{
+//                        //get the path
+//                        Path path=swagger.getPath(group);
+//                        //list all the operations of the path
+//                        Map<HttpMethod, Operation> mapList=path.getOperationMap();
+//                        mapList.forEach((httpMethod,operation)->{
+//                            processPathData(finalResult,operation,path,group,httpMethod,definitions,group);
+//                        });
+//
+//                    });
+//                }
+//
+//                String filename = "swaggerjson/baseTemplate.json";
+//                Gson gson = new Gson();
+//                JsonReader reader = new JsonReader(new FileReader(filename))
+//                JsonObject baseTemplate = gson.fromJson(reader, JsonObject)
+//
+//                baseTemplate.addProperty("paths", finalResult)
+
+
+
                 new File("swaggerjson/${service}/${service}-service.json").write(swaggerJsonResponse)
+
             } else {
                 logger.warn("Swagger Json could not be accessed - using saved swagger json for codegenerator for: $service")
             }
@@ -236,7 +276,7 @@ swaggerSources*.code *.dependsOn 'generators:jar'
 
 // used to build the JSON files from gitlab of services
 // class before the generateSwaggerCode runs.
-swaggerSources*.code *.dependsOn 'getTitanApiSwaggerJson'
+swaggerSources*.code *.dependsOn 'getEMSApiSwaggerJson'
 
 // makes sure when you run ./gradlew generateSwaggerCode
 // that build cache has been cleared out.

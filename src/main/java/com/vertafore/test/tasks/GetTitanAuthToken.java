@@ -17,6 +17,9 @@ import net.serenitybdd.screenplay.rest.interactions.Post;
  * This class is deliberately built separate from UseAuthServiceTo we need an accessToken to access
  * any of the code-generated classes
  */
+
+// COMMENTING OUT FOR NOW - this is where we will need to formulate our own EMS Auth mechanisms
+
 public class GetTitanAuthToken implements Performable {
   private static final String TOKEN_PATH = "/auth/v1/token/";
 

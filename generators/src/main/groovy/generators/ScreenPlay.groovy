@@ -182,15 +182,11 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
     private String generateMethodName(String operationId, Object tag, String summary) {
         String rawControllerName = tag.name ? tag.name : tag.description;
                 String controllerName = "";
-                // we have to normalize the tag name to get the name of the controller
-                if (rawControllerName.contains("-controller-v-1")) {
-                    controllerName = rawControllerName.replace("-controller-v-1", "");
-                    controllerName = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, controllerName);
-                } else {
-                    // because some services don't have -controller-v-1 but instead have 'Realm Management'
+                String isDeprecated = "";
+
                     // we have to format the name of the controller
                     controllerName = capitalizeAndCleanString(rawControllerName);
-                }
+
                 String result =
                         operationId
                                 .replaceAll("GET", "Get")
@@ -198,6 +194,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                                 .replaceAll("POST", "Post")
                                 .replaceAll("DELETE", "Delete")
                                 .replaceAll("PATCH", "Patch");
+
 
                 // if our operationId contains _1 or _2... then the Endpoint Constant name should be
                 // the summary formatted. This prevents endpoints being named the same thing
@@ -207,8 +204,13 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                     controllerName = WordUtils.uncapitalize(cleanedSummary);
                 }
 
+                else if (summary.contains('Deprecated') || summary.contains('DEPRECATED')) {
 
-                return result + "OnThe" + controllerName + "Controller";
+                    isDeprecated = "Deprecated";
+                }
+
+
+                return result + "OnThe" + controllerName + "Controller" + isDeprecated;
             }
 
     private String capitalizeAndCleanString(String stringToClean) {
@@ -221,6 +223,8 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                 .replaceAll("'", "")
         // remove hyphens
                 .replaceAll("-", "");
+        // remove parentheses
+
     }
 }
 
