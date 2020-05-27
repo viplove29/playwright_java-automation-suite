@@ -173,7 +173,7 @@ task getEMSApiSwaggerJson {
                 mkdir("swaggerjson/${service}")
             }
             def swaggerJsonResponse = new URL(
-                    "https://botd-ams360dev1.devop.vertafore.com/ems/swagger/v1")
+                    "https://botd-q-360iis-1.devop.vertafore.com/ems/swagger/v1")
                     .getText(requestProperties: [Accept: 'application/json'])
 
 
