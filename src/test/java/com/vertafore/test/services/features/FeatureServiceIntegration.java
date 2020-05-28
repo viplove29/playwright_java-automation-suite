@@ -2,9 +2,10 @@ package com.vertafore.test.services.features;
 
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
-import com.vertafore.test.abilities.Authenticate;
+import com.vertafore.test.abilities.HaveALoginKey;
+import com.vertafore.test.abilities.HaveAnAccessToken;
 import com.vertafore.test.servicewrappers.UseFeaturesTo;
-import com.vertafore.test.tasks.GetEMSAuthToken;
+import com.vertafore.test.tasks.GetAnAccessToken;
 import java.io.IOException;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
@@ -16,14 +17,16 @@ import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
 public class FeatureServiceIntegration {
+
   Actor emsuser =
       Actor.named("emsuser")
-          .whoCan(CallAnApi.at("https://botd-q-360iis-1.devop.vertafore.com/ems"))
-          .whoCan(Authenticate.with("emsuser", "Password2!"));
+          .whoCan(HaveALoginKey.with("userContext"))
+          .whoCan(HaveAnAccessToken.with())
+          .whoCan(CallAnApi.at("https://botd-q-360iis-1.devop.vertafore.com/ems"));
 
   @Before
-  public void emsuserCanGetToken() {
-    emsuser.attemptsTo(GetEMSAuthToken.forActor());
+  public void getAnAccessToken() {
+    emsuser.attemptsTo(GetAnAccessToken.forActor());
   }
 
   @Test
