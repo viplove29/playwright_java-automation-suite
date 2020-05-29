@@ -2,7 +2,7 @@ package com.vertafore.test.services.features;
 
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.ems.AuthorizeEMSActor;
 import com.vertafore.test.servicewrappers.UseFeaturesTo;
 import java.io.IOException;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 @RunWith(SerenityRunner.class)
 public class FeatureServiceIntegration {
   Actor bob = Actor.named("bob");
-  private EMSActor actor = new EMSActor(bob, "userContext");
+  private AuthorizeEMSActor emsActor = new AuthorizeEMSActor(bob, "userContext");
 
   @Test
   public void featuresReturnsAllFeatures() throws IOException {
