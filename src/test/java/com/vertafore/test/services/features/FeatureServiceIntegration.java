@@ -1,9 +1,9 @@
 package com.vertafore.test.services.features;
 
+import static com.vertafore.test.actor.ems.AuthorizeEMSActor.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
-import com.vertafore.test.actor.ems.BuildEMSCast;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.servicewrappers.UseFeaturesTo;
 import java.io.IOException;
@@ -17,33 +17,23 @@ import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
 public class FeatureServiceIntegration {
-
-  //  Actor emsuser =
-  //      Actor.named("emsuser")
-  //          .whoCan(HaveALoginKey.with("userContext"))
-  //          .whoCan(HaveAnAccessToken.with())
-  //          .whoCan(CallAnApi.at("https://botd-q-360iis-1.devop.vertafore.com/ems"));
-
-  private EMSActor jorj = new EMSActor("jorj", "userContext");
+  private EMSActor bob = new EMSActor("bob", "userContext");
 
   @Before
-  //  public void getAnAccessToken() {
-  //    emsuser.attemptsTo(GetAnAccessToken.forActor());
-  //  }
-  public void setupActors() {
-    OnStage.setTheStage(BuildEMSCast.GetAnAccessToken(jorj));
+  public void getAnAccessToken() {
+    OnStage.setTheStage(GetAnAccessToken(bob));
   }
 
   @Test
   public void featuresReturnsAllFeatures() throws IOException {
-    Actor jorj = theActorCalled("jorj");
+    Actor currentActor = theActorCalled("bob");
 
     UseFeaturesTo featuresApi = new UseFeaturesTo();
 
-    jorj.attemptsTo((featuresApi.gETFeaturesOnTheFeaturesController()));
+    currentActor.attemptsTo((featuresApi.gETFeaturesOnTheFeaturesController()));
 
     SerenityRest.lastResponse().prettyPrint();
 
-    jorj.should(seeThatResponse(res -> res.statusCode(200)));
+    currentActor.should(seeThatResponse(res -> res.statusCode(200)));
   }
 }
