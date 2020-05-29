@@ -15,7 +15,7 @@ import net.serenitybdd.screenplay.rest.interactions.Post;
 
 public class GetAnAppToken implements Performable {
   private static final String LOGIN_APP_PATH = "/auth/loginApp";
-  private static final String AGENCY_NO = "MainQAC-1";
+  private static final String AGENCY_NO = "MainNPR-1";
   private static final String APP_ACCESS_TO_AGENCY_KEY = "92C9E873-C2F0-4601-A6F5-906935BAB177";
 
   @Override
