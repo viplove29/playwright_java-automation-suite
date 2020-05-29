@@ -1,18 +1,18 @@
-//package com.vertafore.test.tasks;
+// package com.vertafore.test.tasks;
 //
-//import static net.serenitybdd.screenplay.Tasks.instrumented;
+// import static net.serenitybdd.screenplay.Tasks.instrumented;
 //
-//import com.google.gson.Gson;
-//import com.vertafore.test.abilities.Authenticate;
-//import io.restassured.http.ContentType;
-//import java.util.HashMap;
-//import java.util.List;
-//import net.serenitybdd.rest.SerenityRest;
-//import net.serenitybdd.screenplay.Actor;
-//import net.serenitybdd.screenplay.Performable;
-//import net.serenitybdd.screenplay.rest.interactions.Post;
+// import com.google.gson.Gson;
+// import com.vertafore.test.abilities.Authenticate;
+// import io.restassured.http.ContentType;
+// import java.util.HashMap;
+// import java.util.List;
+// import net.serenitybdd.rest.SerenityRest;
+// import net.serenitybdd.screenplay.Actor;
+// import net.serenitybdd.screenplay.Performable;
+// import net.serenitybdd.screenplay.rest.interactions.Post;
 //
-//public class GetEMSAuthToken implements Performable {
+// public class GetEMSAuthToken implements Performable {
 //  private static final String LOGIN_KEY_PATH = "/auth";
 //  private static final String USER_APP_KEY = "AB4C2E22-2006-44AB-AA1A-318E653BA345";
 //  private static final String LOGIN_USER_PATH = "/auth/loginUser";
@@ -51,4 +51,4 @@
 //  public static GetEMSAuthToken forActor() {
 //    return instrumented(GetEMSAuthToken.class);
 //  }
-//}
+// }

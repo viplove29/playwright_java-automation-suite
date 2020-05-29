@@ -1,9 +1,9 @@
-//package com.vertafore.test.abilities;
+// package com.vertafore.test.abilities;
 //
-//import net.serenitybdd.screenplay.Ability;
-//import net.serenitybdd.screenplay.Actor;
+// import net.serenitybdd.screenplay.Ability;
+// import net.serenitybdd.screenplay.Actor;
 //
-//public class Authenticate implements Ability {
+// public class Authenticate implements Ability {
 //
 //  private final String username;
 //  private final String password;
@@ -22,7 +22,8 @@
 //  /** returns ability if actor has the ability */
 //  public static Authenticate as(Actor actor) {
 //    if (actor.abilityTo(Authenticate.class) == null) {
-//      throw new IllegalArgumentException(actor.getName() + "doesn't have ability to authenticate");
+//      throw new IllegalArgumentException(actor.getName() + "doesn't have ability to
+// authenticate");
 //    }
 //    return actor.abilityTo(Authenticate.class);
 //  }
@@ -48,4 +49,4 @@
 //  public static String theAuthTokenOf(Actor actor) {
 //    return Authenticate.as(actor).authToken;
 //  }
-//}
+// }
