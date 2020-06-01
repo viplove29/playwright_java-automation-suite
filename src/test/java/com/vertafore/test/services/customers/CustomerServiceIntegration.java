@@ -15,6 +15,9 @@ public class CustomerServiceIntegration {
   Actor bob = Actor.named("bob");
   private AuthorizeEMSActor emsActor = new AuthorizeEMSActor(bob, "appContext");
 
+  Actor doug = Actor.named("doug");
+  private AuthorizeEMSActor emsActor2 = new AuthorizeEMSActor(doug, "userContext");
+
   @Test
   public void customersReturnsAllCustomers() throws IOException {
     UseCustomersTo customersApi = new UseCustomersTo();
@@ -22,5 +25,9 @@ public class CustomerServiceIntegration {
     bob.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
 
     bob.should(seeThatResponse(res -> res.statusCode(200)));
+
+    doug.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+
+    doug.should(seeThatResponse(res -> res.statusCode(200)));
   }
 }

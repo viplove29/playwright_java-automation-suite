@@ -12,23 +12,23 @@ import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 public class AuthorizeEMSActor {
   private static final String BASE_URL = "https://botd-q-360iis-1.devop.vertafore.com/ems";
 
-  public AuthorizeEMSActor(Actor actor, String context) {
-    actor
+  public AuthorizeEMSActor(Actor emsActor, String context) {
+    emsActor
         .can(HaveALoginKey.with(context))
         .can(HaveAnAccessToken.with())
         .can(CallAnApi.at(BASE_URL));
 
-    actor.attemptsTo(GetALoginKey.forActor());
+    emsActor.attemptsTo(GetALoginKey.forActor());
 
     switch (context) {
       case "appContext":
-        actor.attemptsTo(GetAnAppToken.forActor());
+        emsActor.attemptsTo(GetAnAppToken.forActor());
         break;
       case "adminContext":
-        actor.attemptsTo(GetAnAdminToken.forActor());
+        emsActor.attemptsTo(GetAnAdminToken.forActor());
         break;
       default:
-        actor.attemptsTo(GetAUserToken.forActor());
+        emsActor.attemptsTo(GetAUserToken.forActor());
     }
   }
 }
