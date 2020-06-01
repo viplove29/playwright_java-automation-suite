@@ -13,10 +13,13 @@ import org.junit.runner.RunWith;
 @RunWith(SerenityRunner.class)
 public class CustomerServiceIntegration {
   Actor bob = Actor.named("bob");
-  private AuthorizeEMSActor emsActor = new AuthorizeEMSActor(bob, "appContext");
+  private AuthorizeEMSActor appActor = new AuthorizeEMSActor(bob, "appContext");
 
   Actor doug = Actor.named("doug");
-  private AuthorizeEMSActor emsActor2 = new AuthorizeEMSActor(doug, "userContext");
+  private AuthorizeEMSActor userActor = new AuthorizeEMSActor(doug, "userContext");
+
+  Actor adam = Actor.named("adam");
+  private AuthorizeEMSActor adminActor = new AuthorizeEMSActor(adam, "adminContext");
 
   @Test
   public void customersReturnsAllCustomers() throws IOException {
@@ -29,5 +32,9 @@ public class CustomerServiceIntegration {
     doug.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
 
     doug.should(seeThatResponse(res -> res.statusCode(200)));
+
+    adam.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+
+    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
   }
 }
