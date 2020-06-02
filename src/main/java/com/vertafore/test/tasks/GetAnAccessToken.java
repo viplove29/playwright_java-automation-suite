@@ -8,7 +8,7 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 
-public class Authorize implements Performable {
+public class GetAnAccessToken implements Performable {
   private static final String BASE_URL = "https://botd-q-360iis-1.devop.vertafore.com/ems";
 
   @Override
@@ -34,7 +34,7 @@ public class Authorize implements Performable {
     }
   }
 
-  public static Authorize forActor() {
-    return instrumented(Authorize.class);
+  public static GetAnAccessToken forActor() {
+    return instrumented(GetAnAccessToken.class);
   }
 }
