@@ -5,10 +5,15 @@ import net.serenitybdd.screenplay.Actor;
 
 public class HaveALoginKey implements Ability {
 
+  private final String context;
   private String loginKey = null;
 
-  public static HaveALoginKey with() {
-    return new HaveALoginKey();
+  private HaveALoginKey(String context) {
+    this.context = context;
+  }
+
+  public static HaveALoginKey with(String context) {
+    return new HaveALoginKey(context);
   }
 
   public static HaveALoginKey as(Actor actor) {
@@ -17,6 +22,10 @@ public class HaveALoginKey implements Ability {
           actor.getName() + "doesn't have the ability to Have A Login Key");
     }
     return actor.abilityTo(HaveALoginKey.class);
+  }
+
+  public static String contextForActor(Actor actor) {
+    return HaveALoginKey.as(actor).context;
   }
 
   private void setLoginKey(String newLoginKey) {
