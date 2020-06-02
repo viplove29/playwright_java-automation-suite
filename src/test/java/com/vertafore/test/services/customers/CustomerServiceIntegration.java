@@ -14,14 +14,14 @@ import org.junit.runner.RunWith;
 @RunWith(SerenityRunner.class)
 public class CustomerServiceIntegration {
   Actor bob = Actor.named("bob").describedAs("userContext");
-  Actor doug = Actor.named("doug").describedAs("appContext");
-  Actor adam = Actor.named("adam").describedAs("adminContext");
+  //  Actor doug = Actor.named("doug").describedAs("appContext");
+  //  Actor adam = Actor.named("adam").describedAs("adminContext");
 
   @Before
   public void getAnAccessToken() {
     bob.attemptsTo(GetAnAccessToken.forActor());
-    doug.attemptsTo(GetAnAccessToken.forActor());
-    adam.attemptsTo(GetAnAccessToken.forActor());
+    //    doug.attemptsTo(GetAnAccessToken.forActor());
+    //    adam.attemptsTo(GetAnAccessToken.forActor());
   }
 
   @Test
@@ -30,11 +30,19 @@ public class CustomerServiceIntegration {
 
     bob.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
     bob.should(seeThatResponse(res -> res.statusCode(200)));
+    //
+    //    doug.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+    //    doug.should(seeThatResponse(res -> res.statusCode(200)));
+    //
+    //    adam.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+    //    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+  }
 
-    doug.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
-    doug.should(seeThatResponse(res -> res.statusCode(200)));
+  @Test
+  public void customersReturnsOneCustomer() throws IOException {
+    UseCustomersTo customersApi = new UseCustomersTo();
 
-    adam.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    bob.attemptsTo(customersApi.gETCustomersOnTheCustomersController(259, "string"));
+    bob.should(seeThatResponse(res -> res.statusCode(200)));
   }
 }
