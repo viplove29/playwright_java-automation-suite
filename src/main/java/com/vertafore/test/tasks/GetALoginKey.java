@@ -1,6 +1,5 @@
 package com.vertafore.test.tasks;
 
-import static com.vertafore.test.abilities.HaveALoginKey.contextForActor;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;
@@ -24,7 +23,7 @@ public class GetALoginKey implements Performable {
   @Override
   public <T extends Actor> void performAs(T actor) {
 
-    String context = contextForActor(actor);
+    String context = actor.getDescription();
     String appKey;
 
     switch (context) {

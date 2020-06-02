@@ -15,10 +15,7 @@ public class GetAnAccessToken implements Performable {
   public <T extends Actor> void performAs(T emsActor) {
     String context = emsActor.getDescription();
 
-    emsActor
-        .can(HaveALoginKey.with(context))
-        .can(HaveAnAccessToken.with())
-        .can(CallAnApi.at(BASE_URL));
+    emsActor.can(HaveALoginKey.with()).can(HaveAnAccessToken.with()).can(CallAnApi.at(BASE_URL));
 
     emsActor.attemptsTo(GetALoginKey.forActor());
 

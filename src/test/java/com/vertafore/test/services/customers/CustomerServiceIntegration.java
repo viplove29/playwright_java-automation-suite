@@ -3,8 +3,8 @@ package com.vertafore.test.services.customers;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.servicewrappers.UseCustomersTo;
-import java.io.IOException;
 import com.vertafore.test.tasks.GetAnAccessToken;
+import java.io.IOException;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.screenplay.Actor;
 import org.junit.Before;
