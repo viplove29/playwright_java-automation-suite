@@ -12,6 +12,6 @@ pluginManagement {
     repositories(gradle.nexusConfiguration)
 }
 
-rootProject.name = 'integration-tests'
+rootProject.name = 'ems-automation-suite'
 include 'generators'
 
