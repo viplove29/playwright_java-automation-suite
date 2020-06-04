@@ -155,6 +155,12 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
             // clean and normalize the operationId to remove duplicates and unhelpful names.
             op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
+
+            // HACK bc swagger for EMS is terrible.
+            op.summary = op.summary
+                    .replace("\"", "")
+                    .replace("\\r\\n", "")
+                    .replace("\\", "");
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)
