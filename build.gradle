@@ -175,16 +175,23 @@ task getEMSApiSwaggerJson {
             if (!Files.isDirectory(Paths.get("swaggerjson/${service}"))) {
                 mkdir("swaggerjson/${service}")
             }
-            class TrustManager implements X509TrustManager {
-  public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null;  }
-  public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
-  public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) { }
-}
+            def nullTrustManager = [
+    checkClientTrusted: { chain, authType ->  },
+    checkServerTrusted: { chain, authType ->  },
+    getAcceptedIssuers: { null }
+]
 
-TrustManager[] trustAllCerts = new TrustManager[1]
-trustAllCerts[0] = new TrustManager()
-SSLContext sc = SSLContext.getInstance("SSL");
-sc.init(null, trustAllCerts, new java.security.SecureRandom());
+def nullHostnameVerifier = [
+    verify: { hostname, session -> 
+        //true 
+        hostname.startsWith('yuml.me')
+    }
+]
+
+javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
+sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
+javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
+javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             def swaggerJsonResponse = new URL(
                     "https://botd-q-360iis-1.devop.vertafore.com/ems/swagger/v1")
