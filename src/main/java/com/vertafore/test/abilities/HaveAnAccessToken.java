@@ -5,10 +5,15 @@ import net.serenitybdd.screenplay.Actor;
 
 public class HaveAnAccessToken implements Ability {
 
+  private final String loginType;
   private String accessJwt = null;
 
-  public static HaveAnAccessToken with() {
-    return new HaveAnAccessToken();
+  private HaveAnAccessToken(String loginType) {
+    this.loginType = loginType;
+  }
+
+  public static HaveAnAccessToken with(String loginType) {
+    return new HaveAnAccessToken(loginType);
   }
 
   public static HaveAnAccessToken as(Actor actor) {
@@ -17,6 +22,10 @@ public class HaveAnAccessToken implements Ability {
           actor.getName() + "doesn't have the ability to Have A Token");
     }
     return actor.abilityTo(HaveAnAccessToken.class);
+  }
+
+  public static String loginTypeForActor(Actor actor) {
+    return HaveAnAccessToken.as(actor).loginType;
   }
 
   private void setAccessToken(String newAccessToken) {

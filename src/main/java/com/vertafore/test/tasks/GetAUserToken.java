@@ -1,6 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
+import static com.vertafore.test.abilities.HaveAnAccessToken.loginTypeForActor;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;
@@ -18,16 +19,30 @@ public class GetAUserToken implements Performable {
   private static final String AGENCY_NO = "MainQAC-1";
   private static final String USERNAME = "EMSAuto";
   private static final String PASSWORD = "Password2!";
+  private static final String VSSO_USERNAME = "EMSAuto2@mailinator.com";
+  private static final String VSSO_PASSWORD = "Password5!";
 
   @Override
   public <T extends Actor> void performAs(T actor) {
+
+    String loginType = loginTypeForActor(actor);
     String loginKey = theLoginKeyOf(actor);
+    String username;
+    String password;
+
+    if (loginType.equals("Native")) {
+      username = USERNAME;
+      password = PASSWORD;
+    } else {
+      username = VSSO_USERNAME;
+      password = VSSO_PASSWORD;
+    }
 
     HashMap<String, String> tokenBody = new HashMap<>();
     tokenBody.put("LoginKey", loginKey);
     tokenBody.put("AgencyNo", AGENCY_NO);
-    tokenBody.put("Username", USERNAME);
-    tokenBody.put("Password", PASSWORD);
+    tokenBody.put("Username", username);
+    tokenBody.put("Password", password);
     Post.to(LOGIN_USER_PATH)
         .with(
             List.of(
