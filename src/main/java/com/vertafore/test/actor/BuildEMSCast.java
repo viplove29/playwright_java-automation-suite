@@ -10,7 +10,7 @@ import com.vertafore.test.tasks.GetAnAppToken;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 
-public class TokenGetting {
+public class BuildEMSCast {
   private static final String BASE_URL = "https://botd-q-360iis-1.devop.vertafore.com/ems";
 
   public static OnlineCast GetAnAccessToken(EMSActor emsActor) {

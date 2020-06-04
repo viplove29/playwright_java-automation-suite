@@ -1,6 +1,6 @@
 package com.vertafore.test.services.features;
 
-import static com.vertafore.test.actor.TokenGetting.GetAnAccessToken;
+import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
@@ -18,8 +18,12 @@ import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
 public class FeatureServiceIntegration {
-  //  Actor bob = Actor.named("bob").describedAs("userContext");
-  EMSActor bob = new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor();
+  EMSActor bob =
+      new EMSActorBuilder()
+          .actorName("bob")
+          .context("userContext")
+          .loginType("vsso")
+          .buildEMSActor();
 
   @Before
   public void getAnAccessToken() {
