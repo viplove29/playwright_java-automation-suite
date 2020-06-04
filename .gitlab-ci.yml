@@ -17,7 +17,7 @@ build:
     - triggers
     - schedules
   script:
-    - keytool -keystore cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias qa -file lib/certificates/QA.cer
+    - sudo keytool -keystore cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias qa -file lib/certificates/QA.cer
     - chmod +x gradlew
     - ./gradlew generateSwaggerCode --stacktrace
     - ./gradlew spotlessJavaApply
