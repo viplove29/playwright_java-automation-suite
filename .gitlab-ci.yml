@@ -17,7 +17,7 @@ build:
     - schedules
   script:
     - chmod +x gradlew
-    - ./gradlew generateSwaggerCode
+    - ./gradlew generateSwaggerCode --stacktrace
     - ./gradlew spotlessJavaApply
     - ./gradlew addGeneratedCodeToSourceSets
     - ./gradlew --build-cache build testClasses -x test
