@@ -8,6 +8,8 @@ import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.EMSActorBuilder;
 import com.vertafore.test.servicewrappers.UseFeaturesTo;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -18,16 +20,17 @@ import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
 public class FeatureServiceIntegration {
-  EMSActor bob =
-      new EMSActorBuilder()
-          .actorName("bob")
-          .context("userContext")
-          .loginType("vsso")
-          .buildEMSActor();
+  private List<EMSActor> actors = new ArrayList<>();
 
   @Before
   public void getAnAccessToken() {
-    OnStage.setTheStage(GetAnAccessToken(bob));
+    actors.add(
+        new EMSActorBuilder()
+            .actorName("bob")
+            .context("userContext")
+            .loginType("vsso")
+            .buildEMSActor());
+    OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
   @Test

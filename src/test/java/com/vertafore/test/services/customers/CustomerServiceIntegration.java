@@ -1,13 +1,15 @@
 package com.vertafore.test.services.customers;
 
+import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
-import com.vertafore.test.actor.BuildEMSCast;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.EMSActorBuilder;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
@@ -17,15 +19,14 @@ import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
 public class CustomerServiceIntegration {
-  EMSActor bob = new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor();
-  EMSActor doug = new EMSActorBuilder().actorName("doug").context("appContext").buildEMSActor();
-  EMSActor adam = new EMSActorBuilder().actorName("adam").context("adminContext").buildEMSActor();
+  private List<EMSActor> actors = new ArrayList<>();
 
   @Before
   public void getAnAccessToken() {
-    OnStage.setTheStage(BuildEMSCast.GetAnAccessToken(bob));
-    OnStage.setTheStage(BuildEMSCast.GetAnAccessToken(doug));
-    OnStage.setTheStage(BuildEMSCast.GetAnAccessToken(adam));
+    actors.add(new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor());
+    actors.add(new EMSActorBuilder().actorName("doug").context("appContext").buildEMSActor());
+    actors.add(new EMSActorBuilder().actorName("adam").context("adminContext").buildEMSActor());
+    OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
   @Test
