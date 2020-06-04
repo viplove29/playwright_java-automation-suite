@@ -1,7 +1,7 @@
 pluginManagement {
     gradle.ext.nexusConfiguration = {
         maven {
-            url System.env.MAVEN_REPO_URI ?: 'https://nexus-int.util.v4af.com/repository/libs-snapshot'
+            url System.env.MAVEN_REPO_URI ?: 'https://nexus.util.v4af.com/repository/libs-snapshot'
             credentials {
                 username 'vf_dependencies'
                 password 'vfDepReadOnly201711'
