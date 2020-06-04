@@ -31,7 +31,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
      * @return the friendly name for the generator
      */
     public String getName() {
-        return "titanservicewrappers";
+        return "emsservicewrappers";
     }
 
     /**
@@ -41,7 +41,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
      * @return A string value for the help message
      */
     public String getHelp() {
-        return "Generates screenplay service-wrappers for Titan";
+        return "Generates screenplay service-wrappers for Ems";
     }
 
     public ScreenPlay() {
@@ -155,6 +155,12 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
 
             // clean and normalize the operationId to remove duplicates and unhelpful names.
             op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
+
+            // HACK bc swagger for EMS is terrible.
+            op.summary = op.summary
+                    .replace("\"", "")
+                    .replace("\\r\\n", "")
+                    .replace("\\", "");
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)
@@ -209,8 +215,9 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                     isDeprecated = "Deprecated";
                 }
 
+                String newResult = result.substring(0, 1).toUpperCase() + result.substring(1);
 
-                return result + "OnThe" + controllerName + "Controller" + isDeprecated;
+                return newResult + "OnThe" + controllerName + "Controller" + isDeprecated;
             }
 
     private String capitalizeAndCleanString(String stringToClean) {
@@ -222,8 +229,9 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         // remove apostrophes
                 .replaceAll("'", "")
         // remove hyphens
-                .replaceAll("-", "");
+                .replaceAll("-", "")
         // remove parentheses
+                .replaceAll("[()]","");
 
     }
 }

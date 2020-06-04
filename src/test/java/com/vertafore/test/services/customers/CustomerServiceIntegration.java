@@ -37,13 +37,13 @@ public class CustomerServiceIntegration {
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    bob.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     bob.should(seeThatResponse(res -> res.statusCode(200)));
 
-    doug.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+    doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     doug.should(seeThatResponse(res -> res.statusCode(200)));
 
-    adam.attemptsTo(customersApi.gETCustomersOnTheCustomersController(null, "string"));
+    adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
   }
 
@@ -53,7 +53,7 @@ public class CustomerServiceIntegration {
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    bob.attemptsTo(customersApi.gETCustomersOnTheCustomersController(259, "string"));
+    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(259, "string"));
     bob.should(seeThatResponse(res -> res.statusCode(200)));
   }
 }
