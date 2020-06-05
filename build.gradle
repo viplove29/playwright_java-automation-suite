@@ -1,19 +1,7 @@
-import com.gargoylesoftware.htmlunit.HttpMethod
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import com.google.gson.stream.JsonReader
-import jdk.dynalink.Operation
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.X509TrustManager;
 import javax.net.ssl.HttpsURLConnection;
-
-//import io.swagger.v3.parser.OpenAPIV3Parser;
-
 import java.nio.file.Files
 import java.nio.file.Paths
-
 
 buildscript {
     dependencies {
@@ -129,37 +117,7 @@ dependencies {
  * List of all EMS Services
  */
 final List<String> SERVICES = List.of(
-//        "activities",
-//        "acord-form-mapping",
-//        "agency",
-//        "authentication",
-//        "bank-accounts",
-//        "business-units",
-//        "companies",
-//        "sms",
-//        "customers",
-//        "download",
-//        "e-forms",
-//        "error-logs",
-//        "features",
-//        "health-check",
-//        "invoices",
-//        "lines-of-business",
-//        "messages",
-//        "outbound-notification-service",
-//        "policies",
-//        "sms-configuration",
-//        "submissions",
-//        "suspenses",
-//        "titan",
-//        "underwriters",
-//        "user-permissions",
-//        "utility",
-//        "vendors",
-//        "vmb-messages",
-//        "web-service-logs",
         "ems"
-
 );
 
 /**
@@ -175,6 +133,8 @@ task getEMSApiSwaggerJson {
             if (!Files.isDirectory(Paths.get("swaggerjson/${service}"))) {
                 mkdir("swaggerjson/${service}")
             }
+
+// this enables a relaxed HTTPS for getting the JSON.
             def nullTrustManager = [
     checkClientTrusted: { chain, authType ->  },
     checkServerTrusted: { chain, authType ->  },
@@ -187,12 +147,12 @@ def nullHostnameVerifier = [
         hostname.startsWith('yuml.me')
     }
 ]
-
 javax.net.ssl.SSLContext sc = javax.net.ssl.SSLContext.getInstance("SSL")
 sc.init(null, [nullTrustManager as  javax.net.ssl.X509TrustManager] as  javax.net.ssl.X509TrustManager[], null)
 javax.net.ssl.HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory())
 javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier as javax.net.ssl.HostnameVerifier)
 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
             def swaggerJsonResponse = new URL(
                     "https://botd-q-360iis-1.devop.vertafore.com/ems/swagger/v1")
                     .getText(requestProperties: [Accept: 'application/json'])
@@ -201,33 +161,6 @@ HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
             // if the json response has swagger json elements in it - write a new file.
             // Otherwise the code-generator will use the json that has been committed/saved.
             if (swaggerJsonResponse.contains("swagger") && swaggerJsonResponse.contains(service)) {
-
-//                Swagger swagger = new SwaggerParser().read(swaggerJsonResponse)
-//
-//                List<Map<String,Object>>  finalResult=new ArrayList<>();
-//                Map<String, Model>  definitions = swagger.getDefinitions();
-//                // loop all the available paths of the swagger for each service
-//                while(swagger.getPaths.contains(service)){
-//                    swagger.getPaths().keySet().forEach(group->{
-//                        //get the path
-//                        Path path=swagger.getPath(group);
-//                        //list all the operations of the path
-//                        Map<HttpMethod, Operation> mapList=path.getOperationMap();
-//                        mapList.forEach((httpMethod,operation)->{
-//                            processPathData(finalResult,operation,path,group,httpMethod,definitions,group);
-//                        });
-//
-//                    });
-//                }
-//
-//                String filename = "swaggerjson/baseTemplate.json";
-//                Gson gson = new Gson();
-//                JsonReader reader = new JsonReader(new FileReader(filename))
-//                JsonObject baseTemplate = gson.fromJson(reader, JsonObject)
-//
-//                baseTemplate.addProperty("paths", finalResult)
-
-
 
                 new File("swaggerjson/${service}/${service}-service.json").write(swaggerJsonResponse)
 
@@ -303,13 +236,9 @@ swaggerSources*.code *.dependsOn 'getEMSApiSwaggerJson'
 // that build cache has been cleared out.
 swaggerSources*.code *.dependsOn clean
 
-// on every build we run generate codegen
-//build.dependsOn generateSwaggerCode
-
 // run spotlessApply task to remove unused imports that
 // could potentially break builds.
 compileJava.dependsOn spotlessJavaApply
 build.dependsOn spotlessJavaApply
 
-//compileJava.dependsOn swaggerSources*.code
 compileJava.dependsOn 'addGeneratedCodeToSourceSets'

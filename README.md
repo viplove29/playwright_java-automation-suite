@@ -16,7 +16,7 @@ Each integration test is a JUnit test and does not have a corresponding feature 
 
 ## How to Generate Service-Wrappers 
 
-This project has a tool to build Titan Service Wrappers and Models into Java Classes using a gradle task.
+This project has a tool to build EMS Service Wrappers and Models into Java Classes using a gradle task.
 
 As our EMS api changes the tool will be responsible for updating our 'service-wrapper' & models to 
 interact with each backend service. 
@@ -25,7 +25,7 @@ to use it:
 
 ``./gradlew generateSwaggerCode``
 
-note: you may need to run ./gradlew spotlessJavaApply to clean unused imports that may break the build.
+note: you need to run ./gradlew spotlessJavaApply to clean unused imports that may break the build.
 
 This command will reach out to swagger in dev-master then parse the whole API and output your class and models into your /build folder and into the source sets for use by your JUnit tests.
 
@@ -33,15 +33,13 @@ This command will reach out to swagger in dev-master then parse the whole API an
 Each class that holds integration tests must have the `@RunWith(SerenityRunner.class`) annotation.
 
 We need to build our `cast` of actors for the test so we use a `@Before` hook at the top of the class and we give it:
-- username
-- tenant name
-- entity name
+- name
+- context
+- login type
 
 For the actor(s) that we want to use for the test.
 
 Then we `setTheStage` with the actors we just built.
-Right now this project is sets the cast using the class
-`BuildCastOfTitanUsers` where we access the method `loadAndAuthenticate` and pass it a list of Titan Users.
  
  This method will handle logging in and preparing the actor for the test.
 This before hook will run before each JUnit test making sure our actors are fresh.
@@ -49,19 +47,32 @@ This before hook will run before each JUnit test making sure our actors are fres
 Example:
 `````
 @RunWith(SerenityRunner.class)
-public class DocumentServiceIntegration {
+public class UnderwriterServiceIntegration {
 
-  private List<TitanUser> users = new ArrayList<>();
+  private List<EMSActor> actors = new ArrayList<>();
 
   @Before
-  public void setupActors() {
-    users.add(new TitanUser("donald@lizzy123.com", "LIZZY123", "LIZZY123"));
-    OnStage.setTheStage(BuildCastOfTitanUsers.loadAndAuthenticate(users));
+  public void getAnAccessToken() {
+    actors.add(new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor());
+    OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
   @Test
-  public void documentServiceBrandingSetsConfigCorrectly() throws IOException {
-    Actor currentActor = theActorCalled("donald@lizzy123.com");
+  public void UnderwritersReturnsAllUnderwriters() {
+
+    Actor bob = theActorCalled("bob");
+
+    UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
+
+    bob.attemptsTo(
+        underwritersAPI
+            .GETUnderwritersOnTheUnderwritersController(null, "string"));
+
+    bob.should(
+       seeThatResponse("successfully gets underwriters",
+                       res -> res.statusCode(200)));
+  }
+}
 
 `````
 
@@ -75,7 +86,7 @@ From there just build your setup test data and send your requests off.
 The general format for sending requests off in this project look like:
 
 ```
-currentActor.attemptsTo(UseDocumentServiceTo.getBrandingsUsingGetOnTheBrandingController());
+bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(259, "string"));
 ```
 
 Use the the variable that holds your current actor and access the `.attemptsTo` api which takes in a `Performable`.
@@ -83,30 +94,13 @@ The performable we pass will be the service-wrapper Class and Method that are au
 This example doesn't take any parameters, but a different endpoint that requires an ID or a body for example 
  would be supplied right here.
  
-```
-    currentActor.attemptsTo(
-        UseDocumentServiceTo.getImageUsingGetOnTheBrandingController(id, "original"));
-```
 
-What about being able to configure path-params inside of the test?
-```
-    Actor currentActor = theActorCalled("donald@lizzy123.com");
 
-    HaveTitanContext.theNewProductOf(currentActor, "FORM-ADMIN-WEB-UI");
-```
-`HaveTitanContext` has a variety of methods to set things like tenant/entity/product/domain.
-
-In this example, the default product is loaded as AMS-WEB-UI but for the test
-we overrode that with the product of "FORM-ADMIN-WEB-UI" for each request in the test body.
-
-## Using branches
+## Using cookies
 Use these arguments for gradle task used for running test:
 
-Single service
-`-Dcookies="{SERVICE_NAME}={BRANCH_NAME}"`
+`-Dcookies="{COOKIE_VALUE}"`
  
-Multiple services - seperated by ;
-`-Dcookies="form-service=US9999-add-aods;opportunity-service=US1111-add-new-thing"`
 
 #### Getting The Last Request Sent
 Serenity gives access to an easy way to see our last response using:
@@ -150,6 +144,7 @@ Here is how we would set our runners.
 @WithTags({
       @WithTag("titan"),
       @WithTag("3rdParty"),
+      @WithTag("AMS360")
 })
 public class TestClass {
 

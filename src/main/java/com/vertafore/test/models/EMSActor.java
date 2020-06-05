@@ -11,6 +11,11 @@ public class EMSActor {
     this.loginType = loginType;
   }
 
+  public EMSActor(String actorName, String context) {
+    this.actorName = actorName;
+    this.context = context;
+  }
+
   public String getActorName() {
     return actorName;
   }

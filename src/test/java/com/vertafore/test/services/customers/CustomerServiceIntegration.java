@@ -5,9 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.models.EMSActor;
-import com.vertafore.test.models.EMSActorBuilder;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -23,14 +21,16 @@ public class CustomerServiceIntegration {
 
   @Before
   public void getAnAccessToken() {
-    actors.add(new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor());
-    actors.add(new EMSActorBuilder().actorName("doug").context("appContext").buildEMSActor());
-    actors.add(new EMSActorBuilder().actorName("adam").context("adminContext").buildEMSActor());
+    actors.addAll(
+        List.of(
+            new EMSActor("bob", "userContext"),
+            new EMSActor("doug", "appContext"),
+            new EMSActor("adam", "adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
   @Test
-  public void customersReturnsAllCustomers() throws IOException {
+  public void customersReturnsAllCustomers() {
     Actor bob = theActorCalled("bob");
     Actor doug = theActorCalled("doug");
     Actor adam = theActorCalled("adam");
@@ -48,7 +48,7 @@ public class CustomerServiceIntegration {
   }
 
   @Test
-  public void customersReturnsOneCustomer() throws IOException {
+  public void customersReturnsOneCustomer() {
     Actor bob = theActorCalled("bob");
 
     UseCustomersTo customersApi = new UseCustomersTo();
