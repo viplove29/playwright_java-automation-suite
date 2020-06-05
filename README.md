@@ -53,7 +53,7 @@ public class UnderwriterServiceIntegration {
 
   @Before
   public void getAnAccessToken() {
-    actors.add(new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor());
+    actors.addAll(List.of(new EMSActor("bob", "userContext", "vsso")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
