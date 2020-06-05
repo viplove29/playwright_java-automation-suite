@@ -22,7 +22,7 @@ public class UnderwriterServiceIntegration {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor("bob", "userContext")));
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 

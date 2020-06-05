@@ -23,7 +23,8 @@ public class FeatureServiceIntegration {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor("bob", "userContext", "vsso")));
+    actors.addAll(
+        List.of(new EMSActor().called("bob").withContext("userContext").withLoginType("vsso")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 

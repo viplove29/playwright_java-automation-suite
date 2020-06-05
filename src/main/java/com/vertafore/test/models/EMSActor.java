@@ -16,27 +16,47 @@ public class EMSActor {
     this.context = context;
   }
 
+  public EMSActor() {}
+
   public String getActorName() {
     return actorName;
   }
 
-  public void setActorName(String actorName) {
+  public EMSActor called(String actorName) {
+    setActorName(actorName);
+    return this;
+  }
+
+  public EMSActor withContext(String context) {
+    setContext(context);
+    return this;
+  }
+
+  public EMSActor withLoginType(String loginType) {
+    setLoginType(loginType);
+    return this;
+  }
+
+  private EMSActor setActorName(String actorName) {
     this.actorName = actorName;
+    return this;
   }
 
   public String getContext() {
     return context;
   }
 
-  public void setContext(String context) {
+  private EMSActor setContext(String context) {
     this.context = context;
+    return this;
   }
 
   public String getLoginType() {
     return loginType;
   }
 
-  public void setLoginType(String loginType) {
+  private EMSActor setLoginType(String loginType) {
     this.loginType = loginType;
+    return this;
   }
 }

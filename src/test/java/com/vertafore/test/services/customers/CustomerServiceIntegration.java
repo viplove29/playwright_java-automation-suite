@@ -23,9 +23,9 @@ public class CustomerServiceIntegration {
   public void getAnAccessToken() {
     actors.addAll(
         List.of(
-            new EMSActor("bob", "userContext"),
-            new EMSActor("doug", "appContext"),
-            new EMSActor("adam", "adminContext")));
+            new EMSActor().called("bob").withContext("userContext"),
+            new EMSActor().called("doug").withContext("appContext"),
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
