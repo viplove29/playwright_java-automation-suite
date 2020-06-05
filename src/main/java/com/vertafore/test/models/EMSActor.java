@@ -3,7 +3,7 @@ package com.vertafore.test.models;
 public class EMSActor {
   private String actorName;
   private String context;
-  private String loginType;
+  private String loginType = "Native";
 
   public EMSActor(String actorName, String context, String loginType) {
     this.actorName = actorName;
