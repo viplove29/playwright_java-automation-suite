@@ -5,7 +5,6 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.models.EMSActor;
-import com.vertafore.test.models.EMSActorBuilder;
 import com.vertafore.test.servicewrappers.UseUnderwritersTo;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class UnderwriterServiceIntegration {
 
   @Before
   public void getAnAccessToken() {
-    actors.add(new EMSActorBuilder().actorName("bob").context("userContext").buildEMSActor());
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 

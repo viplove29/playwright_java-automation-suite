@@ -160,7 +160,8 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             op.summary = op.summary
                     .replace("\"", "")
                     .replace("\\r\\n", "")
-                    .replace("\\", "");
+                    .replace("\\", "")
+            .replace("\'", "");
         }
 
         return super.postProcessOperationsWithModels(endpoints, allModels)

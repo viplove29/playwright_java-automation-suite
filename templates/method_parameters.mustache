@@ -1,1 +1,4 @@
-{{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}}
+{{#allParams}}
+  {{#isBodyParam}}Object {{/isBodyParam}}{{^isBodyParam}}{{{dataType}}}{{/isBodyParam}} {{paramName}}
+  {{#hasMore}},{{/hasMore}}
+{{/allParams}}

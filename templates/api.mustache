@@ -35,6 +35,7 @@ String cookies = System.getProperty("cookies") != null ? System.getProperty("coo
 {{httpMethod}}
 .to(hydratedPath)
 .with(List.of(
+RequestSpecification::relaxedHTTPSValidation,
 req -> req.contentType(String.valueOf(contentType)),
 req -> req.cookie(cookies),
 req -> req.header("Authorization", "Bearer " + theAccessTokenOf(actor)),

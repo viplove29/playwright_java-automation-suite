@@ -3,7 +3,7 @@ package com.vertafore.test.models;
 public class EMSActor {
   private String actorName;
   private String context;
-  private String loginType;
+  private String loginType = "Native";
 
   public EMSActor(String actorName, String context, String loginType) {
     this.actorName = actorName;
@@ -11,11 +11,33 @@ public class EMSActor {
     this.loginType = loginType;
   }
 
+  public EMSActor(String actorName, String context) {
+    this.actorName = actorName;
+    this.context = context;
+  }
+
+  public EMSActor() {}
+
   public String getActorName() {
     return actorName;
   }
 
-  public void setActorName(String actorName) {
+  public EMSActor called(String actorName) {
+    setActorName(actorName);
+    return this;
+  }
+
+  public EMSActor withContext(String context) {
+    setContext(context);
+    return this;
+  }
+
+  public EMSActor withLoginType(String loginType) {
+    setLoginType(loginType);
+    return this;
+  }
+
+  private void setActorName(String actorName) {
     this.actorName = actorName;
   }
 
@@ -23,7 +45,7 @@ public class EMSActor {
     return context;
   }
 
-  public void setContext(String context) {
+  private void setContext(String context) {
     this.context = context;
   }
 
@@ -31,7 +53,7 @@ public class EMSActor {
     return loginType;
   }
 
-  public void setLoginType(String loginType) {
+  private void setLoginType(String loginType) {
     this.loginType = loginType;
   }
 }
