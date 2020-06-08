@@ -23,12 +23,11 @@ public class BuildEMSCast {
       String loginType = emsActor.getLoginType();
 
       cast.actorNamed(
-          name,
-          HaveALoginKey.with(context),
-          HaveAnAccessToken.with(loginType),
-          CallAnApi.at(BASE_URL));
-
-      cast.actorNamed(name).attemptsTo(GetALoginKey.forActor());
+              name,
+              HaveALoginKey.with(context),
+              HaveAnAccessToken.with(loginType),
+              CallAnApi.at(BASE_URL))
+          .attemptsTo(GetALoginKey.forActor());
 
       switch (context) {
         case "appContext":
