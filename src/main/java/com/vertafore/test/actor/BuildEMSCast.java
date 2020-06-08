@@ -8,6 +8,8 @@ import com.vertafore.test.tasks.GetAUserToken;
 import com.vertafore.test.tasks.GetAnAdminToken;
 import com.vertafore.test.tasks.GetAnAppToken;
 import java.util.List;
+import java.util.Optional;
+import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 
@@ -29,15 +31,23 @@ public class BuildEMSCast {
               CallAnApi.at(BASE_URL))
           .attemptsTo(GetALoginKey.forActor());
 
-      switch (context) {
-        case "appContext":
-          cast.actorNamed(name).attemptsTo(GetAnAppToken.forActor());
-          break;
-        case "adminContext":
-          cast.actorNamed(name).attemptsTo(GetAnAdminToken.forActor());
-          break;
-        default:
-          cast.actorNamed(name).attemptsTo(GetAUserToken.forActor());
+      Optional<Actor> madeActor =
+          cast.getActors()
+              .stream()
+              .filter(actor -> actor.getName().equalsIgnoreCase(name))
+              .findFirst();
+      if (madeActor.isPresent()) {
+        Actor actor = madeActor.get();
+        switch (context) {
+          case "appContext":
+            actor.attemptsTo(GetAnAppToken.forActor());
+            break;
+          case "adminContext":
+            actor.attemptsTo(GetAnAdminToken.forActor());
+            break;
+          default:
+            actor.attemptsTo(GetAUserToken.forActor());
+        }
       }
     }
 
