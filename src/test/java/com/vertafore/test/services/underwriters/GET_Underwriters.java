@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class UnderwriterServiceIntegration {
+public class GET_Underwriters {
 
   private List<EMSActor> actors = new ArrayList<>();
 
@@ -34,6 +34,6 @@ public class UnderwriterServiceIntegration {
     UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
 
     bob.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
-    bob.should(seeThatResponse(res -> res.statusCode(200)));
+    bob.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
   }
 }

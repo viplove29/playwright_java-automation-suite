@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class FeatureServiceIntegration {
+public class GET_Features {
   private List<EMSActor> actors = new ArrayList<>();
 
   @Before
