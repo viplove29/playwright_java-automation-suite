@@ -1,48 +1,60 @@
-# EMS-integration-tests
+# EMS Automation Suite
 
-## Where to Write Tests
+##About the Project
+This project is intended to test the functionality of all the EMS endpoints, and while currently is only available to run against QA it will soon be able to run against MDC and Production as well. It will also soon be provisioned to be able to run against earlier versions of EMS to ensure proper testing of backwards compatibility and the business rules that come with that.
 
-This project uses JUnit to compose tests there is no cucumber/gherkin in this repo.
+The project uses Serenity with JUnit, and implements the Screenplay pattern. It also uses the Handlebars/Mustache plugin to parse the EMS Swagger code and generate 'service-wrappers', which are the classes that we use to build individual endpoint tests. (This is explained a little more in the next section.)
 
-To write a test:
-- go to `src/test/java/com/verafore/test/services/`
-- find or make the folder for the service: `document`
-- find or make the class for the test: `DocumentServiceIntegration`
+As previously stated, this project requires the Handlebars/Mustache Plugin - If you're using IntelliJ, go to Files > Settings > Plugins > Marketplace to get it if needed.
 
-`DocumentServiceIntegration` Class will have all the tests for Document-Service.
+ If you have any changes or suggestions for this README please make a merge request.
 
-Each integration test is a JUnit test and does not have a corresponding feature file or english sentence to coordinate.
-
-
-## How to Generate Service-Wrappers 
+## Start with Generating Service-Wrappers 
 
 This project has a tool to build EMS Service Wrappers and Models into Java Classes using a gradle task.
 
-As our EMS api changes the tool will be responsible for updating our 'service-wrapper' & models to 
+As our EMS api changes the tool will be responsible for updating our 'service-wrappers' & models to 
 interact with each backend service. 
 
 to use it:
 
-``./gradlew generateSwaggerCode``
+`./gradlew generateSwaggerCode`  or  `gradle generateSwaggerCode`
 
-note: you need to run ./gradlew spotlessJavaApply to clean unused imports that may break the build.
+The pipeline checks for code quality, so the project automatically runs `gradle spotlessJavaApply` for you. You can also run it manually at any time if you wish.
 
-This command will reach out to swagger in dev-master then parse the whole API and output your class and models into your /build folder and into the source sets for use by your JUnit tests.
+This command will reach out to swagger in QA then parse the whole API and output your class and models into your /build folder and into the source sets for use by your JUnit tests.
+
+
+## Where to Write Tests
+
+This project uses JUnit to compose tests - there is no cucumber/gherkin in this repo.
+
+To write a test:
+- go to `src/test/java/com/verafore/test/services/`
+- find or make the folder for the service: `customers`
+- find or make the class for the test: `GET_Customers`
+
+`GET_Customers` Class will have all the tests for the GET Customers endpoint.
+
+Each test is a JUnit test and does not have a corresponding feature file or english sentence to coordinate.
+
 
 ## General Test Setup
 Each class that holds integration tests must have the `@RunWith(SerenityRunner.class`) annotation.
 
+Each test requires an `actor` which acts as a device to hold the correct context token needed to access whatever endpoint you're testing. (Actors requiring a userContext token use the project's username and password, with a native login, by default.)
+
 We need to build our `cast` of actors for the test so we use a `@Before` hook at the top of the class and we give it:
 - name
 - context
-- login type
+- login type (native is the default and doesn't need to be included)
 
 For the actor(s) that we want to use for the test.
 
 Then we `setTheStage` with the actors we just built.
  
  This method will handle logging in and preparing the actor for the test.
-This before hook will run before each JUnit test making sure our actors are fresh.
+This before hook will run before each JUnit test making sure our actors' tokens are fresh.
 
 Example:
 `````
@@ -53,7 +65,7 @@ public class UnderwriterServiceIntegration {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor("bob", "userContext", "vsso")));
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -91,10 +103,12 @@ bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(259, "string"))
 
 Use the the variable that holds your current actor and access the `.attemptsTo` api which takes in a `Performable`.
 The performable we pass will be the service-wrapper Class and Method that are auto-generated.
-This example doesn't take any parameters, but a different endpoint that requires an ID or a body for example 
+This example takes two parameters, but a different endpoint that requires an ID or a body for example 
  would be supplied right here.
  
-
+ ####Running Tests
+ The easiest way to run the tests is to click the green arrow to the left fo the test. You can also right-click on the file and select `Run` or `Debug` the entire class. You can do the same thing with the entire package. The tests can also be run from the command line, as explained in more detail below in the 'Running Tests Selectively' section.
+ 
 
 ## Using cookies
 Use these arguments for gradle task used for running test:

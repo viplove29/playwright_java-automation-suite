@@ -16,7 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class CustomerServiceIntegration {
+public class GET_Customers {
   private List<EMSActor> actors = new ArrayList<>();
 
   @Before
