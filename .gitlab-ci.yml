@@ -5,9 +5,11 @@ variables:
 image: openjdk:11-jdk-slim
 
 stages:
+  - project checks
   - build
   - test
   - report
+ 
 
 build:
   tags: [Docker]
@@ -35,22 +37,16 @@ build:
       - build/classes
       - build/resources
 
-codequality:
-  stage: build
-  image: docker:latest
-  variables:
-    DOCKER_DRIVER: overlay2
-  allow_failure: true
-  services:
-    - docker:dind
+spotless:
+  stage: project checks
+  image: openjdk:11-jdk-slim
   script:
-    - setup_docker
-    - codeclimate_html
-  artifacts:
-    expire_in: 1 week
-    paths: [codeclimate.html]
-  except:
-    - triggers
+    - ./gradlew spotlessJavaCheck
+  only:
+    refs:
+      - merge_requests
+    changes:
+      - "**/*.java"
 
 # .after_tests:
 #   after_script:
