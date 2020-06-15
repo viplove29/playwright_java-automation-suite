@@ -1,5 +1,7 @@
 package com.vertafore.test.actor;
 
+import static com.vertafore.test.util.Env_var.BASE_URL;
+
 import com.vertafore.test.abilities.HaveALoginKey;
 import com.vertafore.test.abilities.HaveAnAccessToken;
 import com.vertafore.test.models.EMSActor;
@@ -14,7 +16,6 @@ import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 
 public class BuildEMSCast {
-  private static final String BASE_URL = "https://botd-q-360iis-1.devop.vertafore.com/ems";
 
   public static OnlineCast GetAnAccessToken(List<EMSActor> actorsData) {
     OnlineCast cast = new OnlineCast();

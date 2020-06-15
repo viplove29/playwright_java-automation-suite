@@ -1,6 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.contextForActor;
+import static com.vertafore.test.util.Env_var.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;
@@ -14,12 +15,6 @@ import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.rest.interactions.Post;
 
 public class GetALoginKey implements Performable {
-
-  private static final String LOGIN_KEY_PATH = "/auth";
-  private static final String USER_APP_KEY = "AB4C2E22-2006-44AB-AA1A-318E653BA345";
-  private static final String APP_APP_KEY = "109DF24F-6188-409E-B7FE-9BEA4A673812";
-  private static final String ADMIN_APP_KEY = "3A0CE59E-C644-46A6-8697-002687388329";
-  private static final String VERT_APP_KEY = "9ABE4D45-106D-49A9-9C6A-0CD685BCC337";
 
   @Override
   public <T extends Actor> void performAs(T actor) {

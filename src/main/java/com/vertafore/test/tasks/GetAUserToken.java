@@ -2,6 +2,7 @@ package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
 import static com.vertafore.test.abilities.HaveAnAccessToken.loginTypeForActor;
+import static com.vertafore.test.util.Env_var.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;
@@ -15,12 +16,12 @@ import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.rest.interactions.Post;
 
 public class GetAUserToken implements Performable {
-  private static final String LOGIN_USER_PATH = "/auth/loginUser";
-  private static final String AGENCY_NO = "MainQAC-1";
-  private static final String USERNAME = "EMSAuto";
-  private static final String PASSWORD = "Password2!";
-  private static final String VSSO_USERNAME = "EMSAuto2@mailinator.com";
-  private static final String VSSO_PASSWORD = "Password5!";
+  //  private static final String LOGIN_USER_PATH = "/auth/loginUser";
+  //  private static final String AGENCY_NO = "MainQAC-1";
+  //  private static final String USERNAME = "EMSAuto";
+  //  private static final String PASSWORD = "Password2!";
+  //  private static final String VSSO_USERNAME = "EMSAuto2@mailinator.com";
+  //  private static final String VSSO_PASSWORD = "Password5!";
 
   @Override
   public <T extends Actor> void performAs(T actor) {
