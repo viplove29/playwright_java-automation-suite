@@ -23,11 +23,13 @@ public class BuildEMSCast {
       String name = emsActor.getActorName();
       String context = emsActor.getContext();
       String loginType = emsActor.getLoginType();
+      String username = emsActor.getUsername();
+      String password = emsActor.getPassword();
 
       cast.actorNamed(
               name,
               HaveALoginKey.with(context),
-              HaveAnAccessToken.with(loginType),
+              HaveAnAccessToken.with(loginType, username, password),
               CallAnApi.at(BASE_URL))
           .attemptsTo(GetALoginKey.forActor());
 
