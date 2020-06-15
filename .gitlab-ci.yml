@@ -1,6 +1,5 @@
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  ENVIRONMENT_BASE_URI: "https://api.dev.titan.v4af.com"
 
 image: openjdk:11-jdk-slim
 
@@ -38,6 +37,7 @@ build:
       - build/resources
 
 spotless:
+  tags: [Docker]
   stage: project checks
   image: openjdk:11-jdk-slim
   script:
