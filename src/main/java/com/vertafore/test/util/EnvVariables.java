@@ -3,7 +3,7 @@ package com.vertafore.test.util;
 import net.serenitybdd.core.environment.EnvironmentSpecificConfiguration;
 import net.thucydides.core.util.SystemEnvironmentVariables;
 
-public class Env_var {
+public class EnvVariables {
 
   public static final String BASE_URL = getProperty("base_url");
   public static final String LOGIN_KEY_PATH = getProperty("login_key_path");

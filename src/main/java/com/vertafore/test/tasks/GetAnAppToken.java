@@ -1,7 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
-import static com.vertafore.test.util.Env_var.*;
+import static com.vertafore.test.util.EnvVariables.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;

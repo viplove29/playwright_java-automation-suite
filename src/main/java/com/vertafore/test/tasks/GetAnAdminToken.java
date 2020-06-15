@@ -1,8 +1,8 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
-import static com.vertafore.test.util.Env_var.ADMIN_EMP_CODE;
-import static com.vertafore.test.util.Env_var.LOGIN_ADMIN_PATH;
+import static com.vertafore.test.util.EnvVariables.ADMIN_EMP_CODE;
+import static com.vertafore.test.util.EnvVariables.LOGIN_ADMIN_PATH;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;

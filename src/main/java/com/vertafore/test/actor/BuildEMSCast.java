@@ -1,6 +1,6 @@
 package com.vertafore.test.actor;
 
-import static com.vertafore.test.util.Env_var.BASE_URL;
+import static com.vertafore.test.util.EnvVariables.BASE_URL;
 
 import com.vertafore.test.abilities.HaveALoginKey;
 import com.vertafore.test.abilities.HaveAnAccessToken;
