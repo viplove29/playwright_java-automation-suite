@@ -11,8 +11,7 @@ public class EnvVariables {
   public static final String APP_APP_KEY = getProperty("site_db.appkey_app");
   public static final String ADMIN_APP_KEY = getProperty("site_db.appkey_admin");
   public static final String VERT_APP_KEY = getProperty("site_db.appkey_vert");
-  public static final String APP_ACCESS_TO_AGENCY_KEY =
-      getProperty("site_db.app_access_to_agency_key");
+  public static final String APP_ACCESS_TO_AGENCY_KEY = getProperty("ams.app_access_to_agency_key");
   public static final String LOGIN_USER_PATH = getProperty("login_user_path");
   public static final String LOGIN_APP_PATH = getProperty("login_app_path");
   public static final String LOGIN_ADMIN_PATH = getProperty("login_admin_path");

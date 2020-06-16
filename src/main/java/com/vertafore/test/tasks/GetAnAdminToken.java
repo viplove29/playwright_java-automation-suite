@@ -16,8 +16,6 @@ import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.rest.interactions.Post;
 
 public class GetAnAdminToken implements Performable {
-  //  private static final String LOGIN_ADMIN_PATH = "/auth/loginAdmin";
-  //  private static final String ADMIN_EMP_CODE = "^^]";
 
   @Override
   public <T extends Actor> void performAs(T actor) {
