@@ -1,8 +1,8 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
-import static com.vertafore.test.abilities.HaveAnAccessToken.loginTypeForActor;
 import static com.vertafore.test.util.EnvVariables.*;
+import static com.vertafore.test.abilities.HaveAnAccessToken.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;
@@ -27,14 +27,14 @@ public class GetAUserToken implements Performable {
   public <T extends Actor> void performAs(T actor) {
 
     String loginType = loginTypeForActor(actor);
+    String username = usernameForActor(actor);
+    String password = passwordForActor(actor);
     String loginKey = theLoginKeyOf(actor);
-    String username;
-    String password;
 
-    if (loginType.equals("Native")) {
+    if (loginType.isBlank() && username.isBlank() && password.isBlank()) {
       username = USERNAME;
       password = PASSWORD;
-    } else {
+    } else if (loginType.equals("vsso") && username.isBlank() && password.isBlank()) {
       username = VSSO_USERNAME;
       password = VSSO_PASSWORD;
     }

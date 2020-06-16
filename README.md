@@ -1,6 +1,6 @@
 # EMS Automation Suite
 
-##About the Project
+## About the Project
 This project is intended to test the functionality of all the EMS endpoints, and while currently is only available to run against QA it will soon be able to run against MDC and Production as well. It will also soon be provisioned to be able to run against earlier versions of EMS to ensure proper testing of backwards compatibility and the business rules that come with that.
 
 The project uses Serenity with JUnit, and implements the Screenplay pattern. It also uses the Handlebars/Mustache plugin to parse the EMS Swagger code and generate 'service-wrappers', which are the classes that we use to build individual endpoint tests. (This is explained a little more in the next section.)
@@ -18,9 +18,9 @@ interact with each backend service.
 
 to use it:
 
-`./gradlew generateSwaggerCode`  or  `gradle generateSwaggerCode`
+`./gradlew generateSwaggerCode`
 
-The pipeline checks for code quality, so the project automatically runs `gradle spotlessJavaApply` for you. You can also run it manually at any time if you wish.
+The pipeline checks for code quality, so the project automatically runs `./gradlew spotlessJavaApply` for you. You can also run it manually at any time if you wish.
 
 This command will reach out to swagger in QA then parse the whole API and output your class and models into your /build folder and into the source sets for use by your JUnit tests.
 
