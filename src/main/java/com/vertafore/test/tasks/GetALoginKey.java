@@ -6,13 +6,18 @@ import static net.serenitybdd.screenplay.Tasks.instrumented;
 
 import com.google.gson.Gson;
 import com.vertafore.test.abilities.HaveALoginKey;
+import com.vertafore.test.interactions.Get;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.List;
+
+import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Performable;
 import net.serenitybdd.screenplay.rest.interactions.Post;
+import net.serenitybdd.screenplay.rest.questions.LastResponse;
 
 public class GetALoginKey implements Performable {
 
@@ -24,10 +29,10 @@ public class GetALoginKey implements Performable {
     String loginKey;
 
     switch (context) {
-      case "userContext":
-        appKey = USER_APP_KEY;
-        loginKey = makePOSTAuthCall(actor, appKey);
-        break;
+//      case "userContext":
+//        appKey = USER_APP_KEY;
+//        loginKey = makePOSTAuthCall(actor, appKey);
+//        break;
       case "appContext":
         appKey = APP_APP_KEY;
         loginKey = makePOSTAuthCall(actor, appKey);
@@ -38,7 +43,7 @@ public class GetALoginKey implements Performable {
         break;
       default:
         appKey = VERT_APP_KEY;
-        loginKey = makePOSTAuthCall(actor, appKey);
+        loginKey = makeGETAuthCall(actor, appKey);
     }
 
 //    HashMap<String, String> authBody = new HashMap<>();
@@ -70,6 +75,16 @@ public class GetALoginKey implements Performable {
                             req -> req.relaxedHTTPSValidation()))
             .performAs(actor);
     String loginKey = SerenityRest.lastResponse().getBody().jsonPath().getString("loginKey");
+
+    return loginKey;
+  }
+
+  private static String makeGETAuthCall(Actor actor, String appKey) {
+    Get.to(LOGIN_KEY_PATH).with(req -> req.queryParam("secretKey", appKey)).performAs(actor);
+
+    SerenityRest.lastResponse().prettyPrint();
+
+    String loginKey = LastResponse.received().answeredBy(actor).getBody().asString();
 
     return loginKey;
   }
