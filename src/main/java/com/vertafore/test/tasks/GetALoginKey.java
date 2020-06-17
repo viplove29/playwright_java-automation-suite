@@ -21,36 +21,56 @@ public class GetALoginKey implements Performable {
 
     String context = contextForActor(actor);
     String appKey;
+    String loginKey;
 
     switch (context) {
       case "userContext":
         appKey = USER_APP_KEY;
+        loginKey = makePOSTAuthCall(actor, appKey);
         break;
       case "appContext":
         appKey = APP_APP_KEY;
+        loginKey = makePOSTAuthCall(actor, appKey);
         break;
       case "adminContext":
         appKey = ADMIN_APP_KEY;
+        loginKey = makePOSTAuthCall(actor, appKey);
         break;
       default:
         appKey = VERT_APP_KEY;
+        loginKey = makePOSTAuthCall(actor, appKey);
     }
 
-    HashMap<String, String> authBody = new HashMap<>();
-    authBody.put("AppKey", appKey);
-    Post.to(LOGIN_KEY_PATH)
-        .with(
-            List.of(
-                req -> req.body(new Gson().toJson(authBody)),
-                req -> req.contentType(ContentType.JSON),
-                req -> req.relaxedHTTPSValidation()))
-        .performAs(actor);
-    String loginKey = SerenityRest.lastResponse().getBody().jsonPath().getString("loginKey");
+//    HashMap<String, String> authBody = new HashMap<>();
+//    authBody.put("AppKey", appKey);
+//    Post.to(LOGIN_KEY_PATH)
+//        .with(
+//            List.of(
+//                req -> req.body(new Gson().toJson(authBody)),
+//                req -> req.contentType(ContentType.JSON),
+//                req -> req.relaxedHTTPSValidation()))
+//        .performAs(actor);
+//    String loginKey = SerenityRest.lastResponse().getBody().jsonPath().getString("loginKey");
 
     HaveALoginKey.theNewLoginKeyOf(actor, loginKey);
   }
 
   public static GetALoginKey forActor() {
     return instrumented(GetALoginKey.class);
+  }
+
+  private static String makePOSTAuthCall(Actor actor, String appKey) {
+    HashMap<String, String> authBody = new HashMap<>();
+    authBody.put("AppKey", appKey);
+    Post.to(LOGIN_KEY_PATH)
+            .with(
+                    List.of(
+                            req -> req.body(new Gson().toJson(authBody)),
+                            req -> req.contentType(ContentType.JSON),
+                            req -> req.relaxedHTTPSValidation()))
+            .performAs(actor);
+    String loginKey = SerenityRest.lastResponse().getBody().jsonPath().getString("loginKey");
+
+    return loginKey;
   }
 }
