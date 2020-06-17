@@ -44,16 +44,13 @@ Each class that holds integration tests must have the `@RunWith(SerenityRunner.c
 
 Each test requires an `actor` which acts as a device to hold the correct context token needed to access whatever endpoint you're testing. (Actors requiring a userContext token use the project's username and password, with a native login, by default.)
 
-We need to build our `cast` of actors for the test so we use a `@Before` hook at the top of the class and we give it:
+We need to build our `cast` of actors for the test so we use a `@Before` hook at the top of the class and for each actor we give it:
 - name
 - context
-- login type (native is the default and doesn't need to be included)
-
-For the actor(s) that we want to use for the test.
 
 Then we `setTheStage` with the actors we just built.
  
- This method will handle logging in and preparing the actor for the test.
+ This method will handle the entire authentication/authorization process including obtaining the correct context token for the test.
 This before hook will run before each JUnit test making sure our actors' tokens are fresh.
 
 Example:
@@ -101,12 +98,15 @@ The general format for sending requests off in this project look like:
 bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(259, "string"));
 ```
 
-Use the the variable that holds your current actor and access the `.attemptsTo` api which takes in a `Performable`.
+Use the variable that holds your current actor and access the `.attemptsTo` api which takes in a `Performable`.
 The performable we pass will be the service-wrapper Class and Method that are auto-generated.
 This example takes two parameters, but a different endpoint that requires an ID or a body for example 
  would be supplied right here.
  
- ####Running Tests
+ #### Note About Optional Parameters for UserContext
+ But what if I need to use a vsso login, or I want to use different user credentials to get a userContext token? Well, you're in luck because those options are available. See GET_Features for an example of how to use these optional parameters.
+ 
+ #### Running Tests
  The easiest way to run the tests is to click the green arrow to the left fo the test. You can also right-click on the file and select `Run` or `Debug` the entire class. You can do the same thing with the entire package. The tests can also be run from the command line, as explained in more detail below in the 'Running Tests Selectively' section.
  
 
