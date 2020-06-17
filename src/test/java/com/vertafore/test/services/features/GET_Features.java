@@ -21,13 +21,10 @@ import org.junit.runner.RunWith;
 public class GET_Features {
   private List<EMSActor> actors = new ArrayList<>();
 
-  // The two actors used in this test are examples of optional params that can be used with
-  // userContext. The
-  // first, "bob", uses the project's default VSSO user. The second, "fred", uses AMS login
-  // credentials that are different from the project's default user credentials. In this case it is
-  // not necessary to
-  // indicate whether it is a native or vsso login, as it doesn't matter in terms of getting a
-  // token.
+  // The two actors used in this test are examples of optional params that can be used with userContext. The first,
+  // "bob", uses the project's default VSSO user. The second, "fred", uses AMS login credentials that are different
+  // from the project's default user credentials. In this case it is not necessary to indicate whether it is a native
+  // or VSSO login, as it doesn't matter in terms of getting a token.
 
   @Before
   public void getAnAccessToken() {
