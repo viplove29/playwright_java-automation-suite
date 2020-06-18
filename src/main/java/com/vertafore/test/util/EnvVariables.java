@@ -15,6 +15,7 @@ public class EnvVariables {
   public static final String LOGIN_USER_PATH = getProperty("login_user_path");
   public static final String LOGIN_APP_PATH = getProperty("login_app_path");
   public static final String LOGIN_ADMIN_PATH = getProperty("login_admin_path");
+  public static final String LOGIN_DEPRECATED_PATH = getProperty("login_deprecated_path");
   public static final String USERNAME = getProperty("ams.username");
   public static final String PASSWORD = getProperty("ams.password");
   public static final String VSSO_USERNAME = getProperty("ams.vsso_user");

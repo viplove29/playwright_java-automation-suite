@@ -5,10 +5,8 @@ import static com.vertafore.test.util.EnvVariables.BASE_URL;
 import com.vertafore.test.abilities.HaveALoginKey;
 import com.vertafore.test.abilities.HaveAnAccessToken;
 import com.vertafore.test.models.EMSActor;
-import com.vertafore.test.tasks.GetALoginKey;
-import com.vertafore.test.tasks.GetAUserToken;
-import com.vertafore.test.tasks.GetAnAdminToken;
-import com.vertafore.test.tasks.GetAnAppToken;
+import com.vertafore.test.tasks.*;
+
 import java.util.List;
 import java.util.Optional;
 import net.serenitybdd.screenplay.Actor;
@@ -42,6 +40,8 @@ public class BuildEMSCast {
       if (madeActor.isPresent()) {
         Actor actor = madeActor.get();
         switch (context) {
+          case "userContext":
+            actor.attemptsTo(GetAUserToken.forActor());
           case "appContext":
             actor.attemptsTo(GetAnAppToken.forActor());
             break;
@@ -49,7 +49,7 @@ public class BuildEMSCast {
             actor.attemptsTo(GetAnAdminToken.forActor());
             break;
           default:
-            actor.attemptsTo(GetAUserToken.forActor());
+            actor.attemptsTo(GetABasicToken.forActor());
         }
       }
     }

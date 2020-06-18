@@ -29,10 +29,10 @@ public class GetALoginKey implements Performable {
     String loginKey;
 
     switch (context) {
-//      case "userContext":
-//        appKey = USER_APP_KEY;
-//        loginKey = makePOSTAuthCall(actor, appKey);
-//        break;
+      case "userContext":
+        appKey = USER_APP_KEY;
+        loginKey = makePOSTAuthCall(actor, appKey);
+        break;
       case "appContext":
         appKey = APP_APP_KEY;
         loginKey = makePOSTAuthCall(actor, appKey);
