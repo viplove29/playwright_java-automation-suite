@@ -2,7 +2,7 @@ package com.vertafore.test.models;
 
 public class EMSActor {
   private String actorName;
-  private String context;
+  private String context = "";
   private String loginType = "";
   private String username = "";
   private String password = "";
@@ -25,6 +25,10 @@ public class EMSActor {
   public EMSActor(String actorName, String context) {
     this.actorName = actorName;
     this.context = context;
+  }
+
+  public EMSActor(String actorName) {
+    this.actorName = actorName;
   }
 
   public EMSActor() {}

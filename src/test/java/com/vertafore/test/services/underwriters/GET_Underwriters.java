@@ -9,6 +9,7 @@ import com.vertafore.test.servicewrappers.UseUnderwritersTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import org.junit.Before;
@@ -22,7 +23,7 @@ public class GET_Underwriters {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext"), new EMSActor().called("mary")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -34,6 +35,19 @@ public class GET_Underwriters {
     UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
 
     bob.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
+
+    SerenityRest.lastResponse().prettyPrint();
+
     bob.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
+  }
+
+  @Test
+  public void UnderwritersReturnsAllWithBasic() {
+    Actor mary = theActorCalled("mary");
+
+    UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
+
+    mary.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
+    mary.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
   }
 }

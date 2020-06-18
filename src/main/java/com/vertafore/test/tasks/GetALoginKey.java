@@ -82,8 +82,6 @@ public class GetALoginKey implements Performable {
   private static String makeGETAuthCall(Actor actor, String appKey) {
     Get.to(LOGIN_KEY_PATH).with(req -> req.queryParam("secretKey", appKey)).performAs(actor);
 
-    SerenityRest.lastResponse().prettyPrint();
-
     String loginKey = LastResponse.received().answeredBy(actor).getBody().asString();
 
     return loginKey;
