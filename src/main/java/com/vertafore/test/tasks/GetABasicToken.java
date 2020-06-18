@@ -41,9 +41,9 @@ public class GetABasicToken implements Performable {
                 .with(
                         List.of(
                                 req -> req.queryParam("loginGuid", loginKey),
-                                req -> req.queryParam("username", username),
+                                req -> req.queryParam("username", USERNAME),
                                 req -> req.queryParam("agencyNumber", AGENCY_NO),
-                                req -> req.queryParam("password", password))
+                                req -> req.queryParam("password", PASSWORD))
                                 )
                 .performAs(actor);
         String accessJwt = SerenityRest.lastResponse().getBody().jsonPath().getString("accessJwt");

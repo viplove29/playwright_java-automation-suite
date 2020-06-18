@@ -42,6 +42,7 @@ public class BuildEMSCast {
         switch (context) {
           case "userContext":
             actor.attemptsTo(GetAUserToken.forActor());
+            break;
           case "appContext":
             actor.attemptsTo(GetAnAppToken.forActor());
             break;
