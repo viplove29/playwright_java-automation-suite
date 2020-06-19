@@ -1,7 +1,7 @@
 package com.vertafore.test.services.underwriters;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
-import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static net.serenitybdd.screenplay.actors.OnStage.*;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.models.EMSActor;
@@ -31,6 +31,7 @@ public class GET_Underwriters {
   public void UnderwritersReturnsAllUnderwriters() {
 
     Actor bob = theActorCalled("bob");
+
 
     UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
 

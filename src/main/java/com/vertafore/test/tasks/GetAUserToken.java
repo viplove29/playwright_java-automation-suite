@@ -1,6 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
+import static com.vertafore.test.abilities.HaveALoginKey.versionForActor;
 import static com.vertafore.test.abilities.HaveAnAccessToken.*;
 import static com.vertafore.test.util.EnvVariables.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
@@ -24,18 +25,19 @@ public class GetAUserToken implements Performable {
     String username = usernameForActor(actor);
     String password = passwordForActor(actor);
     String loginKey = theLoginKeyOf(actor);
+    String version = versionForActor(actor);
 
     if (loginType.isBlank() && username.isBlank() && password.isBlank()) {
-      username = USERNAME;
-      password = PASSWORD;
+      username = USERNAME(version);
+      password = PASSWORD(version);
     } else if (loginType.equals("vsso") && username.isBlank() && password.isBlank()) {
-      username = VSSO_USERNAME;
-      password = VSSO_PASSWORD;
+      username = VSSO_USERNAME(version);
+      password = VSSO_PASSWORD(version);
     }
 
     HashMap<String, String> tokenBody = new HashMap<>();
     tokenBody.put("LoginKey", loginKey);
-    tokenBody.put("AgencyNo", AGENCY_NO);
+    tokenBody.put("AgencyNo", AGENCY_NO(version));
     tokenBody.put("Username", username);
     tokenBody.put("Password", password);
     Post.to(LOGIN_USER_PATH)

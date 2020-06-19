@@ -8,6 +8,8 @@ import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.servicewrappers.UseFeaturesTo;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.serenitybdd.core.Serenity;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -47,7 +49,7 @@ public class GET_Features {
                 .withContext("userContext")
                 .withUsername("admin")
                 .withPassword("AMS4all!"),
-            new EMSActor().called("mary")));
+            new EMSActor().called("mary").withVersion("19R1")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 

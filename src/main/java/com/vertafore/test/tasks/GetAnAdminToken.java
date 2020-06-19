@@ -1,6 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
+import static com.vertafore.test.abilities.HaveALoginKey.versionForActor;
 import static com.vertafore.test.util.EnvVariables.ADMIN_EMP_CODE;
 import static com.vertafore.test.util.EnvVariables.LOGIN_ADMIN_PATH;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
@@ -20,10 +21,11 @@ public class GetAnAdminToken implements Performable {
   @Override
   public <T extends Actor> void performAs(T actor) {
     String loginKey = theLoginKeyOf(actor);
+    String version = versionForActor(actor);
 
     HashMap<String, String> tokenBody = new HashMap<>();
     tokenBody.put("LoginKey", loginKey);
-    tokenBody.put("Username", ADMIN_EMP_CODE);
+    tokenBody.put("Username", ADMIN_EMP_CODE(version));
     Post.to(LOGIN_ADMIN_PATH)
         .with(
             List.of(
