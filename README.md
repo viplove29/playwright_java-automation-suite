@@ -106,6 +106,9 @@ This example takes two parameters, but a different endpoint that requires an ID 
  #### Note About Optional Parameters for UserContext
  But what if I need to use a vsso login, or I want to use different user credentials to get a userContext token? Well, you're in luck because those options are available. See GET_Features for an example of how to use these optional parameters.
  
+ #### Note About Testing Earlier Versions of EMS
+ But what if I need to test something in 19R2, and therefore need to use the deprecated authorization methods? Again, very lucky in that if you just don't include a context for your actor the project will use the deprecated methods, allowing you to use older versions. Again, see GET_Features for an example of this.
+ 
  #### Running Tests
  The easiest way to run the tests is to click the green arrow to the left fo the test. You can also right-click on the file and select `Run` or `Debug` the entire class. You can do the same thing with the entire package. The tests can also be run from the command line, as explained in more detail below in the 'Running Tests Selectively' section.
  

@@ -25,8 +25,7 @@ public class GET_Underwriters {
   public void getAnAccessToken() {
     actors.addAll(
         List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("mary")));
+            new EMSActor().called("bob").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -42,15 +41,5 @@ public class GET_Underwriters {
     SerenityRest.lastResponse().prettyPrint();
 
     bob.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
-  }
-
-  @Test
-  public void UnderwritersReturnsAllWithBasic() {
-    Actor mary = theActorCalled("mary");
-
-    UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
-
-    mary.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
-    mary.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
   }
 }
