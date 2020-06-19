@@ -10,9 +10,6 @@ import com.vertafore.test.interactions.Get;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.List;
-
-import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Performable;
@@ -46,17 +43,6 @@ public class GetALoginKey implements Performable {
         loginKey = makeGETAuthCall(actor, appKey);
     }
 
-//    HashMap<String, String> authBody = new HashMap<>();
-//    authBody.put("AppKey", appKey);
-//    Post.to(LOGIN_KEY_PATH)
-//        .with(
-//            List.of(
-//                req -> req.body(new Gson().toJson(authBody)),
-//                req -> req.contentType(ContentType.JSON),
-//                req -> req.relaxedHTTPSValidation()))
-//        .performAs(actor);
-//    String loginKey = SerenityRest.lastResponse().getBody().jsonPath().getString("loginKey");
-
     HaveALoginKey.theNewLoginKeyOf(actor, loginKey);
   }
 
@@ -68,12 +54,12 @@ public class GetALoginKey implements Performable {
     HashMap<String, String> authBody = new HashMap<>();
     authBody.put("AppKey", appKey);
     Post.to(LOGIN_KEY_PATH)
-            .with(
-                    List.of(
-                            req -> req.body(new Gson().toJson(authBody)),
-                            req -> req.contentType(ContentType.JSON),
-                            req -> req.relaxedHTTPSValidation()))
-            .performAs(actor);
+        .with(
+            List.of(
+                req -> req.body(new Gson().toJson(authBody)),
+                req -> req.contentType(ContentType.JSON),
+                req -> req.relaxedHTTPSValidation()))
+        .performAs(actor);
     String loginKey = SerenityRest.lastResponse().getBody().jsonPath().getString("loginKey");
 
     return loginKey;

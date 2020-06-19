@@ -23,7 +23,10 @@ public class GET_Underwriters {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext"), new EMSActor().called("mary")));
+    actors.addAll(
+        List.of(
+            new EMSActor().called("bob").withContext("userContext"),
+            new EMSActor().called("mary")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 

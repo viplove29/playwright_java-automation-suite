@@ -6,7 +6,6 @@ import com.vertafore.test.abilities.HaveALoginKey;
 import com.vertafore.test.abilities.HaveAnAccessToken;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.tasks.*;
-
 import java.util.List;
 import java.util.Optional;
 import net.serenitybdd.screenplay.Actor;
