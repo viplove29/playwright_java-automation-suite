@@ -23,21 +23,17 @@ public class GET_Features {
   private List<EMSActor> actors = new ArrayList<>();
 
   // The three actors used in this test are examples of optional params that can be used when
-  // building your actors.
-  // The first two are specifically for use with "userContext". The first,
+  // building your actors. The first two are specifically for use with "userContext". The first,
   // "bob", uses the project's default VSSO user. The second, "fred", uses AMS login credentials
-  // that are different
-  // from the project's default user credentials. In this case it is not necessary to indicate
-  // whether it is a native
-  // or VSSO login, as it doesn't matter in terms of getting a token. The third, "mary" does not
-  // have a context
-  // indicated - in this case the project will automatically use the deprecated auth endpoints. "mary" also has a
-  // version indicated - if this is not included then by default the project will use the current working version in
-  // QA. This
-  // will be especially
-  // useful if you need to test earlier versions of EMS. Without using a context you can still use
-  // the default vsso
-  // user, or different credentials.
+  // that are different from the project's default user credentials. In this case it is not
+  // necessary to indicate whether it is a native or VSSO login, as it doesn't matter in terms of
+  // getting a token. The
+  // third, "mary" does not have a context indicated - in this case the project will automatically
+  // use the deprecated auth endpoints. "mary" also has a version indicated - if this is not
+  // included then by default the
+  // project will use the current working version in QA. This will be especially useful if you need
+  // to test earlier versions of
+  // EMS. Without using a context you can still use the default vsso user, or different credentials.
 
   @Before
   public void getAnAccessToken() {

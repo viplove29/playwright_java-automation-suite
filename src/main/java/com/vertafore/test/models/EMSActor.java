@@ -23,22 +23,6 @@ public class EMSActor {
     this.version = version;
   }
 
-  public EMSActor(String actorName, String context, String loginType) {
-    this.actorName = actorName;
-    this.context = context;
-    this.loginType = loginType;
-  }
-
-  public EMSActor(String actorName, String context) {
-    this.actorName = actorName;
-    this.context = context;
-  }
-
-  //  public EMSActor(String actorName, String version) {
-  //    this.actorName = actorName;
-  //    this.version = version;
-  //  }
-
   public EMSActor() {}
 
   public EMSActor called(String actorName) {
