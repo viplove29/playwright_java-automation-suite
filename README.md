@@ -181,6 +181,10 @@ passing in `-Dtags="titan" ` or `-Dtags="3rdParty"` would make the whole `TestCl
 
 passing in `-Dtags="important" `  would only cause `testingImportantThings` to run.
   
+### Running in Different Environments
+There are different environment variables set up in serenity.conf for use in running tests in MDC or Production, or if you need to use an earlier version. Pass in `-Denvironment=<env name>` at runtime to switch.
+
+For example, to run 19R1 tests in a 19R1 QA environment, use this in the command line: `./gradlew test -Denvironment=qa19R1 -Dtags="19R1"`
 
 ### Reports
 After each run, Serenity outputs some pretty reports.
