@@ -13,6 +13,7 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.conditions.Check;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,15 +22,19 @@ import org.junit.runner.RunWith;
 public class GET_Features {
   private List<EMSActor> actors = new ArrayList<>();
 
-  // The three actors used in this test are examples of optional params that can be used when building your actors.
+  // The three actors used in this test are examples of optional params that can be used when
+  // building your actors.
   // The first two are specifically for use with "userContext". The first,
   // "bob", uses the project's default VSSO user. The second, "fred", uses AMS login credentials
   // that are different
   // from the project's default user credentials. In this case it is not necessary to indicate
   // whether it is a native
-  // or VSSO login, as it doesn't matter in terms of getting a token. The third, "mary" does not have a context
-  // indicated - in this case the project will automatically use the deprecated auth endpoints. This will be especially
-  // useful if you need to test earlier versions of EMS. Without using a context you can still use the default vsso
+  // or VSSO login, as it doesn't matter in terms of getting a token. The third, "mary" does not
+  // have a context
+  // indicated - in this case the project will automatically use the deprecated auth endpoints. This
+  // will be especially
+  // useful if you need to test earlier versions of EMS. Without using a context you can still use
+  // the default vsso
   // user, or different credentials.
 
   @Before
@@ -50,7 +55,6 @@ public class GET_Features {
   public void featuresReturnsAllFeatures() {
     Actor bob = theActorCalled("bob");
     Actor fred = theActorCalled("fred");
-    Actor mary = theActorCalled("mary");
 
     UseFeaturesTo featuresApi = new UseFeaturesTo();
 
@@ -61,6 +65,14 @@ public class GET_Features {
     fred.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
     fred.should(seeThatResponse(res -> res.statusCode(200)));
     Check.whether(SerenityRest.lastResponse().getStatusCode() == 200);
+  }
+
+  @Test
+  @WithTag("19R1")
+  public void featuresReturnsAllFeatures19R1() {
+    Actor mary = theActorCalled("mary");
+
+    UseFeaturesTo featuresApi = new UseFeaturesTo();
 
     mary.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
     mary.should(seeThatResponse(res -> res.statusCode(200)));
