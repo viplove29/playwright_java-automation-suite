@@ -9,7 +9,12 @@ public class EMSActor {
   private String version = "main";
 
   public EMSActor(
-      String actorName, String context, String loginType, String username, String password, String version) {
+      String actorName,
+      String context,
+      String loginType,
+      String username,
+      String password,
+      String version) {
     this.actorName = actorName;
     this.context = context;
     this.loginType = loginType;
@@ -29,10 +34,10 @@ public class EMSActor {
     this.context = context;
   }
 
-//  public EMSActor(String actorName, String version) {
-//    this.actorName = actorName;
-//    this.version = version;
-//  }
+  //  public EMSActor(String actorName, String version) {
+  //    this.actorName = actorName;
+  //    this.version = version;
+  //  }
 
   public EMSActor() {}
 
@@ -106,7 +111,11 @@ public class EMSActor {
     this.password = password;
   }
 
-  public String getVersion() { return version; }
+  public String getVersion() {
+    return version;
+  }
 
-  private void setVersion(String version) { this.version = version; }
+  private void setVersion(String version) {
+    this.version = version;
+  }
 }

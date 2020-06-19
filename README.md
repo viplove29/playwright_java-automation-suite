@@ -107,7 +107,7 @@ This example takes two parameters, but a different endpoint that requires an ID 
  But what if I need to use a vsso login, or I want to use different user credentials to get a userContext token? Well, you're in luck because those options are available. See GET_Features for an example of how to use these optional parameters.
  
  #### Note About Testing Earlier Versions of EMS
- But what if I need to test something in 19R2, and therefore need to use the deprecated authorization methods? Again, very lucky in that if you just don't include a context for your actor the project will use the deprecated methods, allowing you to use older versions. Again, see GET_Features for an example of this.
+ But what if I need to test something in 19R2, and therefore need to use the deprecated authorization methods? Again, very lucky - if you don't include a context with your actor the project will use the deprecated auth methods, and if you include a version (e.g. "19R1") the project will use the variables for an agency in that version. See GET_Features for an example.
  
  #### Running Tests
  The easiest way to run the tests is to click the green arrow to the left fo the test. You can also right-click on the file and select `Run` or `Debug` the entire class. You can do the same thing with the entire package. The tests can also be run from the command line, as explained in more detail below in the 'Running Tests Selectively' section.
@@ -180,11 +180,11 @@ EX:
 passing in `-Dtags="titan" ` or `-Dtags="3rdParty"` would make the whole `TestClass` run.
 
 passing in `-Dtags="important" `  would only cause `testingImportantThings` to run.
-  
-### Running in Different Environments
-There are different environment variables set up in serenity.conf for use in running tests in MDC or Production, or if you need to use an earlier version. Pass in `-Denvironment=<env name>` at runtime to switch.
 
-For example, to run 19R1 tests in a 19R1 QA environment, use this in the command line: `./gradlew test -Denvironment=qa19R1 -Dtags="19R1"`
+### Running in Different Environments
+There are different environment variables set up in serenity.conf for use in running tests in MDC or Production. Pass in `-Denvironment=<env name>` at runtime to switch.
+
+For example, to run tests in a mdc environment, use this in the command line: `./gradlew test -Denvironment=mdc`
 
 ### Reports
 After each run, Serenity outputs some pretty reports.

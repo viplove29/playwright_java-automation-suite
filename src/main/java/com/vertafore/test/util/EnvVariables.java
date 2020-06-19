@@ -15,25 +15,32 @@ public class EnvVariables {
   public static final String LOGIN_APP_PATH = getProperty("login_app_path");
   public static final String LOGIN_ADMIN_PATH = getProperty("login_admin_path");
   public static final String LOGIN_DEPRECATED_PATH = getProperty("login_deprecated_path");
-  public static final String USERNAME(String version) {
+
+  public static String USERNAME(String version) {
     return getProperty(version + ".username");
   }
-  public static final String PASSWORD(String version) {
+
+  public static String PASSWORD(String version) {
     return getProperty(version + ".password");
   }
-  public static final String VSSO_USERNAME(String version) {
+
+  public static String VSSO_USERNAME(String version) {
     return getProperty(version + ".vsso_user");
   }
-  public static final String VSSO_PASSWORD(String version) {
+
+  public static String VSSO_PASSWORD(String version) {
     return getProperty(version + ".vsso_password");
   }
-  public static final String AGENCY_NO(String version) {
+
+  public static String AGENCY_NO(String version) {
     return getProperty(version + ".agency_no");
   }
-  public static final String ADMIN_EMP_CODE(String version) {
+
+  public static String ADMIN_EMP_CODE(String version) {
     return getProperty(version + ".admin_emp_code");
   }
-  public static final String APP_ACCESS_TO_AGENCY_KEY(String version) {
+
+  public static String APP_ACCESS_TO_AGENCY_KEY(String version) {
     return getProperty(version + ".app_access_to_agency_key");
   }
 

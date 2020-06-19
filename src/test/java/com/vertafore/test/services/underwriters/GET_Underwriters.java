@@ -32,7 +32,6 @@ public class GET_Underwriters {
 
     Actor bob = theActorCalled("bob");
 
-
     UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
 
     bob.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));

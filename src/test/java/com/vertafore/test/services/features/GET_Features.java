@@ -8,8 +8,6 @@ import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.servicewrappers.UseFeaturesTo;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.serenitybdd.core.Serenity;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -33,7 +31,9 @@ public class GET_Features {
   // whether it is a native
   // or VSSO login, as it doesn't matter in terms of getting a token. The third, "mary" does not
   // have a context
-  // indicated - in this case the project will automatically use the deprecated auth endpoints. This
+  // indicated - in this case the project will automatically use the deprecated auth endpoints. "mary" also has a
+  // version indicated - if this is not included then by default the project will use the current working version in
+  // QA. This
   // will be especially
   // useful if you need to test earlier versions of EMS. Without using a context you can still use
   // the default vsso

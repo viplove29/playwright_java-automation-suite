@@ -30,7 +30,9 @@ public class HaveALoginKey implements Ability {
     return HaveALoginKey.as(actor).context;
   }
 
-  public static String versionForActor(Actor actor) { return HaveALoginKey.as(actor).version; }
+  public static String versionForActor(Actor actor) {
+    return HaveALoginKey.as(actor).version;
+  }
 
   private void setLoginKey(String newLoginKey) {
     this.loginKey = newLoginKey;
