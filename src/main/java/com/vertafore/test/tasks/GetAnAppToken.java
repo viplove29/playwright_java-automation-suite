@@ -1,6 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.theLoginKeyOf;
+import static com.vertafore.test.abilities.HaveALoginKey.versionForActor;
 import static com.vertafore.test.util.EnvVariables.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
@@ -19,11 +20,12 @@ public class GetAnAppToken implements Performable {
   @Override
   public <T extends Actor> void performAs(T actor) {
     String loginKey = theLoginKeyOf(actor);
+    String version = versionForActor(actor);
 
     HashMap<String, String> tokenBody = new HashMap<>();
     tokenBody.put("LoginKey", loginKey);
-    tokenBody.put("AgencyNo", AGENCY_NO);
-    tokenBody.put("AppAccessToAgencyKey", APP_ACCESS_TO_AGENCY_KEY);
+    tokenBody.put("AgencyNo", AGENCY_NO(version));
+    tokenBody.put("AppAccessToAgencyKey", APP_ACCESS_TO_AGENCY_KEY(version));
     Post.to(LOGIN_APP_PATH)
         .with(
             List.of(

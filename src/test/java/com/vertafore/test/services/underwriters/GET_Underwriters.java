@@ -1,7 +1,7 @@
 package com.vertafore.test.services.underwriters;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
-import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static net.serenitybdd.screenplay.actors.OnStage.*;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 
 import com.vertafore.test.models.EMSActor;
@@ -9,6 +9,7 @@ import com.vertafore.test.servicewrappers.UseUnderwritersTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import org.junit.Before;
@@ -34,6 +35,9 @@ public class GET_Underwriters {
     UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
 
     bob.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
+
+    SerenityRest.lastResponse().prettyPrint();
+
     bob.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
   }
 }

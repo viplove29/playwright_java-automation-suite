@@ -6,14 +6,16 @@ import net.serenitybdd.screenplay.Actor;
 public class HaveALoginKey implements Ability {
 
   private final String context;
+  private final String version;
   private String loginKey = null;
 
-  private HaveALoginKey(String context) {
+  private HaveALoginKey(String context, String version) {
     this.context = context;
+    this.version = version;
   }
 
-  public static HaveALoginKey with(String context) {
-    return new HaveALoginKey(context);
+  public static HaveALoginKey with(String context, String version) {
+    return new HaveALoginKey(context, version);
   }
 
   public static HaveALoginKey as(Actor actor) {
@@ -26,6 +28,10 @@ public class HaveALoginKey implements Ability {
 
   public static String contextForActor(Actor actor) {
     return HaveALoginKey.as(actor).context;
+  }
+
+  public static String versionForActor(Actor actor) {
+    return HaveALoginKey.as(actor).version;
   }
 
   private void setLoginKey(String newLoginKey) {

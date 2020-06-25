@@ -6,17 +6,15 @@ import static com.vertafore.test.abilities.HaveAnAccessToken.*;
 import static com.vertafore.test.util.EnvVariables.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
-import com.google.gson.Gson;
 import com.vertafore.test.abilities.HaveAnAccessToken;
-import io.restassured.http.ContentType;
+import com.vertafore.test.interactions.Get;
 import java.util.HashMap;
 import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.Performable;
-import net.serenitybdd.screenplay.rest.interactions.Post;
 
-public class GetAUserToken implements Performable {
+public class GetABasicToken implements Performable {
 
   @Override
   public <T extends Actor> void performAs(T actor) {
@@ -35,24 +33,21 @@ public class GetAUserToken implements Performable {
       password = VSSO_PASSWORD(version);
     }
 
-    HashMap<String, String> tokenBody = new HashMap<>();
-    tokenBody.put("LoginKey", loginKey);
-    tokenBody.put("AgencyNo", AGENCY_NO(version));
-    tokenBody.put("Username", username);
-    tokenBody.put("Password", password);
-    Post.to(LOGIN_USER_PATH)
-        .with(
-            List.of(
-                req -> req.body(new Gson().toJson(tokenBody)),
-                req -> req.contentType(ContentType.JSON),
-                req -> req.relaxedHTTPSValidation()))
+    HashMap<String, String> queryParams = new HashMap<>();
+    queryParams.put("loginGuid", loginKey);
+    queryParams.put("username", username);
+    queryParams.put("agencyNumber", AGENCY_NO(version));
+    queryParams.put("password", password);
+
+    Get.to(LOGIN_DEPRECATED_PATH)
+        .with(List.of(req -> req.queryParams(queryParams)))
         .performAs(actor);
     String accessJwt = SerenityRest.lastResponse().getBody().jsonPath().getString("accessJwt");
 
     HaveAnAccessToken.theNewAccessTokenOf(actor, accessJwt);
   }
 
-  public static GetAUserToken forActor() {
-    return instrumented(GetAUserToken.class);
+  public static GetABasicToken forActor() {
+    return instrumented(GetABasicToken.class);
   }
 }

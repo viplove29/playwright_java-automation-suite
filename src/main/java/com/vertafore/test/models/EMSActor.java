@@ -2,29 +2,25 @@ package com.vertafore.test.models;
 
 public class EMSActor {
   private String actorName;
-  private String context;
+  private String context = "";
   private String loginType = "";
   private String username = "";
   private String password = "";
+  private String version = "main";
 
   public EMSActor(
-      String actorName, String context, String loginType, String username, String password) {
+      String actorName,
+      String context,
+      String loginType,
+      String username,
+      String password,
+      String version) {
     this.actorName = actorName;
     this.context = context;
     this.loginType = loginType;
     this.username = username;
     this.password = password;
-  }
-
-  public EMSActor(String actorName, String context, String loginType) {
-    this.actorName = actorName;
-    this.context = context;
-    this.loginType = loginType;
-  }
-
-  public EMSActor(String actorName, String context) {
-    this.actorName = actorName;
-    this.context = context;
+    this.version = version;
   }
 
   public EMSActor() {}
@@ -51,6 +47,11 @@ public class EMSActor {
 
   public EMSActor withPassword(String password) {
     setPassword(password);
+    return this;
+  }
+
+  public EMSActor withVersion(String version) {
+    setVersion(version);
     return this;
   }
 
@@ -92,5 +93,13 @@ public class EMSActor {
 
   private void setPassword(String password) {
     this.password = password;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  private void setVersion(String version) {
+    this.version = version;
   }
 }
