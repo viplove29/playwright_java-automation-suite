@@ -1,4 +1,4 @@
-package LOB;
+package com.vertafore.test.services.LOB;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
