@@ -76,7 +76,7 @@ public class GET_BusinessUnitGroups {
     assertThat(jsonPath.getString("name")).isEqualTo("[Group two]");
     assertThat(jsonPath.getString("shortName")).isEqualTo("[Grp2  ]");
     assertThat(jsonPath.getString("division")).isEqualTo("[Division two]");
-    assertThat(jsonPath.getString("branch")).isEqualTo("[Division two]");
+    assertThat(jsonPath.getString("branch")).isEqualTo("[Branch two]");
     assertThat(jsonPath.getString("department")).isEqualTo("[Department two]");
     assertThat(jsonPath.getString("group")).isEqualTo("[Group two]");
     assertThat(jsonPath.getString("isHide")).isEqualTo("[false]");

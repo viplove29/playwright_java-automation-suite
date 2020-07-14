@@ -48,6 +48,10 @@ public class GET_LOB {
     assertThat(result != null).isTrue();
     assertThat(result.getClass().getDeclaredFields().length).isEqualTo(4);
 
+
+
+
+
     assertThat(
             LastResponse.received()
                 .answeredBy(doug)

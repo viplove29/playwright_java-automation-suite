@@ -38,10 +38,10 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    bob.should(seeThatResponse(res -> res.statusCode(200)));
+    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
     doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    doug.should(seeThatResponse(res -> res.statusCode(200)));
+    doug.should(seeThatResponse("Successfully gets response",res -> res.statusCode(200)));
 
     adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
@@ -54,6 +54,11 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(259, "string"));
-    bob.should(seeThatResponse(res -> res.statusCode(200)));
+    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+
+
+
+
+
   }
 }
