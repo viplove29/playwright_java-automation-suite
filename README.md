@@ -11,7 +11,7 @@ As previously stated, this project requires the Handlebars/Mustache Plugin - If 
  
 ## Initial Project Set Up
 
-Here are the steps you must follow when pulling down from this repo for the first time:
+Here are the steps you must follow in the order listed when pulling down from this repo for the first time:
 
 1. Clone the repo and open the project in IntelliJ. 
 - It will initially try to build itself and will fail. 
