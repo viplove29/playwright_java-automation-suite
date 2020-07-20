@@ -15,14 +15,17 @@ Here are the steps you must follow when pulling down from this repo for the firs
 
 1. Clone the repo and open the project in IntelliJ. 
     - It will initially try to build itself and will fail. 
+    
  
 2. Navigate to the terminal and enter the following command: 
-    ./gradlew wrapper --gradle-version=6.3
+    - ./gradlew wrapper --gradle-version=6.3
+
  
 3. Go into Settings -> Build, Execution, Deployment-> Build Tools -> Gradle
     - Set the Gradle JVM to "Use Project JDK". 
     - Make sure that "Build and run using Gradle" is also selected. 
     - Hit "Apply" and then "OK". 
+    - 
  
 4. Once settings is closed you should do a Rebuild (not a normal build). 
     - During rebuild it should pass the configure build task. 
