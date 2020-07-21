@@ -6,6 +6,7 @@ import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeT
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.models.ems.UnderwriterResponse;
 import com.vertafore.test.services.LOB.LOB;
 import com.vertafore.test.servicewrappers.UseUnderwritersTo;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class GET_Underwriters {
     bob.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
 
     Object result =
-            LastResponse.received().answeredBy(bob).getBody().jsonPath().getList("", Underwriters.class);
+            LastResponse.received().answeredBy(bob).getBody().jsonPath().getList("", UnderwriterResponse.class);
     assertThat(result != null).isTrue();
     assertThat(result.getClass().getDeclaredFields().length).isEqualTo(2);
 
