@@ -8,10 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.CustomerResponse;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
+import io.restassured.path.json.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.restassured.path.json.JsonPath;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -47,11 +46,10 @@ public class GET_Customers {
     bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
     doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    doug.should(seeThatResponse("Successfully gets response",res -> res.statusCode(200)));
+    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
     adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
-
   }
 
   @Test
@@ -63,7 +61,7 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
-    doug.should(seeThatResponse("Successfully gets response",res -> res.statusCode(200)));
+    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
     adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
     adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
@@ -73,40 +71,35 @@ public class GET_Customers {
 
     JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
 
-
     SerenityRest.lastResponse().prettyPrint();
 
-    CustomerResponse customer = LastResponse.received()
+    CustomerResponse customer =
+        LastResponse.received()
             .answeredBy(bob)
             .getBody()
             .jsonPath()
-            .getList("customerList", CustomerResponse.class).get(0);
+            .getList("customerList", CustomerResponse.class)
+            .get(0);
 
+    // Response body format assertions
+    assertThat(customer != null).isTrue();
+    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(10);
 
-  //Response body format assertions
-  assertThat(customer != null).isTrue();
-  assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(10);
+    // Response body field data assertions
+    assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
 
-  //Response body field data assertions
-  assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
+    assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
 
-  assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
+    assertThat(customer.getContactName()).isEqualTo("Lanelle Tremblay");
 
-  assertThat(customer.getContactName()).isEqualTo("Lanelle Tremblay");
+    assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
 
-  assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
+    assertThat(customer.getPrimaryEmail()).isEqualTo("reed.watsica@gmail.com");
 
-  assertThat(customer.getPrimaryEmail()).isEqualTo("reed.watsica@gmail.com");
+    assertThat(customer.getSecondaryEmail()).isEqualTo("manie.koepp@hotmail.com");
 
-  assertThat(customer.getSecondaryEmail()).isEqualTo("manie.koepp@hotmail.com");
+    assertThat(customer.getCustNo()).isEqualTo(186);
 
-  assertThat(customer.getCustNo()).isEqualTo(186);
-
-  assertThat(customer.getZipCode()).isEqualTo("80011");
-
-
-
-
-
+    assertThat(customer.getZipCode()).isEqualTo("80011");
   }
 }

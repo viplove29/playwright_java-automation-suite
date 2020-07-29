@@ -7,14 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.UnderwriterResponse;
-import com.vertafore.test.services.LOB.LOB;
 import com.vertafore.test.servicewrappers.UseUnderwritersTo;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.restassured.path.json.JsonPath;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -42,15 +38,15 @@ public class GET_Underwriters {
 
     bob.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
 
-
     bob.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
 
     Object result =
-            LastResponse.received().answeredBy(bob).getBody().jsonPath().getList("", UnderwriterResponse.class);
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", UnderwriterResponse.class);
     assertThat(result != null).isTrue();
     assertThat(result.getClass().getDeclaredFields().length).isEqualTo(2);
-
-
-
   }
 }
