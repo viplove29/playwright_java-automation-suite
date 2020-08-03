@@ -39,12 +39,12 @@ public class GET_Features {
   public void getAnAccessToken() {
     actors.addAll(
         List.of(
-//            new EMSActor().called("bob").withContext("userContext").withLoginType("vsso"),
-//            new EMSActor()
-//                .called("fred")
-//                .withContext("userContext")
-//                .withUsername("admin")
-//                .withPassword("AMS4all!"),
+            new EMSActor().called("bob").withContext("userContext").withLoginType("vsso"),
+            new EMSActor()
+                .called("fred")
+                .withContext("userContext")
+                .withUsername("admin")
+                .withPassword("AMS4all!"),
             new EMSActor().called("mary").withVersion("19R1")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
