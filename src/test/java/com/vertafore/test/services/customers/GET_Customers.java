@@ -32,7 +32,7 @@ public class GET_Customers {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("mary").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -112,22 +112,21 @@ public class GET_Customers {
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    //Get ALL Customers
+    // Get ALL Customers
     mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
 
     mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
-
-    //Get Customer by Customer Number
+    // Get Customer by Customer Number
     mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
 
     CustomerResponse customer =
-            LastResponse.received()
-                    .answeredBy(mary)
-                    .getBody()
-                    .jsonPath()
-                    .getList("customerList", CustomerResponse.class)
-                    .get(0);
+        LastResponse.received()
+            .answeredBy(mary)
+            .getBody()
+            .jsonPath()
+            .getList("customerList", CustomerResponse.class)
+            .get(0);
 
     // Response body format assertions
     assertThat(customer != null).isTrue();
@@ -149,7 +148,5 @@ public class GET_Customers {
     assertThat(customer.getCustNo()).isEqualTo(186);
 
     assertThat(customer.getZipCode()).isEqualTo("80011");
-
   }
-
 }
