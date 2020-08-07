@@ -7,6 +7,7 @@ import static net.serenitybdd.screenplay.Tasks.instrumented;
 import com.google.gson.Gson;
 import com.vertafore.test.abilities.HaveALoginKey;
 import com.vertafore.test.interactions.Get;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +67,9 @@ public class GetALoginKey implements Performable {
   }
 
   private static String makeGETAuthCall(Actor actor, String appKey) {
+
+    RestAssured.useRelaxedHTTPSValidation();
+
     Get.to(LOGIN_KEY_PATH).with(req -> req.queryParam("secretKey", appKey)).performAs(actor);
 
     String loginKey = LastResponse.received().answeredBy(actor).getBody().asString();
