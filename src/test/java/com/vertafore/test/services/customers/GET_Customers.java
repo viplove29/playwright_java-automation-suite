@@ -16,6 +16,7 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +31,8 @@ public class GET_Customers {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
+            new EMSActor().called("adam").withContext("adminContext"),
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -102,4 +104,52 @@ public class GET_Customers {
 
     assertThat(customer.getZipCode()).isEqualTo("80011");
   }
+
+  @Test
+  @WithTag("19R2")
+  public void customersReturnsCustomers19R2() {
+    Actor mary = theActorCalled("mary");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    //Get ALL Customers
+    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+
+    mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+
+
+    //Get Customer by Customer Number
+    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
+
+    CustomerResponse customer =
+            LastResponse.received()
+                    .answeredBy(mary)
+                    .getBody()
+                    .jsonPath()
+                    .getList("customerList", CustomerResponse.class)
+                    .get(0);
+
+    // Response body format assertions
+    assertThat(customer != null).isTrue();
+    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(10);
+
+    // Response body field data assertions
+    assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
+
+    assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
+
+    assertThat(customer.getContactName()).isEqualTo("Lanelle Tremblay");
+
+    assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
+
+    assertThat(customer.getPrimaryEmail()).isEqualTo("reed.watsica@gmail.com");
+
+    assertThat(customer.getSecondaryEmail()).isEqualTo("manie.koepp@hotmail.com");
+
+    assertThat(customer.getCustNo()).isEqualTo(186);
+
+    assertThat(customer.getZipCode()).isEqualTo("80011");
+
+  }
+
 }

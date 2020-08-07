@@ -45,7 +45,7 @@ public class GET_Features {
                 .withContext("userContext")
                 .withUsername("admin")
                 .withPassword("AMS4all!"),
-            new EMSActor().called("mary").withVersion("19R1")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R1")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
