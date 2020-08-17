@@ -40,12 +40,13 @@ public class POST_ActivityClaim {
     Actor mary = theActorCalled("mary");
 
     UseActivityTo ActivityAPI = new UseActivityTo();
-    HashMap<String, String> tokenBody = new HashMap<>();
-    tokenBody.put("action", "string");
-    tokenBody.put("ClaimId", "0886D269-F5C6-4428-9DD0-292C8820E5BD");
-    tokenBody.put("CustomerId", "F159F623-57E1-4482-B6C7-2AA87DB8B193");
-    tokenBody.put("transactionDate", "2020-08-14T16:31:33.225Z");
-    String jsonObject = new Gson().toJson(tokenBody);
+    HashMap<String, String> claimBody = new HashMap<>();
+    claimBody.put("action", "string");
+    claimBody.put("ClaimId", "0886D269-F5C6-4428-9DD0-292C8820E5BD");
+    claimBody.put("CustomerId", "F159F623-57E1-4482-B6C7-2AA87DB8B193");
+    claimBody.put("transactionDate", "2020-08-14T16:31:33.225Z");
+    
+    String jsonObject = new Gson().toJson(claimBody);
     mary.attemptsTo(ActivityAPI.POSTActivityClaimOnTheActivitiesController(jsonObject, "string"));
 
     mary.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
