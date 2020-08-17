@@ -59,7 +59,6 @@ public class POST_ActivityClaim {
             .getObject("", ActivityClaimResponse.class);
 
     assertThat(claimResponse != null).isTrue();
-    // assertThat(claimResponse.getClass().getDeclaredFields().length).isEqualTo(4);
 
     String activityClaimId = claimResponse.getActivityClaimId();
 
