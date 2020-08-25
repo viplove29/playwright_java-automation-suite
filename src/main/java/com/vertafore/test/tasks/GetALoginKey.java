@@ -67,6 +67,10 @@ public class GetALoginKey implements Performable {
   }
 
   private static String makeGETAuthCall(Actor actor, String appKey) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     RestAssured.useRelaxedHTTPSValidation();
 
     Get.to(LOGIN_KEY_PATH).with(req -> req.queryParam("secretKey", appKey)).performAs(actor);
