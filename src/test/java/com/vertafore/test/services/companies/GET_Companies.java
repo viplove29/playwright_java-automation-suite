@@ -31,7 +31,7 @@ public class GET_Companies {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("mary").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -96,7 +96,7 @@ public class GET_Companies {
 
     UseCompaniesTo companiesAPI = new UseCompaniesTo();
 
-    mary.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController("!!&", "string"));
+    mary.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController("!!%", "string"));
     mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
     SerenityRest.lastResponse().prettyPrint();
@@ -106,14 +106,15 @@ public class GET_Companies {
             .answeredBy(mary)
             .getBody()
             .jsonPath()
-            .getObject("", CompanyResponse.class);
+            .getList("", CompanyResponse.class)
+            .get(0);
 
     // Response body format assertions
     assertThat(company != null).isTrue();
     assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
 
     // Response body field data assertions
-    assertThat(company.getCompanyId()).isEqualTo("26143d85-f40b-43a2-b4c8-a874e948bff2");
-    assertThat(company.getName()).isEqualTo("Test Company");
+    assertThat(company.getCompanyId()).isEqualTo("cd401f72-90a7-476a-b5b1-f61a26a17a73");
+    assertThat(company.getName()).isEqualTo("AppCompany");
   }
 }

@@ -31,7 +31,7 @@ public class GET_CompanyAddresses {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("mary").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -104,7 +104,7 @@ public class GET_CompanyAddresses {
     UseCompanyAddressesTo companyAddressesAPI = new UseCompanyAddressesTo();
 
     mary.attemptsTo(
-        companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated("!!&", "string"));
+        companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated("!!%", "string"));
     mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
 
     SerenityRest.lastResponse().prettyPrint();
@@ -123,7 +123,7 @@ public class GET_CompanyAddresses {
 
     // Response body field data assertions
     assertThat(companyAddress.getCompanyAddressId())
-        .isEqualTo("2c360a92-9e43-4335-a07d-aebd7b84cbd1");
+        .isEqualTo("b7278590-8f0e-4406-b79f-fad801e41ccc");
     assertThat(companyAddress.getEmail() == null).isTrue();
   }
 }
