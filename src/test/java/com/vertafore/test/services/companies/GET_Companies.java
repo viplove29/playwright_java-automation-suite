@@ -54,7 +54,7 @@ public class GET_Companies {
   }
 
   @Test
-  public void customersReturnsOneCustomer() {
+  public void companiesReturnsOneCompany() {
     Actor bob = theActorCalled("bob");
     Actor doug = theActorCalled("doug");
     Actor adam = theActorCalled("adam");
@@ -91,7 +91,7 @@ public class GET_Companies {
 
   @Test
   @WithTag("19R2")
-  public void customersReturnsCustomers19R2() {
+  public void companiesReturnsCompanies19R2() {
     Actor mary = theActorCalled("mary");
 
     UseCompaniesTo companiesAPI = new UseCompaniesTo();
@@ -106,8 +106,7 @@ public class GET_Companies {
             .answeredBy(mary)
             .getBody()
             .jsonPath()
-            .getList("", CompanyResponse.class)
-            .get(0);
+            .getObject("", CompanyResponse.class);
 
     // Response body format assertions
     assertThat(company != null).isTrue();
