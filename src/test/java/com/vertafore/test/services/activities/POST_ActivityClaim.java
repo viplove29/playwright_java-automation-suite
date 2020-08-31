@@ -12,6 +12,7 @@ import com.vertafore.test.servicewrappers.UseActivityTo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -29,7 +30,7 @@ public class POST_ActivityClaim {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("mary").withVersion("19R2")));
+    actors.addAll(List.of(new EMSActor().called("mary").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -41,13 +42,15 @@ public class POST_ActivityClaim {
 
     UseActivityTo ActivityAPI = new UseActivityTo();
     HashMap<String, String> claimBody = new HashMap<>();
+    String randomClaimId = UUID.randomUUID().toString();
+    String randomCustId = UUID.randomUUID().toString();
+
     claimBody.put("action", "string");
-    claimBody.put("ClaimId", "0886D269-F5C6-4428-9DD0-292C8820E5BD");
-    claimBody.put("CustomerId", "F159F623-57E1-4482-B6C7-2AA87DB8B193");
+    claimBody.put("ClaimId", randomClaimId);
+    claimBody.put("CustomerId", randomCustId);
     claimBody.put("transactionDate", "2020-08-14T16:31:33.225Z");
     
-    String jsonObject = new Gson().toJson(claimBody);
-    mary.attemptsTo(ActivityAPI.POSTActivityClaimOnTheActivitiesController(jsonObject, "string"));
+    mary.attemptsTo(ActivityAPI.POSTActivityClaimOnTheActivitiesController(claimBody, "string"));
 
     mary.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
 
@@ -61,9 +64,7 @@ public class POST_ActivityClaim {
 
     assertThat(claimResponse != null).isTrue();
 
-    String activityClaimId = claimResponse.getActivityClaimId();
-
-    mary.attemptsTo(ActivityAPI.GETActivityOnTheActivitiesController(activityClaimId, "string"));
+    mary.attemptsTo(ActivityAPI.GETActivityOnTheActivitiesController(randomClaimId, "string"));
 
     mary.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
   }
