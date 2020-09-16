@@ -149,4 +149,24 @@ public class GET_Customers {
 
     assertThat(customer.getZipCode()).isEqualTo("80011");
   }
+
+  @Test
+  public void customerByPhoneReturnsCustomerByPhone() {
+    Actor bob = theActorCalled("bob");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    bob.attemptsTo(
+        customersApi.GETCustomersContactPhoneOnTheCustomersController("7209512000", "string"));
+
+    CustomerResponse customer =
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("customerList", CustomerResponse.class)
+            .get(0);
+
+    assertThat(customer != null).isTrue();
+  }
 }
