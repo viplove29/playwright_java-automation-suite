@@ -1,6 +1,7 @@
 package {{package}};
 
 {{> import_statements}}
+import com.google.gson.Gson;
 
 {{#operations}}
   public class {{classname}} {
@@ -36,7 +37,7 @@ String cookies = System.getProperty("cookies") != null ? System.getProperty("coo
 .to(hydratedPath)
 .with(List.of(
 RequestSpecification::relaxedHTTPSValidation,
-req -> req.contentType(String.valueOf(contentType)),
+req -> req.contentType("application/json"),
 req -> req.cookie(cookies),
 req -> req.header("Authorization", "Bearer " + theAccessTokenOf(actor)),
 {{#hasFormParams}}{{#formParams}}
