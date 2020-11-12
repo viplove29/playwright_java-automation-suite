@@ -5,6 +5,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.models.ems.CustomerContactResponse;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
 import io.restassured.path.json.JsonPath;
 import java.util.ArrayList;
@@ -65,23 +66,22 @@ public class GET_CustomerContacts {
 
     JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
 
-    String contactResponse = SerenityRest.lastResponse().toString();
+    // String contactResponse = SerenityRest.lastResponse().toString();
+
+    CustomerContactResponse customerContact =
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", CustomerContactResponse.class)
+            .get(0);
 
     /*
-      CustomerContactResponse customerContact =
-          LastResponse.received()
-              .answeredBy(bob)
-              .getBody()
-              .jsonPath()
-              .getList("", CustomerContactResponse.class)
-              .get(0);
+     assertThat(contactResponse != null).isTrue();
+     assertThat(contactResponse.contains("e9b9a2a4-356c-436b-a298-1b96a6eca43b"));
+     assertThat(contactResponse.contains("ForGridExport"));
+
     */
-
-
-    assertThat(contactResponse != null).isTrue();
-    assertThat(contactResponse.contains("e9b9a2a4-356c-436b-a298-1b96a6eca43b"));
-    assertThat(contactResponse.contains("ForGridExport"));
-
 
   }
 }

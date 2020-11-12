@@ -47,7 +47,8 @@ public class GET_EmpCodeToSeqNumber {
     SerenityRest.lastResponse().prettyPrint();
     /*
     doug.attemptsTo(utilityApi.GETCustomersOnTheCustomersController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200); */
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    */
 
     adam.attemptsTo(utilityApi.GETUtilityEmpCodeToSeqNumberOnTheUtilityController("!#^", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(401);
