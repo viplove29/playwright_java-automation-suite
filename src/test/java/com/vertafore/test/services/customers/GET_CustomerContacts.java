@@ -76,12 +76,8 @@ public class GET_CustomerContacts {
             .getList("", CustomerContactResponse.class)
             .get(0);
 
-    /*
-     assertThat(contactResponse != null).isTrue();
-     assertThat(contactResponse.contains("e9b9a2a4-356c-436b-a298-1b96a6eca43b"));
-     assertThat(contactResponse.contains("ForGridExport"));
+    assertThat(customerContact.getCustId()).isEqualTo("e9b9a2a4-356c-436b-a298-1b96a6eca43b");
 
-    */
 
   }
 }
