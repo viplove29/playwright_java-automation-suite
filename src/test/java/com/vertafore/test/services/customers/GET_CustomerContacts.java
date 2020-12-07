@@ -44,12 +44,10 @@ public class GET_CustomerContacts {
 
     bob.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    SerenityRest.lastResponse().prettyPrint();
-    /*
-        doug.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
-        // doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
-        assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    */
+
+    doug.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
     adam.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(401);
   }
@@ -66,8 +64,6 @@ public class GET_CustomerContacts {
 
     JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
 
-    // String contactResponse = SerenityRest.lastResponse().toString();
-
     CustomerContactResponse customerContact =
         LastResponse.received()
             .answeredBy(bob)
@@ -77,7 +73,7 @@ public class GET_CustomerContacts {
             .get(0);
 
     assertThat(customerContact.getCustId()).isEqualTo("e9b9a2a4-356c-436b-a298-1b96a6eca43b");
-
-
+    assertThat(customerContact.getCustNo()).isEqualTo(5);
+    assertThat(customerContact.getName()).isEqualTo("ForGridExport");
   }
 }
