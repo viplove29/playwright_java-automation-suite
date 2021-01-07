@@ -32,7 +32,7 @@ public class GET_Customers {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -45,13 +45,13 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test
@@ -63,13 +63,13 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
 
@@ -115,7 +115,7 @@ public class GET_Customers {
     // Get ALL Customers
     mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
 
-    mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // Get Customer by Customer Number
     mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
@@ -157,7 +157,7 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     bob.attemptsTo(
-        customersApi.GETCustomersContactPhoneOnTheCustomersController("7209512000", "string"));
+        customersApi.GETCustomersContactPhoneOnTheCustomersController("4111600767", "string"));
 
     CustomerResponse customer =
         LastResponse.received()

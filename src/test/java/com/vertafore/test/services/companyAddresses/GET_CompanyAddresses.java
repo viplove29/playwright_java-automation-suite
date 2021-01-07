@@ -31,7 +31,7 @@ public class GET_CompanyAddresses {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -45,15 +45,15 @@ public class GET_CompanyAddresses {
 
     bob.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated(null, "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     doug.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated(null, "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated(null, "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test
@@ -66,15 +66,15 @@ public class GET_CompanyAddresses {
 
     doug.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated("!!%", "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated("!!%", "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     bob.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated("!!%", "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     SerenityRest.lastResponse().prettyPrint();
 
@@ -105,7 +105,7 @@ public class GET_CompanyAddresses {
 
     mary.attemptsTo(
         companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated("!!%", "string"));
-    mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     SerenityRest.lastResponse().prettyPrint();
 

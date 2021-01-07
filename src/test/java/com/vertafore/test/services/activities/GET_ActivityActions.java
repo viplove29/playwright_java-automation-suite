@@ -11,6 +11,7 @@ import com.vertafore.test.servicewrappers.UseActivityTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -31,7 +32,7 @@ public class GET_ActivityActions {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("mary").withVersion("19R2").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -45,7 +46,7 @@ public class GET_ActivityActions {
 
     mary.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController());
 
-    mary.should(seeThatResponse("Activity Actions Returned", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActionResponse action =
         LastResponse.received()
