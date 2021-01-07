@@ -31,7 +31,7 @@ public class GET_Companies {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -44,13 +44,13 @@ public class GET_Companies {
     UseCompaniesTo companiesAPI = new UseCompaniesTo();
 
     bob.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     doug.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test
@@ -62,13 +62,13 @@ public class GET_Companies {
     UseCompaniesTo companiesAPI = new UseCompaniesTo();
 
     doug.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController("!!&", "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController("!!&", "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     bob.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController("!!&", "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     SerenityRest.lastResponse().prettyPrint();
 
@@ -97,7 +97,7 @@ public class GET_Companies {
     UseCompaniesTo companiesAPI = new UseCompaniesTo();
 
     mary.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController("!!%", "string"));
-    mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     SerenityRest.lastResponse().prettyPrint();
 

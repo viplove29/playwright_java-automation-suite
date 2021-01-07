@@ -3,12 +3,14 @@ package com.vertafore.test.services.underwriters;
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.*;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.servicewrappers.UseUnderwritersTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.thucydides.core.annotations.WithTag;
@@ -26,7 +28,7 @@ public class GET_Underwriters {
     actors.addAll(
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -40,7 +42,7 @@ public class GET_Underwriters {
 
     mary.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
 
-    mary.should(seeThatResponse("successfully gets underwriters", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     //    UnderwriterResponse underwriter =
     //        LastResponse.received()

@@ -11,6 +11,7 @@ import com.vertafore.test.servicewrappers.UseVendorsTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -43,13 +44,13 @@ public class GET_Vendors {
     UseVendorsTo vendorsApi = new UseVendorsTo();
 
     bob.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    bob.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     doug.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    doug.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    adam.should(seeThatResponse("Context is not valid", res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test
@@ -60,7 +61,7 @@ public class GET_Vendors {
     UseVendorsTo vendorsApi = new UseVendorsTo();
 
     mary.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    mary.should(seeThatResponse("Successfully gets response", res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     VendorResponse vendorResponse =
         LastResponse.received()

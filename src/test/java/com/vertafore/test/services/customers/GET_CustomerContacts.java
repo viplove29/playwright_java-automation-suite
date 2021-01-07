@@ -49,7 +49,7 @@ public class GET_CustomerContacts {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(401);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test

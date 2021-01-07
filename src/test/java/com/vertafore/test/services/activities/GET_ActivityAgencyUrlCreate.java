@@ -32,7 +32,7 @@ public class GET_ActivityAgencyUrlCreate {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -48,17 +48,17 @@ public class GET_ActivityAgencyUrlCreate {
     bob.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Company", randomEntityId, "string"));
-    bob.should(seeThatResponse(res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     doug.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Employee", randomEntityId, "string"));
-    doug.should(seeThatResponse(res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Customer", randomEntityId, "string"));
-    adam.should(seeThatResponse(res -> res.statusCode(403)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test
@@ -71,7 +71,7 @@ public class GET_ActivityAgencyUrlCreate {
     mary.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Company", randomEntityId, "string"));
-    mary.should(seeThatResponse(res -> res.statusCode(200)));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     SerenityRest.lastResponse().prettyPrint();
     ActivityUrlResponse urlResponse =
