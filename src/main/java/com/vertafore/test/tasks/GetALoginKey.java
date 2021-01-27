@@ -1,6 +1,7 @@
 package com.vertafore.test.tasks;
 
 import static com.vertafore.test.abilities.HaveALoginKey.contextForActor;
+import static com.vertafore.test.databases.SiteDB.getUserAppKey;
 import static com.vertafore.test.util.EnvVariables.*;
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
@@ -28,7 +29,7 @@ public class GetALoginKey implements Performable {
 
     switch (context) {
       case "userContext":
-        appKey = USER_APP_KEY;
+        appKey = getUserAppKey(context);
         loginKey = makePOSTAuthCall(actor, appKey);
         break;
       case "appContext":
