@@ -100,6 +100,8 @@ dependencies {
     implementation group: 'net.serenity-bdd', name: 'serenity-screenplay-rest', version: '2.2.1'
     implementation group: 'net.serenity-bdd', name: 'serenity-ensure', version: '2.2.1'
     implementation group: 'net.serenity-bdd', name: 'serenity-junit', version: '2.2.1'
+    // jdbc driver
+    implementation group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '9.2.0.jre8'
     // Vertafore
     implementation 'com.vertafore.core:foundation:11.0.0-SNAPSHOT'
     // openAPI

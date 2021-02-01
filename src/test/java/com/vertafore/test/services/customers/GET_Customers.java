@@ -26,31 +26,29 @@ public class GET_Customers {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
+    // new EMSActor().called("doug").withContext("appContext"),
+    // new EMSActor().called("adam").withContext("adminContext"),
+    // new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
   @Test
   public void customersReturnsAllCustomers() {
     Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    // Actor doug = theActorCalled("doug");
+    // Actor adam = theActorCalled("adam");
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
     bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    // doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    // assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+    // adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    // assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
   @Test

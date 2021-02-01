@@ -29,7 +29,7 @@ public class GetALoginKey implements Performable {
 
     switch (context) {
       case "userContext":
-        appKey = getUserAppKey(context);
+        appKey = getUserAppKey("AADM");
         loginKey = makePOSTAuthCall(actor, appKey);
         break;
       case "appContext":
