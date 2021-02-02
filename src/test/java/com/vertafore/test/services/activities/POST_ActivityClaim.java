@@ -5,7 +5,6 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.google.gson.Gson;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.ActivityClaimResponse;
 import com.vertafore.test.servicewrappers.UseActivityTo;
@@ -49,7 +48,7 @@ public class POST_ActivityClaim {
     claimBody.put("ClaimId", randomClaimId);
     claimBody.put("CustomerId", randomCustId);
     claimBody.put("transactionDate", "2020-08-14T16:31:33.225Z");
-    
+
     mary.attemptsTo(ActivityAPI.POSTActivityClaimOnTheActivitiesController(claimBody, "string"));
 
     mary.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));

@@ -2,7 +2,6 @@ package com.vertafore.test.services.features;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
-import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
@@ -13,7 +12,6 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
-import net.serenitybdd.screenplay.conditions.Check;
 import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;

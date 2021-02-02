@@ -15,6 +15,10 @@ public class EnvVariables {
   public static final String LOGIN_APP_PATH = getProperty("login_app_path");
   public static final String LOGIN_ADMIN_PATH = getProperty("login_admin_path");
   public static final String LOGIN_DEPRECATED_PATH = getProperty("login_deprecated_path");
+  public static final String SITEDB_SERVER = getProperty("site_db.server");
+  public static final String SITEDB_USER = getProperty("site_db.user");
+  public static final String SITEDB_PASSWORD = getProperty("site_db.password");
+  public static final String SITEDB_DATABASE = getProperty("site_db.database");
 
   public static String USERNAME(String version) {
     return getProperty(version + ".username");
