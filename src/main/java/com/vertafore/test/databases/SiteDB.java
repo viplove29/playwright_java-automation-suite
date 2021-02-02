@@ -17,43 +17,46 @@ public class SiteDB extends SharedDB {
     closeConnection(SITEDB_DATABASE);
   }
 
-  public static String getUserAppKey(String appType) {
+  public static String getAppKey(String appType, String storedKey) {
     openDB();
     Connection connection = Serenity.sessionVariableCalled(SITEDB_DATABASE);
     if (connection == null) {
-      return USER_APP_KEY;
+      return storedKey;
     } else {
       String appId = getAppId(appType);
-      String getRowQuery =
+      String query =
           "SELECT * FROM [dbo].[EMS_AppKey]\n"
               + "WHERE AppId = '"
               + appId
               + "'\n"
               + "AND KeyType = 'T'";
       try {
-        ResultSet resultSet = connection.createStatement().executeQuery(getRowQuery);
-        resultSet.next();
-        return resultSet.getString("AppKey");
+        String appKey;
+        ResultSet resultSet = connection.createStatement().executeQuery(query);
+        if (!resultSet.isBeforeFirst()) {
+          appKey = storedKey;
+        } else {
+          resultSet.next();
+          appKey = resultSet.getString(("AppKey"));
+        }
+        return appKey;
       } catch (SQLException e) {
-        System.out.println(getRowQuery);
+        System.out.println(query);
         throw new RuntimeException(e);
       }
     }
   }
 
   public static String getAppId(String appType) {
-    String getRowQuery =
-        "SELECT * FROM [dbo].[EMS_App] WHERE AppType = '"
-            + appType
-            + "'"
-            + "AND AppName = 'AMS360'";
+    String query =
+        "SELECT * FROM [dbo].[EMS_App] WHERE AppType = '" + appType + "'" + "AND Status = 'A'";
     Connection connection = Serenity.sessionVariableCalled(SITEDB_DATABASE);
     try {
-      ResultSet resultSet = connection.createStatement().executeQuery(getRowQuery);
+      ResultSet resultSet = connection.createStatement().executeQuery(query);
       resultSet.next();
       return resultSet.getString("AppId");
     } catch (SQLException e) {
-      System.out.println(getRowQuery);
+      System.out.println(query);
       throw new RuntimeException(e);
     }
   }
