@@ -29,17 +29,17 @@ public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}}{{^parent}}
   {{/isContainer}}
   {{^isContainer}}
     {{#isDate}}
-      @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE)
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     {{/isDate}}
     {{#isDateTime}}
-      @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME)
+
     {{/isDateTime}}
     private {{>nullableDataType}} {{name}}{{#isNullable}} = JsonNullable.undefined(){{/isNullable}}{{^isNullable}}{{#defaultValue}} = {{{.}}}{{/defaultValue}}{{/isNullable}};
   {{/isContainer}}
 
 {{/vars}}
 {{#vars}}
-  public {{classname}} {{name}}({{{datatypeWithEnum}}} {{name}}) {
+  public {{classname}} {{name}}({{>nullableDataType}} {{name}}) {
   this.{{name}} = {{#isNullable}}JsonNullable.of({{name}}){{/isNullable}}{{^isNullable}}{{name}}{{/isNullable}};
   return this;
   }
