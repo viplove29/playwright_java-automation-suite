@@ -1,1 +1,1 @@
-{{#isNullable}}JsonNullable<{{{datatypeWithEnum}}}>{{/isNullable}}{{^isNullable}}{{{datatypeWithEnum}}}{{/isNullable}}
+{{#isDateTime}}DateTime{{/isDateTime}}{{^isDateTime}}{{#isNullable}}JsonNullable<{{{datatypeWithEnum}}}>{{/isNullable}}{{^isNullable}}{{{datatypeWithEnum}}}{{/isNullable}}{{/isDateTime}}
