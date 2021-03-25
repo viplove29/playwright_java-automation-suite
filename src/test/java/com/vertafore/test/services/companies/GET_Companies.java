@@ -1,6 +1,7 @@
 package com.vertafore.test.services.companies;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
+import static com.vertafore.test.util.EnvVariables.*;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -84,7 +85,11 @@ public class GET_Companies {
     assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
 
     // Response body field data assertions
-    assertThat(company.getCompanyId()).isEqualTo("26143d85-f40b-43a2-b4c8-a874e948bff2");
+    if (BASE_URL.equals("https://botd-q-360iis-1.devop.vertafore.com/ems")) {
+      assertThat(company.getCompanyId()).isEqualTo("26143d85-f40b-43a2-b4c8-a874e948bff2");
+    } else {
+      assertThat(company.getCompanyId()).isEqualTo("434e81e5-f4ab-487b-a505-11db8e805151");
+    }
     assertThat(company.getName()).isEqualTo("Test Company");
   }
 
@@ -113,7 +118,11 @@ public class GET_Companies {
     assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
 
     // Response body field data assertions
-    assertThat(company.getCompanyId()).isEqualTo("cd401f72-90a7-476a-b5b1-f61a26a17a73");
+    if (BASE_URL.equals("https://botd-q-360iis-1.devop.vertafore.com/ems")) {
+      assertThat(company.getCompanyId()).isEqualTo("cd401f72-90a7-476a-b5b1-f61a26a17a73");
+    } else {
+      assertThat(company.getCompanyId()).isEqualTo("6d303ca7-4304-4c9f-babc-d08913d1d988");
+    }
     assertThat(company.getName()).isEqualTo("AppCompany");
   }
 }

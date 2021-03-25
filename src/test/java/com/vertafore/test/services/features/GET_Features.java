@@ -42,9 +42,9 @@ public class GET_Features {
             new EMSActor()
                 .called("fred")
                 .withContext("userContext")
-                .withUsername("admin")
-                .withPassword("AMS4all!"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R1")));
+                .withUsername("qaown")
+                .withPassword("P@ssw0rd2"),
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -63,8 +63,8 @@ public class GET_Features {
   }
 
   @Test
-  @WithTag("19R1")
-  public void featuresReturnsAllFeatures19R1() {
+  @WithTag("19R2")
+  public void featuresReturnsAllFeatures19R2() {
     Actor mary = theActorCalled("mary");
 
     UseFeaturesTo featuresApi = new UseFeaturesTo();
