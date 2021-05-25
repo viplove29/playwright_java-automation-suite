@@ -44,15 +44,18 @@ public class GET_Submissions {
     UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
 
     bob.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsController(customerGUID, true, "string"));
+        submissionsAPI.GETSubmissionsOnTheSubmissionsController(
+            customerGUID, null, true, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    doug.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsController(customerGUID, true, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
+    //    doug.attemptsTo(
+    //        submissionsAPI.GETSubmissionsOnTheSubmissionsController(
+    //            customerGUID, datetime, true, "string"));
+    //    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    //
     adam.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsController(customerGUID, true, "string"));
+        submissionsAPI.GETSubmissionsOnTheSubmissionsController(
+            customerGUID, null, true, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
   }
 
@@ -65,7 +68,8 @@ public class GET_Submissions {
     UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
 
     bob.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsController(customerGUID, false, "string"));
+        submissionsAPI.GETSubmissionsOnTheSubmissionsController(
+            customerGUID, null, false, "string"));
     SerenityRest.lastResponse().prettyPrint();
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
@@ -80,8 +84,9 @@ public class GET_Submissions {
 
     // change the customer to one that has zero policies
     customerGUID = "39B604F3-BC29-4FCB-A4DF-001D893C6BAC";
-    doug.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsController(customerGUID, false, "string"));
+    bob.attemptsTo(
+        submissionsAPI.GETSubmissionsOnTheSubmissionsController(
+            customerGUID, null, false, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<BasicPolicyInfoResponse> zeroPolicies =
@@ -103,7 +108,8 @@ public class GET_Submissions {
     UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
 
     mary.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsController(customerGUID, false, "string"));
+        submissionsAPI.GETSubmissionsOnTheSubmissionsController(
+            customerGUID, null, false, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<BasicPolicyInfoResponse> fourPolicies =
