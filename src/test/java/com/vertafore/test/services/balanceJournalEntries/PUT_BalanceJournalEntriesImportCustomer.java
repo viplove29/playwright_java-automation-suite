@@ -60,8 +60,8 @@ public class PUT_BalanceJournalEntriesImportCustomer {
       CustomerResponse customer = customers.get(customerNumber);
       UsePoliciesTo policiesApi = new UsePoliciesTo();
       bob.attemptsTo(
-          policiesApi.GETPoliciesOnThePoliciesController(
-              customer.getCustId(), null, true, "string"));
+          policiesApi.GETPoliciesOnThePoliciesControllerDeprecated(
+              customer.getCustId(), true, "string"));
 
       List<BasicPolicyInfoResponse> policies =
           LastResponse.received()
