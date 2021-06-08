@@ -31,7 +31,7 @@ public class GET_Companies {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("mary").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -85,11 +85,12 @@ public class GET_Companies {
     assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
 
     // Response body field data assertions
-    if (BASE_URL.equals("https://botd-q-360iis-1.devop.vertafore.com/ems")) {
-      assertThat(company.getCompanyId()).isEqualTo("26143d85-f40b-43a2-b4c8-a874e948bff2");
-    } else {
-      assertThat(company.getCompanyId()).isEqualTo("434e81e5-f4ab-487b-a505-11db8e805151");
-    }
+    //    if (BASE_URL.equals("https://botd-q-360iis-1.devop.vertafore.com/ems")) {
+    //      assertThat(company.getCompanyId()).isEqualTo("26143d85-f40b-43a2-b4c8-a874e948bff2");
+    //    } else {
+    //      assertThat(company.getCompanyId()).isEqualTo("434e81e5-f4ab-487b-a505-11db8e805151");
+    //    }
+    assertThat(company.getCompanyId()).isEqualTo("26143d85-f40b-43a2-b4c8-a874e948bff2");
     assertThat(company.getName()).isEqualTo("Test Company");
   }
 

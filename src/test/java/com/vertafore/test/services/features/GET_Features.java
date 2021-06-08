@@ -38,13 +38,13 @@ public class GET_Features {
   public void getAnAccessToken() {
     actors.addAll(
         List.of(
-            new EMSActor().called("bob").withContext("userContext"),
+            new EMSActor().called("bob").withContext("userContext").withLoginType("vsso"),
             new EMSActor()
                 .called("fred")
                 .withContext("userContext")
                 .withUsername("qaown")
                 .withPassword("P@ssw0rd2"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("mary").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
