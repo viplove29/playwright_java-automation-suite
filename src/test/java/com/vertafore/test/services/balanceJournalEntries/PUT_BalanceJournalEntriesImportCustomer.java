@@ -53,11 +53,21 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     // Check each customer until a policy is found
     boolean policyFound = false;
-    int customerNumber = 0;
     String customerId = "";
     String policyId = "";
-    while (!policyFound && customerNumber < customers.size()) {
+
+    List<Integer> checkedCustNums = new ArrayList<>();
+    Random randNum = new Random();
+    int customerNumber;
+
+    while (!policyFound && checkedCustNums.size() < customers.size()) {
+      customerNumber = randNum.nextInt(customers.size());
+      while (checkedCustNums.contains(customerNumber)) {
+        customerNumber = randNum.nextInt(customers.size());
+      }
+      checkedCustNums.add(customerNumber);
       CustomerResponse customer = customers.get(customerNumber);
+
       UsePoliciesTo policiesApi = new UsePoliciesTo();
       bob.attemptsTo(
           policiesApi.GETPoliciesOnThePoliciesControllerDeprecated(
@@ -79,7 +89,6 @@ public class PUT_BalanceJournalEntriesImportCustomer {
       } else {
         System.out.println("No policies exist for Customer Id " + customer.getCustId());
       }
-      customerNumber++;
     }
 
     // If no policy is found, the test cannot be run
@@ -97,14 +106,14 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     String testCsv = generateCSVRowForFirstPolicyFound();
 
     // Create body and import first BJE
-    String firstCsv = headers + testCsv + "61424,5,1,0,Monoline" + System.lineSeparator();
+    String firstCsv = headers + testCsv + "61424,5,1,0,Automated Test Part 1" + System.lineSeparator();
     String firstCsvContent = new String(Base64.getEncoder().encode(firstCsv.getBytes()));
     HashMap<String, Object> body1 = new HashMap<>();
     body1.put("balanceJournalEntryType", "Customer");
     body1.put("csvFileData", firstCsvContent);
     body1.put("journalEntryDate", "2021-03-11T15:39:47.337Z");
     body1.put("ignoreWarnings", "true");
-    body1.put("description", "Test Description");
+    body1.put("description", "Automated Collection Test Part 1");
 
     UseBalanceJournalEntriesTo balanceJournalEntriesApi = new UseBalanceJournalEntriesTo();
 
@@ -124,19 +133,19 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     assertThat(response1.getBalanceJournalEntryCollectionId()).isNotNull();
     assertThat(response1.getBalanceJournalEntryType()).isEqualTo("Customer");
-    assertThat(response1.getCollectionDescription()).isEqualTo("Test Description");
+    assertThat(response1.getCollectionDescription()).isEqualTo("Automated Collection Test Part 1");
     assertThat(response1.getNumberOfBalanceJournalEntries()).isEqualTo(1);
     assertThat(response1.getNumberOfErrors()).isEqualTo(0);
 
     // Create body from a different CSV and import
-    String secondCsv = testCsv + "50,15,6,0,Homeowners" + System.lineSeparator();
+    String secondCsv = testCsv + "50,15,6,0,Automated Test Part 2" + System.lineSeparator();
     String secondCsvContent = new String(Base64.getEncoder().encode(secondCsv.getBytes()));
     HashMap<String, Object> body2 = new HashMap<>();
     body2.put("balanceJournalEntryType", "Customer");
     body2.put("csvFileData", secondCsvContent);
     body2.put("journalEntryDate", "2021-03-18T11:09:47.337Z");
     body2.put("ignoreWarnings", "true");
-    body2.put("description", "test description");
+    body2.put("description", "Automated Collection Test Part 2");
 
     bob.attemptsTo(
         balanceJournalEntriesApi
@@ -168,12 +177,14 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     Actor bob = theActorCalled("bob");
 
     String headers = generateCSVHeaders();
-    String csvRow = generateCSVRowForFirstPolicyFound();
 
-    // Create csv with many of the same row
+    // Create csv with different customers and policies
     StringBuilder testCsv = new StringBuilder(headers);
     for (int i = 0; i < balanceJournalEntriesToCreate; i++) {
-      testCsv.append(csvRow).append("61424,5,1,0,Monoline").append(System.lineSeparator());
+      testCsv
+          .append(generateCSVRowForFirstPolicyFound())
+          .append("61424,5,1,0,Automated Batch Test")
+          .append(System.lineSeparator());
     }
 
     String csvContent = new String(Base64.getEncoder().encode(testCsv.toString().getBytes()));
