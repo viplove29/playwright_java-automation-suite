@@ -84,14 +84,14 @@ public class GET_Customers {
 
     // Response body format assertions
     assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(10);
+    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(11);
 
     // Response body field data assertions
     assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
 
     assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
 
-    assertThat(customer.getContactName()).isEqualTo("Lanelle Tremblay");
+    assertThat(customer.getContactName()).isEqualTo("Yronwood of Yronwood");
 
     assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
 
@@ -129,14 +129,14 @@ public class GET_Customers {
 
     // Response body format assertions
     assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(10);
+    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(11);
 
     // Response body field data assertions
     assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
 
     assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
 
-    assertThat(customer.getContactName()).isEqualTo("Lanelle Tremblay");
+    assertThat(customer.getContactName()).isEqualTo("Yronwood of Yronwood");
 
     assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
 

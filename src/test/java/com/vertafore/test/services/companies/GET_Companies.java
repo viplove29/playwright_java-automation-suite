@@ -119,7 +119,7 @@ public class GET_Companies {
     assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
 
     // Response body field data assertions
-    if (BASE_URL.equals("https://botd-q-360iis-1.devop.vertafore.com/ems")) {
+    if (BASE_URL.equals("https://ems-qa1.devop.vertafore.com")) {
       assertThat(company.getCompanyId()).isEqualTo("cd401f72-90a7-476a-b5b1-f61a26a17a73");
     } else {
       assertThat(company.getCompanyId()).isEqualTo("6d303ca7-4304-4c9f-babc-d08913d1d988");
