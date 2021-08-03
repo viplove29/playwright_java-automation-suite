@@ -1,4 +1,4 @@
-package com.vertafore.test.services.LOB;
+package com.vertafore.test.services.lines_of_business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
