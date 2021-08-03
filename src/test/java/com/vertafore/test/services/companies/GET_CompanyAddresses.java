@@ -1,4 +1,4 @@
-package com.vertafore.test.services.companyAddresses;
+package com.vertafore.test.services.companies;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
