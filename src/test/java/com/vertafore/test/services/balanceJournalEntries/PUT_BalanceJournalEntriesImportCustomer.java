@@ -4,6 +4,7 @@ import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.sun.xml.bind.v2.TODO;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.BasicPolicyInfoResponse;
 import com.vertafore.test.models.ems.CustomerResponse;
@@ -56,18 +57,19 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     String customerId = "";
     String policyId = "";
 
-    List<Integer> checkedCustNums = new ArrayList<>();
+    List<Integer> checkedCustIndexes = new ArrayList<>();
     Random randNum = new Random();
-    int customerNumber;
+    int customerIndex;
 
-    while (!policyFound && checkedCustNums.size() < customers.size()) {
-      customerNumber = randNum.nextInt(customers.size());
-      while (checkedCustNums.contains(customerNumber)) {
-        customerNumber = randNum.nextInt(customers.size());
+    while (!policyFound && checkedCustIndexes.size() < customers.size()) {
+      customerIndex = randNum.nextInt(customers.size());
+      while (checkedCustIndexes.contains(customerIndex)) {
+        customerIndex = randNum.nextInt(customers.size());
       }
-      checkedCustNums.add(customerNumber);
-      CustomerResponse customer = customers.get(customerNumber);
+      checkedCustIndexes.add(customerIndex);
+      CustomerResponse customer = customers.get(customerIndex);
 
+     //TODO change this endpoint to POST_policies/search
       UsePoliciesTo policiesApi = new UsePoliciesTo();
       bob.attemptsTo(
           policiesApi.GETPoliciesOnThePoliciesControllerDeprecated(
