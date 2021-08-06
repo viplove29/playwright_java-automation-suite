@@ -4,7 +4,6 @@ import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.sun.xml.bind.v2.TODO;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.BasicPolicyInfoResponse;
 import com.vertafore.test.models.ems.CustomerResponse;
@@ -12,6 +11,7 @@ import com.vertafore.test.models.ems.ImportBalanceJournalEntryResponse;
 import com.vertafore.test.servicewrappers.UseBalanceJournalEntriesTo;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
 import com.vertafore.test.servicewrappers.UsePoliciesTo;
+import java.time.*;
 import java.util.*;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
@@ -34,12 +34,11 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
   // Helpers
   public String generateCSVHeaders() {
-    return "Customer Id,Customer Name,Policy Id,Policy Number,Invoice Balance,Late Charge Balance,Number Of Days Old,Financed Balance,Description"
+    return "BJE Type,Customer Id,Customer Name,Policy Id,Policy Number,Invoice Balance,Late Charge Balance,Number Of Days Old,Financed Balance,Description"
         + System.lineSeparator();
   }
 
   public String generateCSVRowForFirstPolicyFound() {
-    String testCsv = "";
     Actor bob = theActorCalled("bob");
 
     // Get list of all customers in environment
@@ -69,7 +68,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
       checkedCustIndexes.add(customerIndex);
       CustomerResponse customer = customers.get(customerIndex);
 
-     //TODO change this endpoint to POST_policies/search
+      // TODO change this endpoint to POST_policies/search
       UsePoliciesTo policiesApi = new UsePoliciesTo();
       bob.attemptsTo(
           policiesApi.GETPoliciesOnThePoliciesControllerDeprecated(
@@ -83,7 +82,6 @@ public class PUT_BalanceJournalEntriesImportCustomer {
               .getList("", BasicPolicyInfoResponse.class);
 
       if (policies.size() > 0) {
-        SerenityRest.lastResponse().prettyPrint();
         policyFound = true;
         BasicPolicyInfoResponse policy = policies.get(0);
         customerId = policy.getCustomerId();
@@ -98,7 +96,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
         .as("No policies exist for the current agency so BJE cannot be imported.")
         .isTrue();
 
-    return testCsv + customerId + ",," + policyId + ",,";
+    return "Customer," + customerId + ",," + policyId + ",,";
   }
 
   @Test
@@ -108,14 +106,28 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     String testCsv = generateCSVRowForFirstPolicyFound();
 
     // Create body and import first BJE
-    String firstCsv = headers + testCsv + "61424,5,1,0,Automated Test Part 1" + System.lineSeparator();
+    int invBalance1 = (int) (Math.random() * (200001) - 100000);
+    int lateCh1 = (int) (Math.random() * 11);
+    int daysOld1 = (int) (Math.random() * (10) + 1);
+    String currentDate = LocalDateTime.now().toString();
+
+    String firstCsv =
+        headers
+            + testCsv
+            + invBalance1
+            + ","
+            + lateCh1
+            + ","
+            + daysOld1
+            + ",0,Automated Test Part 1"
+            + System.lineSeparator();
     String firstCsvContent = new String(Base64.getEncoder().encode(firstCsv.getBytes()));
     HashMap<String, Object> body1 = new HashMap<>();
     body1.put("balanceJournalEntryType", "Customer");
     body1.put("csvFileData", firstCsvContent);
-    body1.put("journalEntryDate", "2021-03-11T15:39:47.337Z");
+    body1.put("journalEntryDate", currentDate);
     body1.put("ignoreWarnings", "true");
-    body1.put("description", "Automated Collection Test Part 1");
+    body1.put("description", "Automated Test Part 1");
 
     UseBalanceJournalEntriesTo balanceJournalEntriesApi = new UseBalanceJournalEntriesTo();
 
@@ -135,19 +147,32 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     assertThat(response1.getBalanceJournalEntryCollectionId()).isNotNull();
     assertThat(response1.getBalanceJournalEntryType()).isEqualTo("Customer");
-    assertThat(response1.getCollectionDescription()).isEqualTo("Automated Collection Test Part 1");
+    assertThat(response1.getCollectionDescription()).isEqualTo("Automated Test Part 1");
     assertThat(response1.getNumberOfBalanceJournalEntries()).isEqualTo(1);
     assertThat(response1.getNumberOfErrors()).isEqualTo(0);
 
     // Create body from a different CSV and import
-    String secondCsv = testCsv + "50,15,6,0,Automated Test Part 2" + System.lineSeparator();
+    int invBalance2 = (int) (Math.random() * (200001) - 100000);
+    int lateCh2 = (int) (Math.random() * 11);
+    int daysOld2 = (int) (Math.random() * (10) + 1);
+
+    String secondCsv =
+        headers
+            + testCsv
+            + invBalance2
+            + ","
+            + lateCh2
+            + ","
+            + daysOld2
+            + ",0,Automated Test Part 6"
+            + System.lineSeparator();
     String secondCsvContent = new String(Base64.getEncoder().encode(secondCsv.getBytes()));
     HashMap<String, Object> body2 = new HashMap<>();
     body2.put("balanceJournalEntryType", "Customer");
     body2.put("csvFileData", secondCsvContent);
-    body2.put("journalEntryDate", "2021-03-18T11:09:47.337Z");
+    body2.put("journalEntryDate", currentDate);
     body2.put("ignoreWarnings", "true");
-    body2.put("description", "Automated Collection Test Part 2");
+    body2.put("description", "Automated Test Part 2");
 
     bob.attemptsTo(
         balanceJournalEntriesApi
