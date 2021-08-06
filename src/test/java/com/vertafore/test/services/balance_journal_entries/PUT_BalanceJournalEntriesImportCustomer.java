@@ -34,6 +34,8 @@ public class PUT_BalanceJournalEntriesImportCustomer {
   }
 
   // Helpers
+  String currentDate = LocalDateTime.now().toString();
+
   public String generateCSVHeaders() {
     return "BJE Type,Customer Id,Customer Name,Policy Id,Policy Number,Invoice Balance,Late Charge Balance,Number Of Days Old,Financed Balance,Description"
         + System.lineSeparator();
@@ -121,7 +123,6 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     Actor bob = theActorCalled("bob");
     String headers = generateCSVHeaders();
     String testCsv = generateCSVRowForFirstPolicyFound();
-    String currentDate = LocalDateTime.now().toString();
 
     // Create body and import first BJE
     String firstCsv = headers + testCsv + ",Automated Test Part 1" + System.lineSeparator();
@@ -201,7 +202,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     for (int i = 0; i < balanceJournalEntriesToCreate; i++) {
       testCsv
           .append(generateCSVRowForFirstPolicyFound())
-          .append("61424,5,1,0,Automated Batch Test")
+          .append(",Automated Batch Test")
           .append(System.lineSeparator());
     }
 
@@ -209,7 +210,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     HashMap<String, Object> body = new HashMap<>();
     body.put("balanceJournalEntryType", "Customer");
     body.put("csvFileData", csvContent);
-    body.put("journalEntryDate", "2021-04-15T15:39:47.337Z");
+    body.put("journalEntryDate", currentDate);
     body.put("ignoreWarnings", "true");
     body.put("description", "Batch of " + balanceJournalEntriesToCreate + " BJEs");
 
