@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+// TODO We still need a test that checks for financed policies, as it's a very common workflow
 @RunWith(SerenityRunner.class)
 public class PUT_BalanceJournalEntriesImportCustomer {
   private List<EMSActor> actors = new ArrayList<>();
@@ -51,7 +52,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
             .jsonPath()
             .getList("customerList", CustomerResponse.class);
 
-    // Check each customer until a policy is found
+    // Check each customer in random order until a policy is found
     boolean policyFound = false;
     String customerId = "";
     String policyId = "";
@@ -96,7 +97,23 @@ public class PUT_BalanceJournalEntriesImportCustomer {
         .as("No policies exist for the current agency so BJE cannot be imported.")
         .isTrue();
 
-    return "Customer," + customerId + ",," + policyId + ",,";
+    int invBalance = (int) (Math.random() * (200001) - 100000);
+    int lateCh = (int) (Math.random() * 11);
+    int daysOld = (int) (Math.random() * (10) + 1);
+    int financedBal = 0;
+
+    return "Customer,"
+        + customerId
+        + ",,"
+        + policyId
+        + ",,"
+        + invBalance
+        + ","
+        + lateCh
+        + ","
+        + daysOld
+        + ","
+        + financedBal;
   }
 
   @Test
@@ -104,23 +121,10 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     Actor bob = theActorCalled("bob");
     String headers = generateCSVHeaders();
     String testCsv = generateCSVRowForFirstPolicyFound();
-
-    // Create body and import first BJE
-    int invBalance1 = (int) (Math.random() * (200001) - 100000);
-    int lateCh1 = (int) (Math.random() * 11);
-    int daysOld1 = (int) (Math.random() * (10) + 1);
     String currentDate = LocalDateTime.now().toString();
 
-    String firstCsv =
-        headers
-            + testCsv
-            + invBalance1
-            + ","
-            + lateCh1
-            + ","
-            + daysOld1
-            + ",0,Automated Test Part 1"
-            + System.lineSeparator();
+    // Create body and import first BJE
+    String firstCsv = headers + testCsv + ",Automated Test Part 1" + System.lineSeparator();
     String firstCsvContent = new String(Base64.getEncoder().encode(firstCsv.getBytes()));
     HashMap<String, Object> body1 = new HashMap<>();
     body1.put("balanceJournalEntryType", "Customer");
@@ -152,20 +156,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     assertThat(response1.getNumberOfErrors()).isEqualTo(0);
 
     // Create body from a different CSV and import
-    int invBalance2 = (int) (Math.random() * (200001) - 100000);
-    int lateCh2 = (int) (Math.random() * 11);
-    int daysOld2 = (int) (Math.random() * (10) + 1);
-
-    String secondCsv =
-        headers
-            + testCsv
-            + invBalance2
-            + ","
-            + lateCh2
-            + ","
-            + daysOld2
-            + ",0,Automated Test Part 6"
-            + System.lineSeparator();
+    String secondCsv = headers + testCsv + ",Automated Test Part 2" + System.lineSeparator();
     String secondCsvContent = new String(Base64.getEncoder().encode(secondCsv.getBytes()));
     HashMap<String, Object> body2 = new HashMap<>();
     body2.put("balanceJournalEntryType", "Customer");
