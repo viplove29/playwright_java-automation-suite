@@ -48,6 +48,10 @@ public class GET_Brokers {
         UseBrokersTo brokersAPI = new UseBrokersTo();
 
 
+        /*Send requests with the skip value set to 0, and top as well as totalRecords set to 5
+        to return only first 5 results.
+         */
+
         adam.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
         assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
