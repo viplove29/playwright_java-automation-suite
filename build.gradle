@@ -244,3 +244,4 @@ compileJava.dependsOn spotlessJavaApply
 build.dependsOn spotlessJavaApply
 
 compileJava.dependsOn 'addGeneratedCodeToSourceSets'
+addGeneratedCodeToSourceSets.dependsOn generateSwaggerCode
