@@ -33,9 +33,9 @@ public class GET_SMSConversationsCount {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-  /* Smoke test that checks for correct response codes for the GET sms/conversations/count endpoint,
-  as well as validates the correct number of fields is being returned and that the count is not null.
-   */
+  /* This a smoke test that validates the user, app, and admin context return correct response codes
+  for the GET sms/conversations/count endpoint, as well as validates the correct number of fields is
+  being returned and that the count is not null.*/
   @Test
   public void smsConversationCountReturnsSmsConversationCount() {
 

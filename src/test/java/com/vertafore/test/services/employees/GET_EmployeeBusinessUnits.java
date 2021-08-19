@@ -62,14 +62,12 @@ public class GET_EmployeeBusinessUnits {
             .getList("", BusinessUnitDetailResponse.class);
 
     /*Created new objects to validate each sub response and validate that the correct fields are being reported*/
-    BusinessUnitNameCodeResponse divisionInfo =
-        businessUnitDetailResponses.get(0).getDivisionInfo();
+    BusinessUnitNameCodeResponse divisionInfo = businessUnitDetailResponses.get(0).getDivisionInfo();
     BusinessUnitNameCodeResponse branchInfo = businessUnitDetailResponses.get(0).getBranchInfo();
     BusinessUnitNameCodeResponse deptInfo = businessUnitDetailResponses.get(0).getDepartmentInfo();
     BusinessUnitNameCodeResponse groupInfo = businessUnitDetailResponses.get(0).getGroupInfo();
 
-    assertThat(businessUnitDetailResponses.get(0).getClass().getDeclaredFields().length)
-        .isEqualTo(4);
+    assertThat(businessUnitDetailResponses.get(0).getClass().getDeclaredFields().length).isEqualTo(4);
     assertThat(divisionInfo.getClass().getDeclaredFields().length).isEqualTo(3);
     assertThat(branchInfo.getClass().getDeclaredFields().length).isEqualTo(3);
     assertThat(deptInfo.getClass().getDeclaredFields().length).isEqualTo(3);

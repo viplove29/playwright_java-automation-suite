@@ -33,6 +33,9 @@ public class GET_AgencyLists {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  /* This a smoke test that validates the GET agency/lists endpoint against user, app, and admin context
+  as well as making sure the list returned by passing in the master PRcode (^^^) is not empty and contains
+  the right number of fields.*/
   @Test
   public void agencyListsReturnsAllPRCodes() {
 

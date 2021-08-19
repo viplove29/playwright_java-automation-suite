@@ -30,8 +30,9 @@ public class GET_SMSConversations {
             new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
-  /* Smoke test that simply checks for correct response codes for the GET sms/conversations endpoint,
-  since our user currently does not have any sms set up in the UI */
+  /* This a smoke test that validates the user, app, and admin context return correct response codes
+  for the GET sms/conversations endpoint, since our user currently does not have any sms set up in
+  the UI */
   @Test
   public void conversationsReturnsAllConversations() {
 
