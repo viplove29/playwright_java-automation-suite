@@ -1,12 +1,12 @@
-package com.vertafore.test.services.customer_agencies;
+package com.vertafore.test.services.agency;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
-import com.vertafore.test.models.ems.CustomerAgencyDetailResponse;
-import com.vertafore.test.servicewrappers.UseCustomerAgenciesTo;
+import com.vertafore.test.models.ems.PrCodeResponse;
+import com.vertafore.test.servicewrappers.UseAgencyTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -19,7 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_CustomerAgencies {
+public class GET_AgencyLists {
+
   private List<EMSActor> actors = new ArrayList<>();
 
   @Before
@@ -32,36 +33,34 @@ public class GET_CustomerAgencies {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-  /* A smoke test that validates the GET /customer-agencies/agency-details endpoint against admin,app, and user contexts.
-  Validate that only admin returns customer agency data and returns a list.*/
   @Test
-  public void customerAgenciesReturnsAllCustomerAgencies() {
+  public void agencyListsReturnsAllPRCodes() {
+
     Actor bob = theActorCalled("bob");
     Actor doug = theActorCalled("doug");
     Actor adam = theActorCalled("adam");
 
-    UseCustomerAgenciesTo customerAgencyApi = new UseCustomerAgenciesTo();
+    UseAgencyTo agencyAPI = new UseAgencyTo();
 
-    doug.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+    String masterCode = "^^^";
+
+    adam.attemptsTo(agencyAPI.GETAgencyListsOnTheAgencyController(masterCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    bob.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-
-    adam.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+    doug.attemptsTo(agencyAPI.GETAgencyListsOnTheAgencyController(masterCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    List<CustomerAgencyDetailResponse> customerAgencyDetail =
+    bob.attemptsTo(agencyAPI.GETAgencyListsOnTheAgencyController(masterCode, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    List<PrCodeResponse> prCodeResponse =
         LastResponse.received()
-            .answeredBy(adam)
+            .answeredBy(bob)
             .getBody()
             .jsonPath()
-            .getList("", CustomerAgencyDetailResponse.class);
+            .getList("", PrCodeResponse.class);
 
-    assertThat(customerAgencyDetail.get(0).getClass().getDeclaredFields().length).isEqualTo(6);
-    assertThat(customerAgencyDetail.size()).isGreaterThan(0);
+    assertThat(prCodeResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(6);
+    assertThat(prCodeResponse.size()).isGreaterThan(0);
   }
 }

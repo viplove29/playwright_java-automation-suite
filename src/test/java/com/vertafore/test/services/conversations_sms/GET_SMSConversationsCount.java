@@ -1,12 +1,12 @@
-package com.vertafore.test.services.customer_agencies;
+package com.vertafore.test.services.conversations_sms;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
-import com.vertafore.test.models.ems.CustomerAgencyDetailResponse;
-import com.vertafore.test.servicewrappers.UseCustomerAgenciesTo;
+import com.vertafore.test.models.ems.ConversationCountResponse;
+import com.vertafore.test.servicewrappers.UseSmsTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -19,7 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_CustomerAgencies {
+public class GET_SMSConversationsCount {
+
   private List<EMSActor> actors = new ArrayList<>();
 
   @Before
@@ -32,36 +33,37 @@ public class GET_CustomerAgencies {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-  /* A smoke test that validates the GET /customer-agencies/agency-details endpoint against admin,app, and user contexts.
-  Validate that only admin returns customer agency data and returns a list.*/
+  /* Smoke test that checks for correct response codes for the GET sms/conversations/count endpoint,
+  as well as validates the correct number of fields is being returned and that the count is not null.
+   */
   @Test
-  public void customerAgenciesReturnsAllCustomerAgencies() {
+  public void smsConversationCountReturnsSmsConversationCount() {
+
     Actor bob = theActorCalled("bob");
     Actor doug = theActorCalled("doug");
     Actor adam = theActorCalled("adam");
 
-    UseCustomerAgenciesTo customerAgencyApi = new UseCustomerAgenciesTo();
+    UseSmsTo conversationsAPI = new UseSmsTo();
 
-    doug.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+    adam.attemptsTo(conversationsAPI.GETSmsConversationsCountOnTheConversationssmsController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    bob.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-
-    adam.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+    doug.attemptsTo(conversationsAPI.GETSmsConversationsCountOnTheConversationssmsController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    List<CustomerAgencyDetailResponse> customerAgencyDetail =
+    bob.attemptsTo(conversationsAPI.GETSmsConversationsCountOnTheConversationssmsController());
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    SerenityRest.lastResponse().prettyPrint();
+
+    ConversationCountResponse conversationCountResponse =
         LastResponse.received()
-            .answeredBy(adam)
+            .answeredBy(bob)
             .getBody()
             .jsonPath()
-            .getList("", CustomerAgencyDetailResponse.class);
+            .getObject("", ConversationCountResponse.class);
 
-    assertThat(customerAgencyDetail.get(0).getClass().getDeclaredFields().length).isEqualTo(6);
-    assertThat(customerAgencyDetail.size()).isGreaterThan(0);
+    assertThat(conversationCountResponse.getClass().getDeclaredFields().length).isEqualTo(1);
+    assertThat(conversationCountResponse.getCount()).isNotNull();
   }
 }
