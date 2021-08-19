@@ -32,8 +32,8 @@ public class GET_CustomerAgencies {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-/* A smoke test that validates the GET /customer-agencies/agency-details endpoint against admin,app, and user contexts.
-Validate that only admin returns customer agency data and returns a list.*/
+  /* A smoke test that validates the GET /customer-agencies/agency-details endpoint against admin,app, and user contexts.
+  Validate that only admin returns customer agency data and returns a list.*/
   @Test
   public void customerAgenciesReturnsAllCustomerAgencies() {
     Actor bob = theActorCalled("bob");

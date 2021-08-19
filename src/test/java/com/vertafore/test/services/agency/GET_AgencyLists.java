@@ -1,23 +1,25 @@
-package com.vertafore.test.services.conversations_sms;
+package com.vertafore.test.services.agency;
 
 import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.EMSActor;
-import com.vertafore.test.servicewrappers.UseSmsTo;
+import com.vertafore.test.models.ems.PrCodeResponse;
+import com.vertafore.test.servicewrappers.UseAgencyTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
+import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_SMSConversations {
+public class GET_AgencyLists {
 
   private List<EMSActor> actors = new ArrayList<>();
 
@@ -30,30 +32,38 @@ public class GET_SMSConversations {
             new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
-  /* This a smoke test that validates the user, app, and admin context return correct response codes
-  for the GET sms/conversations endpoint, since our user currently does not have any sms set up in
-  the UI */
+
+  /* This a smoke test that validates the GET agency/lists endpoint against user, app, and admin context
+  as well as making sure the list returned by passing in the master PRcode (^^^) is not empty and contains
+  the right number of fields.*/
   @Test
-  public void conversationsReturnsAllConversations() {
+  public void agencyListsReturnsAllPRCodes() {
 
     Actor bob = theActorCalled("bob");
     Actor doug = theActorCalled("doug");
     Actor adam = theActorCalled("adam");
 
-    UseSmsTo conversationsAPI = new UseSmsTo();
+    UseAgencyTo agencyAPI = new UseAgencyTo();
 
-    adam.attemptsTo(
-        conversationsAPI.GETSmsConversationsOnTheConversationssmsController(null, "String"));
+    String masterCode = "^^^";
+
+    adam.attemptsTo(agencyAPI.GETAgencyListsOnTheAgencyController(masterCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(
-        conversationsAPI.GETSmsConversationsOnTheConversationssmsController(null, "String"));
+    doug.attemptsTo(agencyAPI.GETAgencyListsOnTheAgencyController(masterCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(
-        conversationsAPI.GETSmsConversationsOnTheConversationssmsController(null, "String"));
+    bob.attemptsTo(agencyAPI.GETAgencyListsOnTheAgencyController(masterCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    SerenityRest.lastResponse().prettyPrint();
+    List<PrCodeResponse> prCodeResponse =
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", PrCodeResponse.class);
+
+    assertThat(prCodeResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(6);
+    assertThat(prCodeResponse.size()).isGreaterThan(0);
   }
 }
