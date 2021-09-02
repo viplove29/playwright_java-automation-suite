@@ -9,6 +9,8 @@ import com.vertafore.test.models.ems.VendorResponse;
 import com.vertafore.test.servicewrappers.UseVendorsTo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -34,6 +36,9 @@ public class GET_Vendors {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  Random random = new Random();
+  Integer randomInt = random.nextInt(5);
+
   @Test
   public void vendorsReturnsAllVendors() {
     Actor bob = theActorCalled("bob");
@@ -42,14 +47,49 @@ public class GET_Vendors {
 
     UseVendorsTo vendorsApi = new UseVendorsTo();
 
-    bob.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    adam.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     doug.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+    bob.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VendorResponse vendorResponse =
+            LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", VendorResponse.class).get(randomInt);
+
+    assertThat(vendorResponse.getClass().getDeclaredFields().length).isEqualTo(6);
+
+    String vendorId = vendorResponse.getVendorId();
+    String vendorCode = vendorResponse.getVendorCode();
+    String email = vendorResponse.geteMail();
+    String firstName = vendorResponse.getFirstName();
+    String lastName = vendorResponse.getLastName();
+    String isCompany = vendorResponse.getIsCompany();
+
+    bob.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(vendorId, vendorCode, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VendorResponse vendorCheck =
+            LastResponse.received()
+                    .answeredBy(bob)
+                    .getBody()
+                    .jsonPath()
+                    .getList("", VendorResponse.class).get(0);
+
+    assertThat(vendorCheck.getClass().getDeclaredFields().length).isEqualTo(6);
+    assertThat(vendorCheck.getVendorId()).isEqualTo(vendorId);
+    assertThat(vendorCheck.getVendorCode()).isEqualTo(vendorCode);
+    assertThat(vendorCheck.geteMail()).isEqualTo(email);
+    assertThat(vendorCheck.getFirstName()).isEqualTo(firstName);
+    assertThat(vendorCheck.getLastName()).isEqualTo(lastName);
+    assertThat(vendorCheck.getIsCompany()).isEqualTo(isCompany);
+
   }
 
   @Test
@@ -63,20 +103,38 @@ public class GET_Vendors {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     VendorResponse vendorResponse =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", VendorResponse.class)
-            .get(0);
+            LastResponse.received()
+                    .answeredBy(mary)
+                    .getBody()
+                    .jsonPath()
+                    .getList("", VendorResponse.class).get(randomInt);
 
-    assertThat(vendorResponse).isNotEqualTo(null);
     assertThat(vendorResponse.getClass().getDeclaredFields().length).isEqualTo(6);
-    assertThat(vendorResponse.geteMail()).isEqualTo(null);
-    assertThat(vendorResponse.getFirstName()).isEqualTo(null);
-    assertThat(vendorResponse.getLastName()).isEqualTo("Vendor");
-    assertThat(vendorResponse.getVendorId()).isEqualTo("b1e6015e-564b-4843-be3f-ab965a0cdb24");
-    assertThat(vendorResponse.getVendorCode()).isEqualTo("!!\"");
-    assertThat(vendorResponse.getIsCompany()).isEqualTo("N");
+
+    String vendorId = vendorResponse.getVendorId();
+    String vendorCode = vendorResponse.getVendorCode();
+    String email = vendorResponse.geteMail();
+    String firstName = vendorResponse.getFirstName();
+    String lastName = vendorResponse.getLastName();
+    String isCompany = vendorResponse.getIsCompany();
+
+    mary.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(vendorId, vendorCode, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VendorResponse vendorCheck =
+            LastResponse.received()
+                    .answeredBy(mary)
+                    .getBody()
+                    .jsonPath()
+                    .getList("", VendorResponse.class).get(0);
+
+    assertThat(vendorCheck.getClass().getDeclaredFields().length).isEqualTo(6);
+    assertThat(vendorCheck.getVendorId()).isEqualTo(vendorId);
+    assertThat(vendorCheck.getVendorCode()).isEqualTo(vendorCode);
+    assertThat(vendorCheck.geteMail()).isEqualTo(email);
+    assertThat(vendorCheck.getFirstName()).isEqualTo(firstName);
+    assertThat(vendorCheck.getLastName()).isEqualTo(lastName);
+    assertThat(vendorCheck.getIsCompany()).isEqualTo(isCompany);
+
   }
 }
