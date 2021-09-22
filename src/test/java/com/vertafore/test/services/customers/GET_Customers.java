@@ -7,9 +7,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.CustomerResponse;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
-import io.restassured.path.json.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -35,6 +35,19 @@ public class GET_Customers {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  // Helpers
+  Random random = new Random();
+  int randomInt = random.nextInt(100);
+
+  public static String randCustId = "";
+  public static String randSortName = "";
+  public static String randContactName = "";
+  public static String randFirmName = "";
+  public static String randPrimaryEmail = "";
+  public static String randSecondEmail = "";
+  public static int randCustNumber = 0;
+  public static String randZipCode = "";
+
   @Test
   public void customersReturnsAllCustomers() {
     Actor bob = theActorCalled("bob");
@@ -43,36 +56,38 @@ public class GET_Customers {
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
     doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-  }
 
-  @Test
-  public void customersReturnsOneCustomer() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
-
-    UseCustomersTo customersApi = new UseCustomersTo();
-
-    doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
+    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+    CustomerResponse customers =
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("customerList", CustomerResponse.class)
+            .get(randomInt);
 
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
+    assertThat(customers.getClass().getDeclaredFields().length).isEqualTo(11);
+
+    /*Create a list of variables to store a random selection from the first getCustomers call*/
+    randCustId = customers.getCustId();
+    randSortName = customers.getSortName();
+    randContactName = customers.getContactName();
+    randFirmName = customers.getFirmName();
+    randPrimaryEmail = customers.getPrimaryEmail();
+    randSecondEmail = customers.getSecondaryEmail();
+    randCustNumber = customers.getCustNo();
+    randZipCode = customers.getZipCode();
+
+    /*Create a second call to the Get Customers endpoint in order to validate that you can get a certain customer and that the data is correct*/
+    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(randCustNumber, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
-
-    SerenityRest.lastResponse().prettyPrint();
 
     CustomerResponse customer =
         LastResponse.received()
@@ -87,66 +102,21 @@ public class GET_Customers {
     assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(11);
 
     // Response body field data assertions
-    assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
+    assertThat(customer.getCustId()).isEqualTo(randCustId);
 
-    assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
+    assertThat(customer.getSortName()).isEqualTo(randSortName);
 
-    assertThat(customer.getContactName()).isEqualTo("Yronwood of Yronwood");
+    assertThat(customer.getContactName()).isEqualTo(randContactName);
 
-    assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
+    assertThat(customer.getFirmName()).isEqualTo(randFirmName);
 
-    assertThat(customer.getPrimaryEmail()).isEqualTo("reed.watsica@gmail.com");
+    assertThat(customer.getPrimaryEmail()).isEqualTo(randPrimaryEmail);
 
-    assertThat(customer.getSecondaryEmail()).isEqualTo("manie.koepp@hotmail.com");
+    assertThat(customer.getSecondaryEmail()).isEqualTo(randSecondEmail);
 
-    assertThat(customer.getCustNo()).isEqualTo(186);
+    assertThat(customer.getCustNo()).isEqualTo(randCustNumber);
 
-    assertThat(customer.getZipCode()).isEqualTo("80011");
-  }
-
-  @Test
-  @WithTag("19R2")
-  public void customersReturnsCustomers19R2() {
-    Actor mary = theActorCalled("mary");
-
-    UseCustomersTo customersApi = new UseCustomersTo();
-
-    // Get ALL Customers
-    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
-
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    // Get Customer by Customer Number
-    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(186, "string"));
-
-    CustomerResponse customer =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("customerList", CustomerResponse.class)
-            .get(0);
-
-    // Response body format assertions
-    assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(11);
-
-    // Response body field data assertions
-    assertThat(customer.getCustId()).isEqualTo("2759ce42-fc31-414c-968d-09b0a80f04c6");
-
-    assertThat(customer.getSortName()).isEqualTo("Yronwood of Yronwood");
-
-    assertThat(customer.getContactName()).isEqualTo("Yronwood of Yronwood");
-
-    assertThat(customer.getFirmName()).isEqualTo("Yronwood of Yronwood");
-
-    assertThat(customer.getPrimaryEmail()).isEqualTo("reed.watsica@gmail.com");
-
-    assertThat(customer.getSecondaryEmail()).isEqualTo("manie.koepp@hotmail.com");
-
-    assertThat(customer.getCustNo()).isEqualTo(186);
-
-    assertThat(customer.getZipCode()).isEqualTo("80011");
+    assertThat(customer.getZipCode()).isEqualTo(randZipCode);
   }
 
   @Test
@@ -167,5 +137,69 @@ public class GET_Customers {
             .get(0);
 
     assertThat(customer != null).isTrue();
+  }
+
+  @Test
+  @WithTag("19R2")
+  public void customersReturnsCustomers19R2() {
+    Actor mary = theActorCalled("mary");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    // Get ALL Customers
+    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    CustomerResponse customers =
+        LastResponse.received()
+            .answeredBy(mary)
+            .getBody()
+            .jsonPath()
+            .getList("customerList", CustomerResponse.class)
+            .get(randomInt);
+
+    assertThat(customers.getClass().getDeclaredFields().length).isEqualTo(11);
+
+    /*Create a list of variables to store a random selection from the first getCustomers call*/
+    randCustId = customers.getCustId();
+    randSortName = customers.getSortName();
+    randContactName = customers.getContactName();
+    randFirmName = customers.getFirmName();
+    randPrimaryEmail = customers.getPrimaryEmail();
+    randSecondEmail = customers.getSecondaryEmail();
+    randCustNumber = customers.getCustNo();
+    randZipCode = customers.getZipCode();
+
+    // Get Customer by Customer Number
+    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(randCustNumber, "string"));
+
+    CustomerResponse customer =
+        LastResponse.received()
+            .answeredBy(mary)
+            .getBody()
+            .jsonPath()
+            .getList("customerList", CustomerResponse.class)
+            .get(0);
+
+    // Response body format assertions
+    assertThat(customer != null).isTrue();
+    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(11);
+
+    // Response body field data assertions
+    assertThat(customer.getCustId()).isEqualTo(randCustId);
+
+    assertThat(customer.getSortName()).isEqualTo(randSortName);
+
+    assertThat(customer.getContactName()).isEqualTo(randContactName);
+
+    assertThat(customer.getFirmName()).isEqualTo(randFirmName);
+
+    assertThat(customer.getPrimaryEmail()).isEqualTo(randPrimaryEmail);
+
+    assertThat(customer.getSecondaryEmail()).isEqualTo(randSecondEmail);
+
+    assertThat(customer.getCustNo()).isEqualTo(randCustNumber);
+
+    assertThat(customer.getZipCode()).isEqualTo(randZipCode);
   }
 }
