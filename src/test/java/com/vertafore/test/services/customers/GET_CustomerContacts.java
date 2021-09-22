@@ -7,9 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.CustomerContactResponse;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
-import io.restassured.path.json.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -26,13 +27,22 @@ public class GET_CustomerContacts {
   @Before
   public void getAnAccessToken() {
     actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            List.of(
+                    new EMSActor().called("bob").withContext("userContext"),
+                    new EMSActor().called("doug").withContext("appContext"),
+                    new EMSActor().called("adam").withContext("adminContext"),
+                    new EMSActor().called("mary").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
+
+  // helpers
+
+  public static String randCustomerId = "";
+  public static int randCustomerNumber = 0;
+  public static String randCustomerName = "";
+
+  Random random = new Random();
+  int randomInt = random.nextInt(100);
 
   @Test
   public void customerContactsReturnsAllCustomerContacts() {
@@ -42,14 +52,28 @@ public class GET_CustomerContacts {
 
     UseCustomerTo customersApi = new UseCustomerTo();
 
-    bob.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
     doug.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    bob.attemptsTo(customersApi.GETCustomerContactsOnTheCustomersController(null, null, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    List<CustomerContactResponse> customerContacts =
+            LastResponse.received()
+                    .answeredBy(bob)
+                    .getBody()
+                    .jsonPath()
+                    .getList("", CustomerContactResponse.class);
+
+    assertThat(customerContacts.get(0).getClass().getDeclaredFields().length).isEqualTo(11);
+    assertThat(customerContacts.size()).isGreaterThan(0);
+
+    randCustomerId = customerContacts.get(randomInt).getCustId();
+    randCustomerNumber = customerContacts.get(randomInt).getCustNo();
+    randCustomerName = customerContacts.get(randomInt).getName();
   }
 
   @Test
@@ -59,21 +83,19 @@ public class GET_CustomerContacts {
     UseCustomerTo customersApi = new UseCustomerTo();
 
     bob.attemptsTo(
-        customersApi.GETCustomerContactsOnTheCustomersController(
-            "e9b9a2a4-356c-436b-a298-1b96a6eca43b", 5, "string"));
-
-    JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
+            customersApi.GETCustomerContactsOnTheCustomersController(
+                    randCustomerId, randCustomerNumber, "string"));
 
     CustomerContactResponse customerContact =
-        LastResponse.received()
-            .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getList("", CustomerContactResponse.class)
-            .get(0);
+            LastResponse.received()
+                    .answeredBy(bob)
+                    .getBody()
+                    .jsonPath()
+                    .getList("", CustomerContactResponse.class)
+                    .get(0);
 
-    assertThat(customerContact.getCustId()).isEqualTo("e9b9a2a4-356c-436b-a298-1b96a6eca43b");
-    assertThat(customerContact.getCustNo()).isEqualTo(5);
-    assertThat(customerContact.getName()).isEqualTo("ForGridExport");
+    assertThat(customerContact.getCustId()).isEqualTo(randCustomerId);
+    assertThat(customerContact.getCustNo()).isEqualTo(randCustomerNumber);
+    assertThat(customerContact.getName()).isEqualTo(randCustomerName);
   }
 }
