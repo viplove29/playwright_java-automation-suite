@@ -31,13 +31,18 @@ public class GET_Vendors {
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext")));
+            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  //Helpers
   Random random = new Random();
   Integer randomInt = random.nextInt(5);
 
+  /* The purpose of this test is to hit the Get /vendors endpoint using admin, user, and app context
+  to validate proper response codes, as well as capturing a vendor object to then query through the
+  same endpoint. By doing so the data validations are not hardcoded.
+   */
   @Test
   public void vendorsReturnsAllVendors() {
     Actor bob = theActorCalled("bob");
@@ -92,6 +97,9 @@ public class GET_Vendors {
     assertThat(vendorCheck.getIsCompany()).isEqualTo(isCompany);
   }
 
+  /* The purpose of this test is the same as above, but only uses the user context and is ran against
+  a 19R2 agency.
+   */
   @Test
   @WithTag("19R2")
   public void vendorsReturnsAllVendors19R2() {
