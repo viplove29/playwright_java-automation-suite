@@ -107,6 +107,8 @@ dependencies {
     // openAPI
     swaggerCodegen 'org.openapitools:openapi-generator-cli:4.3.0'
     implementation 'org.openapitools:openapi-generator-cli:4.3.0'
+    // reportportal
+    compile "com.github.invictum:serenity-reportportal-integration:1.5.8"
     // swaggerCodeGen needs the custom generator we have in /generators
     swaggerCodegen project('generators')
 }
