@@ -35,7 +35,7 @@ public class GET_Vendors {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-  //Helpers
+  // Helpers
   Random random = new Random();
   Integer randomInt = random.nextInt(5);
 

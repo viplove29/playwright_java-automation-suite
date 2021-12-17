@@ -65,7 +65,7 @@ public class GET_Brokers {
             .jsonPath()
             .getList("response", BrokerResponse.class);
 
-    assertThat(brokerResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(8);
+    assertThat(brokerResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(9);
     assertThat(brokerResponse.size()).isGreaterThan(0);
   }
 }

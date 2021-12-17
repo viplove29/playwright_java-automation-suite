@@ -1,8 +1,15 @@
 package com.vertafore.test.services.companies;
 
+import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
+import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.CompanyResponse;
 import com.vertafore.test.servicewrappers.UseCompaniesTo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -13,14 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
-import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
-import static org.assertj.core.api.Assertions.assertThat;
-
 @RunWith(SerenityRunner.class)
 public class GET_Companies {
   private List<EMSActor> actors = new ArrayList<>();
@@ -28,11 +27,11 @@ public class GET_Companies {
   @Before
   public void getAnAccessToken() {
     actors.addAll(
-            List.of(
-                    new EMSActor().called("bob").withContext("userContext"),
-                    new EMSActor().called("doug").withContext("appContext"),
-                    new EMSActor().called("adam").withContext("adminContext"),
-                    new EMSActor().called("mary").withVersion("19R2")));
+        List.of(
+            new EMSActor().called("bob").withContext("userContext"),
+            new EMSActor().called("doug").withContext("appContext"),
+            new EMSActor().called("adam").withContext("adminContext"),
+            new EMSActor().called("mary").withVersion("19R2")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -62,11 +61,11 @@ public class GET_Companies {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<CompanyResponse> companyResponse =
-            LastResponse.received()
-                    .answeredBy(bob)
-                    .getBody()
-                    .jsonPath()
-                    .getList("", CompanyResponse.class);
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", CompanyResponse.class);
 
     assertThat(companyResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(4);
     assertThat(companyResponse.size()).isGreaterThan(0);
@@ -80,12 +79,12 @@ public class GET_Companies {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CompanyResponse company =
-            LastResponse.received()
-                    .answeredBy(bob)
-                    .getBody()
-                    .jsonPath()
-                    .getList("", CompanyResponse.class)
-                    .get(0);
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", CompanyResponse.class)
+            .get(0);
 
     // Response body format assertions
     assertThat(company != null).isTrue();
@@ -104,11 +103,11 @@ public class GET_Companies {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<CompanyResponse> companies =
-            LastResponse.received()
-                    .answeredBy(mary)
-                    .getBody()
-                    .jsonPath()
-                    .getList("", CompanyResponse.class);
+        LastResponse.received()
+            .answeredBy(mary)
+            .getBody()
+            .jsonPath()
+            .getList("", CompanyResponse.class);
 
     // Response body format assertions
     assertThat(companies != null).isTrue();
@@ -123,12 +122,12 @@ public class GET_Companies {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CompanyResponse company =
-            LastResponse.received()
-                    .answeredBy(mary)
-                    .getBody()
-                    .jsonPath()
-                    .getList("", CompanyResponse.class)
-                    .get(0);
+        LastResponse.received()
+            .answeredBy(mary)
+            .getBody()
+            .jsonPath()
+            .getList("", CompanyResponse.class)
+            .get(0);
 
     // Response body format assertions
     assertThat(company != null).isTrue();

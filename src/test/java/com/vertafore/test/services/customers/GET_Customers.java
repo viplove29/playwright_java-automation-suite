@@ -56,13 +56,13 @@ public class GET_Customers {
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    doug.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    doug.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    adam.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CustomerResponse customers =
@@ -86,7 +86,8 @@ public class GET_Customers {
     randZipCode = customers.getZipCode();
 
     /*Create a second call to the Get Customers endpoint in order to validate that you can get a certain customer and that the data is correct*/
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(randCustNumber, "string"));
+    bob.attemptsTo(
+        customersApi.GETCustomersOnTheCustomersControllerDeprecated(randCustNumber, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CustomerResponse customer =
@@ -147,7 +148,7 @@ public class GET_Customers {
     UseCustomersTo customersApi = new UseCustomersTo();
 
     // Get ALL Customers
-    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CustomerResponse customers =
@@ -171,7 +172,8 @@ public class GET_Customers {
     randZipCode = customers.getZipCode();
 
     // Get Customer by Customer Number
-    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersController(randCustNumber, "string"));
+    mary.attemptsTo(
+        customersApi.GETCustomersOnTheCustomersControllerDeprecated(randCustNumber, "string"));
 
     CustomerResponse customer =
         LastResponse.received()
