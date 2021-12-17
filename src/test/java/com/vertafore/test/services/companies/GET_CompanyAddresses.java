@@ -40,7 +40,7 @@ public class GET_CompanyAddresses {
   public static String randCompanyAddress = "";
 
   Random random = new Random();
-  int randomInt = random.nextInt(100);
+  int randomInt = random.nextInt(50);
 
   @Test
   public void companyAddressesReturnsAllCompanyAddresses() {

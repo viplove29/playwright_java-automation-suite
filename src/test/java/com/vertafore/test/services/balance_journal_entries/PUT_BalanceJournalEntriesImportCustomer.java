@@ -46,7 +46,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     // Get list of all customers in environment
     UseCustomersTo customersApi = new UseCustomersTo();
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersController(null, "string"));
+    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     List<CustomerResponse> customers =
         LastResponse.received()
             .answeredBy(bob)
