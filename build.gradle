@@ -158,7 +158,7 @@ javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(nullHostnameVerifier
 HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
             def swaggerJsonResponse = new URL(
-                    "https://ems-qa1.devop.vertafore.com/swagger/v1")
+                    "https://ems-qa1.devop.vertafore.com/swagger/internal")
                     .getText(requestProperties: [Accept: 'application/json'])
 
 
