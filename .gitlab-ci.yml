@@ -76,3 +76,6 @@ QA:
 
 QA Regression:
   extends: .regression
+
+MDC Regression:
+  extends: .regression
