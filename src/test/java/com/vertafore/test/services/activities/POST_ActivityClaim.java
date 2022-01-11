@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.ActivityClaimResponse;
 import com.vertafore.test.servicewrappers.UseActivityTo;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,15 +29,16 @@ public class POST_ActivityClaim {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("mary").withContext("userContext")));
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  // TODO this test needs checks for ORAN and VADM keys, as well as checks on all the other parts of
+  // the post body
   @Test
-  @WithTag("19R2")
   public void PostActivityClaimSuccessfullyPostsOneClaim() {
 
-    Actor mary = theActorCalled("mary");
+    Actor bob = theActorCalled("bob");
 
     UseActivityTo ActivityAPI = new UseActivityTo();
     HashMap<String, String> claimBody = new HashMap<>();
@@ -47,24 +48,26 @@ public class POST_ActivityClaim {
     claimBody.put("action", "string");
     claimBody.put("ClaimId", randomClaimId);
     claimBody.put("CustomerId", randomCustId);
-    claimBody.put("transactionDate", "2020-08-14T16:31:33.225Z");
+    claimBody.put("transactionDate", LocalDateTime.now().toString());
 
-    mary.attemptsTo(ActivityAPI.POSTActivityClaimOnTheActivitiesController(claimBody, "string"));
+    bob.attemptsTo(ActivityAPI.POSTActivityClaimOnTheActivitiesController(claimBody, "string"));
 
-    mary.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
+    bob.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
 
     SerenityRest.lastResponse().prettyPrint();
     ActivityClaimResponse claimResponse =
         LastResponse.received()
-            .answeredBy(mary)
+            .answeredBy(bob)
             .getBody()
             .jsonPath()
             .getObject("", ActivityClaimResponse.class);
 
     assertThat(claimResponse != null).isTrue();
 
-    mary.attemptsTo(ActivityAPI.GETActivityOnTheActivitiesController(randomClaimId, "string"));
+    // TODO this test is using the GET /activity endpoint to check, this should be wrapped up in a
+    // larger test for that endpoint
+    bob.attemptsTo(ActivityAPI.GETActivityOnTheActivitiesController(randomClaimId, "string"));
 
-    mary.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
+    bob.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
   }
 }

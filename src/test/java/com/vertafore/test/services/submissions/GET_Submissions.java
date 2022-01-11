@@ -14,7 +14,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +29,11 @@ public class GET_Submissions {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
+
+  /*TODO both of these tests are using hardcoded data and should be fixed, unless the plan is just to remove this and replace with non-deprecated endpoints */
 
   @Test
   public void submissionsSuccessfullyReturnsPoliciesForCustomer() {
@@ -81,6 +81,9 @@ public class GET_Submissions {
             .getList("", BasicPolicyInfoResponse.class);
 
     assertThat(fourPolicies.size()).isEqualTo(4);
+    for (BasicPolicyInfoResponse response : fourPolicies) {
+      assertThat(response.getPolicySubType()).isEqualTo("S");
+    }
 
     // change the customer to one that has zero policies
     customerGUID = "39B604F3-BC29-4FCB-A4DF-001D893C6BAC";
@@ -97,32 +100,5 @@ public class GET_Submissions {
             .getList("", BasicPolicyInfoResponse.class);
 
     assertThat(zeroPolicies.size()).isEqualTo(0);
-  }
-
-  @Test
-  @WithTag("19R2")
-  public void submissionsSuccessfullyReturnsAllSubmissions19R2() {
-    Actor mary = theActorCalled("mary");
-    String customerGUID = "5C10AEB1-E12D-43F8-86F1-CFA9F43ED253";
-
-    UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
-
-    mary.attemptsTo(
-        submissionsAPI.GETSubmissionsOnTheSubmissionsControllerDeprecated(
-            customerGUID, false, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    List<BasicPolicyInfoResponse> fourPolicies =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", BasicPolicyInfoResponse.class);
-
-    assertThat(fourPolicies.size()).isEqualTo(4);
-
-    for (BasicPolicyInfoResponse response : fourPolicies) {
-      assertThat(response.getPolicySubType()).isEqualTo("S");
-    }
   }
 }
