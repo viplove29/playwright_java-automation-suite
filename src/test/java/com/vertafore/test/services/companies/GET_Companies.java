@@ -15,7 +15,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +29,7 @@ public class GET_Companies {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -89,52 +87,6 @@ public class GET_Companies {
     // Response body format assertions
     assertThat(company != null).isTrue();
     assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
-    assertThat(company.getCompanyId()).isEqualTo(randCompanyId);
-    assertThat(company.getName()).isEqualTo(randCompanyName);
-  }
-
-  @Test
-  @WithTag("19R2")
-  public void companiesReturnsAllCompanies19R2() {
-    Actor mary = theActorCalled("mary");
-
-    UseCompaniesTo companiesAPI = new UseCompaniesTo();
-    mary.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    List<CompanyResponse> companies =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", CompanyResponse.class);
-
-    // Response body format assertions
-    assertThat(companies != null).isTrue();
-    assertThat(companies.get(0).getClass().getDeclaredFields().length).isEqualTo(4);
-
-    randCompanyCode = companies.get(randomInt).getCompanyCode();
-    randCompanyId = companies.get(randomInt).getCompanyId();
-    randCompanyName = companies.get(randomInt).getName();
-
-    /*Single Company test case*/
-    mary.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(randCompanyCode, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    CompanyResponse company =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", CompanyResponse.class)
-            .get(0);
-
-    // Response body format assertions
-    assertThat(company != null).isTrue();
-    assertThat(company.getClass().getDeclaredFields().length).isEqualTo(4);
-
-    // Response body field data assertions
-    assertThat(company.getName()).isEqualTo(randCompanyName);
     assertThat(company.getCompanyId()).isEqualTo(randCompanyId);
     assertThat(company.getName()).isEqualTo(randCompanyName);
   }

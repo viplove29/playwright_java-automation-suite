@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.SeqNumberResponse;
 import com.vertafore.test.servicewrappers.UseUtilityTo;
-import io.restassured.path.json.JsonPath;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -29,8 +28,7 @@ public class GET_EmpCodeToSeqNumber {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -53,6 +51,7 @@ public class GET_EmpCodeToSeqNumber {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
   }
 
+  // TODO - NO HARDCODED DATA! OR WIRE HANGERS!
   @Test
   public void empCodeReturnsCorrectSeqNumber() {
     Actor bob = theActorCalled("bob");
@@ -61,8 +60,6 @@ public class GET_EmpCodeToSeqNumber {
 
     bob.attemptsTo(utilityApi.GETUtilityEmpCodeToSeqNumberOnTheUtilityController("!#^", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    JsonPath jsonPath = LastResponse.received().answeredBy(bob).getBody().jsonPath();
 
     // Use getObject because return object is a hashmap, not a list
     SeqNumberResponse seqResponse =

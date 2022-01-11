@@ -33,8 +33,7 @@ public class POST_ActivityClaim {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-  // TODO this test needs checks for ORAN and VADM keys, as well as checks on all the other parts of
-  // the post body
+  /* TODO this test needs checks for ORAN and VADM keys, as well as checks on all the other parts of the post body */
   @Test
   public void PostActivityClaimSuccessfullyPostsOneClaim() {
 
@@ -64,8 +63,7 @@ public class POST_ActivityClaim {
 
     assertThat(claimResponse != null).isTrue();
 
-    // TODO this test is using the GET /activity endpoint to check, this should be wrapped up in a
-    // larger test for that endpoint
+    /* TODO this test is using the GET /activity endpoint to check, this should be wrapped up in a larger test for that endpoint */
     bob.attemptsTo(ActivityAPI.GETActivityOnTheActivitiesController(randomClaimId, "string"));
 
     bob.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));

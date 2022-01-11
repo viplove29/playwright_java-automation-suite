@@ -29,8 +29,7 @@ public class GET_CustomerContacts {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
