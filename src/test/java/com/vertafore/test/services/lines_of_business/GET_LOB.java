@@ -22,6 +22,8 @@ import org.junit.runner.RunWith;
 @RunWith(SerenityRunner.class)
 public class GET_LOB {
 
+  // TODO this whole class needs to be reviewed and updated, and the accompanying LOB class
+  // addressed
   private List<EMSActor> actors = new ArrayList<>();
 
   @Before

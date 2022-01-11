@@ -12,7 +12,6 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,28 +23,26 @@ public class GET_Underwriters {
 
   @Before
   public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  // TODO write an actual test for this lol
+
   @Test
-  @WithTag("19R2")
   public void UnderwritersReturnsAllUnderwriters() {
 
-    Actor mary = theActorCalled("mary");
+    Actor bob = theActorCalled("bob");
 
     UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
 
-    mary.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
+    bob.attemptsTo(underwritersAPI.GETUnderwritersOnTheUnderwritersController(null, "string"));
 
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     //    UnderwriterResponse underwriter =
     //        LastResponse.received()
-    //            .answeredBy(mary)
+    //            .answeredBy(bob)
     //            .getBody()
     //            .jsonPath()
     //            .getList("", UnderwriterResponse.class)

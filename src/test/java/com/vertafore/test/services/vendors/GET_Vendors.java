@@ -15,7 +15,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +29,7 @@ public class GET_Vendors {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -83,56 +81,6 @@ public class GET_Vendors {
     VendorResponse vendorCheck =
         LastResponse.received()
             .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getList("", VendorResponse.class)
-            .get(0);
-
-    assertThat(vendorCheck.getClass().getDeclaredFields().length).isEqualTo(6);
-    assertThat(vendorCheck.getVendorId()).isEqualTo(vendorId);
-    assertThat(vendorCheck.getVendorCode()).isEqualTo(vendorCode);
-    assertThat(vendorCheck.geteMail()).isEqualTo(email);
-    assertThat(vendorCheck.getFirstName()).isEqualTo(firstName);
-    assertThat(vendorCheck.getLastName()).isEqualTo(lastName);
-    assertThat(vendorCheck.getIsCompany()).isEqualTo(isCompany);
-  }
-
-  /* The purpose of this test is the same as above, but only uses the user context and is ran against
-  a 19R2 agency.
-   */
-  @Test
-  @WithTag("19R2")
-  public void vendorsReturnsAllVendors19R2() {
-    Actor mary = theActorCalled("mary");
-
-    UseVendorsTo vendorsApi = new UseVendorsTo();
-
-    mary.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(null, null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    VendorResponse vendorResponse =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", VendorResponse.class)
-            .get(randomInt);
-
-    assertThat(vendorResponse.getClass().getDeclaredFields().length).isEqualTo(6);
-
-    String vendorId = vendorResponse.getVendorId();
-    String vendorCode = vendorResponse.getVendorCode();
-    String email = vendorResponse.geteMail();
-    String firstName = vendorResponse.getFirstName();
-    String lastName = vendorResponse.getLastName();
-    String isCompany = vendorResponse.getIsCompany();
-
-    mary.attemptsTo(vendorsApi.GETVendorsOnTheVendorsController(vendorId, vendorCode, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    VendorResponse vendorCheck =
-        LastResponse.received()
-            .answeredBy(mary)
             .getBody()
             .jsonPath()
             .getList("", VendorResponse.class)

@@ -28,8 +28,7 @@ public class GET_ActiveForms {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -54,6 +53,7 @@ public class GET_ActiveForms {
             .getList("", AcordFormInfoResponse.class)
             .get(0);
 
+    // TODO this is a hardcoded response that needs to be addressed
     assertThat(form.getDescription()).isEqualTo("Accidents/Convictions Schedule");
     assertThat(form.getNumber()).isEqualTo("99");
     assertThat(form.getState()).isEqualTo("US");

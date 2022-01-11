@@ -15,7 +15,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,8 +29,7 @@ public class GET_CompanyAddresses {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
@@ -84,53 +82,6 @@ public class GET_CompanyAddresses {
     CompanyAddressResponse companyAddress =
         LastResponse.received()
             .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getList("", CompanyAddressResponse.class)
-            .get(0);
-
-    // Response body format assertions
-    assertThat(companyAddress != null).isTrue();
-    assertThat(companyAddress.getClass().getDeclaredFields().length).isEqualTo(3);
-
-    // Response body field data assertions
-    assertThat(companyAddress.getCompanyAddressId()).isEqualTo(randCompanyAddress);
-    assertThat(companyAddress.getEmail() == null).isTrue();
-  }
-
-  @Test
-  @WithTag("19R2")
-  public void companyAddressesReturnsAllCompanyAddresses19R2() {
-    Actor mary = theActorCalled("mary");
-
-    UseCompanyAddressesTo companyAddressesAPI = new UseCompanyAddressesTo();
-
-    mary.attemptsTo(
-        companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    List<CompanyAddressResponse> companyAddresses =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", CompanyAddressResponse.class);
-
-    assertThat(companyAddresses.get(0).getClass().getDeclaredFields().length).isEqualTo(3);
-    assertThat(companyAddresses.size()).isGreaterThan(0);
-
-    randCompanyCode = companyAddresses.get(randomInt).getCompanyCode();
-    randCompanyAddress = companyAddresses.get(randomInt).getCompanyAddressId();
-
-    /*Test to validate that in 19R2 one Company address can be found*/
-    mary.attemptsTo(
-        companyAddressesAPI.GETCompanyAddressesOnTheCompaniesControllerDeprecated(
-            randCompanyCode, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    CompanyAddressResponse companyAddress =
-        LastResponse.received()
-            .answeredBy(mary)
             .getBody()
             .jsonPath()
             .getList("", CompanyAddressResponse.class)

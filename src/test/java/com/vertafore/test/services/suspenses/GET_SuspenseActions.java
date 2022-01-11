@@ -14,7 +14,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,26 +29,26 @@ public class GET_SuspenseActions {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
+  /* TODO this needs tests for ORAN and VADM keys, as well as dealing with hardcoded info */
+
   @Test
-  @WithTag("19R2")
   public void SuspenseActionsReturnsAllSuspenseActions() {
 
-    Actor mary = theActorCalled("mary");
+    Actor bob = theActorCalled("bob");
 
     UseSuspensesTo suspensesAPI = new UseSuspensesTo();
 
-    mary.attemptsTo(suspensesAPI.GETSuspensesActionsOnTheSuspensesController());
+    bob.attemptsTo(suspensesAPI.GETSuspensesActionsOnTheSuspensesController());
 
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActionResponse action =
         LastResponse.received()
-            .answeredBy(mary)
+            .answeredBy(bob)
             .getBody()
             .jsonPath()
             .getList("", ActionResponse.class)

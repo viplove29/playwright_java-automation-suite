@@ -15,7 +15,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,10 +30,11 @@ public class POST_SubmissionsTransactionsSearch {
         List.of(
             new EMSActor().called("bob").withContext("userContext"),
             new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext"),
-            new EMSActor().called("mary").withContext("userContext").withVersion("19R2")));
+            new EMSActor().called("adam").withContext("adminContext")));
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
+
+  // TODO these tests all rely on hardcoded data, please change
 
   @Test
   public void submissionsTransactionsSearchSuccessfullyReturnsForAuthorizedUsers() {
@@ -156,49 +156,6 @@ public class POST_SubmissionsTransactionsSearch {
     List<PolicyTransactionResponse> transactionResponse =
         LastResponse.received()
             .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getList("", PolicyTransactionResponse.class);
-
-    assertThat(transactionResponse.size()).isEqualTo(2);
-    assertThat(transactionResponse.get(0).getPolicyId()).isEqualTo(submissionGUID);
-    assertThat(transactionResponse.get(0).getTransactionType())
-        .isEqualTo(submissionTransactionType);
-    assertThat(transactionResponse.get(0).getDescription()).isEqualTo(submissionDescription);
-    assertThat(transactionResponse.get(1).getPolicyId()).isEqualTo(policyGUID);
-    assertThat(transactionResponse.get(1).getTransactionType()).isEqualTo(policyTransactionType);
-    assertThat(transactionResponse.get(1).getDescription()).isEqualTo(policyDescription);
-  }
-
-  @Test
-  @WithTag("19R2")
-  public void submissionsTransactionSearchReturnsCorrectData19R2() {
-    Actor mary = theActorCalled("mary");
-    String submissionGUID = "959d63d6-5709-4a4c-a042-03311792be5b";
-    String policyGUID = "fa06dea6-dec6-4767-9b03-0087c91ccc58";
-    String submissionTransactionType = "NBQ";
-    String policyTransactionType = "NBS";
-    String submissionDescription = "New business quote";
-    String policyDescription = "New business";
-
-    ArrayList<String> policies = new ArrayList<>();
-    policies.add(submissionGUID); // submission
-    policies.add(policyGUID); // normal policy
-
-    PoliciesTransactionsSearchPostRequest requestBody = new PoliciesTransactionsSearchPostRequest();
-    requestBody.setPolicyIds(policies);
-    requestBody.setIncludeAllPolicyTypes(true);
-
-    UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
-
-    mary.attemptsTo(
-        submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
-            requestBody, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    List<PolicyTransactionResponse> transactionResponse =
-        LastResponse.received()
-            .answeredBy(mary)
             .getBody()
             .jsonPath()
             .getList("", PolicyTransactionResponse.class);
