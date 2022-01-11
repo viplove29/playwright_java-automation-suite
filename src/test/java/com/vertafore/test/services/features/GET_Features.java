@@ -14,7 +14,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,7 +41,6 @@ public class GET_Features {
             new EMSActor().called("doug").withContext("appContext"),
             new EMSActor().called("adam").withContext("adminContext"),
             new EMSActor().called("bob").withContext("userContext").withLoginType("vsso"),
-            new EMSActor().called("mary").withVersion("19R2"),
             new EMSActor()
                 .called("fred")
                 .withContext("userContext")
@@ -91,6 +89,7 @@ public class GET_Features {
     Boolean agencyEnabled = featureResponse.getAgencyEnabled();
     Boolean globalEnabled = featureResponse.getGlobalEnabled();
 
+    // TODO should this part be its own class?
     adam.attemptsTo(featuresApi.GETFeaturesFeatureNameOnTheFeaturesController(name, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
@@ -103,51 +102,6 @@ public class GET_Features {
     FeatureAvailabilityResponse featureCheck =
         LastResponse.received()
             .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getObject("", FeatureAvailabilityResponse.class);
-
-    assertThat(featureResponse.getClass().getDeclaredFields().length).isEqualTo(3);
-
-    assertThat(featureCheck.getName()).isEqualTo(name);
-    assertThat(featureCheck.getAgencyEnabled()).isEqualTo(agencyEnabled);
-    assertThat(featureCheck.getGlobalEnabled()).isEqualTo(globalEnabled);
-  }
-
-  /* The purpose of this test is the same as above, but only uses the user context and is ran against
-  a 19R2 agency.
-   */
-
-  @Test
-  @WithTag("19R2")
-  public void featuresReturnsAllFeatures19R2() {
-    Actor mary = theActorCalled("mary");
-
-    UseFeaturesTo featuresApi = new UseFeaturesTo();
-
-    mary.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    FeatureAvailabilityResponse featureResponse =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("", FeatureAvailabilityResponse.class)
-            .get(0);
-
-    assertThat(featureResponse.getClass().getDeclaredFields().length).isEqualTo(3);
-
-    String name = featureResponse.getName();
-    Boolean agencyEnabled = featureResponse.getAgencyEnabled();
-    Boolean globalEnabled = featureResponse.getGlobalEnabled();
-
-    mary.attemptsTo(featuresApi.GETFeaturesFeatureNameOnTheFeaturesController(name, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    FeatureAvailabilityResponse featureCheck =
-        LastResponse.received()
-            .answeredBy(mary)
             .getBody()
             .jsonPath()
             .getObject("", FeatureAvailabilityResponse.class);

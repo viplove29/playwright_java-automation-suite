@@ -15,7 +15,6 @@ import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import net.thucydides.core.annotations.WithTag;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -120,6 +119,8 @@ public class GET_Customers {
     assertThat(customer.getZipCode()).isEqualTo(randZipCode);
   }
 
+  // TODO this should not only be its own test but should also not use a hardcoded phone number.
+  // Also, it should check that just the one customer is returned.
   @Test
   public void customerByPhoneReturnsCustomerByPhone() {
     Actor bob = theActorCalled("bob");
@@ -138,70 +139,5 @@ public class GET_Customers {
             .get(0);
 
     assertThat(customer != null).isTrue();
-  }
-
-  @Test
-  @WithTag("19R2")
-  public void customersReturnsCustomers19R2() {
-    Actor mary = theActorCalled("mary");
-
-    UseCustomersTo customersApi = new UseCustomersTo();
-
-    // Get ALL Customers
-    mary.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    CustomerResponse customers =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("customerList", CustomerResponse.class)
-            .get(randomInt);
-
-    assertThat(customers.getClass().getDeclaredFields().length).isEqualTo(11);
-
-    /*Create a list of variables to store a random selection from the first getCustomers call*/
-    randCustId = customers.getCustId();
-    randSortName = customers.getSortName();
-    randContactName = customers.getContactName();
-    randFirmName = customers.getFirmName();
-    randPrimaryEmail = customers.getPrimaryEmail();
-    randSecondEmail = customers.getSecondaryEmail();
-    randCustNumber = customers.getCustNo();
-    randZipCode = customers.getZipCode();
-
-    // Get Customer by Customer Number
-    mary.attemptsTo(
-        customersApi.GETCustomersOnTheCustomersControllerDeprecated(randCustNumber, "string"));
-
-    CustomerResponse customer =
-        LastResponse.received()
-            .answeredBy(mary)
-            .getBody()
-            .jsonPath()
-            .getList("customerList", CustomerResponse.class)
-            .get(0);
-
-    // Response body format assertions
-    assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(11);
-
-    // Response body field data assertions
-    assertThat(customer.getCustId()).isEqualTo(randCustId);
-
-    assertThat(customer.getSortName()).isEqualTo(randSortName);
-
-    assertThat(customer.getContactName()).isEqualTo(randContactName);
-
-    assertThat(customer.getFirmName()).isEqualTo(randFirmName);
-
-    assertThat(customer.getPrimaryEmail()).isEqualTo(randPrimaryEmail);
-
-    assertThat(customer.getSecondaryEmail()).isEqualTo(randSecondEmail);
-
-    assertThat(customer.getCustNo()).isEqualTo(randCustNumber);
-
-    assertThat(customer.getZipCode()).isEqualTo(randZipCode);
   }
 }
