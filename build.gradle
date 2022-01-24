@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath("net.serenity-bdd:serenity-gradle-plugin:2.2.1")
         classpath("com.diffplug.spotless:spotless-plugin-gradle:3.26.1")
+        classpath('com.github.javafaker:javafaker:1.0.2')
     }
 }
 
@@ -111,6 +112,9 @@ dependencies {
     compile "com.github.invictum:serenity-reportportal-integration:1.5.8"
     // swaggerCodeGen needs the custom generator we have in /generators
     swaggerCodegen project('generators')
+    // faker
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
 }
 
 /**
