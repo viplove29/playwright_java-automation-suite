@@ -11,6 +11,7 @@ import com.vertafore.test.servicewrappers.UseCompanyAddressesTo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -56,9 +57,6 @@ public class GET_CompanyAddresses {
   public static String randCompanyWebAddress;
   public static String randCompanyCompanyType;
 
-  Random random = new Random();
-  int randomInt = random.nextInt(50);
-
   @Test
   public void companyAddressesReturnsAllCompanyAddresses() {
     Actor bob = theActorCalled("bob");
@@ -88,28 +86,33 @@ public class GET_CompanyAddresses {
 
     assertThat(companyAddressResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(20);
     assertThat(companyAddressResponse.size()).isGreaterThan(0);
+    int randomCompanyIndex = new Random().nextInt(companyAddressResponse.size());
 
     // set helper variables for later validation
-    randCompanyCode = companyAddressResponse.get(randomInt).getCompanyCode();
-    randCompanyAddressId = companyAddressResponse.get(randomInt).getCompanyAddressId();
-    randCompanyEmail = companyAddressResponse.get(randomInt).getEmail();
-    randCompanyAddressDescription = companyAddressResponse.get(randomInt).getAddressDescription();
-    randCompanyIsDefaultForChecks = companyAddressResponse.get(randomInt).getIsDefaultForChecks();
-    randCompanyIsDefaultForCLForms = companyAddressResponse.get(randomInt).getIsDefaultForCLForms();
-    randCompanyIsPrimaryAddress = companyAddressResponse.get(randomInt).getIsPrimaryAddress();
-    randCompanyAddressLine1 = companyAddressResponse.get(randomInt).getAddressLine1();
-    randCompanyAddressLine2 = companyAddressResponse.get(randomInt).getAddressLine2();
-    randCompanyCity = companyAddressResponse.get(randomInt).getCity();
-    randCompanyState = companyAddressResponse.get(randomInt).getState();
-    randCompanyZipCode = companyAddressResponse.get(randomInt).getZipCode();
-    randCompanyAreaCode = companyAddressResponse.get(randomInt).getAreaCode();
-    randCompanyPhone = companyAddressResponse.get(randomInt).getPhone();
-    randCompanyExtension = companyAddressResponse.get(randomInt).getExtension();
-    randCompanyFaxAreaCode = companyAddressResponse.get(randomInt).getFaxAreaCode();
-    randCompanyFaxPhone = companyAddressResponse.get(randomInt).getFaxPhone();
-    randCompanyFaxExtension = companyAddressResponse.get(randomInt).getFaxExtension();
-    randCompanyWebAddress = companyAddressResponse.get(randomInt).getWebAddress();
-    randCompanyCompanyType = companyAddressResponse.get(randomInt).getCompanyType();
+    randCompanyCode = companyAddressResponse.get(randomCompanyIndex).getCompanyCode();
+    randCompanyAddressId = companyAddressResponse.get(randomCompanyIndex).getCompanyAddressId();
+    randCompanyEmail = companyAddressResponse.get(randomCompanyIndex).getEmail();
+    randCompanyAddressDescription =
+        companyAddressResponse.get(randomCompanyIndex).getAddressDescription();
+    randCompanyIsDefaultForChecks =
+        companyAddressResponse.get(randomCompanyIndex).getIsDefaultForChecks();
+    randCompanyIsDefaultForCLForms =
+        companyAddressResponse.get(randomCompanyIndex).getIsDefaultForCLForms();
+    randCompanyIsPrimaryAddress =
+        companyAddressResponse.get(randomCompanyIndex).getIsPrimaryAddress();
+    randCompanyAddressLine1 = companyAddressResponse.get(randomCompanyIndex).getAddressLine1();
+    randCompanyAddressLine2 = companyAddressResponse.get(randomCompanyIndex).getAddressLine2();
+    randCompanyCity = companyAddressResponse.get(randomCompanyIndex).getCity();
+    randCompanyState = companyAddressResponse.get(randomCompanyIndex).getState();
+    randCompanyZipCode = companyAddressResponse.get(randomCompanyIndex).getZipCode();
+    randCompanyAreaCode = companyAddressResponse.get(randomCompanyIndex).getAreaCode();
+    randCompanyPhone = companyAddressResponse.get(randomCompanyIndex).getPhone();
+    randCompanyExtension = companyAddressResponse.get(randomCompanyIndex).getExtension();
+    randCompanyFaxAreaCode = companyAddressResponse.get(randomCompanyIndex).getFaxAreaCode();
+    randCompanyFaxPhone = companyAddressResponse.get(randomCompanyIndex).getFaxPhone();
+    randCompanyFaxExtension = companyAddressResponse.get(randomCompanyIndex).getFaxExtension();
+    randCompanyWebAddress = companyAddressResponse.get(randomCompanyIndex).getWebAddress();
+    randCompanyCompanyType = companyAddressResponse.get(randomCompanyIndex).getCompanyType();
 
     /*Test to validate that one Company Address can be found*/
     bob.attemptsTo(
@@ -117,12 +120,20 @@ public class GET_CompanyAddresses {
             randCompanyCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    CompanyAddressResponse companyAddress =
+    // a company code can have multiple addresses associated with it
+    List<CompanyAddressResponse> companyAddressesList =
         LastResponse.received()
             .answeredBy(bob)
             .getBody()
             .jsonPath()
-            .getList("", CompanyAddressResponse.class)
+            .getList("", CompanyAddressResponse.class);
+
+    // Filter the list by the company address ID
+    CompanyAddressResponse companyAddress =
+        companyAddressesList
+            .stream()
+            .filter(address -> address.getCompanyAddressId().contains(randCompanyAddressId))
+            .collect(Collectors.toList())
             .get(0);
 
     // Response body format assertions
@@ -180,28 +191,33 @@ public class GET_CompanyAddresses {
 
     assertThat(companyAddressResponse.get(0).getClass().getDeclaredFields().length).isEqualTo(20);
     assertThat(companyAddressResponse.size()).isGreaterThan(0);
+    int randomCompanyIndex = new Random().nextInt(companyAddressResponse.size());
 
     // set helper variables for later validation
-    randCompanyCode = companyAddressResponse.get(randomInt).getCompanyCode();
-    randCompanyAddressId = companyAddressResponse.get(randomInt).getCompanyAddressId();
-    randCompanyEmail = companyAddressResponse.get(randomInt).getEmail();
-    randCompanyAddressDescription = companyAddressResponse.get(randomInt).getAddressDescription();
-    randCompanyIsDefaultForChecks = companyAddressResponse.get(randomInt).getIsDefaultForChecks();
-    randCompanyIsDefaultForCLForms = companyAddressResponse.get(randomInt).getIsDefaultForCLForms();
-    randCompanyIsPrimaryAddress = companyAddressResponse.get(randomInt).getIsPrimaryAddress();
-    randCompanyAddressLine1 = companyAddressResponse.get(randomInt).getAddressLine1();
-    randCompanyAddressLine2 = companyAddressResponse.get(randomInt).getAddressLine2();
-    randCompanyCity = companyAddressResponse.get(randomInt).getCity();
-    randCompanyState = companyAddressResponse.get(randomInt).getState();
-    randCompanyZipCode = companyAddressResponse.get(randomInt).getZipCode();
-    randCompanyAreaCode = companyAddressResponse.get(randomInt).getAreaCode();
-    randCompanyPhone = companyAddressResponse.get(randomInt).getPhone();
-    randCompanyExtension = companyAddressResponse.get(randomInt).getExtension();
-    randCompanyFaxAreaCode = companyAddressResponse.get(randomInt).getFaxAreaCode();
-    randCompanyFaxPhone = companyAddressResponse.get(randomInt).getFaxPhone();
-    randCompanyFaxExtension = companyAddressResponse.get(randomInt).getFaxExtension();
-    randCompanyWebAddress = companyAddressResponse.get(randomInt).getWebAddress();
-    randCompanyCompanyType = companyAddressResponse.get(randomInt).getCompanyType();
+    randCompanyCode = companyAddressResponse.get(randomCompanyIndex).getCompanyCode();
+    randCompanyAddressId = companyAddressResponse.get(randomCompanyIndex).getCompanyAddressId();
+    randCompanyEmail = companyAddressResponse.get(randomCompanyIndex).getEmail();
+    randCompanyAddressDescription =
+        companyAddressResponse.get(randomCompanyIndex).getAddressDescription();
+    randCompanyIsDefaultForChecks =
+        companyAddressResponse.get(randomCompanyIndex).getIsDefaultForChecks();
+    randCompanyIsDefaultForCLForms =
+        companyAddressResponse.get(randomCompanyIndex).getIsDefaultForCLForms();
+    randCompanyIsPrimaryAddress =
+        companyAddressResponse.get(randomCompanyIndex).getIsPrimaryAddress();
+    randCompanyAddressLine1 = companyAddressResponse.get(randomCompanyIndex).getAddressLine1();
+    randCompanyAddressLine2 = companyAddressResponse.get(randomCompanyIndex).getAddressLine2();
+    randCompanyCity = companyAddressResponse.get(randomCompanyIndex).getCity();
+    randCompanyState = companyAddressResponse.get(randomCompanyIndex).getState();
+    randCompanyZipCode = companyAddressResponse.get(randomCompanyIndex).getZipCode();
+    randCompanyAreaCode = companyAddressResponse.get(randomCompanyIndex).getAreaCode();
+    randCompanyPhone = companyAddressResponse.get(randomCompanyIndex).getPhone();
+    randCompanyExtension = companyAddressResponse.get(randomCompanyIndex).getExtension();
+    randCompanyFaxAreaCode = companyAddressResponse.get(randomCompanyIndex).getFaxAreaCode();
+    randCompanyFaxPhone = companyAddressResponse.get(randomCompanyIndex).getFaxPhone();
+    randCompanyFaxExtension = companyAddressResponse.get(randomCompanyIndex).getFaxExtension();
+    randCompanyWebAddress = companyAddressResponse.get(randomCompanyIndex).getWebAddress();
+    randCompanyCompanyType = companyAddressResponse.get(randomCompanyIndex).getCompanyType();
 
     /*Test to validate that one Company Address can be found*/
     bob.attemptsTo(
@@ -209,12 +225,20 @@ public class GET_CompanyAddresses {
             randCompanyCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    CompanyAddressResponse companyAddress =
+    // a company code can have multiple addresses associated with it
+    List<CompanyAddressResponse> companyAddressesList =
         LastResponse.received()
             .answeredBy(bob)
             .getBody()
             .jsonPath()
-            .getList("", CompanyAddressResponse.class)
+            .getList("", CompanyAddressResponse.class);
+
+    // Filter the list by the company address ID
+    CompanyAddressResponse companyAddress =
+        companyAddressesList
+            .stream()
+            .filter(address -> address.getCompanyAddressId().contains(randCompanyAddressId))
+            .collect(Collectors.toList())
             .get(0);
 
     // Response body format assertions
