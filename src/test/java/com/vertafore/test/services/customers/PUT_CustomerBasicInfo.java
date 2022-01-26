@@ -49,36 +49,35 @@ public class PUT_CustomerBasicInfo {
     UseCustomersTo customersApi = new UseCustomersTo();
     CreateUpdateCustomer customerCreator = new CreateUpdateCustomer();
 
-    // Random number generator to pick a customer for editing in PUT
-    Integer customerSelector = new Random().nextInt(5);
-
     // Models for requests and responses
     CustomerFilterPostRequest customerSearch = new CustomerFilterPostRequest();
     PagingRequestCustomerFilterPostRequest pageSearch =
         new PagingRequestCustomerFilterPostRequest();
 
-    // Send request to capture an existing customer object to edit with PUT endpoint
+    // Send POST search request to capture an existing customer object to edit with PUT endpoint
     bob.attemptsTo(
-        customerAPI.GETCustomerOnTheCustomersController(null, customerSelector, "string"));
+        customersApi.POSTCustomersSearchOnTheCustomersController(customerSearch, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    // Capture random customers number
-    Integer customerNumber =
+    // Page Response containing customer list
+    PagingResponseCustomerBasicInfoResponse pageResponseAllCustomers =
         LastResponse.received()
             .answeredBy(bob)
             .getBody()
             .jsonPath()
-            .getObject("", CustomerIdResponse.class)
-            .getCustomerNumber();
+            .getObject("", PagingResponseCustomerBasicInfoResponse.class);
 
+    // Grab list of customers from page response
+    List<CustomerBasicInfoResponse> allCustomers = pageResponseAllCustomers.getResponse();
+
+    // Random number generator to pick a customer for editing in PUT using size of POST search
+    // response
+    Integer customerSelector = new Random().nextInt(allCustomers.size());
+
+    // Capture random customers number
+    Integer customerNumber = allCustomers.get(customerSelector).getCustomerNumber();
     // Capture random customers id
-    String customerId =
-        LastResponse.received()
-            .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getObject("", CustomerIdResponse.class)
-            .getCustomerId();
+    String customerId = allCustomers.get(customerSelector).getCustomerId();
 
     // Create updated customer object using id and number from request above
     CustomerBasicInfoPutRequest customerPUT =
