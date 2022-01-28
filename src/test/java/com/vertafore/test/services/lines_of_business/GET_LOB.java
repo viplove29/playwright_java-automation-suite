@@ -10,7 +10,6 @@ import com.vertafore.test.servicewrappers.UseLinesOfBusinessTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.conditions.Check;
@@ -22,8 +21,7 @@ import org.junit.runner.RunWith;
 @RunWith(SerenityRunner.class)
 public class GET_LOB {
 
-  // TODO this whole class needs to be reviewed and updated, and the accompanying LOB class
-  // addressed
+  /* TODO this whole class needs to be reviewed and updated, and the accompanying LOB class addressed */
   private List<EMSActor> actors = new ArrayList<>();
 
   @Before
@@ -41,8 +39,6 @@ public class GET_LOB {
 
     doug.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(false, "string"));
-
-    SerenityRest.lastResponse().prettyPrint();
 
     doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     Object result =
@@ -78,16 +74,12 @@ public class GET_LOB {
     doug.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(false, "string"));
 
-    SerenityRest.lastResponse().prettyPrint();
-
     doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int onlyActive =
         LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("").size();
 
     doug.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(null, "string"));
-
-    SerenityRest.lastResponse().prettyPrint();
 
     doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int onlyActive2 =
@@ -105,16 +97,12 @@ public class GET_LOB {
     doug.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(true, "string"));
 
-    SerenityRest.lastResponse().prettyPrint();
-
     doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int includesInactive =
         LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("").size();
 
     doug.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(null, "string"));
-
-    SerenityRest.lastResponse().prettyPrint();
 
     doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int onlyActive =
