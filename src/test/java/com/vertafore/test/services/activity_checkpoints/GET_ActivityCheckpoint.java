@@ -59,8 +59,6 @@ public class GET_ActivityCheckpoint {
             "Claim", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    SerenityRest.lastResponse().prettyPrint();
-
     ActivityCheckpointResponse activityCheckpointClaimResponse =
         LastResponse.received()
             .answeredBy(bob)

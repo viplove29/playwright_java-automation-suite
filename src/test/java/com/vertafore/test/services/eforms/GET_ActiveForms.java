@@ -40,25 +40,7 @@ public class GET_ActiveForms {
 
     UseEFormsTo eformsApi = new UseEFormsTo();
 
-    bob.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    bob.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    AcordFormInfoResponse form =
-        LastResponse.received()
-            .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getList("", AcordFormInfoResponse.class)
-            .get(0);
-
-    // TODO this is a hardcoded response that needs to be addressed
-    assertThat(form.getDescription()).isEqualTo("Accidents/Convictions Schedule");
-    assertThat(form.getNumber()).isEqualTo("99");
-    assertThat(form.getState()).isEqualTo("US");
-    assertThat(form.getElfFormVersionId()).isNotNull();
-
+    // TODO what's the difference between true or false for LatestOnly param?
     doug.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     doug.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
@@ -68,5 +50,34 @@ public class GET_ActiveForms {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     adam.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    bob.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    bob.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    AcordFormInfoResponse formResponse =
+        LastResponse.received()
+            .answeredBy(bob)
+            .getBody()
+            .jsonPath()
+            .getList("", AcordFormInfoResponse.class)
+            .get(0);
+
+    // basic field name assertions
+    assertThat(formResponse.getClass().getDeclaredFields().length).isEqualTo(9);
+    assertThat(formResponse.getClass().getDeclaredFields()[0].getName()).isEqualTo("description");
+    assertThat(formResponse.getClass().getDeclaredFields()[1].getName()).isEqualTo("number");
+    assertThat(formResponse.getClass().getDeclaredFields()[2].getName()).isEqualTo("state");
+    assertThat(formResponse.getClass().getDeclaredFields()[3].getName()).isEqualTo("edition");
+    assertThat(formResponse.getClass().getDeclaredFields()[4].getName()).isEqualTo("mapRuleIdList");
+    assertThat(formResponse.getClass().getDeclaredFields()[5].getName())
+        .isEqualTo("resourceIdList");
+    assertThat(formResponse.getClass().getDeclaredFields()[6].getName())
+        .isEqualTo("hasACORDFieldNames");
+    assertThat(formResponse.getClass().getDeclaredFields()[7].getName())
+        .isEqualTo("isMappedToDatabase");
+    assertThat(formResponse.getClass().getDeclaredFields()[8].getName())
+        .isEqualTo("elfFormVersionId");
   }
 }

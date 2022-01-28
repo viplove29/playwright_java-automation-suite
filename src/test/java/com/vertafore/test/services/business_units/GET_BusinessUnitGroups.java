@@ -11,7 +11,6 @@ import com.vertafore.test.servicewrappers.UseBusinessUnitsTo;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -30,8 +29,7 @@ public class GET_BusinessUnitGroups {
     OnStage.setTheStage(GetAnAccessToken(actors));
   }
 
-  /* This test just makes sure that business units exist (that the number returned is greater than zero) and that there are two fields in the response model.
-   */
+  /* TODO this needs some work lol */
   @Test
   public void businessUnitGroupsReturnsAllBUGroups() {
 
@@ -40,8 +38,6 @@ public class GET_BusinessUnitGroups {
     UseBusinessUnitsTo buGroupsAPI = new UseBusinessUnitsTo();
 
     bob.attemptsTo(buGroupsAPI.GETBusinessUnitsGroupsOnTheBusinessunitsController());
-
-    SerenityRest.lastResponse().prettyPrint();
 
     bob.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
 

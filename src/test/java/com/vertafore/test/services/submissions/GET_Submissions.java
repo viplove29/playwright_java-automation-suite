@@ -70,7 +70,7 @@ public class GET_Submissions {
     bob.attemptsTo(
         submissionsAPI.GETSubmissionsOnTheSubmissionsControllerDeprecated(
             customerGUID, false, "string"));
-    SerenityRest.lastResponse().prettyPrint();
+
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<BasicPolicyInfoResponse> fourPolicies =
