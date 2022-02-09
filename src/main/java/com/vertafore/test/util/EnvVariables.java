@@ -9,6 +9,7 @@ public class EnvVariables {
   public static final String LOGIN_KEY_PATH = getProperty("login_key_path");
   public static final String USER_APP_KEY = getProperty("site_db.appkey_user");
   public static final String APP_APP_KEY = getProperty("site_db.appkey_app");
+  public static final String APP_APP_ID = getProperty("site_db.appId_orange");
   public static final String ADMIN_APP_KEY = getProperty("site_db.appkey_admin");
   public static final String VERT_APP_KEY = getProperty("site_db.appkey_vert");
   public static final String LOGIN_USER_PATH = getProperty("login_user_path");
