@@ -8,7 +8,7 @@ import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
-import com.vertafore.test.util.CreateUpdateCustomer;
+import com.vertafore.test.util.CustomerUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,12 +47,9 @@ public class PUT_CustomerBasicInfo {
     // Services for endpoint methods
     UseCustomerTo customerAPI = new UseCustomerTo();
     UseCustomersTo customersApi = new UseCustomersTo();
-    CreateUpdateCustomer customerCreator = new CreateUpdateCustomer();
 
     // Models for requests and responses
     CustomerFilterPostRequest customerSearch = new CustomerFilterPostRequest();
-    PagingRequestCustomerFilterPostRequest pageSearch =
-        new PagingRequestCustomerFilterPostRequest();
 
     // Send POST search request to capture an existing customer object to edit with PUT endpoint
     bob.attemptsTo(
@@ -72,17 +69,16 @@ public class PUT_CustomerBasicInfo {
 
     // Random number generator to pick a customer for editing in PUT using size of POST search
     // response
-    Integer customerSelector = new Random().nextInt(allCustomers.size());
+    int customerSelector = new Random().nextInt(allCustomers.size());
 
     // Capture random customers number
-    Integer customerNumber = allCustomers.get(customerSelector).getCustomerNumber();
+    int customerNumber = allCustomers.get(customerSelector).getCustomerNumber();
     // Capture random customers id
     String customerId = allCustomers.get(customerSelector).getCustomerId();
 
     // Create updated customer object using id and number from request above
     CustomerBasicInfoPutRequest customerPUT =
-        customerCreator.updateBasicCustomer(
-            customerNumber, customerId, "Suspect", "Individual", bob);
+        CustomerUtil.updateBasicCustomer(customerNumber, customerId, "Suspect", "Individual", bob);
 
     // Make and send PUT request to update customer
 
@@ -91,64 +87,20 @@ public class PUT_CustomerBasicInfo {
         customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPUT, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    // TODO comment this back in once the Service User Application Lock defect is completed
-    // (DE27864)
     // Check AppContext
-    //    doug.attemptsTo(
-    //        customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPUT, "string"));
-    //    SerenityRest.lastResponse().prettyPrint();
-    //    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    doug.attemptsTo(
+        customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPUT, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // Check UserContext
     bob.attemptsTo(customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPUT, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    // Create POST object for customer search
-    customerSearch.setCustomerNumber(customerNumber);
-    customerSearch.setCustomerId(customerId);
-    pageSearch.setModel(customerSearch);
+    // Send POST Search request for updated Customer
+    CustomerBasicInfoResponse customer =
+        CustomerUtil.searchForACustomer(customerId, customerNumber, bob);
 
-    // Send out new POST customer search to get updated PUT fields
-    bob.attemptsTo(customersApi.POSTCustomersSearchOnTheCustomersController(pageSearch, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    // Capture POST Customer search response with updated PUT fields
-    PagingResponseCustomerBasicInfoResponse pageResponse =
-        LastResponse.received()
-            .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getObject("", PagingResponseCustomerBasicInfoResponse.class);
-
-    // Get first index of response to access customer
-    CustomerBasicInfoResponse customer = pageResponse.getResponse().get(0);
-
-    // Response Validations for PUT
-    assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(22);
-    assertThat(customer.getCustomerNumber()).isEqualTo(customerNumber);
-    assertThat(customer.getCustomerId()).isEqualTo(customerId);
-    assertThat(customer.getCustomerType()).isEqualTo(customerPUT.getCustomerType());
-    assertThat(customer.getFullName()).isEqualTo(customerPUT.getCustomerName().getFirmName());
-    assertThat(customer.getFirstName()).isEqualTo(customerPUT.getCustomerName().getFirstName());
-    assertThat(customer.getMiddleName()).isEqualTo(customerPUT.getCustomerName().getMiddleName());
-    assertThat(customer.getLastName()).isEqualTo(customerPUT.getCustomerName().getLastName());
-    assertThat(customer.getAddressLine1())
-        .isEqualTo(customerPUT.getCustomerAddress().getAddressLine1());
-    assertThat(customer.getAddressLine2())
-        .isEqualTo(customerPUT.getCustomerAddress().getAddressLine2());
-    assertThat(customer.getZipCode().replaceAll("[\\D]", ""))
-        .isEqualTo(customerPUT.getCustomerAddress().getZipCode().replaceAll("[\\D]", ""));
-    assertThat(customer.getCity()).isEqualTo(customerPUT.getCustomerAddress().getCity());
-    assertThat(customer.getState()).isEqualTo(customerPUT.getCustomerAddress().getState());
-    assertThat(customer.getCountry()).isEqualTo(customerPUT.getCustomerAddress().getCountry());
-    assertThat(customer.getPrimaryEmail()).isEqualTo(customerPUT.getPrimaryEmail());
-    assertThat(customer.getSecondaryEmail()).isEqualTo(customerPUT.getSecondaryEmail());
-    assertThat(customer.getResidencePhone().replaceAll("[\\D]", ""))
-        .isEqualTo(customerPUT.getPhoneNumbers().getResidencePhone().replaceAll("[\\D]", ""));
-    assertThat(customer.getBusinessPhone().replaceAll("[\\D]", ""))
-        .isEqualTo(customerPUT.getPhoneNumbers().getBusinessPhone().replaceAll("[\\D]", ""));
-    assertThat(customer.getMobilePhone().replaceAll("[\\D]", ""))
-        .isEqualTo(customerPUT.getPhoneNumbers().getCell().replaceAll("[\\D]", ""));
+    // Validate response fields
+    CustomerUtil.validateBasicCustomer(customer);
   }
 }
