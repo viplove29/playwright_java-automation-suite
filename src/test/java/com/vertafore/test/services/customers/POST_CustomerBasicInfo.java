@@ -7,8 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.EMSActor;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
-import com.vertafore.test.servicewrappers.UseCustomersTo;
-import com.vertafore.test.util.CreateUpdateCustomer;
+import com.vertafore.test.util.CustomerUtil;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -51,15 +50,10 @@ public class POST_CustomerBasicInfo {
 
     // Services for endpoint methods
     UseCustomerTo customerAPI = new UseCustomerTo();
-    UseCustomersTo customersAPI = new UseCustomersTo();
-    CreateUpdateCustomer customerCreator = new CreateUpdateCustomer();
 
     // Models for requests and responses
     CustomerBasicInfoPostRequest customerBody =
-        customerCreator.createBasicCustomer("Customer", "Family", bob);
-    CustomerFilterPostRequest customerSearch = new CustomerFilterPostRequest();
-    PagingRequestCustomerFilterPostRequest pageSearch =
-        new PagingRequestCustomerFilterPostRequest();
+        CustomerUtil.createBasicCustomer("Customer", "Family", bob);
 
     // Send POST customer request
 
@@ -79,7 +73,7 @@ public class POST_CustomerBasicInfo {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // Grab customerNumber for POST Search
-    Integer customerNumber =
+    int customerNumber =
         LastResponse.received()
             .answeredBy(bob)
             .getBody()
@@ -96,64 +90,11 @@ public class POST_CustomerBasicInfo {
             .getObject("", CustomerIdResponse.class)
             .getCustomerId();
 
-    // Create POST object for customer search
-    customerSearch.setCustomerNumber(customerNumber);
-    customerSearch.setCustomerId(customerId);
-    pageSearch.setModel(customerSearch);
-
     // Send POST Search request for created Customer
+    CustomerBasicInfoResponse customer =
+        CustomerUtil.searchForACustomer(customerId, customerNumber, bob);
 
-    // Check AdminContext
-    adam.attemptsTo(
-        customersAPI.POSTCustomersSearchOnTheCustomersController(customerSearch, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-
-    // Check AppContext
-    doug.attemptsTo(
-        customersAPI.POSTCustomersSearchOnTheCustomersController(customerSearch, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    // Check UserContext
-    bob.attemptsTo(customersAPI.POSTCustomersSearchOnTheCustomersController(pageSearch, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    // Capture POST Customer search response
-    PagingResponseCustomerBasicInfoResponse pageResponse =
-        LastResponse.received()
-            .answeredBy(bob)
-            .getBody()
-            .jsonPath()
-            .getObject("", PagingResponseCustomerBasicInfoResponse.class);
-
-    // Get first index of response to access customer
-    CustomerBasicInfoResponse customer = pageResponse.getResponse().get(0);
-
-    // Response validations for POST search
-    assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(22);
-    assertThat(customer.getCustomerNumber()).isEqualTo(customerNumber);
-    assertThat(customer.getCustomerId()).isEqualTo(customerId);
-    assertThat(customer.getCustomerType()).isEqualTo(customerBody.getCustomerType());
-    assertThat(customer.getFullName()).isEqualTo(customerBody.getCustomerName().getFirmName());
-    assertThat(customer.getFirstName()).isEqualTo(customerBody.getCustomerName().getFirstName());
-    assertThat(customer.getMiddleName()).isEqualTo(customerBody.getCustomerName().getMiddleName());
-    assertThat(customer.getLastName()).isEqualTo(customerBody.getCustomerName().getLastName());
-    assertThat(customer.getAddressLine1())
-        .isEqualTo(customerBody.getCustomerAddress().getAddressLine1());
-    assertThat(customer.getAddressLine2())
-        .isEqualTo(customerBody.getCustomerAddress().getAddressLine2());
-    assertThat(customer.getZipCode().replaceAll("[\\D]", ""))
-        .isEqualTo(customerBody.getCustomerAddress().getZipCode().replaceAll("[\\D]", ""));
-    assertThat(customer.getCity()).isEqualTo(customerBody.getCustomerAddress().getCity());
-    assertThat(customer.getState()).isEqualTo(customerBody.getCustomerAddress().getState());
-    assertThat(customer.getCountry()).isEqualTo(customerBody.getCustomerAddress().getCountry());
-    assertThat(customer.getPrimaryEmail()).isEqualTo(customerBody.getPrimaryEmail());
-    assertThat(customer.getSecondaryEmail()).isEqualTo(customerBody.getSecondaryEmail());
-    assertThat(customer.getResidencePhone().replaceAll("[\\D]", ""))
-        .isEqualTo(customerBody.getPhoneNumbers().getResidencePhone().replaceAll("[\\D]", ""));
-    assertThat(customer.getBusinessPhone().replaceAll("[\\D]", ""))
-        .isEqualTo(customerBody.getPhoneNumbers().getBusinessPhone().replaceAll("[\\D]", ""));
-    assertThat(customer.getMobilePhone().replaceAll("[\\D]", ""))
-        .isEqualTo(customerBody.getPhoneNumbers().getCell().replaceAll("[\\D]", ""));
+    // Validate response fields
+    CustomerUtil.validateBasicCustomer(customer);
   }
 }
