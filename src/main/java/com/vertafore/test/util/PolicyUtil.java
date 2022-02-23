@@ -20,7 +20,7 @@ import org.joda.time.DateTime;
 
 public class PolicyUtil {
 
-  // Validation Helpers
+  /*Validation Helpers - latestTransactionTranType and latestTransactionDate are also returned parameters, but are obsolete and so have been removed from our list*/
   public static String policyId;
   public static String customerId;
   public static String companyCode;
@@ -41,8 +41,6 @@ public class PolicyUtil {
   public static String description;
   public static String issuedState;
   public static String agencyNotation;
-  public static String latestTransactionTranType;
-  public static DateTime latestTransactionDate;
 
   public static BasicPolicyInfoResponse selectRandomPolicy(Actor actor, String policyType) {
 
@@ -54,10 +52,10 @@ public class PolicyUtil {
     polPostBody.setIncludeAllPolicyTypes(false);
     pageSearch.setModel(polPostBody);
     pageSearch.setTop(1000); // 1000 is the max that will return in a page
+    UsePoliciesTo policiesAPI = new UsePoliciesTo();
 
     switch (policyType) {
       case "policy":
-        UsePoliciesTo policiesAPI = new UsePoliciesTo();
         actor.attemptsTo(
             (policiesAPI.POSTPoliciesSearchOnThePoliciesController(pageSearch, "string")));
         assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
@@ -75,8 +73,15 @@ public class PolicyUtil {
                 pageSearch, "string")));
         assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
         break;
+      case "all":
+        polPostBody.setIncludeAllPolicyTypes(true);
+        pageSearch.setModel(polPostBody);
+        actor.attemptsTo(
+            (policiesAPI.POSTPoliciesSearchOnThePoliciesController(pageSearch, "string")));
+        assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+        break;
       default:
-        System.out.println("No policies exist of type " + policyType);
+        System.out.println("No policies exist of type " + policyType + "in this page response");
     }
 
     // this will get a full page of policies of the specified type
@@ -114,8 +119,6 @@ public class PolicyUtil {
     description = onePolicy.getDescription();
     issuedState = onePolicy.getIssuedState();
     agencyNotation = onePolicy.getAgencyNotation();
-    latestTransactionTranType = onePolicy.getLatestTransactionTranType();
-    latestTransactionDate = onePolicy.getLatestTransactionDate();
   }
 
   public static void validateSinglePolicyResponseVariables(BasicPolicyInfoResponse onePolicy) {
@@ -139,7 +142,5 @@ public class PolicyUtil {
     assertThat(onePolicy.getDescription()).isEqualTo(description);
     assertThat(onePolicy.getIssuedState()).isEqualTo(issuedState);
     assertThat(onePolicy.getAgencyNotation()).isEqualTo(agencyNotation);
-    assertThat(onePolicy.getLatestTransactionTranType()).isEqualTo(latestTransactionTranType);
-    assertThat(onePolicy.getLatestTransactionDate()).isEqualTo(latestTransactionDate);
   }
 }

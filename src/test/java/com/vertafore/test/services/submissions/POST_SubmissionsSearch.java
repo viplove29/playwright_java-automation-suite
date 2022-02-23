@@ -78,8 +78,8 @@ public class POST_SubmissionsSearch {
             .jsonPath()
             .getObject("", PagingResponseBasicPolicyInfoResponse.class);
 
-    Long numOfSubPols = pageResponse.getTotalCount();
-    assertThat(numOfSubPols).isGreaterThan(0);
+    assertThat(pageResponse.getTotalCount()).isGreaterThan(0);
+    int numOfSubPols = pageResponse.getResponse().size();
 
     int numOfTypeS =
         (int)
