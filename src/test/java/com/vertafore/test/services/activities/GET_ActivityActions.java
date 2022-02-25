@@ -59,13 +59,11 @@ public class GET_ActivityActions {
             .getList("", ActionResponse.class)
             .get(0);
 
-    assertThat(action != null).isTrue();
+    assertThat(action).isNotNull();
     assertThat(action.getClass().getDeclaredFields().length).isEqualTo(4);
-
-    // TODO fix hardcoded data
-    assertThat(action.getActionId()).isEqualTo("43138610-4a9e-4ed0-8f81-0e858048b409");
-    assertThat(action.getActionName()).isEqualTo("Acord Forms");
-    assertThat(action.getIsClaimAction()).isEqualTo("Y");
-    assertThat(action.getIsPolicyAction()).isEqualTo("Y");
+    assertThat(action.getClass().getDeclaredFields()[0].getName()).isEqualTo("actionId");
+    assertThat(action.getClass().getDeclaredFields()[1].getName()).isEqualTo("actionName");
+    assertThat(action.getClass().getDeclaredFields()[2].getName()).isEqualTo("isPolicyAction");
+    assertThat(action.getClass().getDeclaredFields()[3].getName()).isEqualTo("isClaimAction");
   }
 }
