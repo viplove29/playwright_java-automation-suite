@@ -62,20 +62,27 @@ spotless:
 .regression:
   tags: [ Windows ]
   stage: test
+  extends: .windows scripts
   only:
     - schedules
     - web
-  extends: .windows scripts
   script:
     - Set-ReportPortalProperties -Project EMS -LaunchName $LAUNCH_NAME
-    - ./gradlew testClasses test --info
+    - echo $ENVIRONMENT
+    - ./gradlew testClasses test --info -Denvironment="$ENVIRONMENT"
   interruptible: false
 
 QA:
   extends: .run_tc_from_branch
 
 QA Regression:
+  only:
+    variables:
+      - '$ENVIRONMENT == "QA"'
   extends: .regression
 
 MDC Regression:
+  only:
+    variables:
+      - '$ENVIRONMENT == "MDC"'
   extends: .regression
