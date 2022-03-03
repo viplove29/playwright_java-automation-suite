@@ -10,6 +10,7 @@ import com.vertafore.test.servicewrappers.UsePoliciesTo;
 import com.vertafore.test.servicewrappers.UseServiceAgreementsTo;
 import com.vertafore.test.servicewrappers.UseSubmissionsTo;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -142,5 +143,78 @@ public class PolicyUtil {
     assertThat(onePolicy.getDescription()).isEqualTo(description);
     assertThat(onePolicy.getIssuedState()).isEqualTo(issuedState);
     assertThat(onePolicy.getAgencyNotation()).isEqualTo(agencyNotation);
+  }
+
+  public static BasicPolicyInfoResponse getPolicyById(Actor actor, String policyId) {
+    PagingRequestPoliciesSearchPostRequest pageSearch =
+        new PagingRequestPoliciesSearchPostRequest();
+    PoliciesSearchPostRequest polPostBody = new PoliciesSearchPostRequest();
+    polPostBody.setPolicyId(policyId);
+    polPostBody.setIsCurrentlyInForce(false);
+    polPostBody.setIncludeAllPolicyTypes(true);
+    pageSearch.setModel(polPostBody);
+    pageSearch.setTop(1000); // 1000 is the max that will return in a page
+    UsePoliciesTo policiesAPI = new UsePoliciesTo();
+
+    actor.attemptsTo((policiesAPI.POSTPoliciesSearchOnThePoliciesController(pageSearch, "string")));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    List<BasicPolicyInfoResponse> matchingPolicyList =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseBasicPolicyInfoResponse.class)
+            .getResponse();
+
+    assertThat(matchingPolicyList.size())
+        .as("Expected to find exactly 1 policy, but found " + matchingPolicyList.size() + ".")
+        .isEqualTo(1);
+
+    return matchingPolicyList.get(0);
+  }
+
+  // Continuously get policy by policy id until it is different from the "old" policy object
+  // and return the policy once it has been updated
+  // This is ONLY for tests that execute too quickly for a policy to update
+  public static BasicPolicyInfoResponse waitForDelayedPolicyUpdateAndGetPolicyById(
+      Actor actor, String policyId, BasicPolicyInfoResponse oldPolicy) {
+    int tries = 0;
+    while (tries < 5) {
+      BasicPolicyInfoResponse policy = getPolicyById(actor, policyId);
+
+      // check for any differences across all fields of BasicPolicyInfoResponse object using
+      // Objects.equals() instead of .equals() to ensure there are no NullPointerExceptions during
+      // comparison
+      if (!(Objects.equals(policy.getPolicyId(), oldPolicy.getPolicyId())
+          && Objects.equals(policy.getCustomerId(), oldPolicy.getCustomerId())
+          && Objects.equals(policy.getCompanyCode(), oldPolicy.getCompanyCode())
+          && Objects.equals(policy.getCompanyName(), oldPolicy.getCompanyName())
+          && Objects.equals(policy.getWritingCompanyCode(), oldPolicy.getWritingCompanyCode())
+          && Objects.equals(policy.getPolicyNumber(), oldPolicy.getPolicyNumber())
+          && Objects.equals(policy.getPolicyEffectiveDate(), oldPolicy.getPolicyEffectiveDate())
+          && Objects.equals(policy.getPolicyExpirationDate(), oldPolicy.getPolicyExpirationDate())
+          && Objects.equals(policy.getCsrCode(), oldPolicy.getCsrCode())
+          && Objects.equals(policy.getExecutiveCode(), oldPolicy.getExecutiveCode())
+          && Objects.equals(policy.getLineOfBusiness(), oldPolicy.getLineOfBusiness())
+          && Objects.equals(policy.getPolicySubType(), oldPolicy.getPolicySubType())
+          && Objects.equals(policy.getGlDivisionCode(), oldPolicy.getGlDivisionCode())
+          && Objects.equals(policy.getGlDepartmentCode(), oldPolicy.getGlDepartmentCode())
+          && Objects.equals(policy.getGlBranchCode(), oldPolicy.getGlBranchCode())
+          && Objects.equals(policy.getGlGroupCode(), oldPolicy.getGlGroupCode())
+          && Objects.equals(policy.getRenewalReportStatus(), oldPolicy.getRenewalReportStatus())
+          && Objects.equals(policy.getDescription(), oldPolicy.getDescription())
+          && Objects.equals(policy.getIssuedState(), oldPolicy.getIssuedState())
+          && Objects.equals(policy.getAgencyNotation(), oldPolicy.getAgencyNotation())
+          && Objects.equals(
+              policy.getLatestTransactionTranType(), oldPolicy.getLatestTransactionTranType())
+          && Objects.equals(
+              policy.getLatestTransactionDate(), oldPolicy.getLatestTransactionDate()))) {
+        return policy;
+      }
+      tries++;
+    }
+    throw new RuntimeException("Policy " + policyId + " did not update after " + tries + " tries.");
   }
 }
