@@ -8,16 +8,19 @@ public class HaveAnAccessToken implements Ability {
   private final String loginType;
   private final String username;
   private final String password;
+  private final String loginPath;
   private String accessJwt = null;
 
-  private HaveAnAccessToken(String loginType, String username, String password) {
+  private HaveAnAccessToken(String loginType, String username, String password, String loginPath) {
     this.loginType = loginType;
     this.username = username;
     this.password = password;
+    this.loginPath = loginPath;
   }
 
-  public static HaveAnAccessToken with(String loginType, String username, String password) {
-    return new HaveAnAccessToken(loginType, username, password);
+  public static HaveAnAccessToken with(
+      String loginType, String username, String password, String loginPath) {
+    return new HaveAnAccessToken(loginType, username, password, loginPath);
   }
 
   public static HaveAnAccessToken as(Actor actor) {
@@ -38,6 +41,10 @@ public class HaveAnAccessToken implements Ability {
 
   public static String passwordForActor(Actor actor) {
     return HaveAnAccessToken.as(actor).password;
+  }
+
+  public static String loginPathForActor(Actor actor) {
+    return HaveAnAccessToken.as(actor).loginPath;
   }
 
   private void setAccessToken(String newAccessToken) {

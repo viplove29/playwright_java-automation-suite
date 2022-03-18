@@ -1,62 +1,46 @@
 package com.vertafore.test.services.activities;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.ActivityUrlResponse;
 import com.vertafore.test.servicewrappers.UseActivityTo;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_ActivityAgencyUrlCreate {
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_ActivityAgencyUrlCreate extends TokenSuperClass {
 
   @Test
   public void ActivityAgencyUrlCreateReturnsCreatedUrl() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     String randomEntityId;
     UseActivityTo activityApi = new UseActivityTo();
 
     // VADM key returns 403
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Employee", UUID.randomUUID().toString(), "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     // ORAN key successful, tests Employee EntityType
     randomEntityId = UUID.randomUUID().toString();
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Employee", randomEntityId, "string"));
 
     ActivityUrlResponse urlResponse =
         LastResponse.received()
-            .answeredBy(doug)
+            .answeredBy(ORAN_App)
             .getBody()
             .jsonPath()
             .getObject("", ActivityUrlResponse.class);
@@ -71,13 +55,13 @@ public class GET_ActivityAgencyUrlCreate {
 
     // AADM key successful, tests Company
     randomEntityId = UUID.randomUUID().toString();
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Company", randomEntityId, "string"));
 
     urlResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityUrlResponse.class);
@@ -92,13 +76,13 @@ public class GET_ActivityAgencyUrlCreate {
 
     // and bob again for Customer
     randomEntityId = UUID.randomUUID().toString();
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityApi.GETActivityAgencyUrlCreateOnTheActivitiesController(
             "Customer", randomEntityId, "string"));
 
     urlResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityUrlResponse.class);

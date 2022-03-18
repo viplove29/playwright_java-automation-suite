@@ -1,64 +1,48 @@
 package com.vertafore.test.services.eforms;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.AcordFormInfoResponse;
 import com.vertafore.test.servicewrappers.UseEFormsTo;
-import java.util.ArrayList;
-import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_ActiveForms {
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_ActiveForms extends TokenSuperClass {
 
   @Test
   public void eformsActiveFormsReturnsAllActiveForms() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseEFormsTo eformsApi = new UseEFormsTo();
 
     // TODO what's the difference between true or false for LatestOnly param?
-    doug.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
+    ORAN_App.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    doug.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
+    ORAN_App.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
+    VADM_Admin.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-    adam.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
+    VADM_Admin.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    bob.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
+    AADM_User.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(false, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    bob.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
+    AADM_User.attemptsTo(eformsApi.GETEFormsActiveFormsOnTheEformsController(true, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AcordFormInfoResponse formResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", AcordFormInfoResponse.class)

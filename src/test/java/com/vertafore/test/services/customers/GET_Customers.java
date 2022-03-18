@@ -1,37 +1,21 @@
 package com.vertafore.test.services.customers;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.CustomerResponse;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_Customers {
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_Customers extends TokenSuperClass {
 
   // Helpers
   Random random = new Random();
@@ -48,24 +32,27 @@ public class GET_Customers {
 
   @Test
   public void customersReturnsAllCustomers() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    doug.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
+    ORAN_App.attemptsTo(
+        customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
+    VADM_Admin.attemptsTo(
+        customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
+    AADM_User.attemptsTo(
+        customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CustomerResponse customers =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("customerList", CustomerResponse.class)
@@ -84,13 +71,13 @@ public class GET_Customers {
     randZipCode = customers.getZipCode();
 
     /*Create a second call to the Get Customers endpoint in order to validate that you can get a certain customer and that the data is correct*/
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         customersApi.GETCustomersOnTheCustomersControllerDeprecated(randCustNumber, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CustomerResponse customer =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("customerList", CustomerResponse.class)
@@ -122,16 +109,16 @@ public class GET_Customers {
   // Also, it should check that just the one customer is returned.
   @Test
   public void customerByPhoneReturnsCustomerByPhone() {
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
 
     UseCustomersTo customersApi = new UseCustomersTo();
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         customersApi.GETCustomersContactPhoneOnTheCustomersController("4111600767", "string"));
 
     CustomerResponse customer =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("customerList", CustomerResponse.class)

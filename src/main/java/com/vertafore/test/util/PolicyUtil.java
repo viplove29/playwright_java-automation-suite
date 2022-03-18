@@ -179,7 +179,8 @@ public class PolicyUtil {
   // and return the policy once it has been updated
   // This is ONLY for tests that execute too quickly for a policy to update
   public static BasicPolicyInfoResponse waitForDelayedPolicyUpdateAndGetPolicyById(
-      Actor actor, String policyId, BasicPolicyInfoResponse oldPolicy) {
+      Actor actor, String policyId, BasicPolicyInfoResponse oldPolicy) throws InterruptedException {
+    Thread.sleep(5000);
     int tries = 0;
     while (tries < 5) {
       BasicPolicyInfoResponse policy = getPolicyById(actor, policyId);

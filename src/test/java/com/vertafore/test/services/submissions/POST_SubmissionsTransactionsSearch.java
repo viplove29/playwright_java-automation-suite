@@ -1,10 +1,9 @@
 package com.vertafore.test.services.submissions;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePoliciesTo;
 import com.vertafore.test.servicewrappers.UseSubmissionsTo;
@@ -16,37 +15,23 @@ import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.joda.time.DateTime;
 import org.joda.time.Minutes;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class POST_SubmissionsTransactionsSearch {
-
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class POST_SubmissionsTransactionsSearch extends TokenSuperClass {
 
   @Test
   public void submissionsTransactionsSearchSuccessfullyReturnsForAuthorizedUsers() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     // endpoint requires at least one policyId
-    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(bob, "submission");
+    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "submission");
     String policyId = randomPolicy.getPolicyId();
     ArrayList<String> policies = new ArrayList<>();
     policies.add(policyId);
@@ -57,25 +42,25 @@ public class POST_SubmissionsTransactionsSearch {
 
     UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     requestBody.setIncludeAllPolicyTypes(false);
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     PolicyTransactionResponse transactionResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", PolicyTransactionResponse.class)
@@ -97,10 +82,10 @@ public class POST_SubmissionsTransactionsSearch {
 
   @Test
   public void includeAllPoliciesFlagReturnsCorrectResponses() {
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
 
-    BasicPolicyInfoResponse subPolicy = PolicyUtil.selectRandomPolicy(bob, "submission");
-    BasicPolicyInfoResponse regPolicy = PolicyUtil.selectRandomPolicy(bob, "policy");
+    BasicPolicyInfoResponse subPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "submission");
+    BasicPolicyInfoResponse regPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
     String subPolId = subPolicy.getPolicyId();
     String regPolId = regPolicy.getPolicyId();
     String regPolNumber = regPolicy.getPolicyNumber();
@@ -116,14 +101,14 @@ public class POST_SubmissionsTransactionsSearch {
     UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
 
     // includeAllPolicies set to true should return both policies
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<PolicyTransactionResponse> twoPolsResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", PolicyTransactionResponse.class);
@@ -132,7 +117,7 @@ public class POST_SubmissionsTransactionsSearch {
 
     // includesAllPolicies set to false should return an error for the regular policy
     requestBody.setIncludeAllPolicyTypes(false);
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
@@ -146,7 +131,7 @@ public class POST_SubmissionsTransactionsSearch {
     policies.remove(regPolId);
     requestBody.setPolicyIds(policies);
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
@@ -154,9 +139,9 @@ public class POST_SubmissionsTransactionsSearch {
 
   @Test
   public void newTransactionIncludedInResponse() {
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
 
-    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(bob, "submission");
+    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "submission");
     String policyId = randomPolicy.getPolicyId();
     DateTime effDate = randomPolicy.getPolicyEffectiveDate();
     DateTime expDate = randomPolicy.getPolicyExpirationDate();
@@ -172,14 +157,14 @@ public class POST_SubmissionsTransactionsSearch {
     UsePoliciesTo policiesAPI = new UsePoliciesTo();
 
     // check to see how many endorsements exist for the random policy
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     int numOfTransactions =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", PolicyTransactionResponse.class)
@@ -209,17 +194,18 @@ public class POST_SubmissionsTransactionsSearch {
     postBody.put("policyEndorsements", endorsements);
 
     // add a transaction to the policy
-    bob.attemptsTo(policiesAPI.POSTPoliciesEndorseOnThePoliciesController(postBody, "string"));
+    AADM_User.attemptsTo(
+        policiesAPI.POSTPoliciesEndorseOnThePoliciesController(postBody, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // confirm that one transaction was added to the policy
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         submissionsAPI.POSTSubmissionsTransactionsSearchOnTheSubmissionsController(
             requestBody, "string"));
 
     int numOfTransPlusOne =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", PolicyTransactionResponse.class)

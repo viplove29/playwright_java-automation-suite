@@ -1,67 +1,50 @@
 package com.vertafore.test.services.activity_checkpoints;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.ActivityCheckpointResponse;
 import com.vertafore.test.servicewrappers.UseActivityCheckpointTo;
-import java.util.ArrayList;
-import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_ActivityCheckpoint {
-
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_ActivityCheckpoint extends TokenSuperClass {
 
   /* A smoke test that validates the GET /activity-checkpoint endpoint against admin,app, and user contexts.
   This test checks that when "Claim" or "1" are used as parameters for the Checkpoint, the response
   is the same.*/
   @Test
   public void activityCheckpointClaimReturnsAllActivityClaimCheckpoint() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseActivityCheckpointTo activityCheckpointApi = new UseActivityCheckpointTo();
 
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Claim", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Claim", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Claim", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointClaimResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -70,14 +53,14 @@ public class GET_ActivityCheckpoint {
 
     /*This request queries the endpoint using "1" which should return the same result as inputting
     the word "Claim" as a parameter*/
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "1", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointClaimNumberResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -104,30 +87,30 @@ public class GET_ActivityCheckpoint {
   is the same.*/
   @Test
   public void activityCheckpointCustomerReturnsAllActivityCustomerCheckpoint() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseActivityCheckpointTo activityCheckpointApi = new UseActivityCheckpointTo();
 
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Customer", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Customer", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Customer", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointCustomerResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -137,14 +120,14 @@ public class GET_ActivityCheckpoint {
 
     /*This request queries the endpoint using "4" which should return the same result as inputting
     the word "Customer" as a parameter*/
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "4", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointCustomerNumberResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -171,30 +154,30 @@ public class GET_ActivityCheckpoint {
   is the same.*/
   @Test
   public void activityCheckpointDownloadReturnsAllActivityDownloadCheckpoint() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseActivityCheckpointTo activityCheckpointApi = new UseActivityCheckpointTo();
 
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Download", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Download", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Download", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointDownloadResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -204,14 +187,14 @@ public class GET_ActivityCheckpoint {
 
     /*This request queries the endpoint using "6" which should return the same result as inputting
     the word "Download" as a parameter*/
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "6", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointDownloadNumberResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -238,30 +221,30 @@ public class GET_ActivityCheckpoint {
   is the same.*/
   @Test
   public void activityCheckpointPolicyEditReturnsAllActivityPolicyEditCheckpoint() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseActivityCheckpointTo activityCheckpointApi = new UseActivityCheckpointTo();
 
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Policy Edit", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Policy Edit", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "Policy Edit", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointPolicyEditResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);
@@ -271,14 +254,14 @@ public class GET_ActivityCheckpoint {
 
     /*This request queries the endpoint using "20" which should return the same result as inputting
     the word "Policy Edit" as a parameter*/
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         activityCheckpointApi.GETActivityCheckpointOnTheActivitycheckpointsController(
             "20", "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActivityCheckpointResponse activityCheckpointPolicyEditNumberResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ActivityCheckpointResponse.class);

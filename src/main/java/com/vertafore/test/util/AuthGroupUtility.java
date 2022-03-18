@@ -1,8 +1,8 @@
 package com.vertafore.test.util;
 
+import static com.vertafore.test.util.EnvVariables.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.abilities.HaveALoginKey;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseAuthTo;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class AuthGroupUtility {
   public static byte[] currentDbPassword;
   public static String currentIsDbo;
   public static Integer currentPermFlag;
-  public static String currentIsHide;
+  public static Boolean currentIsHide; // changed from String
   public static String currentChangedBy;
   public static DateTime currentChangedDate;
   public static DateTime currentEnteredDate;
@@ -36,10 +36,10 @@ public class AuthGroupUtility {
     currentGrpDescShort = authGroupResponse.getGrpDescShort();
     currentGrpDescLong = authGroupResponse.getGrpDescLong();
     currentSecurityMaskPos = authGroupResponse.getSecurityMaskPos();
-    currentDbGroup = authGroupResponse.getDbGroup();
-    currentDbLoginId = authGroupResponse.getDbLoginId();
-    currentDbPassword = authGroupResponse.getDbPassword();
-    currentIsDbo = authGroupResponse.getIsDbo();
+    //    currentDbGroup = authGroupResponse.getDbGroup();
+    //    currentDbLoginId = authGroupResponse.getDbLoginId();
+    //    currentDbPassword = authGroupResponse.getDbPassword();
+    //    currentIsDbo = authGroupResponse.getIsDbo();
     currentPermFlag = authGroupResponse.getPermFlag();
     currentIsHide = authGroupResponse.getIsHide();
     currentChangedBy = authGroupResponse.getChangedBy();
@@ -52,15 +52,15 @@ public class AuthGroupUtility {
     assertThat(authGroupResponse.getGrpDescShort()).isEqualTo(currentGrpDescShort);
     assertThat(authGroupResponse.getGrpDescLong()).isEqualTo(currentGrpDescLong);
     assertThat(authGroupResponse.getSecurityMaskPos()).isEqualTo(currentSecurityMaskPos);
-    assertThat(authGroupResponse.getDbGroup()).isEqualTo(currentDbGroup);
+    //    assertThat(authGroupResponse.getDbGroup()).isEqualTo(currentDbGroup);
     assertThat(authGroupResponse.getChangedBy()).isEqualTo(currentChangedBy);
     assertThat(authGroupResponse.getChangedDate()).isEqualTo(currentChangedDate);
     assertThat(authGroupResponse.getEnteredDate()).isEqualTo(currentEnteredDate);
-    assertThat(authGroupResponse.getDbLoginId()).isEqualTo(currentDbLoginId);
-    assertThat(authGroupResponse.getDbPassword()).isEqualTo(currentDbPassword);
+    //    assertThat(authGroupResponse.getDbLoginId()).isEqualTo(currentDbLoginId);
+    //    assertThat(authGroupResponse.getDbPassword()).isEqualTo(currentDbPassword);
     assertThat(authGroupResponse.getIsHide()).isEqualTo(currentIsHide);
     assertThat(authGroupResponse.getPermFlag()).isEqualTo(currentPermFlag);
-    assertThat(authGroupResponse.getIsDbo()).isEqualTo(currentIsDbo);
+    //    assertThat(authGroupResponse.getIsDbo()).isEqualTo(currentIsDbo);
   }
 
   public static AuthGroupResponse selectRandomAuthGroup(Actor actor) {
@@ -77,7 +77,8 @@ public class AuthGroupUtility {
             .jsonPath()
             .getList("", AuthGroupResponse.class);
 
-    assertThat(authGroupResponses.get(0).getClass().getDeclaredFields().length).isEqualTo(13);
+    assertThat(authGroupResponses.get(0).getClass().getDeclaredFields().length)
+        .isEqualTo(9); // changed from 13
     assertThat(authGroupResponses.size()).isGreaterThan(0);
     int randomInt = new Random().nextInt(authGroupResponses.size());
 
@@ -94,8 +95,7 @@ public class AuthGroupUtility {
     UseAuthTo authAPI = new UseAuthTo();
 
     actor.attemptsTo(
-        authAPI.GETAuthConfigAgencyKeysAppIdOnTheConfigauthController(
-            EnvVariables.APP_APP_ID, "string"));
+        authAPI.GETAuthConfigAgencyKeysAppIdOnTheConfigauthController(ORAN_APP_ID, "string"));
 
     List<AppAccessToAgencyResponse> appAccessToAgencyResponses =
         LastResponse.received()
@@ -108,8 +108,8 @@ public class AuthGroupUtility {
        an app can be available through multiple agencies
        Filtering by the app access to agency key returns the right appAccessToAgencyResponse
     */
-    String version = HaveALoginKey.versionForActor(actor);
-    String appAccessToAgencyKey = EnvVariables.APP_ACCESS_TO_AGENCY_KEY(version).toLowerCase();
+    //    String version = HaveALoginKey.versionForActor(actor);
+    String appAccessToAgencyKey = APP_ACCESS_TO_AGENCY_KEY.toLowerCase();
 
     AppAccessToAgencyResponse filteredAppAccessToAgencyResponse =
         appAccessToAgencyResponses
