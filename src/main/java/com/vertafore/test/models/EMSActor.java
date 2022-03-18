@@ -2,25 +2,25 @@ package com.vertafore.test.models;
 
 public class EMSActor {
   private String actorName;
-  private String context = "";
+  private String keyType = "";
+  private String loginPath = "";
   private String loginType = "";
   private String username = "";
   private String password = "";
-  private String version = "main";
 
   public EMSActor(
       String actorName,
-      String context,
+      String keyType,
+      String loginPath,
       String loginType,
       String username,
-      String password,
-      String version) {
+      String password) {
     this.actorName = actorName;
-    this.context = context;
+    this.keyType = keyType;
+    this.loginPath = loginPath;
     this.loginType = loginType;
     this.username = username;
     this.password = password;
-    this.version = version;
   }
 
   public EMSActor() {}
@@ -30,8 +30,13 @@ public class EMSActor {
     return this;
   }
 
-  public EMSActor withContext(String context) {
-    setContext(context);
+  public EMSActor withKeyType(String keyType) {
+    setKeyType(keyType);
+    return this;
+  }
+
+  public EMSActor withLoginPath(String loginPath) {
+    setLoginPath(loginPath);
     return this;
   }
 
@@ -50,11 +55,6 @@ public class EMSActor {
     return this;
   }
 
-  public EMSActor withVersion(String version) {
-    setVersion(version);
-    return this;
-  }
-
   public String getActorName() {
     return actorName;
   }
@@ -63,12 +63,20 @@ public class EMSActor {
     this.actorName = actorName;
   }
 
-  public String getContext() {
-    return context;
+  public String getKeyType() {
+    return keyType;
   }
 
-  private void setContext(String context) {
-    this.context = context;
+  private void setKeyType(String keyType) {
+    this.keyType = keyType;
+  }
+
+  public String getLoginPath() {
+    return loginPath;
+  }
+
+  private void setLoginPath(String loginPath) {
+    this.loginPath = loginPath;
   }
 
   public String getLoginType() {
@@ -93,13 +101,5 @@ public class EMSActor {
 
   private void setPassword(String password) {
     this.password = password;
-  }
-
-  public String getVersion() {
-    return version;
-  }
-
-  private void setVersion(String version) {
-    this.version = version;
   }
 }

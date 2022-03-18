@@ -1,37 +1,22 @@
 package com.vertafore.test.services.companies;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.CompanyResponse;
 import com.vertafore.test.servicewrappers.UseCompaniesTo;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_Companies {
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_Companies extends TokenSuperClass {
 
   // Helpers
   public static String randCompanyCode = "";
@@ -43,24 +28,24 @@ public class GET_Companies {
 
   @Test
   public void companiesReturnsAllCompanies() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseCompaniesTo companiesAPI = new UseCompaniesTo();
 
-    doug.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
+    ORAN_App.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    adam.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
+    VADM_Admin.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    bob.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
+    AADM_User.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(null, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<CompanyResponse> companyResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", CompanyResponse.class);
@@ -73,12 +58,13 @@ public class GET_Companies {
     randCompanyName = companyResponse.get(randomInt).getName();
 
     /*Test to validate that one Company can be found using a random company code and the data can be verified using the first test*/
-    bob.attemptsTo(companiesAPI.GETCompaniesOnTheCompaniesController(randCompanyCode, "string"));
+    AADM_User.attemptsTo(
+        companiesAPI.GETCompaniesOnTheCompaniesController(randCompanyCode, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     CompanyResponse company =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", CompanyResponse.class)

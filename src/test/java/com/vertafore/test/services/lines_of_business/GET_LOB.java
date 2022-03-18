@@ -1,54 +1,47 @@
 package com.vertafore.test.services.lines_of_business;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static net.serenitybdd.screenplay.rest.questions.ResponseConsequence.seeThatResponse;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.servicewrappers.UseLinesOfBusinessTo;
-import java.util.ArrayList;
-import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.conditions.Check;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_LOB {
+public class GET_LOB extends TokenSuperClass {
 
   /* TODO this whole class needs to be reviewed and updated, and the accompanying LOB class addressed */
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("doug").withContext("appContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
 
   @Test
   public void LOBReturnsCorrectResponseBody() {
 
-    Actor doug = theActorCalled("doug");
+    Actor ORAN_App = theActorCalled("ORAN_App");
 
     UseLinesOfBusinessTo lobAPI = new UseLinesOfBusinessTo();
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(false, "string"));
 
-    doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
+    ORAN_App.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     Object result =
-        LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("", LOB.class).get(0);
+        LastResponse.received()
+            .answeredBy(ORAN_App)
+            .getBody()
+            .jsonPath()
+            .getList("", LOB.class)
+            .get(0);
     assertThat(result != null).isTrue();
     assertThat(result.getClass().getDeclaredFields().length).isEqualTo(4);
 
     assertThat(
             LastResponse.received()
-                .answeredBy(doug)
+                .answeredBy(ORAN_App)
                 .getBody()
                 .jsonPath()
                 .getString("sdeCode")
@@ -56,7 +49,7 @@ public class GET_LOB {
         .contains("GL");
     assertThat(
             LastResponse.received()
-                .answeredBy(doug)
+                .answeredBy(ORAN_App)
                 .getBody()
                 .jsonPath()
                 .getString("sdeDescription")
@@ -67,46 +60,46 @@ public class GET_LOB {
   @Test
   public void LOBReturnsActiveLOBs() {
 
-    Actor doug = theActorCalled("doug");
+    Actor ORAN_App = theActorCalled("ORAN_App");
 
     UseLinesOfBusinessTo lobAPI = new UseLinesOfBusinessTo();
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(false, "string"));
 
-    doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
+    ORAN_App.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int onlyActive =
-        LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("").size();
+        LastResponse.received().answeredBy(ORAN_App).getBody().jsonPath().getList("").size();
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(null, "string"));
 
-    doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
+    ORAN_App.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int onlyActive2 =
-        LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("").size();
+        LastResponse.received().answeredBy(ORAN_App).getBody().jsonPath().getList("").size();
     Check.whether(onlyActive == onlyActive2);
   }
 
   @Test
   public void LOBReturnsInactiveLOBs() {
 
-    Actor doug = theActorCalled("doug");
+    Actor ORAN_App = theActorCalled("ORAN_App");
 
     UseLinesOfBusinessTo lobAPI = new UseLinesOfBusinessTo();
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(true, "string"));
 
-    doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
+    ORAN_App.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int includesInactive =
-        LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("").size();
+        LastResponse.received().answeredBy(ORAN_App).getBody().jsonPath().getList("").size();
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
         lobAPI.GETLinesOfBusinessOnTheLinesofbusinessControllerDeprecated(null, "string"));
 
-    doug.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
+    ORAN_App.should(seeThatResponse("successfully gets response", res -> res.statusCode(200)));
     int onlyActive =
-        LastResponse.received().answeredBy(doug).getBody().jsonPath().getList("").size();
+        LastResponse.received().answeredBy(ORAN_App).getBody().jsonPath().getList("").size();
     Check.whether(includesInactive > onlyActive);
   }
 }

@@ -1,10 +1,9 @@
 package com.vertafore.test.services.balance_journal_entries;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.BasicPolicyInfoResponse;
 import com.vertafore.test.models.ems.CustomerResponse;
 import com.vertafore.test.models.ems.ImportBalanceJournalEntryResponse;
@@ -16,22 +15,13 @@ import java.util.*;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 // TODO We still need a test that checks for financed policies, as it's a very common workflow
 @RunWith(SerenityRunner.class)
-public class PUT_BalanceJournalEntriesImportCustomer {
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class PUT_BalanceJournalEntriesImportCustomer extends TokenSuperClass {
 
   // Helpers
   String currentDate = LocalDateTime.now().toString();
@@ -42,14 +32,15 @@ public class PUT_BalanceJournalEntriesImportCustomer {
   }
 
   public String generateCSVRowForFirstPolicyFound() {
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
 
     // Get list of all customers in environment
     UseCustomersTo customersApi = new UseCustomersTo();
-    bob.attemptsTo(customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
+    AADM_User.attemptsTo(
+        customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
     List<CustomerResponse> customers =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("customerList", CustomerResponse.class);
@@ -73,13 +64,13 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
       // TODO change this endpoint to POST_policies/search
       UsePoliciesTo policiesApi = new UsePoliciesTo();
-      bob.attemptsTo(
+      AADM_User.attemptsTo(
           policiesApi.GETPoliciesOnThePoliciesControllerDeprecated(
               customer.getCustId(), true, "string"));
 
       List<BasicPolicyInfoResponse> policies =
           LastResponse.received()
-              .answeredBy(bob)
+              .answeredBy(AADM_User)
               .getBody()
               .jsonPath()
               .getList("", BasicPolicyInfoResponse.class);
@@ -120,7 +111,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
   @Test
   public void balanceJournalEntriesWithExistingCustomerAndPolicyReturnsSuccessfulResponse() {
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
     String headers = generateCSVHeaders();
     String testCsv = generateCSVRowForFirstPolicyFound();
 
@@ -136,7 +127,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     UseBalanceJournalEntriesTo balanceJournalEntriesApi = new UseBalanceJournalEntriesTo();
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         balanceJournalEntriesApi
             .PUTBalanceJournalEntriesCustomerImportOnTheBalancejournalentriesController(
                 body1, "string"));
@@ -145,7 +136,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     ImportBalanceJournalEntryResponse response1 =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ImportBalanceJournalEntryResponse.class);
@@ -166,7 +157,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
     body2.put("ignoreWarnings", "true");
     body2.put("description", "Automated Test Part 2");
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         balanceJournalEntriesApi
             .PUTBalanceJournalEntriesCustomerImportOnTheBalancejournalentriesController(
                 body2, "string"));
@@ -175,7 +166,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     ImportBalanceJournalEntryResponse response2 =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ImportBalanceJournalEntryResponse.class);
@@ -193,7 +184,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
       multipleBalanceJournalEntriesWithSameCustomerAndPolicyReturnsMultipleSuccessfulResponses() {
     int balanceJournalEntriesToCreate = 10;
 
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
 
     String headers = generateCSVHeaders();
 
@@ -216,7 +207,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     UseBalanceJournalEntriesTo balanceJournalEntriesApi = new UseBalanceJournalEntriesTo();
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         balanceJournalEntriesApi
             .PUTBalanceJournalEntriesCustomerImportOnTheBalancejournalentriesController(
                 body, "string"));
@@ -225,7 +216,7 @@ public class PUT_BalanceJournalEntriesImportCustomer {
 
     ImportBalanceJournalEntryResponse response1 =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", ImportBalanceJournalEntryResponse.class);

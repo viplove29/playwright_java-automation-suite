@@ -1,62 +1,46 @@
 package com.vertafore.test.services.employees;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.BusinessUnitDetailResponse;
 import com.vertafore.test.models.ems.BusinessUnitNameCodeResponse;
 import com.vertafore.test.servicewrappers.UseEmployeeTo;
-import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_EmployeeBusinessUnits {
-
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_EmployeeBusinessUnits extends TokenSuperClass {
 
   /* A smoke test that validates the GET /employee/business-units endpoint against admin,app, and user contexts.
   Validate that only admin does not have access, and that App and User context do have access.
   Returns employee business unit data as a list and validates the response length.*/
   @Test
   public void employeeBusinessUnitsReturnsAllEmployeeBusinessUnits() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseEmployeeTo employeeApi = new UseEmployeeTo();
 
-    adam.attemptsTo(employeeApi.GETEmployeeBusinessUnitsOnTheEmployeesController());
+    VADM_Admin.attemptsTo(employeeApi.GETEmployeeBusinessUnitsOnTheEmployeesController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(employeeApi.GETEmployeeBusinessUnitsOnTheEmployeesController());
+    ORAN_App.attemptsTo(employeeApi.GETEmployeeBusinessUnitsOnTheEmployeesController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(employeeApi.GETEmployeeBusinessUnitsOnTheEmployeesController());
+    AADM_User.attemptsTo(employeeApi.GETEmployeeBusinessUnitsOnTheEmployeesController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<BusinessUnitDetailResponse> businessUnitDetailResponses =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", BusinessUnitDetailResponse.class);

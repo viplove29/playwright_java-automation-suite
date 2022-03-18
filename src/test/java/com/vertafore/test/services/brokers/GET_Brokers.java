@@ -1,47 +1,30 @@
 package com.vertafore.test.services.brokers;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.BrokerResponse;
 import com.vertafore.test.servicewrappers.UseBrokersTo;
-import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_Brokers {
-
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class GET_Brokers extends TokenSuperClass {
 
   /* This is a simple smoke test that sends a request to get the first 5 brokers and checks that the
   response body is not empty as well as the correct number of fields being returned.
    */
   @Test
   public void brokersReturnsAllBrokers() {
-
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseBrokersTo brokersAPI = new UseBrokersTo();
 
@@ -49,18 +32,18 @@ public class GET_Brokers {
     to return only first 5 results.
      */
 
-    adam.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
+    VADM_Admin.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
+    ORAN_App.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
+    AADM_User.attemptsTo(brokersAPI.GETBrokersOnTheBrokersController(0, 5, 5, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<BrokerResponse> brokerResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("response", BrokerResponse.class);

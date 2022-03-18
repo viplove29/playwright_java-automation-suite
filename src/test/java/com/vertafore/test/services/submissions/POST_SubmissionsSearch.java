@@ -1,48 +1,35 @@
 package com.vertafore.test.services.submissions;
 
-import static com.vertafore.test.actor.BuildEMSCast.GetAnAccessToken;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.BasicPolicyInfoResponse;
 import com.vertafore.test.models.ems.PagingRequestPoliciesSearchPostRequest;
 import com.vertafore.test.models.ems.PagingResponseBasicPolicyInfoResponse;
 import com.vertafore.test.models.ems.PoliciesSearchPostRequest;
 import com.vertafore.test.servicewrappers.UseSubmissionsTo;
 import com.vertafore.test.util.PolicyUtil;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class POST_SubmissionsSearch {
-
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(
-        List.of(
-            new EMSActor().called("bob").withContext("userContext"),
-            new EMSActor().called("doug").withContext("appContext"),
-            new EMSActor().called("adam").withContext("adminContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
+public class POST_SubmissionsSearch extends TokenSuperClass {
 
   @Test
   public void submissionsSuccessfullyReturnsAllSubmissions() {
-    Actor bob = theActorCalled("bob");
-    Actor doug = theActorCalled("doug");
-    Actor adam = theActorCalled("adam");
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
+    Actor AADM_V4App = theActorCalled("AADM_V4App");
+    Actor AGNY_User = theActorCalled("AGNY_User");
+    Actor VERT_User = theActorCalled("VERT_User");
+    Actor VERT_V4App = theActorCalled("VERT_V4App");
 
     UseSubmissionsTo submissionsAPI = new UseSubmissionsTo();
 
@@ -55,11 +42,27 @@ public class POST_SubmissionsSearch {
     polPostBody.setIncludeAllPolicyTypes(true);
     pageSearch.setModel(polPostBody);
 
-    adam.attemptsTo(
+    VADM_Admin.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    doug.attemptsTo(
+    ORAN_App.attemptsTo(
+        (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    AADM_V4App.attemptsTo(
+        (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    AGNY_User.attemptsTo(
+        (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VERT_User.attemptsTo(
+        (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VERT_V4App.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
@@ -67,13 +70,13 @@ public class POST_SubmissionsSearch {
     polPostBody.setIncludeAllPolicyTypes(false);
     pageSearch.setModel(polPostBody);
 
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     PagingResponseBasicPolicyInfoResponse pageResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBasicPolicyInfoResponse.class);
@@ -95,9 +98,9 @@ public class POST_SubmissionsSearch {
 
   @Test
   public void submissionsSuccessfullyReturnsOneSubmission() {
-    Actor bob = theActorCalled("bob");
+    Actor AADM_User = theActorCalled("AADM_User");
 
-    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(bob, "submission");
+    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "submission");
     String custId = randomPolicy.getCustomerId();
     String polId = randomPolicy.getPolicyId();
     PolicyUtil.setSinglePolicyResponseVariables(randomPolicy);
@@ -113,12 +116,12 @@ public class POST_SubmissionsSearch {
     pageSearch.setModel(polPostBody);
 
     // gets just the one policy using policy id
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
 
     BasicPolicyInfoResponse onePolicyByPolId =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBasicPolicyInfoResponse.class)
@@ -136,13 +139,13 @@ public class POST_SubmissionsSearch {
     pageSearch.setTop(1000); // 1000 is the max that will return in a page
 
     // gets all submission policies for customer
-    bob.attemptsTo(
+    AADM_User.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
 
     // filters by policy id
     BasicPolicyInfoResponse onePolicyByCustId =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBasicPolicyInfoResponse.class)

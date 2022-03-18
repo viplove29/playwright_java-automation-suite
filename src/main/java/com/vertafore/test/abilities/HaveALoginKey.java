@@ -5,17 +5,15 @@ import net.serenitybdd.screenplay.Actor;
 
 public class HaveALoginKey implements Ability {
 
-  private final String context;
-  private final String version;
+  private final String keyType;
   private String loginKey = null;
 
-  private HaveALoginKey(String context, String version) {
-    this.context = context;
-    this.version = version;
+  private HaveALoginKey(String keyType) {
+    this.keyType = keyType;
   }
 
-  public static HaveALoginKey with(String context, String version) {
-    return new HaveALoginKey(context, version);
+  public static HaveALoginKey with(String keyType) {
+    return new HaveALoginKey(keyType);
   }
 
   public static HaveALoginKey as(Actor actor) {
@@ -26,12 +24,8 @@ public class HaveALoginKey implements Ability {
     return actor.abilityTo(HaveALoginKey.class);
   }
 
-  public static String contextForActor(Actor actor) {
-    return HaveALoginKey.as(actor).context;
-  }
-
-  public static String versionForActor(Actor actor) {
-    return HaveALoginKey.as(actor).version;
+  public static String keyTypeForActor(Actor actor) {
+    return HaveALoginKey.as(actor).keyType;
   }
 
   private void setLoginKey(String newLoginKey) {
