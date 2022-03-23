@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.AuthGroupResponse;
 import com.vertafore.test.util.AuthGroupUtility;
+import com.vertafore.test.util.EmployeeUtil;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.screenplay.Actor;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import org.junit.runner.RunWith;
 public class POST_UserAuthGroupDelete extends TokenSuperClass {
 
   public static String randomAGrpId;
-  public static String serviceEmployeeEmpCode;
+  public static String randomEmpCode;
 
   @Test
   public void PostDeleteUserAuthGroupDeletesUserAuthGroup() {
@@ -24,30 +25,26 @@ public class POST_UserAuthGroupDelete extends TokenSuperClass {
     Actor ORAN_App = theActorCalled("ORAN_App");
 
     // Need to put at least one auth group to delete in case application is empty
-    // we will always do this with Orange partner (ORAN_App) to guarantee AuthGroup is added
+    // we will always do this with AADM to guarantee AuthGroup is added
     stageAuthGroupData(AADM_User);
 
     // ORANG TEST
-    assertThat(AuthGroupUtility.DeleteUserAuthGroup(ORAN_App, randomAGrpId, serviceEmployeeEmpCode))
-        .isEqualTo(200);
-    assertThat(AuthGroupUtility.isAuthGroupIdInAuthGroupList(ORAN_App, randomAGrpId))
-        .isEqualTo(false); // auth group is deleted, none in the list
-
-    stageAuthGroupData(ORAN_App);
+    assertThat(EmployeeUtil.DeleteUserAuthGroup(ORAN_App, randomAGrpId, randomEmpCode))
+        .isEqualTo(403);
+    assertThat(EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode))
+        .isTrue(); // not deleted, still in the list
 
     // VADM TEST
-    assertThat(
-            AuthGroupUtility.DeleteUserAuthGroup(VADM_Admin, randomAGrpId, serviceEmployeeEmpCode))
-        .isEqualTo(403); // AADM test
-    assertThat(AuthGroupUtility.isAuthGroupIdInAuthGroupList(ORAN_App, randomAGrpId))
-        .isEqualTo(true); // auth group is not deleted, still in the list
+    assertThat(EmployeeUtil.DeleteUserAuthGroup(VADM_Admin, randomAGrpId, randomEmpCode))
+        .isEqualTo(403);
+    assertThat(EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode))
+        .isTrue();
 
     // AADM TEST
-    assertThat(
-            AuthGroupUtility.DeleteUserAuthGroup(AADM_User, randomAGrpId, serviceEmployeeEmpCode))
-        .isEqualTo(200); // delete the same auth group VADM wasn't authorized to
-    assertThat(AuthGroupUtility.isAuthGroupIdInAuthGroupList(ORAN_App, randomAGrpId))
-        .isEqualTo(false); // auth group is deleted, none in the list
+    assertThat(EmployeeUtil.DeleteUserAuthGroup(AADM_User, randomAGrpId, randomEmpCode))
+        .isEqualTo(200);
+    assertThat(EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode))
+        .isFalse(); // auth group is deleted, none in the list
   }
 
   public void stageAuthGroupData(Actor actor) {
@@ -55,7 +52,8 @@ public class POST_UserAuthGroupDelete extends TokenSuperClass {
 
     authGroupToInsert = AuthGroupUtility.selectRandomAuthGroup(actor);
     randomAGrpId = authGroupToInsert.getaGrpId();
-    serviceEmployeeEmpCode = AuthGroupUtility.getCurrentServiceEmployeeEmpCode(actor);
-    AuthGroupUtility.PutAuthGroupUser(actor, authGroupToInsert, serviceEmployeeEmpCode);
+    randomEmpCode = EmployeeUtil.getRandomEmployee(actor).getEmpCode();
+
+    EmployeeUtil.PutAuthGroupUser(actor, authGroupToInsert, randomEmpCode);
   }
 }

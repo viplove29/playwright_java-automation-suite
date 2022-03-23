@@ -359,4 +359,27 @@ public class CustomerUtil {
     assertThat(customer.getMobilePhone().replaceAll("[\\D]", ""))
         .isEqualTo(cell.replaceAll("[\\D]", ""));
   }
+
+  // only AADM has access
+  public static List<SecuredCustomerBasicInfoResponse> getAllSecuredCustomers(Actor actor) {
+    actor.attemptsTo(customersAPI.GETCustomersSecuredCustomersOnTheCustomersController());
+    int statusCode = SerenityRest.lastResponse().getStatusCode();
+
+    if (statusCode == 200) {
+      return LastResponse.received()
+          .answeredBy(actor)
+          .getBody()
+          .jsonPath()
+          .getList("", SecuredCustomerBasicInfoResponse.class);
+    } else {
+      return null;
+    }
+  }
+
+  // only AADM has access
+  public static SecuredCustomerBasicInfoResponse getRandomSecuredCustomer(Actor actor) {
+    List<SecuredCustomerBasicInfoResponse> securedCustomers = getAllSecuredCustomers(actor);
+
+    return securedCustomers.get(new Random().nextInt(securedCustomers.size()));
+  }
 }
