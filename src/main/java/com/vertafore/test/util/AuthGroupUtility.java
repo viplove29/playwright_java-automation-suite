@@ -5,14 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseAuthTo;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.joda.time.DateTime;
 
 public class AuthGroupUtility {
 
@@ -20,47 +18,22 @@ public class AuthGroupUtility {
   public static String currentAGrpId;
   public static String currentGrpDescShort;
   public static String currentGrpDescLong;
-  public static Integer currentSecurityMaskPos;
-  public static String currentDbGroup;
-  public static String currentDbLoginId;
-  public static byte[] currentDbPassword;
-  public static String currentIsDbo;
   public static Integer currentPermFlag;
   public static Boolean currentIsHide; // changed from String
-  public static String currentChangedBy;
-  public static DateTime currentChangedDate;
-  public static DateTime currentEnteredDate;
 
   public static void setAuthGroupHelperVariables(AuthGroupResponse authGroupResponse) {
     currentAGrpId = authGroupResponse.getaGrpId();
     currentGrpDescShort = authGroupResponse.getGrpDescShort();
     currentGrpDescLong = authGroupResponse.getGrpDescLong();
-    currentSecurityMaskPos = authGroupResponse.getSecurityMaskPos();
-    //    currentDbGroup = authGroupResponse.getDbGroup();
-    //    currentDbLoginId = authGroupResponse.getDbLoginId();
-    //    currentDbPassword = authGroupResponse.getDbPassword();
-    //    currentIsDbo = authGroupResponse.getIsDbo();
     currentPermFlag = authGroupResponse.getPermFlag();
     currentIsHide = authGroupResponse.getIsHide();
-    currentChangedBy = authGroupResponse.getChangedBy();
-    currentChangedDate = authGroupResponse.getChangedDate();
-    currentEnteredDate = authGroupResponse.getEnteredDate();
   }
 
   public static void validateSingleAuthGroup(AuthGroupResponse authGroupResponse) {
     assertThat(authGroupResponse.getaGrpId()).isEqualTo(currentAGrpId);
     assertThat(authGroupResponse.getGrpDescShort()).isEqualTo(currentGrpDescShort);
     assertThat(authGroupResponse.getGrpDescLong()).isEqualTo(currentGrpDescLong);
-    assertThat(authGroupResponse.getSecurityMaskPos()).isEqualTo(currentSecurityMaskPos);
-    //    assertThat(authGroupResponse.getDbGroup()).isEqualTo(currentDbGroup);
-    assertThat(authGroupResponse.getChangedBy()).isEqualTo(currentChangedBy);
-    assertThat(authGroupResponse.getChangedDate()).isEqualTo(currentChangedDate);
-    assertThat(authGroupResponse.getEnteredDate()).isEqualTo(currentEnteredDate);
-    //    assertThat(authGroupResponse.getDbLoginId()).isEqualTo(currentDbLoginId);
-    //    assertThat(authGroupResponse.getDbPassword()).isEqualTo(currentDbPassword);
-    assertThat(authGroupResponse.getIsHide()).isEqualTo(currentIsHide);
     assertThat(authGroupResponse.getPermFlag()).isEqualTo(currentPermFlag);
-    //    assertThat(authGroupResponse.getIsDbo()).isEqualTo(currentIsDbo);
   }
 
   public static AuthGroupResponse selectRandomAuthGroup(Actor actor) {
@@ -78,7 +51,7 @@ public class AuthGroupUtility {
             .getList("", AuthGroupResponse.class);
 
     assertThat(authGroupResponses.get(0).getClass().getDeclaredFields().length)
-        .isEqualTo(9); // changed from 13
+        .isEqualTo(5); // changed from 13
     assertThat(authGroupResponses.size()).isGreaterThan(0);
     int randomInt = new Random().nextInt(authGroupResponses.size());
 
@@ -123,46 +96,6 @@ public class AuthGroupUtility {
 
   public static String getCurrentServiceEmployeeEmpCode(Actor actor) {
     return getCurrentApplicationWithCurrentAgency(actor).getEmpCode();
-  }
-
-  public static int DeleteUserAuthGroup(Actor actor, String aGrpId, String serviceEmployeeEmpCode) {
-    UseAuthTo authAPI = new UseAuthTo();
-
-    // Format post body
-    UserAuthGroupsDeletePostRequest deletePostRequest = new UserAuthGroupsDeletePostRequest();
-    deletePostRequest.setAuthGroupId(aGrpId);
-    deletePostRequest.setEmpCode(serviceEmployeeEmpCode);
-
-    List<UserAuthGroupsDeletePostRequest> listDeletePostRequest = new ArrayList<>();
-    listDeletePostRequest.add(deletePostRequest);
-
-    actor.attemptsTo(
-        authAPI.POSTAuthConfigUserAuthGroupsDeleteOnTheConfigauthController(
-            listDeletePostRequest, "string"));
-    return SerenityRest.lastResponse().getStatusCode();
-  }
-
-  public static int PutAuthGroupUser(
-      Actor actor, AuthGroupResponse authGroupToPut, String serviceEmployeeEmpCode) {
-
-    UseAuthTo authAPI = new UseAuthTo();
-
-    // Get random auth group id to assign/PUT it to the service Employee.
-    String randomAGrpId = authGroupToPut.getaGrpId();
-
-    // Format the singular put request
-    UserAuthGroupsPutRequest putRequest = new UserAuthGroupsPutRequest();
-    putRequest.setEmpCode(serviceEmployeeEmpCode);
-    putRequest.setAuthGroupId(randomAGrpId);
-
-    // Insert PUT request into a list for formatting
-    List<UserAuthGroupsPutRequest> listRequest = new ArrayList<>();
-    listRequest.add(putRequest);
-
-    actor.attemptsTo(
-        authAPI.PUTAuthConfigUserAuthGroupsOnTheConfigauthController(listRequest, "string"));
-
-    return SerenityRest.lastResponse().getStatusCode();
   }
 
   public static boolean isAuthGroupIdInAuthGroupList(Actor actor, String authGroupID) {
