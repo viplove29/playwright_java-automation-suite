@@ -182,7 +182,7 @@ public class PolicyUtil {
       Actor actor, String policyId, BasicPolicyInfoResponse oldPolicy) throws InterruptedException {
     Thread.sleep(5000);
     int tries = 0;
-    while (tries < 5) {
+    while (tries < 10) {
       BasicPolicyInfoResponse policy = getPolicyById(actor, policyId);
 
       // check for any differences across all fields of BasicPolicyInfoResponse object using
