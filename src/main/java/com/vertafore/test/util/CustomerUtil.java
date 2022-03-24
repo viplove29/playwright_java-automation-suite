@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
 import com.vertafore.test.models.ems.*;
+import com.vertafore.test.servicewrappers.UseCustomerTo;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
 import com.vertafore.test.servicewrappers.UseEmployeeTo;
 import java.util.List;
@@ -49,6 +50,7 @@ public class CustomerUtil {
   // Helper APIs and faker
   public static UseEmployeeTo employeeAPI = new UseEmployeeTo();
   public static UseCustomersTo customersAPI = new UseCustomersTo();
+  public static UseCustomerTo customerAPI = new UseCustomerTo();
   public static Faker faker = new Faker();
 
   // Global models for the methods that can either be a put or post model depending on the request
@@ -381,5 +383,57 @@ public class CustomerUtil {
     List<SecuredCustomerBasicInfoResponse> securedCustomers = getAllSecuredCustomers(actor);
 
     return securedCustomers.get(new Random().nextInt(securedCustomers.size()));
+  }
+
+  public static CustomerBasicInfoResponse selectRandomCustomer(Actor actor, String customerType) {
+    customerSearch.setIncludeCustomers(false);
+    customerSearch.setIncludeProspects(false);
+    customerSearch.setIncludeSuspects(false);
+    switch (customerType) {
+      case "customer":
+        customerSearch.setIncludeCustomers(true);
+        break;
+      case "prospect":
+        customerSearch.setIncludeProspects(true);
+        break;
+      case "suspect":
+        customerSearch.setIncludeSuspects(true);
+        break;
+      case "all":
+        customerSearch.setIncludeCustomers(true);
+        customerSearch.setIncludeProspects(true);
+        customerSearch.setIncludeSuspects(true);
+        break;
+      default:
+        System.out.println("No customers exist of type " + customerType + " in this page response");
+    }
+    pageSearch.setModel(customerSearch);
+
+    actor.attemptsTo(
+        customersAPI.POSTCustomersSearchOnTheCustomersController(pageSearch, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    List<CustomerBasicInfoResponse> allCustomers =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerBasicInfoResponse.class)
+            .getResponse();
+
+    int customerIndex = new Random().nextInt(allCustomers.size());
+
+    return allCustomers.get(customerIndex);
+  }
+
+  public static CustomerInfoResponse getCustomerInfoByCustomerId(Actor actor, String customerId) {
+    actor.attemptsTo(customerAPI.GETCustomerOnTheCustomersController(customerId, null, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    return LastResponse.received()
+        .answeredBy(actor)
+        .getBody()
+        .jsonPath()
+        .getObject("", CustomerInfoResponse.class);
   }
 }
