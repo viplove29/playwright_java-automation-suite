@@ -65,6 +65,25 @@ public class EmployeeUtil {
     return SerenityRest.lastResponse().getStatusCode();
   }
 
+  public static int insertMultipleSecuredCustomerAccessesForEmployee(
+      Actor actor, String empCode, List<String> customerIds) {
+    List<CustomerEmployeeSecurityPutRequest> customersToInsert = new ArrayList<>();
+
+    // format put request and insert all customer ids into list
+    for (String custId : customerIds) {
+      CustomerEmployeeSecurityPutRequest securedCustomerPutRequest =
+          new CustomerEmployeeSecurityPutRequest();
+      securedCustomerPutRequest.setCustomerId(custId);
+      securedCustomerPutRequest.setEmployeeCode(empCode);
+      customersToInsert.add(securedCustomerPutRequest);
+    }
+
+    actor.attemptsTo(
+        employeeApi.PUTEmployeeSecuredCustomersCustomerEmployeeSecurityOnTheEmployeesController(
+            customersToInsert, "string"));
+    return SerenityRest.lastResponse().getStatusCode();
+  }
+
   public static int deleteSecuredCustomerAccessForEmployee(
       Actor actor, String empCode, String customerId) {
     CustomerEmployeeSecurityPostRequest securedCustomerDeletePostRequest =
@@ -80,7 +99,7 @@ public class EmployeeUtil {
         employeeApi
             .POSTEmployeeSecuredCustomersCustomerEmployeeSecurityDeleteOnTheEmployeesController(
                 listPostRequest, "string"));
-    SerenityRest.lastResponse().prettyPrint();
+
     return SerenityRest.lastResponse().getStatusCode();
   }
 

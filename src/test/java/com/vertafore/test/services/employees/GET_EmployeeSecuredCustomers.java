@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.SecuredCustomerBasicInfoResponse;
-import com.vertafore.test.util.AuthGroupUtility;
 import com.vertafore.test.util.CustomerUtil;
 import com.vertafore.test.util.EmployeeUtil;
 import java.util.List;
+import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import org.junit.Test;
@@ -20,19 +20,27 @@ public class GET_EmployeeSecuredCustomers extends TokenSuperClass {
     Actor AADM_User = theActorCalled("AADM_User");
 
     // Get the necessary service employee who has access to all secured customers
-    String serviceEmployeeEmpCodeWithAllSecuredCustomers =
-        AuthGroupUtility.getCurrentServiceEmployeeEmpCode(AADM_User);
+    String randomEmployeeEmpCode = EmployeeUtil.getRandomEmployee(AADM_User).getEmpCode();
 
     // Get the number of all secured customers
     List<SecuredCustomerBasicInfoResponse> allSecuredCustomers =
         CustomerUtil.getAllSecuredCustomers(AADM_User);
     int numOfSecuredCustomers = allSecuredCustomers.size();
 
-    /* assert that the number of secured customers under the service employee who has them all
-    is equal to the number of all secured customers */
+    // get list of secured customer id strings from last response
+    List<String> securedCustomerIds =
+        allSecuredCustomers
+            .stream()
+            .map(securedCustomer -> securedCustomer.getCustomerId())
+            .collect(Collectors.toList());
+
+    // insert all secured customers into employee
+    EmployeeUtil.insertMultipleSecuredCustomerAccessesForEmployee(
+        AADM_User, randomEmployeeEmpCode, securedCustomerIds);
+
     List<SecuredCustomerBasicInfoResponse> securedCustomersUnderAnEmployee =
-        EmployeeUtil.getAllSecuredCustomersUnderAnEmployee(
-            AADM_User, serviceEmployeeEmpCodeWithAllSecuredCustomers);
+        EmployeeUtil.getAllSecuredCustomersUnderAnEmployee(AADM_User, randomEmployeeEmpCode);
+
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     assertThat(securedCustomersUnderAnEmployee.size()).isEqualTo(numOfSecuredCustomers);
   }
