@@ -48,13 +48,10 @@ public class POST_EmployeeSecuredCustomersDelete extends TokenSuperClass {
 
     // AADM Test
     assertThat(
-            EmployeeUtil.insertSecuredCustomerAccessForEmployee(
+            EmployeeUtil.deleteSecuredCustomerAccessForEmployee(
                 AADM_User, randomEmployeeEmpCode, randomSecuredCustomerId))
         .isEqualTo(200);
 
-    // Clean up data
-    EmployeeUtil.deleteSecuredCustomerAccessForEmployee(
-        AADM_User, randomEmployeeEmpCode, randomSecuredCustomerId);
     assertThat(
             EmployeeUtil.doesEmployeeHaveAccessToSecuredCustomer(
                 AADM_User, randomEmployeeEmpCode, randomSecuredCustomerId))
