@@ -6,6 +6,7 @@ import com.github.javafaker.Faker;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
+import com.vertafore.test.servicewrappers.UseCustomersWithContactsDependentsTo;
 import com.vertafore.test.servicewrappers.UseEmployeeTo;
 import java.util.List;
 import java.util.Random;
@@ -27,6 +28,7 @@ public class CustomerUtil {
   public static String accountRepShortName;
   public static String customerType;
   public static String nameType;
+  public static String fullName;
   public static String firmName;
   public static String firstName;
   public static String middleName;
@@ -51,6 +53,8 @@ public class CustomerUtil {
   public static UseEmployeeTo employeeAPI = new UseEmployeeTo();
   public static UseCustomersTo customersAPI = new UseCustomersTo();
   public static UseCustomerTo customerAPI = new UseCustomerTo();
+  public static UseCustomersWithContactsDependentsTo contactDependentsApi =
+      new UseCustomersWithContactsDependentsTo();
   public static Faker faker = new Faker();
 
   // Global models for the methods that can either be a put or post model depending on the request
@@ -238,9 +242,11 @@ public class CustomerUtil {
             .getObject("", PagingResponseCustomerBasicInfoResponse.class);
 
     // Get first index of response to access customer
-    CustomerBasicInfoResponse oneSearchedCustomer = pageResponse.getResponse().get(0);
-
-    return oneSearchedCustomer;
+    if (pageResponse.getResponse().size() > 0) {
+      return pageResponse.getResponse().get(0);
+    } else {
+      return null;
+    }
   }
 
   public static CustomerBasicInfoPostRequest createBasicCustomer(
@@ -362,6 +368,28 @@ public class CustomerUtil {
         .isEqualTo(cell.replaceAll("[\\D]", ""));
   }
 
+  public static void setBasicCustomerValidationHelpers(CustomerBasicInfoResponse customer) {
+    customerId = customer.getCustomerId();
+    customerNumber = customer.getCustomerNumber();
+    customerType = customer.getCustomerType();
+    fullName = customer.getFullName();
+    firmName = customer.getFirmName();
+    firstName = customer.getFirstName();
+    lastName = customer.getLastName();
+    middleName = customer.getMiddleName();
+    addressLine1 = customer.getAddressLine1();
+    addressLine2 = customer.getAddressLine2();
+    zipCode = customer.getZipCode();
+    city = customer.getCity();
+    state = customer.getState();
+    country = customer.getCountry();
+    primaryEmail = customer.getPrimaryEmail();
+    secondaryEmail = customer.getSecondaryEmail();
+    residencePhone = customer.getResidencePhone();
+    businessPhone = customer.getBusinessPhone();
+    cell = customer.getMobilePhone();
+  }
+
   // only AADM has access
   public static List<SecuredCustomerBasicInfoResponse> getAllSecuredCustomers(Actor actor) {
     actor.attemptsTo(customersAPI.GETCustomersSecuredCustomersOnTheCustomersController());
@@ -376,6 +404,16 @@ public class CustomerUtil {
     } else {
       return null;
     }
+  }
+
+  public static List<String> getAllSecuredCustomerIds(Actor actor) {
+    List<SecuredCustomerBasicInfoResponse> allSecuredCustomers = getAllSecuredCustomers(actor);
+
+    // get list of secured customer id strings from last response
+    return allSecuredCustomers
+        .stream()
+        .map(securedCustomer -> securedCustomer.getCustomerId())
+        .collect(Collectors.toList());
   }
 
   // only AADM has access
@@ -428,12 +466,61 @@ public class CustomerUtil {
 
   public static CustomerInfoResponse getCustomerInfoByCustomerId(Actor actor, String customerId) {
     actor.attemptsTo(customerAPI.GETCustomerOnTheCustomersController(customerId, null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    return LastResponse.received()
-        .answeredBy(actor)
-        .getBody()
-        .jsonPath()
-        .getObject("", CustomerInfoResponse.class);
+    if (SerenityRest.lastResponse().getStatusCode() == 200) {
+      return LastResponse.received()
+          .answeredBy(actor)
+          .getBody()
+          .jsonPath()
+          .getObject("", CustomerInfoResponse.class);
+    } else {
+      return null;
+    }
+  }
+
+  public static List<CustomerContactDependentResponse> getAllCustomerContactDependents(
+      Actor actor, String division) {
+
+    // format body for post search request
+    DivisionFilterPostRequest postRequest = new DivisionFilterPostRequest();
+    postRequest.setDivisionCode(division);
+    PagingRequestDivisionFilterPostRequest pageRequest =
+        new PagingRequestDivisionFilterPostRequest();
+    pageRequest.setModel(postRequest);
+
+    actor.attemptsTo(
+        contactDependentsApi.POSTCustomersWithContactsDependentsSearchOnTheCustomersController(
+            pageRequest, ""));
+
+    if (SerenityRest.lastResponse().getStatusCode() == 200) {
+      PagingResponseCustomerContactDependentResponse response =
+          LastResponse.received()
+              .answeredBy(actor)
+              .getBody()
+              .jsonPath()
+              .getObject("", PagingResponseCustomerContactDependentResponse.class);
+      return response.getResponse();
+    } else {
+      return null;
+    }
+  }
+
+  public static CustomerContactDependentResponse getCustomerContactDependentByCustomerId(
+      Actor actor, String division, String custId) {
+    List<CustomerContactDependentResponse> customerContactDependents =
+        getAllCustomerContactDependents(actor, division);
+
+    // filter list to only contain item that has the custId
+    customerContactDependents =
+        customerContactDependents
+            .stream()
+            .filter(customer -> customer.getCustomerId().contains(custId))
+            .collect(Collectors.toList());
+
+    if (customerContactDependents.isEmpty()) {
+      return null;
+    } else {
+      return customerContactDependents.get(0);
+    }
   }
 }

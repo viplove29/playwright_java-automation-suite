@@ -7,7 +7,10 @@ import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
 import com.vertafore.test.servicewrappers.UseCustomersTo;
+import com.vertafore.test.util.AuthGroupUtility;
 import com.vertafore.test.util.CustomerUtil;
+import com.vertafore.test.util.EmployeeUtil;
+import com.vertafore.test.util.Util;
 import java.util.List;
 import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -88,5 +91,50 @@ public class PUT_CustomerBasicInfo extends TokenSuperClass {
 
     // Validate response fields
     CustomerUtil.validateBasicCustomer(customer);
+  }
+
+  @Test
+  public void putCustomerBasicInfoFiltersBySecuredCustomerAccessForServiceEmployees() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+
+    // Services for endpoint methods
+    UseCustomerTo customerAPI = new UseCustomerTo();
+
+    String serviceEmployeeEmpCode = AuthGroupUtility.getCurrentServiceEmployeeEmpCode(AADM_User);
+
+    // give service employee access to random secured customer
+    String randomSecuredCustomerId =
+        CustomerUtil.getRandomSecuredCustomer(AADM_User).getCustomerId();
+    EmployeeUtil.insertSecuredCustomerAccessForEmployee(
+        AADM_User, serviceEmployeeEmpCode, randomSecuredCustomerId);
+    Integer randomSecuredCustomerNumber =
+        CustomerUtil.getCustomerInfoByCustomerId(ORAN_App, randomSecuredCustomerId)
+            .getCustomerNumber();
+
+    // format the put request to use the customer number, not updating anything
+    CustomerBasicInfoPutRequest customerPutRequest = new CustomerBasicInfoPutRequest();
+    customerPutRequest.setCustomerNumber(randomSecuredCustomerNumber);
+
+    // Send a PUT request, the custId returned should correspond to the random one retrieved earlier
+    ORAN_App.attemptsTo(
+        customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPutRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    CustomerIdResponse customerPutResponse =
+        LastResponse.received()
+            .answeredBy(ORAN_App)
+            .getBody()
+            .jsonPath()
+            .getObject("", CustomerIdResponse.class);
+    assertThat(customerPutResponse.getCustomerId()).isEqualTo(randomSecuredCustomerId);
+
+    // remove secured customer access from Service Employee
+    EmployeeUtil.deleteSecuredCustomerAccessForEmployee(
+        AADM_User, serviceEmployeeEmpCode, randomSecuredCustomerId);
+
+    // Send the PUT request again, should not be successful
+    ORAN_App.attemptsTo(
+        customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPutRequest, "string"));
+    Util.validateErrorResponse("No customer was found using the arguments supplied", ORAN_App);
   }
 }
