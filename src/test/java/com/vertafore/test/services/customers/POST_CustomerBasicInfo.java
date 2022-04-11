@@ -6,7 +6,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
+import com.vertafore.test.util.AuthGroupUtility;
 import com.vertafore.test.util.CustomerUtil;
+import com.vertafore.test.util.EmployeeUtil;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -79,5 +81,36 @@ public class POST_CustomerBasicInfo extends TokenSuperClass {
 
     // Validate response fields
     CustomerUtil.validateBasicCustomer(customer);
+  }
+
+  @Test
+  public void postCustomerSearchFiltersBySecuredCustomerAccessForServiceEmployees() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+
+    String serviceEmployeeEmpCode = AuthGroupUtility.getCurrentServiceEmployeeEmpCode(AADM_User);
+
+    // give secured customer access to employee
+    String randomSecuredCustomerId =
+        CustomerUtil.getRandomSecuredCustomer(AADM_User).getCustomerId();
+    EmployeeUtil.insertSecuredCustomerAccessForEmployee(
+        AADM_User, serviceEmployeeEmpCode, randomSecuredCustomerId);
+
+    // search for a customer, customerNo isn't necessary so just pass 0
+    CustomerBasicInfoResponse randomSecuredCustomerBasicInfo =
+        CustomerUtil.searchForACustomer(randomSecuredCustomerId, 0, ORAN_App);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(randomSecuredCustomerBasicInfo).isNotNull();
+    assertThat(randomSecuredCustomerBasicInfo.getClass().getDeclaredFields().length).isEqualTo(22);
+
+    // remove access to secured customer
+    EmployeeUtil.deleteSecuredCustomerAccessForEmployee(
+        AADM_User, serviceEmployeeEmpCode, randomSecuredCustomerId);
+
+    randomSecuredCustomerBasicInfo =
+        CustomerUtil.searchForACustomer(randomSecuredCustomerId, 0, ORAN_App);
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .isEqualTo(200); // 200 status code, but returns an empty list
+    assertThat(randomSecuredCustomerBasicInfo).isNull();
   }
 }

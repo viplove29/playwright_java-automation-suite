@@ -103,6 +103,26 @@ public class EmployeeUtil {
     return SerenityRest.lastResponse().getStatusCode();
   }
 
+  public static int deleteMultipleSecuredCustomerAccessForEmployee(
+      Actor actor, String empCode, List<String> customerIds) {
+    List<CustomerEmployeeSecurityPostRequest> customersToDelete = new ArrayList<>();
+
+    // format put request and insert all customer ids into list
+    for (String custId : customerIds) {
+      CustomerEmployeeSecurityPostRequest securedCustomerPostRequest =
+          new CustomerEmployeeSecurityPostRequest();
+      securedCustomerPostRequest.setCustomerId(custId);
+      securedCustomerPostRequest.setEmployeeCode(empCode);
+      customersToDelete.add(securedCustomerPostRequest);
+    }
+
+    actor.attemptsTo(
+        employeeApi
+            .POSTEmployeeSecuredCustomersCustomerEmployeeSecurityDeleteOnTheEmployeesController(
+                customersToDelete, "string"));
+    return SerenityRest.lastResponse().getStatusCode();
+  }
+
   public static boolean doesEmployeeHaveAccessToSecuredCustomer(
       Actor actor, String empCode, String customerId) {
 
