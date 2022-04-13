@@ -78,12 +78,18 @@ public class PUT_CustomerBasicInfo extends TokenSuperClass {
     // Check AppContext
     ORAN_App.attemptsTo(
         customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPUT, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    if (SerenityRest.lastResponse().getStatusCode() != 200) {
+      SerenityRest.lastResponse().prettyPrint();
+    }
 
     // Check UserContext
     AADM_User.attemptsTo(
         customerAPI.PUTCustomerBasicInfoOnTheCustomersController(customerPUT, "string"));
+    if (SerenityRest.lastResponse().getStatusCode() != 200) {
+      SerenityRest.lastResponse().prettyPrint();
+    }
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(LastResponse.received().answeredBy(ORAN_App).getStatusCode()).isEqualTo(200);
 
     // Send POST Search request for updated Customer
     CustomerBasicInfoResponse customer =
