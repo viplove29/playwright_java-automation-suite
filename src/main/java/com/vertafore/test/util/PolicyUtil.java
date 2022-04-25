@@ -43,6 +43,8 @@ public class PolicyUtil {
   public static String issuedState;
   public static String agencyNotation;
 
+  public static UsePoliciesTo policiesApi = new UsePoliciesTo();
+
   public static BasicPolicyInfoResponse selectRandomPolicy(Actor actor, String policyType) {
 
     PagingRequestPoliciesSearchPostRequest pageSearch =
@@ -219,5 +221,36 @@ public class PolicyUtil {
       Thread.sleep(3000);
     }
     throw new RuntimeException("Policy " + policyId + " did not update after " + tries + " tries.");
+  }
+
+  public static BasicPolicyInfoResponse getRandomSecuredCustomerPolicy(
+      Actor actor, List<String> securedCustomerIds) {
+    PagingRequestPoliciesSearchPostRequest pageSearch =
+        new PagingRequestPoliciesSearchPostRequest();
+    PoliciesSearchPostRequest polPostBody = new PoliciesSearchPostRequest();
+    polPostBody.setIsCurrentlyInForce(false);
+    polPostBody.setIncludeAllPolicyTypes(true);
+    pageSearch.setTop(1000); // 1000 is the max that will return in a page
+
+    for (String custId : securedCustomerIds) {
+      polPostBody.setCustomerId(custId);
+      pageSearch.setModel(polPostBody);
+      actor.attemptsTo(policiesApi.POSTPoliciesSearchOnThePoliciesController(pageSearch, ""));
+
+      // this will get a full page of policies of the specified type
+      List<BasicPolicyInfoResponse> allPols =
+          LastResponse.received()
+              .answeredBy(actor)
+              .getBody()
+              .jsonPath()
+              .getObject("", PagingResponseBasicPolicyInfoResponse.class)
+              .getResponse();
+
+      if (allPols.size() > 0) {
+        return allPols.get(new Random().nextInt(allPols.size()));
+      }
+    }
+
+    return null;
   }
 }
