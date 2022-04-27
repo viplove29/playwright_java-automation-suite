@@ -143,8 +143,8 @@ public class POST_SubmissionsTransactionsSearch extends TokenSuperClass {
 
     BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "submission");
     String policyId = randomPolicy.getPolicyId();
-    DateTime effDate = randomPolicy.getPolicyEffectiveDate();
-    DateTime expDate = randomPolicy.getPolicyExpirationDate();
+    String effDate = randomPolicy.getPolicyEffectiveDate();
+    String expDate = randomPolicy.getPolicyExpirationDate();
 
     ArrayList<String> policies = new ArrayList<>();
     policies.add(policyId);
@@ -171,9 +171,11 @@ public class POST_SubmissionsTransactionsSearch extends TokenSuperClass {
             .size();
 
     // choose a random datetime between the effective date and expiration date
-    int diff = Math.abs(Minutes.minutesBetween(effDate, expDate).getMinutes());
+    DateTime effDateConverted = DateTime.parse(effDate);
+    DateTime expDateConverted = DateTime.parse(expDate);
+    int diff = Math.abs(Minutes.minutesBetween(effDateConverted, expDateConverted).getMinutes());
     int randomMinutes = new Random().nextInt(diff);
-    DateTime randomDate = effDate.plusMinutes(randomMinutes);
+    DateTime randomDate = effDateConverted.plusMinutes(randomMinutes);
 
     /*TODO can't get the models to work due to a problem with accepting DateTimes. The current way works but feels hacky - I've left the original model instantiations as a guide for later.*/
 

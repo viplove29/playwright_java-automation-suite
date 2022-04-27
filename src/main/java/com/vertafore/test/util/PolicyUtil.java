@@ -15,7 +15,6 @@ import java.util.Random;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.joda.time.DateTime;
 
 /*This class will work for any of the policy response endpoints, including Policies, Submissions, and Service Agreements */
 
@@ -28,8 +27,8 @@ public class PolicyUtil {
   public static String companyName;
   public static String writingCompanyCode;
   public static String policyNumber;
-  public static DateTime policyEffectiveDate;
-  public static DateTime policyExpirationDate;
+  public static String policyEffectiveDate;
+  public static String policyExpirationDate;
   public static String csrCode;
   public static String executiveCode;
   public static String lineOfBusiness;

@@ -12,7 +12,6 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -64,8 +63,8 @@ public class GET_MaintenanceWindows extends TokenSuperClass {
     int mwIndex = new Random().nextInt(mwResponse.size());
     String id = mwResponse.get(mwIndex).getId();
     String status = mwResponse.get(mwIndex).getStatus();
-    DateTime startTime = mwResponse.get(mwIndex).getStartTime();
-    DateTime endTime = mwResponse.get(mwIndex).getEndTime();
+    String startTime = mwResponse.get(mwIndex).getStartTime();
+    String endTime = mwResponse.get(mwIndex).getEndTime();
     String prodVersion = mwResponse.get(mwIndex).getProdVersion();
     String comments = mwResponse.get(mwIndex).getComments();
     Boolean enabled = mwResponse.get(mwIndex).getEnabled();
