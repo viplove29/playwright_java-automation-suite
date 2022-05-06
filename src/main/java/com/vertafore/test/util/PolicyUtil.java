@@ -2,16 +2,14 @@ package com.vertafore.test.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.vertafore.test.models.ems.BasicPolicyInfoResponse;
-import com.vertafore.test.models.ems.PagingRequestPoliciesSearchPostRequest;
-import com.vertafore.test.models.ems.PagingResponseBasicPolicyInfoResponse;
-import com.vertafore.test.models.ems.PoliciesSearchPostRequest;
+import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePoliciesTo;
 import com.vertafore.test.servicewrappers.UseServiceAgreementsTo;
 import com.vertafore.test.servicewrappers.UseSubmissionsTo;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -251,5 +249,69 @@ public class PolicyUtil {
     }
 
     return null;
+  }
+
+  // Get policy data of a customer whose having more than two policies
+  public List<BasicPolicyInfoResponse> getAllPoliciesFromRandomCustomerWithMultiplePolicies(
+      Actor actor) {
+    PagingRequestPoliciesSearchPostRequest pageSearch =
+        new PagingRequestPoliciesSearchPostRequest();
+    PoliciesSearchPostRequest polPostBody = new PoliciesSearchPostRequest();
+
+    polPostBody.setIsCurrentlyInForce(false);
+    polPostBody.setIncludeAllPolicyTypes(false);
+    pageSearch.setModel(polPostBody);
+    pageSearch.setTop(1000); // 1000 is the max that will return in a page
+    UsePoliciesTo policiesAPI = new UsePoliciesTo();
+
+    actor.attemptsTo((policiesAPI.POSTPoliciesSearchOnThePoliciesController(pageSearch, "string")));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    List<BasicPolicyInfoResponse> allPols =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseBasicPolicyInfoResponse.class)
+            .getResponse();
+
+    String filteredCustomer =
+        allPols
+            .stream()
+            .collect(
+                Collectors.collectingAndThen(
+                    Collectors.groupingBy(
+                        BasicPolicyInfoResponse::getCustomerId, Collectors.counting()),
+                    map -> {
+                      map.values().removeIf(m -> m < 2);
+                      return map.keySet();
+                    }))
+            .stream()
+            .findFirst()
+            .get();
+
+    return allPols
+        .stream()
+        .filter(bp -> bp.getCustomerId().equals(filteredCustomer))
+        .collect(Collectors.toList());
+  }
+
+  public List<PolicyTransactionResponse> getPolicyTransactions(Actor actor, List<String> polIds) {
+    PoliciesTransactionsSearchPostRequest polTransactionsSearch =
+        new PoliciesTransactionsSearchPostRequest();
+    polTransactionsSearch.setPolicyIds(polIds);
+    polTransactionsSearch.setIncludeAllPolicyTypes(false);
+    UsePoliciesTo policiesAPI = new UsePoliciesTo();
+
+    actor.attemptsTo(
+        (policiesAPI.POSTPoliciesTransactionsSearchOnThePoliciesController(
+            polTransactionsSearch, "string")));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    return LastResponse.received()
+        .answeredBy(actor)
+        .getBody()
+        .jsonPath()
+        .getList("", PolicyTransactionResponse.class);
   }
 }
