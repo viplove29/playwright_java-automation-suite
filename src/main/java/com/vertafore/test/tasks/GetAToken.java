@@ -28,10 +28,13 @@ public class GetAToken implements Performable {
     if (loginType.isBlank() && username.isBlank() && password.isBlank()) {
       username = USERNAME;
       password = PASSWORD;
-    } else if (loginType.equals("vsso") && username.isBlank() && password.isBlank()) {
-      username = VSSO_USERNAME;
-      password = VSSO_PASSWORD;
     }
+    // since VSSO functionality has fundamentally changed this code is no longer needed, but can be
+    // left here for future reference
+    // else if (loginType.equals("vsso") && username.isBlank() && password.isBlank()) {
+    //      username = VSSO_USERNAME;
+    //      password = VSSO_PASSWORD;
+    //    }
 
     UseAuthTo authAPI = new UseAuthTo();
 

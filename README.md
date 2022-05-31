@@ -67,54 +67,14 @@ Each test is a JUnit test and does not have a corresponding feature file or engl
 ## General Test Setup
 Each class that holds integration tests must have the `@RunWith(SerenityRunner.class`) annotation.
 
-Each test requires an `actor` which acts as a device to hold the correct context token needed to access whatever endpoint you're testing. (Actors requiring a userContext token use the project's username and password, with a native login, by default.)
+Each test requires an `actor` which acts as a device to hold the token needed to access whatever endpoint you're testing. The suite gets tokens for a number of actors with different combinations of keyType/loginPath, that can then be used for all tests. This is facilitated through the use of the TokenSuperClass, which all test classes should extend to. 
 
-We need to build our `cast` of actors for the test so we use a `@Before` hook at the top of the class and for each actor we give it:
-- name
-- context
-
-Then we `setTheStage` with the actors we just built.
- 
- This method will handle the entire authentication/authorization process including obtaining the correct context token for the test.
-This before hook will run before each JUnit test making sure our actors' tokens are fresh.
-
-Example:
-`````
-@RunWith(SerenityRunner.class)
-public class UnderwriterServiceIntegration {
-
-  private List<EMSActor> actors = new ArrayList<>();
-
-  @Before
-  public void getAnAccessToken() {
-    actors.addAll(List.of(new EMSActor().called("bob").withContext("userContext")));
-    OnStage.setTheStage(GetAnAccessToken(actors));
-  }
-
-  @Test
-  public void UnderwritersReturnsAllUnderwriters() {
-
-    Actor bob = theActorCalled("bob");
-
-    UseUnderwritersTo underwritersAPI = new UseUnderwritersTo();
-
-    bob.attemptsTo(
-        underwritersAPI
-            .GETUnderwritersOnTheUnderwritersController(null, "string"));
-
-    bob.should(
-       seeThatResponse("successfully gets underwriters",
-                       res -> res.statusCode(200)));
-  }
-}
-
-`````
+(If you want to build your own actors for a test you can look at GET_Features to see an example of how to do that.)
 
 Next we just need to write our tests.
 Each test should have the JUnit `@Test` annotation.
 
-To get access to the actor you need use the `theActorCalled`
- and give it the username of the actor that you want to use.
+To get access to the actor you need use the `theActorCalled` and give it the username of the actor that you want to use. To see the username of available actors the suite automatically uses see the TokenSuperClass.
 
 From there just build your setup test data and send your requests off. 
 The general format for sending requests off in this project look like:
@@ -127,13 +87,8 @@ Use the variable that holds your current actor and access the `.attemptsTo` api 
 The performable we pass will be the service-wrapper Class and Method that are auto-generated.
 This example takes two parameters, but a different endpoint that requires an ID or a body for example 
  would be supplied right here.
- 
- #### Note About Optional Parameters for UserContext
- But what if I need to use a vsso login, or I want to use different user credentials to get a userContext token? Well, you're in luck because those options are available. See GET_Features for an example of how to use these optional parameters.
- 
- #### Note About Testing Earlier Versions of EMS
- But what if I need to test something in 19R2, and therefore need to use the deprecated authorization methods? Again, very lucky - if you don't include a context with your actor the project will use the deprecated auth methods, and if you include a version (e.g. "19R1") the project will use the variables for an agency in that version. See GET_Features for an example.
- 
+
+
  #### Running Tests
  The easiest way to run the tests is to click the green arrow to the left fo the test. You can also right-click on the file and select `Run` or `Debug` the entire class. You can do the same thing with the entire package. The tests can also be run from the command line, as explained in more detail below in the 'Running Tests Selectively' section.
  
@@ -161,8 +116,8 @@ Ex:
 This example asserts that the last response was a 201, and it will be annotated in the reports
 with the string we provide. If the response is *not* a 201 then the test will fail.
 
-##### What about getting getting properties off of a response?
-Having all of our models from each service in the project make it easy to cast responses and get properties.
+##### What about getting properties from a response?
+Having all of our models from each service in the project makes it easy to cast responses and get properties.
 Here is an example:
 ```
     String brandingId =
