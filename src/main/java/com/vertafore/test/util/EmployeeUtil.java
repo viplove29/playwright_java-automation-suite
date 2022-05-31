@@ -19,6 +19,26 @@ public class EmployeeUtil {
     return employeeList.get(randomNum);
   }
 
+  public static EmployeeResponse getRandomExec(Actor actor) {
+    List<EmployeeResponse> employeeList =
+        getAllEmployees(actor)
+            .stream()
+            .filter(employee -> employee.getIsProd().equals("Y"))
+            .collect(Collectors.toList());
+    int randomNum = new Random().nextInt(employeeList.size());
+    return employeeList.get(randomNum);
+  }
+
+  public static EmployeeResponse getRandomRep(Actor actor) {
+    List<EmployeeResponse> employeeList =
+        getAllEmployees(actor)
+            .stream()
+            .filter(employee -> employee.getIsRep().equals("Y"))
+            .collect(Collectors.toList());
+    int randomNum = new Random().nextInt(employeeList.size());
+    return employeeList.get(randomNum);
+  }
+
   public static List<EmployeeResponse> getAllEmployees(Actor actor) {
     actor.attemptsTo(employeeApi.GETEmployeeEmployeesOnTheEmployeesController());
     List<EmployeeResponse> employeeList =

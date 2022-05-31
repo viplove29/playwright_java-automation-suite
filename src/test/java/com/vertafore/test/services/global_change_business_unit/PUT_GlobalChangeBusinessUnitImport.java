@@ -1,4 +1,4 @@
-package com.vertafore.test.services.global_change;
+package com.vertafore.test.services.global_change_business_unit;
 
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
