@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 public class GET_Features {
   private List<EMSActor> actors = new ArrayList<>();
 
-  /* The suite can automatically get tokens to cover different combinations of keys/logins to use for your tests, but this test is an example of getting a token outside of those parameters. Every actor requires a keyType and a loginPath, but you can use whatever name, username, and password you want - see example of "fred". The project also has a default VSSO user that you can use, you just need to indicate that - see example of "bob. */
+  /* The suite can automatically get tokens to cover different combinations of keys/logins to use for your tests, but this test is an example of getting a token outside of those parameters. Every actor requires a keyType and a loginPath, but you can use whatever name, username, and password you want - see example of "fred". */
 
   @Before
   public void getAccessTokens() {
@@ -30,10 +30,9 @@ public class GET_Features {
         List.of(
             new EMSActor().called("mary").withKeyType("ORAN").withLoginPath("app"),
             new EMSActor().called("adam").withKeyType("VADM").withLoginPath("admin"),
-            new EMSActor().called("bob").withKeyType("AADM").withLoginPath("user"),
             new EMSActor()
                 .called("fred")
-                .withKeyType("AGNY")
+                .withKeyType("AADM")
                 .withLoginPath("user")
                 .withUsername("admin")
                 .withPassword("AMS4all!")));
@@ -47,15 +46,11 @@ public class GET_Features {
    */
   @Test
   public void featuresReturnsAllFeatures() {
-    Actor bob = theActorCalled("bob");
     Actor mary = theActorCalled("mary");
     Actor adam = theActorCalled("adam");
     Actor fred = theActorCalled("fred");
 
     UseFeaturesTo featuresApi = new UseFeaturesTo();
-
-    fred.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     adam.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
@@ -63,12 +58,12 @@ public class GET_Features {
     mary.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
+    fred.attemptsTo((featuresApi.GETFeaturesOnTheFeaturesController()));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     FeatureAvailabilityResponse featureResponse =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(fred)
             .getBody()
             .jsonPath()
             .getList("", FeatureAvailabilityResponse.class)
@@ -87,12 +82,12 @@ public class GET_Features {
     mary.attemptsTo(featuresApi.GETFeaturesFeatureNameOnTheFeaturesController(name, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    bob.attemptsTo(featuresApi.GETFeaturesFeatureNameOnTheFeaturesController(name, "string"));
+    fred.attemptsTo(featuresApi.GETFeaturesFeatureNameOnTheFeaturesController(name, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     FeatureAvailabilityResponse featureCheck =
         LastResponse.received()
-            .answeredBy(bob)
+            .answeredBy(fred)
             .getBody()
             .jsonPath()
             .getObject("", FeatureAvailabilityResponse.class);

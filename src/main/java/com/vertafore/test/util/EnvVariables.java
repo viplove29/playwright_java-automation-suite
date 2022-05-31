@@ -19,8 +19,8 @@ public class EnvVariables {
 
   public static final String USERNAME = getProperty("username");
   public static final String PASSWORD = getProperty("password");
-  public static final String VSSO_USERNAME = getProperty("vsso_user");
-  public static final String VSSO_PASSWORD = getProperty("vsso_password");
+  //  public static final String VSSO_USERNAME = getProperty("vsso_user");
+  //  public static final String VSSO_PASSWORD = getProperty("vsso_password");
   public static final String AGENCY_NO = getProperty("agency_no");
   public static final String ADMIN_EMP_CODE = getProperty("admin_emp_code");
   public static final String APP_ACCESS_TO_AGENCY_KEY = getProperty("app_access_to_agency_key");
