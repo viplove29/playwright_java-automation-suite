@@ -30,11 +30,7 @@ public class GET_Features {
         List.of(
             new EMSActor().called("mary").withKeyType("ORAN").withLoginPath("app"),
             new EMSActor().called("adam").withKeyType("VADM").withLoginPath("admin"),
-            new EMSActor()
-                .called("bob")
-                .withKeyType("AADM")
-                .withLoginPath("user")
-                .withLoginType("vsso"),
+            new EMSActor().called("bob").withKeyType("AADM").withLoginPath("user"),
             new EMSActor()
                 .called("fred")
                 .withKeyType("AGNY")
