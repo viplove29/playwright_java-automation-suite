@@ -54,4 +54,10 @@ public class Util {
     Gson gsonwithnulls = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     return gsonwithnulls.toJson(jsonElement);
   }
+
+  public static void printLastSentRequest(Object request) {
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    String json = gson.toJson(request);
+    System.out.println("\n" + json + "\n");
+  }
 }

@@ -14,7 +14,26 @@ public class SuspenseUtil {
   private static UseSuspenseTo suspenseApi = new UseSuspenseTo();
   private static UseSuspensesTo suspensesApi = new UseSuspensesTo();
 
-  public static SuspensePostRequest createRandomPersonalEmployeeSuspense(
+  public static SuspensePostRequest createRandomPersonalSuspense(String empCode, Actor actor) {
+    SuspensePostRequest postRequest = new SuspensePostRequest();
+    int[] statusOptions = {1, 2};
+    int[] priorityOptions = {1, 5, 10};
+
+    String randomDate = LocalDateTime.now().plusDays(new Random().nextInt(30)).toString();
+    postRequest.setAssignToEmployeeCode(empCode);
+    postRequest.setDueDate(randomDate);
+    postRequest.setDescription("description");
+    postRequest.setEntityType("8"); // entity type User
+    postRequest.setEntityId(empCode);
+    postRequest.setAssignedByEmpCode(empCode);
+    postRequest.setStatus(statusOptions[new Random().nextInt(statusOptions.length)]);
+    postRequest.setAction(ActivityUtil.getRandomActivityAction(actor));
+    postRequest.setPriority(priorityOptions[new Random().nextInt(priorityOptions.length)]);
+
+    return postRequest;
+  }
+
+  public static SuspensePostRequest createRandomSuspenseTiedToEmployee(
       String empCode, Actor actor) {
     SuspensePostRequest postRequest = new SuspensePostRequest();
     int[] statusOptions = {1, 2};
@@ -24,7 +43,7 @@ public class SuspenseUtil {
     postRequest.setAssignToEmployeeCode(empCode);
     postRequest.setDueDate(randomDate);
     postRequest.setDescription("description");
-    postRequest.setEntityType("5"); // entity type employee
+    postRequest.setEntityType("5"); // entity type Employee
     postRequest.setEntityId(empCode);
     postRequest.setAssignedByEmpCode(empCode);
     postRequest.setStatus(statusOptions[new Random().nextInt(statusOptions.length)]);
@@ -88,8 +107,7 @@ public class SuspenseUtil {
   // requires an employee with a policy and a customer tied to it
   public static void insertAllSuspenseTypesUnderEmployee(
       Actor actor, String empCode, String custId, String policyId) {
-    SuspensePostRequest postRequest =
-        SuspenseUtil.createRandomPersonalEmployeeSuspense(empCode, actor);
+    SuspensePostRequest postRequest = SuspenseUtil.createRandomPersonalSuspense(empCode, actor);
     actor.attemptsTo(suspenseApi.POSTSuspenseOnTheSuspensesController(postRequest, ""));
 
     postRequest = SuspenseUtil.createRandomSuspenseTiedToCustomer(empCode, custId, actor);
@@ -118,13 +136,15 @@ public class SuspenseUtil {
     // necessary for GCP processing
     switch (personnelType) {
       case "P":
+      case "Exec":
         toEmployee = EmployeeUtil.getRandomExec(actor).getEmpCode();
         break;
       case "R":
+      case "Rep":
         toEmployee = EmployeeUtil.getRandomRep(actor).getEmpCode();
         break;
       default:
-        System.out.println("Personnel type can only be 'P' for exec and 'R' for rep");
+        System.out.println("Personnel type can only be 'P'/'Exec' or 'R'/'Rep");
     }
 
     gcpSetupPostRequest.setFromPersonnelCode(empcode);
@@ -160,7 +180,6 @@ public class SuspenseUtil {
             .getObject("", GCPStatusResponse.class);
 
     if (statusResponse == null) {
-
       return -1;
     }
     return statusResponse.getSuspenseStatus().getTotalToProcessCount();

@@ -179,8 +179,9 @@ public class PolicyUtil {
   // This is ONLY for tests that execute too quickly for a policy to update
   public static BasicPolicyInfoResponse waitForDelayedPolicyUpdateAndGetPolicyById(
       Actor actor, String policyId, BasicPolicyInfoResponse oldPolicy) throws InterruptedException {
-    Thread.sleep(10000);
+
     int tries = 0;
+
     while (tries < 10) {
 
       BasicPolicyInfoResponse policy = getPolicyById(actor, policyId);
@@ -212,11 +213,13 @@ public class PolicyUtil {
               policy.getLatestTransactionTranType(), oldPolicy.getLatestTransactionTranType())
           && Objects.equals(
               policy.getLatestTransactionDate(), oldPolicy.getLatestTransactionDate()))) {
+
         return policy;
       }
       tries++;
-      Thread.sleep(3000);
+      Thread.sleep(10000);
     }
+
     throw new RuntimeException("Policy " + policyId + " did not update after " + tries + " tries.");
   }
 
