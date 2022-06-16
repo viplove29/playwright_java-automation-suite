@@ -116,6 +116,96 @@ Ex:
 This example asserts that the last response was a 201, and it will be annotated in the reports
 with the string we provide. If the response is *not* a 201 then the test will fail.
 
+### Sending properties in a request body
+We use our models generated from the internal swagger page. 
+For example, we use a PagingRequestCustomerFilterPostRequest body to send to the
+POST /customers/search endpoint. From there we retrieve a CustomerBasicInfoResponse.
+
+Here is an example of setting the properties in a request body then sending it
+```
+    // format request body with data
+    SearchPostRequest postRequest = new SearchPostRequest();
+    postRequest.setCustomerId(custId);
+    postRequest.setPolicyId(polId);
+    postRequest.setIncludeAllPolicyTypes(true);
+    postRequest.setIsCurrentlyInForce(false);
+    
+    // Set the paging request model to the search post request
+    PagingRequestSearchPostRequest pagingRequest =
+        new PagingRequestServiceAgreementsSearchPostRequest();
+    pagingRequest.setModel(postRequest);
+    pagingRequest.setCount(1)
+
+    // Send the paging request to the endpoint
+    currentActor.attemptsTo(
+        serviceWrapperApi.POSTpagingRequestOnTheEndpoint(
+            pagingRequest, ""));
+```
+
+### What exactly does this send?
+If you're familiar with postman, this effectively sends a JSON request body similar
+to the one below. The actor already has the necessary bearer token gotten from the
+TokenSuperClass. All you have to worry about is choosing the appropriate actor
+and setting the model correctly.
+
+```
+{
+   model {
+     customerId: {{custId}},
+     policyId: {{polId}},
+     includeAllPolicyTypes: true,
+     isCurrentlyInForce: false
+   }
+   count: 1
+}
+```
+
+### Sending data outside of what the models allow
+So what if you want to edge case test and send something
+not in the value? These service wrappers take in generic objects
+for their parameters. You technically don't have to use the models, it's just
+good practice to do so.
+Technically, you could even do this
+
+```
+  String Json =   "{
+                       model {
+                         customerId: {{custId}},
+                         policyId: {{polId}},
+                         includeAllPolicyTypes: true,
+                         isCurrentlyInForce: false
+                       }
+                       count: 1
+                    }"
+                    
+      currentActor.attemptsTo(
+        serviceWrapperApi.POSTpagingRequestOnTheEndpoint(
+            Json, ""));
+```
+
+You can also use objects such as a HashMap<String, Object> where the key is field name.
+However, we try to avoid this, if we find problems with our templates, we would rather
+fix them via the Mustache code rather than use these workarounds. Sometimes though, it's unavoidable.
+
+
+### Sending NULL values to the endpoint
+The way the suite currently works is that NULL values do not get serialized in our
+generated models. This is due to the jackson tag "@JsonInclude(NON_NULL)" in our pojo.mustache
+file.
+
+We do this because non-initialized values typically get set as Null, and because of the
+nature of EMS and the AMS database, we can have fields that are OPTIONAL, but NOT nullable. For example,
+the boolean above, includeAllPolicyTypes. If we don't include this in our json, EMS will default it to false.
+But if we pass it "includeAllPolicyTypes = null" we get an exception.
+
+This can lead to lots of problems and debugging with request bodies that are quite big with several optional
+fields. Because EMS has poor error feedback, sometimes we have no clue which field left out is causing the error.
+All we get is a generic 400.
+
+Now that jackson tag will ensure NO values set to null get serialized and sent to the endpoint. Neat. But
+what if we want to? There are 2 methods in the Util file that will allow you to do this, however,
+they use the String workaround listed above. 
+
 ##### What about getting properties from a response?
 Having all of our models from each service in the project makes it easy to cast responses and get properties.
 Here is an example:
