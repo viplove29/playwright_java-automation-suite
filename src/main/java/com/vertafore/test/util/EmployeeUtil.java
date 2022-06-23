@@ -178,17 +178,17 @@ public class EmployeeUtil {
     // Get random auth group id to assign/PUT it to the service Employee.
     String randomAGrpId = authGroupToPut.getaGrpId();
 
-    // Format the singular put request
-    UserAuthGroupsPutRequest putRequest = new UserAuthGroupsPutRequest();
-    putRequest.setEmpCode(empCode);
-    putRequest.setAuthGroupId(randomAGrpId);
+    // Format the singular post request
+    UserAuthGroupsPostRequest postRequest = new UserAuthGroupsPostRequest();
+    postRequest.setEmpCode(empCode);
+    postRequest.setAuthGroupId(randomAGrpId);
 
-    // Insert PUT request into a list for formatting
-    List<UserAuthGroupsPutRequest> listRequest = new ArrayList<>();
-    listRequest.add(putRequest);
+    // Insert Post request into a list for formatting
+    List<UserAuthGroupsPostRequest> listRequest = new ArrayList<>();
+    listRequest.add(postRequest);
 
     actor.attemptsTo(
-        employeeApi.PUTEmployeeUserAuthGroupsOnTheEmployeesController(listRequest, "string"));
+        employeeApi.POSTEmployeeUserAuthGroupsOnTheEmployeesController(listRequest, "string"));
 
     return SerenityRest.lastResponse().getStatusCode();
   }
