@@ -7,7 +7,6 @@ import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePoliciesTo;
 import com.vertafore.test.util.PolicyUtil;
-import com.vertafore.test.util.Util;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -47,12 +46,9 @@ public class PUT_PoliciesFirstNamedInsuredCopyCustomerInfo extends TokenSuperCla
         new ApplicantsInfoCopyFromCustomerPutRequest();
     putRequest.setCustomerId(customerId);
 
-    Util.printLastSentRequest(putRequest);
-
     AADM_User.attemptsTo(
         policiesApi.PUTPoliciesFirstNamedInsuredCopyCustomerInfoOnThePoliciesController(
             putRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    SerenityRest.lastResponse().prettyPrint();
   }
 }

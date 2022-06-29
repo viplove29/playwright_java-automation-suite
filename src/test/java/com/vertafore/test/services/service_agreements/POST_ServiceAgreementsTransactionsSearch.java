@@ -75,6 +75,7 @@ public class POST_ServiceAgreementsTransactionsSearch extends TokenSuperClass {
             .POSTServiceAgreementsTransactionsSearchOnTheServiceagreementsController(
                 postRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-    Util.validateErrorResponse("No policy was found using the arguments supplied", ORAN_App);
+    Util.validateErrorResponse(
+        "User does not have access to 1 or more of the provided policies.", ORAN_App);
   }
 }
