@@ -55,9 +55,33 @@ public class Util {
     return gsonwithnulls.toJson(jsonElement);
   }
 
-  public static void printLastSentRequest(Object request) {
+  public static void printObjectAsJson(Object objectToPrint) {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    String json = gson.toJson(request);
+    String json = gson.toJson(objectToPrint);
     System.out.println("\n" + json + "\n");
+  }
+
+  public static void printObjectAsJsonWithNulls(Object objectToPrint) {
+    Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    String json = gson.toJson(objectToPrint);
+    System.out.println("\n" + json + "\n");
+  }
+
+  public static File createTestFile(String filename) {
+    try {
+      File myObj = new File(filename);
+      if (myObj.createNewFile()) {
+        System.out.println("File created: " + myObj.getName());
+      } else {
+        System.out.println("File already exists.");
+      }
+
+      return myObj;
+    } catch (IOException e) {
+      System.out.println("An error occurred while trying to create file: " + filename);
+      e.printStackTrace();
+    }
+
+    return null;
   }
 }
