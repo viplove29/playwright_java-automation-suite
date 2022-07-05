@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.ensure.Ensure;
@@ -83,5 +84,15 @@ public class Util {
     }
 
     return null;
+  }
+
+  public static Boolean isValidGUID(String guid) {
+    Pattern UUID_REGEX_PATTERN =
+        Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+
+    if (guid == null) {
+      return false;
+    }
+    return UUID_REGEX_PATTERN.matcher(guid).matches();
   }
 }

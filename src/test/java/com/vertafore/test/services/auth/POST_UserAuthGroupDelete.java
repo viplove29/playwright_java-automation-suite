@@ -54,6 +54,6 @@ public class POST_UserAuthGroupDelete extends TokenSuperClass {
     randomAGrpId = authGroupToInsert.getaGrpId();
     randomEmpCode = EmployeeUtil.getRandomEmployee(actor).getEmpCode();
 
-    EmployeeUtil.PutAuthGroupUser(actor, authGroupToInsert, randomEmpCode);
+    EmployeeUtil.PostAuthGroupUser(actor, authGroupToInsert, randomEmpCode);
   }
 }

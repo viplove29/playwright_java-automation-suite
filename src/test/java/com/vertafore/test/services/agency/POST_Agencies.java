@@ -4,8 +4,9 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
+import com.vertafore.test.models.ems.AgenciesPostRequest;
 import com.vertafore.test.models.ems.AgencyResponse;
-import com.vertafore.test.servicewrappers.UseAgencyTo;
+import com.vertafore.test.servicewrappers.UseAgenciesTo;
 import com.vertafore.test.util.EnvVariables;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
@@ -15,38 +16,38 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_AgencyDetails extends TokenSuperClass {
+public class POST_Agencies extends TokenSuperClass {
 
   @Test
-  public void getAgencyDetailsGetsAgencyDetails() {
+  public void postAgenciesRetrievesCorrectAgency() {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
-    UseAgencyTo agencyApi = new UseAgencyTo();
+    UseAgenciesTo agenciesApi = new UseAgenciesTo();
 
-    ORAN_App.attemptsTo(
-        agencyApi.GETAgencyDetailsOnTheAgencyController(EnvVariables.AGENCY_NO, ""));
+    AgenciesPostRequest postRequest = new AgenciesPostRequest();
+    postRequest.setSearchTerm(EnvVariables.AGENCY_NO);
+
+    ORAN_App.attemptsTo(agenciesApi.POSTAgenciesOnTheAgencyController(postRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    VADM_Admin.attemptsTo(
-        agencyApi.GETAgencyDetailsOnTheAgencyController(EnvVariables.AGENCY_NO, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-
-    AADM_User.attemptsTo(
-        agencyApi.GETAgencyDetailsOnTheAgencyController(EnvVariables.AGENCY_NO, ""));
+    VADM_Admin.attemptsTo(agenciesApi.POSTAgenciesOnTheAgencyController(postRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    AgencyResponse agencyResponse =
+    AADM_User.attemptsTo(agenciesApi.POSTAgenciesOnTheAgencyController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    AgencyResponse response =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
-            .getObject("", AgencyResponse.class);
+            .getList("", AgencyResponse.class)
+            .get(0);
 
-    assertThat(agencyResponse).isNotNull();
-    assertThat(agencyResponse.getClass().getDeclaredFields().length).isEqualTo(19);
-    assertThat(agencyResponse.getAgencyNo()).isEqualTo(EnvVariables.AGENCY_NO);
-    assertThat(agencyResponse.getAddress().getClass().getDeclaredFields().length).isEqualTo(5);
+    assertThat(response).isNotNull();
+    assertThat(response.getAgencyNo()).isEqualTo(EnvVariables.AGENCY_NO);
+    assertThat(response.getClass().getDeclaredFields().length).isEqualTo(19);
   }
 }

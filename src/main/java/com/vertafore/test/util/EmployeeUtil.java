@@ -127,7 +127,7 @@ public class EmployeeUtil {
       Actor actor, String empCode, List<String> customerIds) {
     List<CustomerEmployeeSecurityPostRequest> customersToDelete = new ArrayList<>();
 
-    // format put request and insert all customer ids into list
+    // format post request and insert all customer ids into list
     for (String custId : customerIds) {
       CustomerEmployeeSecurityPostRequest securedCustomerPostRequest =
           new CustomerEmployeeSecurityPostRequest();
@@ -172,10 +172,10 @@ public class EmployeeUtil {
     return SerenityRest.lastResponse().getStatusCode();
   }
 
-  public static int PutAuthGroupUser(
+  public static int PostAuthGroupUser(
       Actor actor, AuthGroupResponse authGroupToPut, String empCode) {
 
-    // Get random auth group id to assign/PUT it to the service Employee.
+    // Get random auth group id to assign it to the service Employee.
     String randomAGrpId = authGroupToPut.getaGrpId();
 
     // Format the singular post request

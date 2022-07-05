@@ -9,11 +9,14 @@ import com.vertafore.test.models.ems.CustomerActivityPostRequest;
 import com.vertafore.test.servicewrappers.UseActivityTo;
 import com.vertafore.test.util.ActivityUtil;
 import com.vertafore.test.util.CustomerUtil;
+import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(SerenityRunner.class)
 public class POST_ActivityCustomer extends TokenSuperClass {
 
   @Test
