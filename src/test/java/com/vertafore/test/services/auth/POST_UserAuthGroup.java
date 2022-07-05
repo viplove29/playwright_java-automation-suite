@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class PUT_UserAuthGroup extends TokenSuperClass {
+public class POST_UserAuthGroup extends TokenSuperClass {
 
   /*only the AADM user has access to insert auth groups to an employee
   thus all validation and setup will be done by this user, the other contexts tests
@@ -35,19 +35,19 @@ public class PUT_UserAuthGroup extends TokenSuperClass {
     } while (EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode));
 
     // ORANG TEST
-    assertThat(EmployeeUtil.PutAuthGroupUser(ORAN_App, authGroupToInsert, randomEmpCode))
+    assertThat(EmployeeUtil.PostAuthGroupUser(ORAN_App, authGroupToInsert, randomEmpCode))
         .isEqualTo(403);
     assertThat(EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode))
         .isFalse();
 
     // VADM TEST
-    assertThat(EmployeeUtil.PutAuthGroupUser(VADM_Admin, authGroupToInsert, randomEmpCode))
+    assertThat(EmployeeUtil.PostAuthGroupUser(VADM_Admin, authGroupToInsert, randomEmpCode))
         .isEqualTo(403);
     assertThat(EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode))
         .isFalse();
 
     // AADM TEST
-    assertThat(EmployeeUtil.PutAuthGroupUser(AADM_User, authGroupToInsert, randomEmpCode))
+    assertThat(EmployeeUtil.PostAuthGroupUser(AADM_User, authGroupToInsert, randomEmpCode))
         .isEqualTo(200);
     assertThat(EmployeeUtil.doesEmployeeHaveAuthGroupAccess(AADM_User, randomAGrpId, randomEmpCode))
         .isTrue();

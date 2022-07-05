@@ -9,6 +9,7 @@ import com.vertafore.test.servicewrappers.UseSuspensesTo;
 import com.vertafore.test.util.EmployeeUtil;
 import com.vertafore.test.util.PolicyUtil;
 import com.vertafore.test.util.SuspenseUtil;
+import com.vertafore.test.util.Util;
 import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -42,13 +43,13 @@ public class POST_SuspensesPolicy extends TokenSuperClass {
     AADM_User.attemptsTo(suspensesApi.POSTSuspensesPolicyOnTheSuspensesController(request, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    List<MultiSuspenseIdResponse> suspenseIdResponse =
+    List<SuspenseIdResponse> suspenseIdResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
-            .getList("", MultiSuspenseIdResponse.class);
+            .getList("", SuspenseIdResponse.class);
 
-    assertThat(suspenseIdResponse.get(0).getSuspenseId()).isNotNull();
+    assertThat(Util.isValidGUID(suspenseIdResponse.get(0).getSuspenseId())).isTrue();
   }
 }
