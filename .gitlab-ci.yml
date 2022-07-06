@@ -11,8 +11,8 @@ stages:
 build:
   tags: [ Windows ]
   stage: project checks
-  only:
-    - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   script:
     - ./gradlew --build-cache build testClasses -x test
   cache:
@@ -30,10 +30,9 @@ spotless:
   stage: project checks
   script:
     - ./gradlew spotlessJavaCheck
-  only:
-    refs:
-      - merge_requests
-    changes:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
       - "**/*.java"
 
 .windows scripts:
@@ -48,8 +47,8 @@ spotless:
 .run_tc_from_branch:
   tags: [ Windows ]
   stage: test
-  only:
-    - merge_requests
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
   extends: .windows scripts
   script:
     - echo "$CI_MERGE_REQUEST_TITLE"
@@ -63,9 +62,8 @@ spotless:
   tags: [ Windows ]
   stage: test
   extends: .windows scripts
-  only:
-    - schedules
-    - web
+  rules:
+    - if: ($CI_PIPELINE_SOURCE == "schedule" || $CI_PIPELINE_SOURCE == "web")
   script:
     - Set-ReportPortalProperties -Project EMS -LaunchName $LAUNCH_NAME
     - echo $ENVIRONMENT
@@ -76,13 +74,12 @@ QA:
   extends: .run_tc_from_branch
 
 QA Regression:
-  only:
-    variables:
-      - '$ENVIRONMENT == "QA"'
   extends: .regression
+  rules:
+    - if: $ENVIRONMENT == "QA"
 
 MDC Regression:
-  only:
-    variables:
-      - '$ENVIRONMENT == "MDC"'
   extends: .regression
+  rules:
+    - if: $ENVIRONMENT == "MDC"
+  
