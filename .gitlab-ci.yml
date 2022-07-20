@@ -70,6 +70,7 @@ spotless:
     - echo $ENVIRONMENT
     - ./gradlew testClasses test --info -Denvironment="$ENVIRONMENT"
   interruptible: false
+  allow_failure: true
 
 QA:
   extends: .run_tc_from_branch
