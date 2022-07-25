@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.joda.time.DateTime;
 
 public class CustomerUtil {
 
@@ -170,6 +171,28 @@ public class CustomerUtil {
     return customerName;
   }
 
+  public static CustomerNameExpandedPostRequest createCustomerNameExpandedModel() {
+
+    String[] nameTypes = {"Individual", "Family"};
+    CustomerNameExpandedPostRequest customerName = new CustomerNameExpandedPostRequest();
+
+    // Customer Name Data
+    firmName = faker.name().fullName();
+    firstName = faker.name().firstName();
+    middleName = faker.name().firstName();
+    lastName = faker.name().lastName();
+    nameType = nameTypes[new Random().nextInt(nameTypes.length)];
+
+    // Set customer name data into model
+    customerName.setNameType(nameType);
+    customerName.setFirmName(firmName);
+    customerName.setFirstName(firstName);
+    customerName.setMiddleName(middleName);
+    customerName.setLastName(lastName);
+
+    return customerName;
+  }
+
   public static AddressPostRequest createCustomerAddressModel() {
 
     AddressPostRequest customerAddress = new AddressPostRequest();
@@ -214,6 +237,39 @@ public class CustomerUtil {
     phoneNumbers.setOther(other);
 
     return phoneNumbers;
+  }
+
+  public static CustomerIdResponse createBrokerCustomer(Actor actor, String brokerShortName) {
+
+    CustomerNameExpandedPostRequest customerNameModel = createCustomerNameExpandedModel();
+    createBUModel(actor, "POST");
+
+    AgencyPersonnelPostRequestWithBroker agencyPersonnelModel =
+        new AgencyPersonnelPostRequestWithBroker();
+
+    agencyPersonnelModel.setIsBrokerCustomer(true);
+    agencyPersonnelModel.setBrokerShortName(brokerShortName);
+    agencyPersonnelModel.setAccountExecShortName(EmployeeUtil.getRandomExec(actor).getShortName());
+    agencyPersonnelModel.setAccountRepShortName(EmployeeUtil.getRandomRep(actor).getShortName());
+
+    CustomerInfoPostRequest customerInfoPostRequest = new CustomerInfoPostRequest();
+    customerInfoPostRequest.setBusinessUnit(businessUnitPOST);
+    customerInfoPostRequest.setAgencyPersonnel(agencyPersonnelModel);
+    customerInfoPostRequest.setCustomerType("Customer");
+    customerInfoPostRequest.setCustomerName(customerNameModel);
+    customerInfoPostRequest.setCustomerAddedDate(new DateTime().toString());
+
+    actor.attemptsTo(customerAPI.POSTCustomerOnTheCustomersController(customerInfoPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    CustomerIdResponse response =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", CustomerIdResponse.class);
+
+    return response;
   }
 
   public static CustomerBasicInfoResponse searchForACustomer(

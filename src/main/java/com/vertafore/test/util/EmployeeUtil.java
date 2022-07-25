@@ -33,7 +33,7 @@ public class EmployeeUtil {
     List<EmployeeResponse> employeeList =
         getAllEmployees(actor)
             .stream()
-            .filter(employee -> employee.getIsRep().equals("Y"))
+            .filter(employee -> employee.getIsRep().equals("Y") && employee.getIsProd().equals("N"))
             .collect(Collectors.toList());
     int randomNum = new Random().nextInt(employeeList.size());
     return employeeList.get(randomNum);
