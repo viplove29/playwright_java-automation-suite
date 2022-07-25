@@ -57,7 +57,7 @@ public class Util {
   }
 
   public static void printObjectAsJson(Object objectToPrint) {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
     String json = gson.toJson(objectToPrint);
     System.out.println("\n" + json + "\n");
   }

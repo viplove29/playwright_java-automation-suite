@@ -6,10 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseGlobalChangeTo;
-import com.vertafore.test.util.EmployeeUtil;
-import com.vertafore.test.util.PolicyUtil;
-import com.vertafore.test.util.SuspenseUtil;
-import com.vertafore.test.util.Util;
+import com.vertafore.test.util.*;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -86,7 +83,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
 
     BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
     String fromEmployee = randomPolicy.getExecutiveCode();
-    String toEmployee = EmployeeUtil.getRandomEmployee(AADM_User).getEmpCode();
+    String toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
 
     // if it turns out the two employees are the same no gcp processing will occur
     while (toEmployee.equals(fromEmployee)) {
@@ -206,6 +203,12 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
     String fromEmployee = randomPolicy.getExecutiveCode();
     String toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
+
+    // if it turns out the two employees are the same no gcp processing will occur
+    while (toEmployee.equals(fromEmployee)) {
+      toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
+    }
+
     UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
     GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
 
@@ -248,8 +251,6 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
             .jsonPath()
             .getObject("", GCPStatusResponse.class);
 
-    SerenityRest.lastResponse().prettyPrint();
-
     assertThat(statusResponse.getAlertsStatus().getTotalToProcessCount()).isGreaterThan(-1);
     assertThat(statusResponse.getCustomersStatus().getTotalToProcessCount()).isGreaterThan(-1);
     assertThat(statusResponse.getPoliciesStatus().getTotalToProcessCount()).isGreaterThan(-1);
@@ -264,6 +265,12 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
     String fromEmployee = randomPolicy.getExecutiveCode();
     String toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
+
+    // if it turns out the two employees are the same no gcp processing will occur
+    while (toEmployee.equals(fromEmployee)) {
+      toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
+    }
+
     UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
     GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
 
@@ -285,5 +292,168 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
 
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponse("No changes detected for Global Change Processing", AADM_User);
+  }
+
+  // test to ensure the employees provided match the flag (Rep, Exec, Broker)
+  @Test
+  public void empCodesMatchEmployeeTypeFlagValidation() {
+    Actor AADM_User = theActorCalled("AADM_User");
+
+    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
+    String fromEmployee = randomPolicy.getCsrCode();
+    String toEmployee = EmployeeUtil.getRandomRep(AADM_User).getEmpCode();
+
+    // if it turns out the two employees are the same no gcp processing will occur
+    while (toEmployee.equals(fromEmployee)) {
+      toEmployee = EmployeeUtil.getRandomRep(AADM_User).getEmpCode();
+    }
+
+    UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
+    GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
+
+    // set required fields for the GCP request model
+    gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
+    gcpSetupPostRequest.setToPersonnelCode(toEmployee);
+    gcpSetupPostRequest.setPersonnelType(
+        "Exec"); // both employees are reps, this should return error
+    gcpSetupPostRequest.setChangeCustomers(true);
+    gcpSetupPostRequest.setChangePolicies(true);
+
+    // make the request
+    AADM_User.attemptsTo(
+        gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
+            gcpSetupPostRequest, ""));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    String errorMessage =
+        "The following errors occurred while setting up the GCP process: { Employee with Empcode "
+            + toEmployee
+            + " does not match specified employee type P. }";
+    Util.validateErrorResponse(errorMessage, AADM_User);
+  }
+
+  // edge case sad path testing to ensure employee type can only be of types P, R, B, or T
+  @Test
+  public void employeeTypeAcceptableValuesValidation() {
+    Actor AADM_User = theActorCalled("AADM_User");
+
+    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
+    String fromEmployee = randomPolicy.getCsrCode();
+    String toEmployee = EmployeeUtil.getRandomRep(AADM_User).getEmpCode();
+    UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
+    GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
+
+    // set required fields for the GCP request model
+    gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
+    gcpSetupPostRequest.setToPersonnelCode(toEmployee);
+    gcpSetupPostRequest.setPersonnelType("Something"); // should return error
+    gcpSetupPostRequest.setChangeCustomers(true);
+    gcpSetupPostRequest.setChangePolicies(true);
+
+    // make the request
+    AADM_User.attemptsTo(
+        gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
+            gcpSetupPostRequest, ""));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    String errorMessage =
+        "The PersonnelType must equal one of the following: { 'Exec' or 'P', 'Rep' or 'R', 'Broker' or 'B', 'Sales Center Rep' or 'T' }.";
+    Util.validateErrorResponse(errorMessage, AADM_User);
+  }
+
+  // edge case sad path testing to ensure changeCustomerSuspense can only be A, S, or N
+  @Test
+  public void changeCustomerSuspenseAcceptableValuesValidation() {
+    Actor AADM_User = theActorCalled("AADM_User");
+
+    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
+    String fromEmployee = randomPolicy.getExecutiveCode();
+    String toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
+    UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
+    GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
+
+    // set required fields for the GCP request model
+    gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
+    gcpSetupPostRequest.setToPersonnelCode(toEmployee);
+    gcpSetupPostRequest.setPersonnelType("Exec");
+    gcpSetupPostRequest.setChangeCustomers(true);
+    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomerSuspense("something"); // should return error
+
+    // make the request
+    AADM_User.attemptsTo(
+        gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
+            gcpSetupPostRequest, ""));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    String errorMessage =
+        "The ChangeCustomerSuspense must equal one of the following: { 'All' or 'A', 'Selected' or 'S', 'None' or 'N' }.";
+    Util.validateErrorResponse(errorMessage, AADM_User);
+  }
+
+  // test to validate that the flags to pass alerts, suspenses, and notes to GCP
+  // cannot be passed as true if the personnel type is Broker
+  @Test
+  public void validateNotesAlertsSuspensesCannotBePassedWithBrokerPersonnelType() {
+    Actor AADM_User = theActorCalled("AADM_User");
+
+    BrokerResponse fromEmployee = BrokerUtil.getRandomActiveBroker(AADM_User);
+    BrokerResponse toEmployee = BrokerUtil.getRandomActiveBroker(AADM_User);
+
+    while (toEmployee.getBrokerCode().equals(fromEmployee.getBrokerCode())) {
+      toEmployee = BrokerUtil.getRandomActiveBroker(AADM_User);
+    }
+
+    // in case brokers are empty, stage a customer
+    CustomerUtil.createBrokerCustomer(AADM_User, fromEmployee.getShortName());
+
+    UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
+    GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
+
+    // set required fields for the GCP request model
+    gcpSetupPostRequest.setFromPersonnelCode(fromEmployee.getBrokerCode());
+    gcpSetupPostRequest.setToPersonnelCode(toEmployee.getBrokerCode());
+    gcpSetupPostRequest.setPersonnelType("Broker");
+    gcpSetupPostRequest.setChangeCustomers(true);
+    gcpSetupPostRequest.setChangePolicies(true);
+
+    // the following fields should automatically be set to false/None once you post
+    gcpSetupPostRequest.setIncludeAlertChanges(true);
+    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
+    gcpSetupPostRequest.setIncludePersonalNoteChanges(true);
+    gcpSetupPostRequest.setChangeCustomerSuspense("All");
+
+    // make the request
+    AADM_User.attemptsTo(
+        gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
+            gcpSetupPostRequest, ""));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // validate that the fields are flipped in the details model
+    GCPSetupResponse gcpSetupResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", GCPSetupResponse.class);
+
+    AADM_User.attemptsTo(
+        gcpApi.GETGlobalChangePersonnelDetailsOnThePersonnelglobalchangeController(
+            gcpSetupResponse.getGlobalChangeHeaderId(), ""));
+
+    GCPDetailsResponse detailsResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", GCPDetailsResponse.class);
+
+    assertThat(detailsResponse).isNotNull();
+    assertThat(detailsResponse.getHeader()).isNotNull();
+    assertThat(detailsResponse.getHeader().getChangeCustomerSuspense()).isEqualTo("None");
+    assertThat(detailsResponse.getHeader().getIncludeAlertChanges()).isEqualTo(false);
+    assertThat(detailsResponse.getHeader().getIncludePersonalNoteChanges()).isEqualTo(false);
+    assertThat(detailsResponse.getHeader().getIncludePersonalSuspenseChanges()).isEqualTo(false);
   }
 }
