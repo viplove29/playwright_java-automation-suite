@@ -67,7 +67,7 @@ public class POST_SubmissionsTransactionsSearch extends TokenSuperClass {
             .get(0);
 
     // basic field name assertions
-    assertThat(transactionResponse.getClass().getDeclaredFields().length).isEqualTo(5);
+    assertThat(transactionResponse.getClass().getDeclaredFields().length).isEqualTo(17);
     assertThat(transactionResponse.getClass().getDeclaredFields()[0].getName())
         .isEqualTo("policyId");
     assertThat(transactionResponse.getClass().getDeclaredFields()[1].getName())
@@ -78,6 +78,29 @@ public class POST_SubmissionsTransactionsSearch extends TokenSuperClass {
         .isEqualTo("description");
     assertThat(transactionResponse.getClass().getDeclaredFields()[4].getName())
         .isEqualTo("enteredDate");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[5].getName()).isEqualTo("source");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[6].getName())
+        .isEqualTo("billedNonPremium");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[7].getName())
+        .isEqualTo("isUploaded");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[8].getName())
+        .isEqualTo("billMethod");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[9].getName())
+        .isEqualTo("installmentDay");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[10].getName())
+        .isEqualTo("paymentPlanId");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[11].getName())
+        .isEqualTo("reasonForCancellation");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[12].getName())
+        .isEqualTo("replaceDateBinder");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[13].getName())
+        .isEqualTo("binderReplaceEffectiveDate");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[14].getName())
+        .isEqualTo("premiumToBillOnEffectiveDate");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[15].getName())
+        .isEqualTo("isPosted");
+    assertThat(transactionResponse.getClass().getDeclaredFields()[16].getName())
+        .isEqualTo("estimatedRevenuePercent");
   }
 
   @Test
