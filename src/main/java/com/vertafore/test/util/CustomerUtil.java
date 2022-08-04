@@ -538,15 +538,18 @@ public class CustomerUtil {
       Actor actor, String division) {
 
     // format body for post search request
-    DivisionFilterPostRequest postRequest = new DivisionFilterPostRequest();
-    postRequest.setDivisionCode(division);
-    PagingRequestDivisionFilterPostRequest pageRequest =
-        new PagingRequestDivisionFilterPostRequest();
-    pageRequest.setModel(postRequest);
+    CustomersWithContactsFilterPostRequest customersWithContactsFilterPostRequest =
+        new CustomersWithContactsFilterPostRequest();
+    customersWithContactsFilterPostRequest.setDivisionCode(division);
+    PagingRequestCustomersWithContactsFilterPostRequest
+        pagingRequestCustomersWithContactsFilterPostRequest =
+            new PagingRequestCustomersWithContactsFilterPostRequest();
+    pagingRequestCustomersWithContactsFilterPostRequest.setModel(
+        customersWithContactsFilterPostRequest);
 
     actor.attemptsTo(
         contactDependentsApi.POSTCustomersWithContactsDependentsSearchOnTheCustomersController(
-            pageRequest, ""));
+            pagingRequestCustomersWithContactsFilterPostRequest, ""));
 
     if (SerenityRest.lastResponse().getStatusCode() == 200) {
       PagingResponseCustomerContactDependentResponse response =

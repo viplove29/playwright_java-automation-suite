@@ -84,20 +84,26 @@ public class POST_PurgePoliciesSearch extends TokenSuperClass {
         pagingResponsePurgePolicyCandidateResponse.getResponse().get(0);
 
     assertThat(purgePolicyCandidateResponse).isNotNull();
-    assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields().length).isEqualTo(7);
+    assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields().length).isEqualTo(10);
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[0].getName())
         .isEqualTo("customerName");
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[1].getName())
-        .isEqualTo("policyNumber");
+        .isEqualTo("customerNumber");
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[2].getName())
-        .isEqualTo("policyId");
+        .isEqualTo("policyNumber");
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[3].getName())
-        .isEqualTo("division");
+        .isEqualTo("policyId");
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[4].getName())
-        .isEqualTo("branch");
+        .isEqualTo("policyEffectiveDate");
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[5].getName())
-        .isEqualTo("department");
+        .isEqualTo("policyExpirationDate");
     assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[6].getName())
+        .isEqualTo("division");
+    assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[7].getName())
+        .isEqualTo("branch");
+    assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[8].getName())
+        .isEqualTo("department");
+    assertThat(purgePolicyCandidateResponse.getClass().getDeclaredFields()[9].getName())
         .isEqualTo("group");
   }
 }
