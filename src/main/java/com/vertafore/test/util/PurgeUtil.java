@@ -75,4 +75,20 @@ public class PurgeUtil {
     }
     throw new RuntimeException("Purge Policy did not complete after " + tries + " tries");
   }
+
+  public static String purgePolicy(
+      Actor actor, PurgePolicyDeletePostRequest purgePolicyDeletePostRequest) {
+    actor.attemptsTo(
+        purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(purgePolicyDeletePostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    PurgeSessionResponse purgeSessionResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", PurgeSessionResponse.class);
+
+    return purgeSessionResponse.getPurgeSessionId();
+  }
 }
