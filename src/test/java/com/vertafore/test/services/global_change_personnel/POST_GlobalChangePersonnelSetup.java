@@ -326,9 +326,9 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
 
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     String errorMessage =
-        "The following errors occurred while setting up the GCP process: { Employee with Empcode "
+        "The following errors occurred while setting up the GCP process: { Employee Code with value ("
             + toEmployee
-            + " does not match specified employee type P. }";
+            + ") provided to 'ToPersonnelCode' does not match the PersonnelType 'P' }";
     Util.validateErrorResponse(errorMessage, AADM_User);
   }
 

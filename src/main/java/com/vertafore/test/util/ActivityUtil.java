@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Random;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 
@@ -43,6 +44,8 @@ public class ActivityUtil {
     activity.setEntityId(customerId);
 
     actor.attemptsTo(activityApi.POSTActivityOnTheActivitiesController(activity, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
     ActivityIdResponse response =
         LastResponse.received()
             .answeredBy(actor)
