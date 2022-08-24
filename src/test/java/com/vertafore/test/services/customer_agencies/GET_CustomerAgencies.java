@@ -28,15 +28,18 @@ public class GET_CustomerAgencies extends TokenSuperClass {
     UseCustomerAgenciesTo customerAgencyApi = new UseCustomerAgenciesTo();
 
     ORAN_App.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+        customerAgencyApi
+            .GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesControllerDeprecated());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     AADM_User.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+        customerAgencyApi
+            .GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesControllerDeprecated());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     VADM_Admin.attemptsTo(
-        customerAgencyApi.GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesController());
+        customerAgencyApi
+            .GETCustomerAgenciesAgencyDetailsOnTheCustomeragenciesControllerDeprecated());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<CustomerAgencyDetailResponse> customerAgencyDetail =
@@ -46,7 +49,7 @@ public class GET_CustomerAgencies extends TokenSuperClass {
             .jsonPath()
             .getList("", CustomerAgencyDetailResponse.class);
 
-    assertThat(customerAgencyDetail.get(0).getClass().getDeclaredFields().length).isEqualTo(6);
+    assertThat(customerAgencyDetail.get(0).getClass().getDeclaredFields().length).isEqualTo(9);
     assertThat(customerAgencyDetail.size()).isGreaterThan(0);
   }
 }

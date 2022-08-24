@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
+import com.vertafore.test.util.PolicyUtil;
 import com.vertafore.test.util.PurgeUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,11 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
 
     UsePurgeTo purgeAPI = new UsePurgeTo();
 
-    Map<String, String> fiscalEndDateAndDivisionCode =
-        PurgeUtil.getPurgeFiscalEndDateAndDivisionCode(AADM_User);
-
     // Purge Policy Search Object
     PurgePolicySearchPostRequest purgePolicySearchPostRequest = new PurgePolicySearchPostRequest();
+
+    Map<String, String> fiscalEndDateAndDivisionCode =
+        PurgeUtil.getPurgeFiscalEndDateAndDivisionCode(AADM_User, purgePolicySearchPostRequest);
 
     purgePolicySearchPostRequest.setFiscalYear(fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
     purgePolicySearchPostRequest.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
@@ -68,6 +69,16 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
     purgePolicyDeletePostRequestADMIN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
     purgePolicyDeletePostRequestORAN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
 
+    // Check if policy exist
+    BasicPolicyInfoResponse basicPolicyInfoResponseAADM =
+        PolicyUtil.getPolicyById(AADM_User, purgePolicyCandidateResponseList.get(0).getPolicyId());
+    assertThat(basicPolicyInfoResponseAADM).isNotNull();
+
+    // Check if policy exist
+    BasicPolicyInfoResponse basicPolicyInfoResponseORAN =
+        PolicyUtil.getPolicyById(AADM_User, purgePolicyCandidateResponseList.get(1).getPolicyId());
+    assertThat(basicPolicyInfoResponseORAN).isNotNull();
+
     // Set Policy ID in purgePolicyDelete Object
     List<String> purgePolicyIDsAdmin = new ArrayList<>();
     purgePolicyIDsAdmin.add(purgePolicyCandidateResponseList.get(0).getPolicyId());
@@ -94,6 +105,9 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
         purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(
             purgePolicyDeletePostRequestADMIN, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Wait for Purge Policy to complete
+    PurgeUtil.waitForPurgeProcessToComplete(AADM_User);
 
     PurgeSessionResponse purgeSessionResponse =
         LastResponse.received()

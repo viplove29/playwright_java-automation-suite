@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
+import com.vertafore.test.util.PurgeUtil;
+import java.util.Map;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -22,23 +24,15 @@ public class POST_PurgePoliciesSearch extends TokenSuperClass {
 
     UsePurgeTo purgeAPI = new UsePurgeTo();
 
-    AADM_User.attemptsTo(purgeAPI.GETPurgeFiscalYearOnThePurgeController());
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    PurgeFiscalYearDivisionResponse purgeFiscalYearDivisionResponse =
-        LastResponse.received()
-            .answeredBy(AADM_User)
-            .getBody()
-            .jsonPath()
-            .getList("", PurgeFiscalYearDivisionResponse.class)
-            .get(0);
-
+    // Purge Policy Search Object
     PurgePolicySearchPostRequest purgePolicySearchPostRequest = new PurgePolicySearchPostRequest();
 
-    // Set End Fiscal Date and Division Coded in Purge Policy Search Post Request object
-    purgePolicySearchPostRequest.setFiscalYear(
-        purgeFiscalYearDivisionResponse.getFiscalEndDate().substring(0, 4));
-    purgePolicySearchPostRequest.setDivision(purgeFiscalYearDivisionResponse.getDivisionCode());
+    Map<String, String> fiscalEndDateAndDivisionCode =
+        PurgeUtil.getPurgeFiscalEndDateAndDivisionCode(AADM_User, purgePolicySearchPostRequest);
+
+    // Set Fiscal End Date Division Code in Purge Policies Search Object
+    // Fiscal End Date only needs to be the Year
+    purgePolicySearchPostRequest.setFiscalYear(fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
 
     // Paging Request Purge Policy Search object
     PagingRequestPurgePolicySearchPostRequest pagingRequestPurgePolicySearchPostRequest =
@@ -54,7 +48,7 @@ public class POST_PurgePoliciesSearch extends TokenSuperClass {
 
     AADM_User.attemptsTo(
         purgeAPI.POSTPurgePoliciesSearchOnThePurgeController(
-            pagingRequestPurgePolicySearchPostRequest, "string"));
+            pagingRequestPurgePolicySearchPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     PagingResponsePurgePolicyCandidateResponse pagingResponsePurgePolicyCandidateResponse =
