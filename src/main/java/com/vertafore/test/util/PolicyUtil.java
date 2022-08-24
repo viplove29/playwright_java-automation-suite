@@ -217,7 +217,7 @@ public class PolicyUtil {
         return policy;
       }
       tries++;
-      Thread.sleep(10000);
+      Thread.sleep(15000);
     }
 
     throw new RuntimeException("Policy " + policyId + " did not update after " + tries + " tries.");

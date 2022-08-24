@@ -12,27 +12,61 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 
 public class PurgeUtil {
-  private static UsePurgeTo purgeAPI = new UsePurgeTo();
+  private static final UsePurgeTo purgeAPI = new UsePurgeTo();
 
-  public static Map<String, String> getPurgeFiscalEndDateAndDivisionCode(Actor actor) {
+  public static Map<String, String> getPurgeFiscalEndDateAndDivisionCode(
+      Actor actor, PurgePolicySearchPostRequest purgePolicySearchPostRequest) {
     actor.attemptsTo(purgeAPI.GETPurgeFiscalYearOnThePurgeController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    PurgeFiscalYearDivisionResponse purgeFiscalYearDivisionResponse =
+    List<PurgeFiscalYearDivisionResponse> purgeFiscalYearDivisionResponses =
         LastResponse.received()
             .answeredBy(actor)
             .getBody()
             .jsonPath()
-            .getList("", PurgeFiscalYearDivisionResponse.class)
-            .get(0);
+            .getList("", PurgeFiscalYearDivisionResponse.class);
 
-    Map<String, String> fiscalEndDateAndDivisionCode = new HashMap<>();
-    fiscalEndDateAndDivisionCode.put(
-        "fiscalEndDate", purgeFiscalYearDivisionResponse.getFiscalEndDate().substring(0, 4));
-    fiscalEndDateAndDivisionCode.put(
-        "divisionCode", purgeFiscalYearDivisionResponse.getDivisionCode());
+    for (PurgeFiscalYearDivisionResponse purgeFiscalYearDivisionResponse :
+        purgeFiscalYearDivisionResponses) {
+      // Set End Fiscal Date and Division Coded in Purge Policy Search Post Request object
+      purgePolicySearchPostRequest.setFiscalYear(
+          purgeFiscalYearDivisionResponse.getFiscalEndDate().substring(0, 4));
+      purgePolicySearchPostRequest.setDivision(purgeFiscalYearDivisionResponse.getDivisionCode());
 
-    return fiscalEndDateAndDivisionCode;
+      // Paging Request Purge Policy Search object
+      PagingRequestPurgePolicySearchPostRequest pagingRequestPurgePolicySearchPostRequest =
+          new PagingRequestPurgePolicySearchPostRequest();
+
+      // Add Purge Policy Search object to Paging Purge Policy object
+      pagingRequestPurgePolicySearchPostRequest.model(purgePolicySearchPostRequest);
+
+      // Set Skip to 0, Top and Total to 1000
+      pagingRequestPurgePolicySearchPostRequest.setSkip(0);
+      pagingRequestPurgePolicySearchPostRequest.setTop(1000);
+      pagingRequestPurgePolicySearchPostRequest.setTotalRecords(1000);
+
+      actor.attemptsTo(
+          purgeAPI.POSTPurgePoliciesSearchOnThePurgeController(
+              pagingRequestPurgePolicySearchPostRequest, "string"));
+      assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+      PagingResponsePurgePolicyCandidateResponse pagingResponsePurgePolicyCandidateResponse =
+          LastResponse.received()
+              .answeredBy(actor)
+              .getBody()
+              .jsonPath()
+              .getObject("", PagingResponsePurgePolicyCandidateResponse.class);
+
+      if (pagingResponsePurgePolicyCandidateResponse.getTotalCount() != 0) {
+        Map<String, String> fiscalEndDateAndDivisionCode = new HashMap<>();
+        fiscalEndDateAndDivisionCode.put(
+            "fiscalEndDate", purgeFiscalYearDivisionResponse.getFiscalEndDate().substring(0, 4));
+        fiscalEndDateAndDivisionCode.put(
+            "divisionCode", purgeFiscalYearDivisionResponse.getDivisionCode());
+        return fiscalEndDateAndDivisionCode;
+      }
+    }
+    throw new RuntimeException("There are no policies eligible for purge");
   }
 
   public static List<PurgePolicyCandidateResponse> getPurgePolicyResponse(
