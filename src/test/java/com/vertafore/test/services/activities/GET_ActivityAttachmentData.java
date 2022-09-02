@@ -38,10 +38,11 @@ public class GET_ActivityAttachmentData extends TokenSuperClass {
 
     byte[] data = Files.readAllBytes(attachment.toPath());
     String dataAsString = new String(data);
+    String comment = "comment";
     ActivityIdResponse activityToAppendAttachment = ActivityUtil.postRandomActivity(AADM_User);
     DocAttachmentResponse response =
         ActivityUtil.postAttachmentToActivity(
-            activityToAppendAttachment.getActivityId(), attachment, AADM_User);
+            activityToAppendAttachment.getActivityId(), attachment, comment, AADM_User);
 
     attachment.delete();
 

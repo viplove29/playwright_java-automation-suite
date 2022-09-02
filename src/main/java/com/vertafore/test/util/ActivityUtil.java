@@ -57,11 +57,11 @@ public class ActivityUtil {
   }
 
   public static DocAttachmentResponse postAttachmentToActivity(
-      String activityID, File attachment, Actor actor) throws IOException {
+      String activityID, File attachment, String comment, Actor actor) throws IOException {
     AppendAttachmentPostRequest postRequest = new AppendAttachmentPostRequest();
     byte[] data = Files.readAllBytes(attachment.toPath());
     postRequest.setActivityId(activityID);
-    postRequest.setComment("comment");
+    postRequest.setComment(comment);
     postRequest.setData(data);
     postRequest.setFileSizeInBytes(data.length);
     postRequest.setSourceFileName(attachment.getName());
