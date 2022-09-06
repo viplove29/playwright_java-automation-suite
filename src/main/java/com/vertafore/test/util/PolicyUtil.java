@@ -42,8 +42,7 @@ public class PolicyUtil {
 
   public static UsePoliciesTo policiesApi = new UsePoliciesTo();
 
-  public static BasicPolicyInfoResponse selectRandomPolicy(Actor actor, String policyType) {
-
+  public static List<BasicPolicyInfoResponse> getAllPolicies(Actor actor, String policyType) {
     PagingRequestPoliciesSearchPostRequest pageSearch =
         new PagingRequestPoliciesSearchPostRequest();
     PoliciesSearchPostRequest polPostBody = new PoliciesSearchPostRequest();
@@ -92,6 +91,14 @@ public class PolicyUtil {
             .jsonPath()
             .getObject("", PagingResponseBasicPolicyInfoResponse.class)
             .getResponse();
+
+    return allPols;
+  }
+
+  public static BasicPolicyInfoResponse selectRandomPolicy(Actor actor, String policyType) {
+
+    // this will get a full page of policies of the specified type
+    List<BasicPolicyInfoResponse> allPols = getAllPolicies(actor, policyType);
 
     int polsIndex = new Random().nextInt(allPols.size());
 
