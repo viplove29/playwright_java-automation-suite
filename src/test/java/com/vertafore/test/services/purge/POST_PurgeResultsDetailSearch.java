@@ -158,24 +158,26 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
     PurgeResultDetailResponse purgeResultDetailResponse =
         pagingResponsePurgeResultDetailResponse.getResponse().get(0);
 
-    assertThat(purgeResultDetailResponse.getClass().getDeclaredFields().length).isEqualTo(9);
+    assertThat(purgeResultDetailResponse.getClass().getDeclaredFields().length).isEqualTo(10);
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[0].getName())
-        .isEqualTo("purgeSessionId");
+        .isEqualTo("purgeDetailId");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[1].getName())
-        .isEqualTo("purgeItemDescription");
+        .isEqualTo("purgeSessionId");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[2].getName())
-        .isEqualTo("purgeStatus");
+        .isEqualTo("purgeItemDescription");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[3].getName())
-        .isEqualTo("rejectReason");
+        .isEqualTo("purgeStatus");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[4].getName())
-        .isEqualTo("divisionName");
+        .isEqualTo("rejectReason");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[5].getName())
-        .isEqualTo("branchName");
+        .isEqualTo("divisionName");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[6].getName())
-        .isEqualTo("departmentName");
+        .isEqualTo("branchName");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[7].getName())
-        .isEqualTo("groupName");
+        .isEqualTo("departmentName");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[8].getName())
+        .isEqualTo("groupName");
+    assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[9].getName())
         .isEqualTo("itemsPurged");
   }
 }
