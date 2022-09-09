@@ -582,4 +582,27 @@ public class CustomerUtil {
       return customerContactDependents.get(0);
     }
   }
+
+  public static List<CustomerBasicInfoResponse> getAllCustomers(Actor actor) {
+    UseCustomersTo customersApi = new UseCustomersTo();
+    CustomerFilterPostRequest customerFilterPostRequest = new CustomerFilterPostRequest();
+    customerFilterPostRequest.setIncludeCustomers(true);
+    customerFilterPostRequest.setAnyStatus(true);
+
+    PagingRequestCustomerFilterPostRequest pagingRequest =
+        new PagingRequestCustomerFilterPostRequest();
+    pagingRequest.setModel(customerFilterPostRequest);
+    pagingRequest.setTop(1000);
+
+    actor.attemptsTo(customersApi.POSTCustomersSearchOnTheCustomersController(pagingRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    List<CustomerBasicInfoResponse> customerResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerBasicInfoResponse.class)
+            .getResponse();
+    return customerResponse;
+  }
 }
