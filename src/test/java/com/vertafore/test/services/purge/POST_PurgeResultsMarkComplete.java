@@ -77,15 +77,15 @@ public class POST_PurgeResultsMarkComplete extends TokenSuperClass {
     // Make call to waitForPurgeProcessToComplete to wait for purge to complete running
     PurgeUtil.waitForPurgeProcessToComplete(AADM_User);
 
-    // Purge Header Post Request object
-    PurgeHeaderPostRequest purgeHeaderPostRequest = new PurgeHeaderPostRequest();
+    // Purge Session Post Request object
+    PurgeSessionPostRequest purgeSessionPostRequest = new PurgeSessionPostRequest();
 
     // Set session ID in Purge Header Post Request Object
-    purgeHeaderPostRequest.setPurgeSessionId(purgeSessionId);
+    purgeSessionPostRequest.setPurgeSessionId(purgeSessionId);
 
     // Make call to Purge Results Mark complete
     AADM_User.attemptsTo(
-        purgeAPI.POSTPurgeResultsMarkCompleteOnThePurgeController(purgeHeaderPostRequest, ""));
+        purgeAPI.POSTPurgeResultsMarkCompleteOnThePurgeController(purgeSessionPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     PurgeSessionResponse purgeSessionResponse =

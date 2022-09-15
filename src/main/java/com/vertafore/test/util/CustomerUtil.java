@@ -564,6 +564,21 @@ public class CustomerUtil {
     }
   }
 
+  public static CustomerContactDependentResponse getRandomCustomerWithContacts(
+      Actor actor, String division) {
+    List<CustomerContactDependentResponse> contactDependentResponseList =
+        CustomerUtil.getAllCustomerContactDependents(actor, division);
+    assert contactDependentResponseList != null;
+    contactDependentResponseList =
+        contactDependentResponseList
+            .stream()
+            .filter(customer -> !customer.getCustomerContacts().isEmpty())
+            .collect(Collectors.toList());
+
+    return contactDependentResponseList.get(
+        new Random().nextInt(contactDependentResponseList.size()));
+  }
+
   public static CustomerContactDependentResponse getCustomerContactDependentByCustomerId(
       Actor actor, String division, String custId) {
     List<CustomerContactDependentResponse> customerContactDependents =
