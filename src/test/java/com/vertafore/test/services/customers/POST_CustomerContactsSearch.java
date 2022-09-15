@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 public class POST_CustomerContactsSearch extends TokenSuperClass {
 
   @Test
-  public void customerContactsReturnsOneCustomerContact() {
+  public void customerContactsSearchWithCustomerIdReturnsOneCustomerContact() {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
@@ -32,19 +32,10 @@ public class POST_CustomerContactsSearch extends TokenSuperClass {
 
     /* Get all customers' contacts and dependents and select a random
     customer that has at least one customer contact */
-    List<CustomerContactDependentResponse> contactDependentResponseList =
-        CustomerUtil.getAllCustomerContactDependents(AADM_User, null);
-    assert contactDependentResponseList != null;
-    contactDependentResponseList =
-        contactDependentResponseList
-            .stream()
-            .filter(customer -> !customer.getCustomerContacts().isEmpty())
-            .collect(Collectors.toList());
+    CustomerContactDependentResponse randomCustomerWithContacts =
+        CustomerUtil.getRandomCustomerWithContacts(AADM_User, null);
 
-    String randCustomerId =
-        contactDependentResponseList
-            .get(new Random().nextInt(contactDependentResponseList.size()))
-            .getCustomerId();
+    String randCustomerId = randomCustomerWithContacts.getCustomerId();
 
     // fill out the request body
     PagingRequestCustomerContactsFilterPostRequest pagingRequest =
@@ -60,7 +51,7 @@ public class POST_CustomerContactsSearch extends TokenSuperClass {
 
     VADM_Admin.attemptsTo(
         customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
-    ;
+
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     AADM_User.attemptsTo(
@@ -76,6 +67,199 @@ public class POST_CustomerContactsSearch extends TokenSuperClass {
             .getObject("", PagingResponseCustomerContactResponse.class);
 
     assertThat(customerContacts.getResponse().get(0).getCustomerId()).isEqualTo(randCustomerId);
+  }
+
+  @Test
+  public void customerContactsSearchWithCustomerNumberReturnsOneCustomerContact() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    /* Get a random customer that has at least one customer contact */
+    CustomerContactDependentResponse randomCustomerWithContacts =
+        CustomerUtil.getRandomCustomerWithContacts(AADM_User, null);
+
+    String randCustomerId = randomCustomerWithContacts.getCustomerId();
+    int randCustomerNumber =
+        CustomerUtil.getCustomerInfoByCustomerId(AADM_User, randCustomerId).getCustomerNumber();
+
+    // fill out the request body
+    PagingRequestCustomerContactsFilterPostRequest pagingRequest =
+        new PagingRequestCustomerContactsFilterPostRequest();
+    CustomerContactsFilterPostRequest postRequest = new CustomerContactsFilterPostRequest();
+    postRequest.setCustomerNumber(randCustomerNumber);
+    pagingRequest.setModel(postRequest);
+
+    // send requests
+    ORAN_App.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VADM_Admin.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    AADM_User.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // validate response
+    PagingResponseCustomerContactResponse customerContacts =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerContactResponse.class);
+
+    assertThat(customerContacts != null).isTrue();
+    assertThat(customerContacts.getResponse().get(0).getCustomerId()).isEqualTo(randCustomerId);
+  }
+
+  @Test
+  public void
+      customerContactsSearchWithMismatchingCustomerIdAndCustomerNumberReturnsEmptyCustomers() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    /* Get a random customer that has at least one customer contact */
+    CustomerContactDependentResponse randomCustomerWithContacts =
+        CustomerUtil.getRandomCustomerWithContacts(AADM_User, null);
+
+    String randCustomerId = randomCustomerWithContacts.getCustomerId();
+    int randCustomerNumber =
+        CustomerUtil.getCustomerInfoByCustomerId(AADM_User, randCustomerId).getCustomerNumber();
+
+    // fill out the request body
+    PagingRequestCustomerContactsFilterPostRequest pagingRequest =
+        new PagingRequestCustomerContactsFilterPostRequest();
+    CustomerContactsFilterPostRequest postRequest = new CustomerContactsFilterPostRequest();
+    postRequest.setCustomerId(randCustomerId);
+    // set mismatching customer number
+    postRequest.setCustomerNumber(randCustomerNumber + 1);
+    pagingRequest.setModel(postRequest);
+
+    // send requests
+    ORAN_App.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VADM_Admin.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    AADM_User.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // validate response
+    PagingResponseCustomerContactResponse customerContacts =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerContactResponse.class);
+
+    assertThat(customerContacts != null).isTrue();
+    // check no customer is returned
+    assertThat(customerContacts.getResponse().isEmpty()).isTrue();
+  }
+
+  @Test
+  public void customerContactsSearchForCustomerWithNoContactsReturnsEmptyResponse() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    /* Get a random customer that has no customer contact */
+    List<CustomerContactDependentResponse> contactDependentResponseList =
+        CustomerUtil.getAllCustomerContactDependents(AADM_User, null);
+    assert contactDependentResponseList != null;
+    contactDependentResponseList =
+        contactDependentResponseList
+            .stream()
+            .filter(customer -> customer.getCustomerContacts().isEmpty())
+            .collect(Collectors.toList());
+
+    CustomerContactDependentResponse randomCustomersWithNoContacts =
+        contactDependentResponseList.get(new Random().nextInt(contactDependentResponseList.size()));
+
+    String randCustomerId = randomCustomersWithNoContacts.getCustomerId();
+
+    // fill out the request body
+    PagingRequestCustomerContactsFilterPostRequest pagingRequest =
+        new PagingRequestCustomerContactsFilterPostRequest();
+    CustomerContactsFilterPostRequest postRequest = new CustomerContactsFilterPostRequest();
+    postRequest.setCustomerId(randCustomerId);
+    pagingRequest.setModel(postRequest);
+
+    ORAN_App.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VADM_Admin.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    AADM_User.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    PagingResponseCustomerContactResponse customerContacts =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerContactResponse.class);
+
+    assertThat(customerContacts != null).isTrue();
+    // check no customer is returned
+    assertThat(customerContacts.getResponse().isEmpty()).isTrue();
+
+    // Repeat the test with customer number
+    int randCustomerNumber =
+        CustomerUtil.getCustomerInfoByCustomerId(AADM_User, randCustomerId).getCustomerNumber();
+
+    // fill out the request body
+    pagingRequest = new PagingRequestCustomerContactsFilterPostRequest();
+    postRequest = new CustomerContactsFilterPostRequest();
+    postRequest.setCustomerNumber(randCustomerNumber);
+    pagingRequest.setModel(postRequest);
+
+    // send requests
+    ORAN_App.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VADM_Admin.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    AADM_User.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // validate response
+    customerContacts =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerContactResponse.class);
+
+    assertThat(customerContacts != null).isTrue();
+    // check no customer is returned
+    assertThat(customerContacts.getResponse().isEmpty()).isTrue();
   }
 
   @Test

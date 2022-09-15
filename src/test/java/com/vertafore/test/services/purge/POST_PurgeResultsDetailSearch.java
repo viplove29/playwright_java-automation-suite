@@ -106,9 +106,6 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
             purgePolicyDeletePostRequestADMIN, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    // Wait for Purge Policy to complete
-    PurgeUtil.waitForPurgeProcessToComplete(AADM_User);
-
     PurgeSessionResponse purgeSessionResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -116,24 +113,29 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
             .jsonPath()
             .getObject("", PurgeSessionResponse.class);
 
-    // Purge Result Search Post Request object
-    PurgeResultSearchPostRequest purgeResultSearchPostRequest = new PurgeResultSearchPostRequest();
+    // Purge Result Detail Post Request object
+    PurgeResultDetailPostRequest purgeResultDetailPostRequest = new PurgeResultDetailPostRequest();
 
     // Set the purgeSessionID
-    purgeResultSearchPostRequest.setPurgeSessionId(purgeSessionResponse.getPurgeSessionId());
+    purgeResultDetailPostRequest.setPurgeSessionId(purgeSessionResponse.getPurgeSessionId());
 
-    // Paging Request Purge Results Search Post Request object
-    PagingRequestPurgeResultSearchPostRequest pagingRequestPurgeResultSearchPostRequest =
-        new PagingRequestPurgeResultSearchPostRequest();
+    // Paging Request Purge Results Detail Post Request object
+    PagingRequestPurgeResultDetailPostRequest pagingRequestPurgeResultDetailPostRequest =
+        new PagingRequestPurgeResultDetailPostRequest();
 
-    // Add Purge Result Search Post Request model to Paging Request Purge Results Search Post
+    // Add Purge Result Detail Post Request model to Paging Request Purge Results Detail Post
     // Request
-    pagingRequestPurgeResultSearchPostRequest.setModel(purgeResultSearchPostRequest);
+    pagingRequestPurgeResultDetailPostRequest.setModel(purgeResultDetailPostRequest);
+
+    // Set Skip to 0, Top and Total to 1000
+    pagingRequestPurgePolicySearchPostRequest.setSkip(0);
+    pagingRequestPurgePolicySearchPostRequest.setTop(1000);
+    pagingRequestPurgePolicySearchPostRequest.setTotalRecords(1000);
 
     // Make call to purge/results-detail/search
     AADM_User.attemptsTo(
         purgeAPI.POSTPurgeResultsDetailSearchOnThePurgeController(
-            pagingRequestPurgeResultSearchPostRequest, ""));
+            pagingRequestPurgeResultDetailPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     PagingResponsePurgeResultDetailResponse pagingResponsePurgeResultDetailResponse =
@@ -179,5 +181,8 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
         .isEqualTo("groupName");
     assertThat(purgeResultDetailResponse.getClass().getDeclaredFields()[9].getName())
         .isEqualTo("itemsPurged");
+
+    // Wait for Purge Policy to complete
+    PurgeUtil.waitForPurgeProcessToComplete(AADM_User);
   }
 }

@@ -150,8 +150,7 @@ public class SuspenseUtil {
     gcpSetupPostRequest.setFromPersonnelCode(empcode);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType(personnelType);
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
     gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
     gcpSetupPostRequest.setChangeCustomerSuspense("All");
 

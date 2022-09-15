@@ -73,14 +73,14 @@ public class POST_PurgeRetry extends TokenSuperClass {
     // Wait for purge process to complete
     PurgeUtil.waitForPurgeProcessToComplete(AADM_User);
 
-    // Purge retry object
-    PurgeRetryPostRequest purgeRetryPostRequest = new PurgeRetryPostRequest();
+    // Purge Session Post Request object
+    PurgeSessionPostRequest purgeSessionPostRequest = new PurgeSessionPostRequest();
 
     // Set purge session id in Purge Retry Object
-    purgeRetryPostRequest.setPurgeSessionId(purgeSessionId);
+    purgeSessionPostRequest.setPurgeSessionId(purgeSessionId);
 
     // Make call to Purge Retry. Status code will be 400 since purge delete will be complete
-    AADM_User.attemptsTo(purgeAPI.POSTPurgeRetryOnThePurgeController(purgeRetryPostRequest, ""));
+    AADM_User.attemptsTo(purgeAPI.POSTPurgeRetryOnThePurgeController(purgeSessionPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponse(
         "Purge Session ID provided is fully purged, session cannot be retried", AADM_User);

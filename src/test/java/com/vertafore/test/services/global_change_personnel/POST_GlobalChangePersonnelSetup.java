@@ -33,8 +33,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
     gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
     gcpSetupPostRequest.setChangeCustomerSuspense("All");
 
@@ -96,8 +95,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
 
     AADM_User.attemptsTo(
         gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
@@ -152,8 +150,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
     gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
     gcpSetupPostRequest.setChangeCustomerSuspense("All");
     gcpSetupPostRequest.setIncludeAlertChanges(false);
@@ -216,8 +213,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
     gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
     gcpSetupPostRequest.setChangeCustomerSuspense("All");
     gcpSetupPostRequest.setIncludeAlertChanges(true);
@@ -278,8 +274,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomers(false);
-    gcpSetupPostRequest.setChangePolicies(false);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("N");
     gcpSetupPostRequest.setIncludePersonalSuspenseChanges(false);
     gcpSetupPostRequest.setChangeCustomerSuspense("None");
     gcpSetupPostRequest.setIncludeAlertChanges(false);
@@ -316,8 +311,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType(
         "Exec"); // both employees are reps, this should return error
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
 
     // make the request
     AADM_User.attemptsTo(
@@ -328,7 +322,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     String errorMessage =
         "The following errors occurred while setting up the GCP process: { Employee Code with value ("
             + toEmployee
-            + ") provided to 'ToPersonnelCode' does not match the PersonnelType 'P' }";
+            + ") provided to 'ToPersonnelCode' does not match the PersonnelType 'Exec' }";
     Util.validateErrorResponse(errorMessage, AADM_User);
   }
 
@@ -347,8 +341,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Something"); // should return error
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
 
     // make the request
     AADM_User.attemptsTo(
@@ -376,8 +369,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
     gcpSetupPostRequest.setChangeCustomerSuspense("something"); // should return error
 
     // make the request
@@ -414,8 +406,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setFromPersonnelCode(fromEmployee.getBrokerCode());
     gcpSetupPostRequest.setToPersonnelCode(toEmployee.getBrokerCode());
     gcpSetupPostRequest.setPersonnelType("Broker");
-    gcpSetupPostRequest.setChangeCustomers(true);
-    gcpSetupPostRequest.setChangePolicies(true);
+    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
 
     // the following fields should automatically be set to false/None once you post
     gcpSetupPostRequest.setIncludeAlertChanges(true);
