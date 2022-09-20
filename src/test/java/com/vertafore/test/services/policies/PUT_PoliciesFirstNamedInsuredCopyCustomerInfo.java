@@ -49,6 +49,8 @@ public class PUT_PoliciesFirstNamedInsuredCopyCustomerInfo extends TokenSuperCla
     AADM_User.attemptsTo(
         policiesApi.PUTPoliciesFirstNamedInsuredCopyCustomerInfoOnThePoliciesController(
             putRequest, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .as(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
   }
 }

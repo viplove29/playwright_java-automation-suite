@@ -50,12 +50,16 @@ public class POST_CustomerBasicInfo extends TokenSuperClass {
     // Check AppContext
     ORAN_App.attemptsTo(
         customerAPI.POSTCustomerBasicInfoOnTheCustomersController(customerBody, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .as(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
 
     // Check UserContext
     AADM_User.attemptsTo(
         customerAPI.POSTCustomerBasicInfoOnTheCustomersController(customerBody, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .as(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
 
     // Grab customerNumber for POST Search
     int customerNumber =

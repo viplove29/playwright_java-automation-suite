@@ -424,6 +424,28 @@ public class CustomerUtil {
         .isEqualTo(cell.replaceAll("[\\D]", ""));
   }
 
+  public static CustomerIdResponse stageARandomCustomer(Actor actor) {
+    CustomerBasicInfoPostRequest customerToStageModel =
+        createBasicCustomer("Customer", "Individual", actor);
+    actor.attemptsTo(
+        customerAPI.POSTCustomerBasicInfoOnTheCustomersController(customerToStageModel, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .as(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
+
+    CustomerIdResponse stagedCustomerResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", CustomerIdResponse.class);
+
+    assertThat(stagedCustomerResponse).isNotNull();
+    assertThat(stagedCustomerResponse.getCustomerId()).isNotNull();
+
+    return stagedCustomerResponse;
+  }
+
   public static void setBasicCustomerValidationHelpers(CustomerBasicInfoResponse customer) {
     customerId = customer.getCustomerId();
     customerNumber = customer.getCustomerNumber();
