@@ -22,14 +22,15 @@ public class POST_ActivityCustomerSearch extends TokenSuperClass {
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
-    // stage data
-    String comment = "Automation Test";
-    String action = ActivityUtil.getRandomActivityAction(AADM_User);
-    String customerId = CustomerUtil.selectRandomCustomer(AADM_User, "customer").getCustomerId();
+    // Stage customer to append activity to
+    CustomerIdResponse stagedCustomer = CustomerUtil.stageARandomCustomer(AADM_User);
 
+    // Stage Activity to search
     UseActivityTo activityApi = new UseActivityTo();
     CustomerActivityPostRequest postRequest = new CustomerActivityPostRequest();
-    postRequest.setCustomerId(customerId);
+    postRequest.setCustomerId(stagedCustomer.getCustomerId());
+    String comment = "Automation Test";
+    String action = ActivityUtil.getRandomActivityAction(AADM_User);
     postRequest.setComment(comment);
     postRequest.setAction(action);
 
@@ -40,7 +41,7 @@ public class POST_ActivityCustomerSearch extends TokenSuperClass {
     // Create request models for search
     CustomerActivitiesSearchPostRequest searchPostRequest =
         new CustomerActivitiesSearchPostRequest();
-    searchPostRequest.setCustomerId(customerId);
+    searchPostRequest.setCustomerId(stagedCustomer.getCustomerId());
     PagingRequestCustomerActivitiesSearchPostRequest pagingRequest =
         new PagingRequestCustomerActivitiesSearchPostRequest();
     pagingRequest.setModel(searchPostRequest);

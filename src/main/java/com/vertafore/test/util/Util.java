@@ -35,6 +35,12 @@ public class Util {
     assertThat(errorResponse.get("error")).isEqualTo(errorMessage);
   }
 
+  public static void validateErrorResponseContainsString(String errorMessage, Actor actor) {
+    HashMap<String, String> errorResponse =
+        LastResponse.received().answeredBy(actor).getBody().jsonPath().getObject("", HashMap.class);
+    assertThat(errorResponse.get("error")).contains(errorMessage);
+  }
+
   // method to insert a null field to be serialized at the HIGHEST level of the model
   // e.g. any variable that isn't contained in a subclass/model
   public static String addNullFieldToModel(Object model, String fieldName) {
