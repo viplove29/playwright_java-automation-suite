@@ -16,6 +16,7 @@ import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -260,6 +261,54 @@ public class POST_CustomerContactsSearch extends TokenSuperClass {
     assertThat(customerContacts != null).isTrue();
     // check no customer is returned
     assertThat(customerContacts.getResponse().isEmpty()).isTrue();
+  }
+
+  @Test
+  public void customerContactsSearchByChangeDateReturnsCustomers() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor VADM_Admin = theActorCalled("VADM_Admin");
+
+    UseCustomersTo customersApi = new UseCustomersTo();
+
+    /* Use 2 years old date as changeDate to test the API. This is not ideal. However there is no way
+    to add a contact for a customer through API. So we can not add a contact to a customer use the current time to
+    send as changed date. Also, CustomerContactDependents search also do not return the contact changed date. If it
+    returned changedData we could use that to test.
+     */
+    DateTime twoYearsOldDateTime = DateTime.now().minusYears(2);
+    String changedDate = twoYearsOldDateTime.toString();
+
+    // fill out the request body
+    PagingRequestCustomerContactsFilterPostRequest pagingRequest =
+        new PagingRequestCustomerContactsFilterPostRequest();
+    CustomerContactsFilterPostRequest postRequest = new CustomerContactsFilterPostRequest();
+    postRequest.setChangedDate(changedDate);
+    pagingRequest.setModel(postRequest);
+
+    // send requests
+    ORAN_App.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    VADM_Admin.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    AADM_User.attemptsTo(
+        customersApi.POSTCustomersContactsSearchOnTheCustomersController(pagingRequest, "string"));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // validate response
+    PagingResponseCustomerContactResponse customerContacts =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerContactResponse.class);
+    assertThat(customerContacts).isNotNull();
+    // there should be at least one customer with a contact updated in last 2 years.
+    assertThat(customerContacts.getResponse().isEmpty()).isFalse();
   }
 
   @Test
