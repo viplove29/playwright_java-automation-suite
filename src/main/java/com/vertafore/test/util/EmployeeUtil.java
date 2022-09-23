@@ -215,4 +215,17 @@ public class EmployeeUtil {
 
     return desiredAuthGroup.size() > 0;
   }
+
+  public static EmployeeResponse getEmployeeDetailsByEmpCode(Actor actor, String empCode) {
+    List<EmployeeResponse> employees = getAllEmployees(actor);
+    List<EmployeeResponse> filteredEmployees =
+        employees
+            .stream()
+            .filter(employee -> employee.getEmpCode().equals(empCode))
+            .collect(Collectors.toList());
+    if (filteredEmployees.size() > 0) {
+      return filteredEmployees.get(0);
+    }
+    return null;
+  }
 }
