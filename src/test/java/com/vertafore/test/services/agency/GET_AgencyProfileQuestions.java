@@ -4,10 +4,13 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
+import com.vertafore.test.models.ems.AgencyProfileQuestionResponse;
 import com.vertafore.test.servicewrappers.UseAgencyTo;
+import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
+import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,10 +28,18 @@ public class GET_AgencyProfileQuestions extends TokenSuperClass {
     AADM_User.attemptsTo(agencyApi.GETAgencyProfileQuestionsOnTheAgencyController(false, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
+    VADM_Admin.attemptsTo(agencyApi.GETAgencyProfileQuestionsOnTheAgencyController(false, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
     ORAN_App.attemptsTo(agencyApi.GETAgencyProfileQuestionsOnTheAgencyController(false, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    VADM_Admin.attemptsTo(agencyApi.GETAgencyProfileQuestionsOnTheAgencyController(false, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+    List<AgencyProfileQuestionResponse> profileQuestions =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getList("", AgencyProfileQuestionResponse.class);
+    assertThat(profileQuestions).isNotNull();
   }
 }
