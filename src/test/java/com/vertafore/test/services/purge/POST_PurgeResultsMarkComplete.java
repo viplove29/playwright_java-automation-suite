@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
+import com.vertafore.test.util.AppLockUtil;
 import com.vertafore.test.util.PolicyUtil;
 import com.vertafore.test.util.PurgeUtil;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class POST_PurgeResultsMarkComplete extends TokenSuperClass {
     Actor AADM_User = theActorCalled("AADM_User");
 
     UsePurgeTo purgeAPI = new UsePurgeTo();
+
+    AppLockUtil.releaseAllPolicyApplicationLocks(AADM_User);
 
     // Purge Policy Search Object
     PurgePolicySearchPostRequest purgePolicySearchPostRequest = new PurgePolicySearchPostRequest();

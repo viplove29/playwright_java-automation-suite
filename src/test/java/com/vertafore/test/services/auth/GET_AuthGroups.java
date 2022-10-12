@@ -29,7 +29,7 @@ public class GET_AuthGroups extends TokenSuperClass {
     // ORANG TEST
     ORAN_App.attemptsTo(
         AuthAPI.GETAuthConfigAuthGroupsAuthGroupIdOnTheConfigauthController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
 
     // VADM TEST
     VADM_Admin.attemptsTo(
@@ -53,21 +53,21 @@ public class GET_AuthGroups extends TokenSuperClass {
 
   @Test
   public void AuthGroupsReturnsSpecificAuthGroup() {
-    Actor ORAN_App = theActorCalled("ORAN_App");
+    Actor AADM_User = theActorCalled("AADM_User");
     UseAuthTo AuthAPI = new UseAuthTo();
 
     // set helper variables for validation
-    AuthGroupUtility.setAuthGroupHelperVariables(AuthGroupUtility.selectRandomAuthGroup(ORAN_App));
+    AuthGroupUtility.setAuthGroupHelperVariables(AuthGroupUtility.selectRandomAuthGroup(AADM_User));
 
     // Test to validate that a specific AuthGroup can be found
-    ORAN_App.attemptsTo(
+    AADM_User.attemptsTo(
         AuthAPI.GETAuthConfigAuthGroupsAuthGroupIdOnTheConfigauthController(
             AuthGroupUtility.currentAGrpId, "string"));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AuthGroupResponse authGroupResponse =
         LastResponse.received()
-            .answeredBy(ORAN_App)
+            .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getList("", AuthGroupResponse.class)

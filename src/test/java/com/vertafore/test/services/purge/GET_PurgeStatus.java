@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
+import com.vertafore.test.util.AppLockUtil;
 import com.vertafore.test.util.PolicyUtil;
 import com.vertafore.test.util.PurgeUtil;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class GET_PurgeStatus extends TokenSuperClass {
   @Test
   public void purgeStatus() throws InterruptedException {
     Actor AADM_User = theActorCalled("AADM_User");
+
+    AppLockUtil.releaseAllPolicyApplicationLocks(AADM_User);
 
     UsePurgeTo purgeAPI = new UsePurgeTo();
 
@@ -76,7 +79,22 @@ public class GET_PurgeStatus extends TokenSuperClass {
         purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(purgePolicyDeletePostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    AADM_User.attemptsTo(purgeAPI.GETPurgeStatusOnThePurgeController());
+    PurgeSessionResponse purgeSessionResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PurgeSessionResponse.class);
+    assertThat(purgeSessionResponse)
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isNotNull();
+    assertThat(purgeSessionResponse.getPurgeSessionId())
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isNotNull();
+
+    String purgeSessionId = purgeSessionResponse.getPurgeSessionId();
+
+    AADM_User.attemptsTo(purgeAPI.GETPurgeStatusOnThePurgeController(purgeSessionId, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     PurgeStatusResponse purgeStatusResponse =
@@ -87,9 +105,9 @@ public class GET_PurgeStatus extends TokenSuperClass {
             .getObject("", PurgeStatusResponse.class);
 
     assertThat(purgeStatusResponse != null).isTrue();
-    assertThat(purgeStatusResponse.getClass().getDeclaredFields().length).isEqualTo(1);
+    assertThat(purgeStatusResponse.getClass().getDeclaredFields().length).isEqualTo(5);
     assertThat(purgeStatusResponse.getClass().getDeclaredFields()[0].getName())
-        .isEqualTo("isPurgeRunning");
+        .isEqualTo("purgeSessionId");
     assertThat(purgeStatusResponse.getIsPurgeRunning()).isTrue();
 
     // Call wait for purge to complete before end of test

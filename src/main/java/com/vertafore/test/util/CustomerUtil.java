@@ -203,7 +203,8 @@ public class CustomerUtil {
     city = faker.address().city();
     state = faker.address().stateAbbr();
     zipCode = faker.address().zipCode();
-    country = faker.address().countryCode();
+    country =
+        "US"; // faker will input country codes that EMS doesn't account for, set US to be safe
 
     // Set customer address data into model
     customerAddress.setAddressLine1(addressLine1);
@@ -399,7 +400,7 @@ public class CustomerUtil {
 
     // Response validations for POST search
     assertThat(customer != null).isTrue();
-    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(22);
+    assertThat(customer.getClass().getDeclaredFields().length).isEqualTo(24);
     assertThat(customer.getCustomerNumber()).isEqualTo(customerNumber);
     assertThat(customer.getCustomerId()).isEqualTo(customerId);
     assertThat(customer.getCustomerType()).isEqualTo(customerType);

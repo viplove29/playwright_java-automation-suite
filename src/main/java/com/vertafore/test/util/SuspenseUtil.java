@@ -151,8 +151,8 @@ public class SuspenseUtil {
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType(personnelType);
     gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
-    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
-    gcpSetupPostRequest.setChangeCustomerSuspense("All");
+    gcpSetupPostRequest.setChangePersonalSuspenses(true);
+    gcpSetupPostRequest.setChangeCustomerSuspenses("All");
 
     // post the setup endpoint to get a GCP processing request with a header GUID
     actor.attemptsTo(

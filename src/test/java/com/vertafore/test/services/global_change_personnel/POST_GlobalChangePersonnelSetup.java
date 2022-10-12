@@ -15,68 +15,6 @@ import org.junit.Test;
 public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
 
   @Test
-  public void personnelReassignmentDateCanBePassedAsNull() {
-    Actor AADM_User = theActorCalled("AADM_User");
-
-    BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
-    String randomPolicyId = randomPolicy.getPolicyId();
-    String fromEmployee = randomPolicy.getExecutiveCode();
-    String toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
-    // if it turns out the two employees are the same no gcp processing will occur
-    while (toEmployee.equals(fromEmployee)) {
-      toEmployee = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
-    }
-    UseGlobalChangeTo gcpApi = new UseGlobalChangeTo();
-    GCPSetupPostRequest gcpSetupPostRequest = new GCPSetupPostRequest();
-
-    // set required fields for the gcp setup model at the highest level
-    gcpSetupPostRequest.setFromPersonnelCode(fromEmployee);
-    gcpSetupPostRequest.setToPersonnelCode(toEmployee);
-    gcpSetupPostRequest.setPersonnelType("Exec");
-    gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
-    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
-    gcpSetupPostRequest.setChangeCustomerSuspense("All");
-
-    // set required fields in the policy selections sub model
-    GCPPolicySelectionsPostRequest policySelectionsPostRequest =
-        new GCPPolicySelectionsPostRequest();
-    policySelectionsPostRequest.setIncludePolicyLevelPolicies(false);
-    policySelectionsPostRequest.setSetDefaultToPersonnelCommissionAmounts(false);
-    policySelectionsPostRequest.setExcludeExpiringPolicies(false);
-    policySelectionsPostRequest.setDefaultToPersonnelCommissionAmounts(false);
-    gcpSetupPostRequest.setPolicySelections(policySelectionsPostRequest);
-
-    // set personnelReassignmentDate equal to null in the policy selections sub model for the
-    // request body
-    String nullReassignmentDateModel =
-        Util.addNullFieldToSubModel(
-            gcpSetupPostRequest, "policySelections", "PersonnelReassignmentDate");
-
-    // send the model with the serialized null field passed as a string, it is possible to do this
-    // rather than a typical
-    // java object/hashmap with how the serialization works
-    AADM_User.attemptsTo(
-        gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
-            nullReassignmentDateModel, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    // validate the response
-    GCPSetupResponse gcpSetupResponse =
-        LastResponse.received()
-            .answeredBy(AADM_User)
-            .getBody()
-            .jsonPath()
-            .getObject("", GCPSetupResponse.class);
-
-    assertThat(gcpSetupResponse).isNotNull();
-    assertThat(gcpSetupResponse.getClass().getDeclaredFields().length).isEqualTo(2);
-    assertThat(gcpSetupResponse.getClass().getDeclaredFields()[0].getName())
-        .isEqualTo("globalChangeHeaderId");
-    assertThat(gcpSetupResponse.getClass().getDeclaredFields()[1].getName())
-        .isEqualTo("enteredDate");
-  }
-
-  @Test
   public void optionalFieldsCanBeLeftOutOfSetupBody() {
     Actor AADM_User = theActorCalled("AADM_User");
 
@@ -151,10 +89,10 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
     gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
-    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
-    gcpSetupPostRequest.setChangeCustomerSuspense("All");
-    gcpSetupPostRequest.setIncludeAlertChanges(false);
-    gcpSetupPostRequest.setIncludePersonalNoteChanges(false);
+    gcpSetupPostRequest.setChangePersonalSuspenses(true);
+    gcpSetupPostRequest.setChangeCustomerSuspenses("All");
+    gcpSetupPostRequest.setChangeAlerts(false);
+    gcpSetupPostRequest.setChangePersonalNotes(false);
 
     // make the request
     AADM_User.attemptsTo(
@@ -214,10 +152,10 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
     gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
-    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
-    gcpSetupPostRequest.setChangeCustomerSuspense("All");
-    gcpSetupPostRequest.setIncludeAlertChanges(true);
-    gcpSetupPostRequest.setIncludePersonalNoteChanges(true);
+    gcpSetupPostRequest.setChangePersonalSuspenses(true);
+    gcpSetupPostRequest.setChangeCustomerSuspenses("All");
+    gcpSetupPostRequest.setChangeAlerts(true);
+    gcpSetupPostRequest.setChangePersonalNotes(true);
 
     // make the request
     AADM_User.attemptsTo(
@@ -275,10 +213,10 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
     gcpSetupPostRequest.setChangeCustomersAndPolicies("N");
-    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(false);
-    gcpSetupPostRequest.setChangeCustomerSuspense("None");
-    gcpSetupPostRequest.setIncludeAlertChanges(false);
-    gcpSetupPostRequest.setIncludePersonalNoteChanges(false);
+    gcpSetupPostRequest.setChangePersonalSuspenses(false);
+    gcpSetupPostRequest.setChangeCustomerSuspenses("None");
+    gcpSetupPostRequest.setChangeAlerts(false);
+    gcpSetupPostRequest.setChangeAlerts(false);
 
     // make the request
     AADM_User.attemptsTo(
@@ -370,7 +308,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setToPersonnelCode(toEmployee);
     gcpSetupPostRequest.setPersonnelType("Exec");
     gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
-    gcpSetupPostRequest.setChangeCustomerSuspense("something"); // should return error
+    gcpSetupPostRequest.setChangeCustomerSuspenses("something"); // should return error
 
     // make the request
     AADM_User.attemptsTo(
@@ -379,7 +317,7 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
 
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     String errorMessage =
-        "The ChangeCustomerSuspense must equal one of the following: { 'All' or 'A', 'Selected' or 'S', 'None' or 'N' }.";
+        "The ChangeCustomerSuspenses must equal one of the following: { 'All' or 'A', 'Selected' or 'S', 'None' or 'N' }.";
     Util.validateErrorResponse(errorMessage, AADM_User);
   }
 
@@ -409,10 +347,10 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
     gcpSetupPostRequest.setChangeCustomersAndPolicies("B");
 
     // the following fields should automatically be set to false/None once you post
-    gcpSetupPostRequest.setIncludeAlertChanges(true);
-    gcpSetupPostRequest.setIncludePersonalSuspenseChanges(true);
-    gcpSetupPostRequest.setIncludePersonalNoteChanges(true);
-    gcpSetupPostRequest.setChangeCustomerSuspense("All");
+    gcpSetupPostRequest.setChangeAlerts(true);
+    gcpSetupPostRequest.setChangePersonalSuspenses(true);
+    gcpSetupPostRequest.setChangePersonalNotes(true);
+    gcpSetupPostRequest.setChangeCustomerSuspenses("All");
 
     // make the request
     AADM_User.attemptsTo(
@@ -442,9 +380,9 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
 
     assertThat(detailsResponse).isNotNull();
     assertThat(detailsResponse.getHeader()).isNotNull();
-    assertThat(detailsResponse.getHeader().getChangeCustomerSuspense()).isEqualTo("None");
-    assertThat(detailsResponse.getHeader().getIncludeAlertChanges()).isEqualTo(false);
-    assertThat(detailsResponse.getHeader().getIncludePersonalNoteChanges()).isEqualTo(false);
-    assertThat(detailsResponse.getHeader().getIncludePersonalSuspenseChanges()).isEqualTo(false);
+    assertThat(detailsResponse.getHeader().getChangeCustomerSuspenses()).isEqualTo("None");
+    assertThat(detailsResponse.getHeader().getChangeAlerts()).isEqualTo(false);
+    assertThat(detailsResponse.getHeader().getChangePersonalNotes()).isEqualTo(false);
+    assertThat(detailsResponse.getHeader().getChangePersonalSuspenses()).isEqualTo(false);
   }
 }
