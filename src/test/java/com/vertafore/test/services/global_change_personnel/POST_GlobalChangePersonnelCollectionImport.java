@@ -51,12 +51,12 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
 
     gcpCollectionImportPostRequest.setCustomerFileName("AutomationCustomerGCP.csv");
     gcpCollectionImportPostRequest.setCollectionMemo("GCP EMS Automated Test");
-    gcpCollectionImportPostRequest.setIncludePersonalSuspenseChanges(false);
-    gcpCollectionImportPostRequest.setChangeCustomerSuspense("None");
-    gcpCollectionImportPostRequest.setIncludeAlertChanges(false);
-    gcpCollectionImportPostRequest.setIncludePersonalNoteChanges(false);
-    gcpCollectionImportPostRequest.setSetZeroFromPersonnelCommissionAmounts(false);
-    gcpCollectionImportPostRequest.setSetDefaultToPersonnelCommissionAmounts(false);
+    gcpCollectionImportPostRequest.setChangePersonalSuspenses(false);
+    gcpCollectionImportPostRequest.setChangeCustomerSuspenses("None");
+    gcpCollectionImportPostRequest.setChangeAlerts(false);
+    gcpCollectionImportPostRequest.setChangePersonalNotes(false);
+    gcpCollectionImportPostRequest.setFromPersonnelCommissionsSetToZero(false);
+    gcpCollectionImportPostRequest.setToPersonnelCommissionsSetToDefault(false);
 
     AADM_User.attemptsTo(
         gcpApi.POSTGlobalChangePersonnelCollectionImportOnThePersonnelglobalchangeController(
@@ -117,12 +117,12 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
 
     gcpCollectionImportPostRequest.setPolicyFileName("AutomationPolicyGCP.csv");
     gcpCollectionImportPostRequest.setCollectionMemo("GCP EMS Automated Test");
-    gcpCollectionImportPostRequest.setIncludePersonalSuspenseChanges(false);
-    gcpCollectionImportPostRequest.setChangeCustomerSuspense("None");
-    gcpCollectionImportPostRequest.setIncludeAlertChanges(false);
-    gcpCollectionImportPostRequest.setIncludePersonalNoteChanges(false);
-    gcpCollectionImportPostRequest.setSetZeroFromPersonnelCommissionAmounts(false);
-    gcpCollectionImportPostRequest.setSetDefaultToPersonnelCommissionAmounts(false);
+    gcpCollectionImportPostRequest.setChangePersonalSuspenses(false);
+    gcpCollectionImportPostRequest.setChangeCustomerSuspenses("None");
+    gcpCollectionImportPostRequest.setChangeAlerts(false);
+    gcpCollectionImportPostRequest.setChangePersonalNotes(false);
+    gcpCollectionImportPostRequest.setFromPersonnelCommissionsSetToZero(false);
+    gcpCollectionImportPostRequest.setToPersonnelCommissionsSetToDefault(false);
 
     AADM_User.attemptsTo(
         gcpApi.POSTGlobalChangePersonnelCollectionImportOnThePersonnelglobalchangeController(

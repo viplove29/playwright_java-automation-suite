@@ -155,4 +155,35 @@ public class AppLockUtil {
       String policyId, Actor actor) {
     return releaseApplicationLockByRecordId(policyId, CKOUT_TYPE_POLICY, actor);
   }
+
+  public static List<ApplicationLockResponse> getAllPolicyApplicationLocks(Actor actor) {
+    // get all policy locks
+    actor.attemptsTo(
+        applicationLocksApi.GETApplicationLocksOnTheApplicationlocksController(
+            CKOUT_TYPE_POLICY, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
+    List<ApplicationLockResponse> policyLocks =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", ApplicationLockResponse.class);
+
+    assertThat(policyLocks).isNotNull();
+    return policyLocks;
+  }
+
+  public static void releaseAllPolicyApplicationLocks(Actor actor) {
+    List<ApplicationLockResponse> allPolicyLocks = getAllPolicyApplicationLocks(actor);
+
+    if (allPolicyLocks.isEmpty()) {
+      return;
+    }
+
+    for (ApplicationLockResponse policyLock : allPolicyLocks) {
+      releaseApplicationLockByApplicationLockId(policyLock.getApplicationLockId(), actor);
+    }
+  }
 }

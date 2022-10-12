@@ -105,7 +105,7 @@ public class POST_CustomerBasicInfo extends TokenSuperClass {
         CustomerUtil.searchForACustomer(randomSecuredCustomerId, 0, ORAN_App);
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     assertThat(randomSecuredCustomerBasicInfo).isNotNull();
-    assertThat(randomSecuredCustomerBasicInfo.getClass().getDeclaredFields().length).isEqualTo(22);
+    assertThat(randomSecuredCustomerBasicInfo.getClass().getDeclaredFields().length).isEqualTo(24);
 
     // remove access to secured customer
     EmployeeUtil.deleteSecuredCustomerAccessForEmployee(

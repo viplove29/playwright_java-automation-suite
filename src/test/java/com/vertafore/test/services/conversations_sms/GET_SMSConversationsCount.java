@@ -38,8 +38,6 @@ public class GET_SMSConversationsCount extends TokenSuperClass {
         conversationsAPI.GETSmsConversationsCountOnTheConversationssmsController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    SerenityRest.lastResponse().prettyPrint();
-
     ConversationCountResponse conversationCountResponse =
         LastResponse.received()
             .answeredBy(AADM_User)

@@ -93,7 +93,7 @@ public class PurgeUtil {
     int tries = 0;
 
     while (tries < 60) {
-      actor.attemptsTo(purgeAPI.GETPurgeStatusOnThePurgeController());
+      actor.attemptsTo(purgeAPI.GETPurgeStatusOnThePurgeController(null, ""));
       assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
       PurgeStatusResponse purgeStatusResponse =

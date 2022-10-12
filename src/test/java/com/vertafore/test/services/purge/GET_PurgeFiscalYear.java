@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.PurgeFiscalYearDivisionResponse;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
+import com.vertafore.test.util.AppLockUtil;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -20,6 +21,8 @@ public class GET_PurgeFiscalYear extends TokenSuperClass {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
+
+    AppLockUtil.releaseAllPolicyApplicationLocks(AADM_User);
 
     UsePurgeTo purgeAPI = new UsePurgeTo();
 

@@ -5,11 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.BasicPolicyInfoResponse;
-import com.vertafore.test.models.ems.CustomerResponse;
+import com.vertafore.test.models.ems.CustomerInfoResponse;
 import com.vertafore.test.models.ems.ImportBalanceJournalEntryResponse;
 import com.vertafore.test.servicewrappers.UseBalanceJournalEntriesTo;
-import com.vertafore.test.servicewrappers.UseCustomersTo;
-import com.vertafore.test.servicewrappers.UsePoliciesTo;
+import com.vertafore.test.servicewrappers.UseCustomerTo;
+import com.vertafore.test.util.CustomerUtil;
+import com.vertafore.test.util.PolicyUtil;
 import java.time.*;
 import java.util.*;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -34,61 +35,27 @@ public class PUT_BalanceJournalEntriesImportCustomer extends TokenSuperClass {
   public String generateCSVRowForFirstPolicyFound() {
     Actor AADM_User = theActorCalled("AADM_User");
 
-    // Get list of all customers in environment
-    UseCustomersTo customersApi = new UseCustomersTo();
-    AADM_User.attemptsTo(
-        customersApi.GETCustomersOnTheCustomersControllerDeprecated(null, "string"));
-    List<CustomerResponse> customers =
-        LastResponse.received()
-            .answeredBy(AADM_User)
-            .getBody()
-            .jsonPath()
-            .getList("customerList", CustomerResponse.class);
-
-    // Check each customer in random order until a policy is found
-    boolean policyFound = false;
-    String customerId = "";
     String policyId = "";
+    String customerId = "";
+    String customerType = "";
+    BasicPolicyInfoResponse randomPolicy = new BasicPolicyInfoResponse();
+    CustomerInfoResponse randomCustomer = new CustomerInfoResponse();
 
-    List<Integer> checkedCustIndexes = new ArrayList<>();
-    Random randNum = new Random();
-    int customerIndex;
+    UseCustomerTo customersApi = new UseCustomerTo();
 
-    while (!policyFound && checkedCustIndexes.size() < customers.size()) {
-      customerIndex = randNum.nextInt(customers.size());
-      while (checkedCustIndexes.contains(customerIndex)) {
-        customerIndex = randNum.nextInt(customers.size());
-      }
-      checkedCustIndexes.add(customerIndex);
-      CustomerResponse customer = customers.get(customerIndex);
+    // get policy info ensuring that customer is not of type Suspect or Prospect
+    do {
+      randomPolicy = PolicyUtil.selectRandomPolicy(AADM_User, "policy");
+      assertThat(randomPolicy).isNotNull();
+      assertThat(randomPolicy.getPolicyId()).isNotNull();
+      assertThat(randomPolicy.getCustomerId()).isNotNull();
 
-      // TODO change this endpoint to POST_policies/search
-      UsePoliciesTo policiesApi = new UsePoliciesTo();
-      AADM_User.attemptsTo(
-          policiesApi.GETPoliciesOnThePoliciesControllerDeprecated(
-              customer.getCustId(), true, "string"));
+      policyId = randomPolicy.getPolicyId();
+      customerId = randomPolicy.getCustomerId();
 
-      List<BasicPolicyInfoResponse> policies =
-          LastResponse.received()
-              .answeredBy(AADM_User)
-              .getBody()
-              .jsonPath()
-              .getList("", BasicPolicyInfoResponse.class);
-
-      if (policies.size() > 0) {
-        policyFound = true;
-        BasicPolicyInfoResponse policy = policies.get(0);
-        customerId = policy.getCustomerId();
-        policyId = policy.getPolicyId();
-      } else {
-        System.out.println("No policies exist for Customer Id " + customer.getCustId());
-      }
-    }
-
-    // If no policy is found, the test cannot be run
-    assertThat(policyFound)
-        .as("No policies exist for the current agency so BJE cannot be imported.")
-        .isTrue();
+      randomCustomer = CustomerUtil.getCustomerInfoByCustomerId(AADM_User, customerId);
+      assertThat(randomCustomer).isNotNull();
+    } while (!randomCustomer.getCustomerType().equals("Customer"));
 
     int invBalance = (int) (Math.random() * (200001) - 100000);
     int lateCh = (int) (Math.random() * 11);

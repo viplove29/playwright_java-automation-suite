@@ -41,7 +41,7 @@ public class GET_PolicyTransactions extends TokenSuperClass {
     searchRequest.setPolicyIds(policyIds);
     searchRequest.setIncludeAllPolicyTypes(true);
 
-    ORAN_App.attemptsTo(
+    AADM_User.attemptsTo(
         policiesApi.POSTPoliciesTransactionsSearchOnThePoliciesController(searchRequest, ""));
     List<PolicyTransactionResponse> policyTransactionSearchResponse =
         LastResponse.received()
