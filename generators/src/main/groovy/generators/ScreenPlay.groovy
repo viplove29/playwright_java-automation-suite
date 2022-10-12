@@ -154,7 +154,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
             op.path = op.path.replaceAll(	'[\\?].*$', "");
 
             // clean and normalize the operationId to remove duplicates and unhelpful names.
-            op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary)
+            op.operationId = generateMethodName(op.operationId, op.tags.get(0), op.summary, op.isDeprecated)
 
             // HACK bc swagger for EMS is terrible.
             op.summary = op.summary
@@ -183,10 +183,10 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         if (name.contains("-")){
             name = CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, name);
         }
-        return "Use" + name.capitalize() + "To";
+        return "Use" + handleProblematicEndpoints(name).capitalize() + "To";
     }
 
-    private String generateMethodName(String operationId, Object tag, String summary) {
+    private static String generateMethodName(String operationId, Object tag, String summary, Boolean deprecated) {
         String rawControllerName = tag.name ? tag.name : tag.description;
                 String controllerName = "";
                 String isDeprecated = "";
@@ -211,8 +211,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                     controllerName = WordUtils.uncapitalize(cleanedSummary);
                 }
 
-                else if (summary.contains('Deprecated') || summary.contains('DEPRECATED')) {
-
+                else if (deprecated) {
                     isDeprecated = "Deprecated";
                 }
 
@@ -221,7 +220,7 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
                 return newResult + "OnThe" + controllerName + "Controller" + isDeprecated;
             }
 
-    private String capitalizeAndCleanString(String stringToClean) {
+    private static String capitalizeAndCleanString(String stringToClean) {
         return WordUtils.capitalizeFully(stringToClean)
         // remove whitespace
                 .replaceAll("\\s+", "")
@@ -232,8 +231,21 @@ public class ScreenPlay extends SpringCodegen implements CodegenConfig {
         // remove hyphens
                 .replaceAll("-", "")
         // remove parentheses
-                .replaceAll("[()]","");
+                .replaceAll("[()]","")
+        // remove colons
+                .replaceAll(":","")
+        // remove forward slashes
+                .replaceAll("/","");
 
+    }
+
+    private static String handleProblematicEndpoints(String name) {
+        switch(name) {
+            case "errorLogs":
+                return "errorLogsDuplicate";
+            default:
+                return name;
+        }
     }
 }
 
