@@ -15,7 +15,7 @@ import org.junit.Test;
 public class PUT_PoliciesFirstNamedInsuredCopyCustomerInfo extends TokenSuperClass {
 
   @Test
-  public void putPoliciesFirstNamedInsuredCopyCustomerInfoUpdatesAllPoliciesUnderCustomer() {
+  public void putPoliciesFirstNamedInsuredCopyCustomerInfoUpdatesOnePolicyUnderCustomer() {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
@@ -26,31 +26,35 @@ public class PUT_PoliciesFirstNamedInsuredCopyCustomerInfo extends TokenSuperCla
 
     UsePoliciesTo policiesApi = new UsePoliciesTo();
 
-    PoliciesSearchPostRequest postRequest = new PoliciesSearchPostRequest();
-    postRequest.setCustomerId(customerId);
-    PagingRequestPoliciesSearchPostRequest pagingRequest =
-        new PagingRequestPoliciesSearchPostRequest();
-    pagingRequest.setModel(postRequest);
-
-    AADM_User.attemptsTo(policiesApi.POSTPoliciesSearchOnThePoliciesController(pagingRequest, ""));
-    PagingResponseBasicPolicyInfoResponse pagingResponse =
-        LastResponse.received()
-            .answeredBy(AADM_User)
-            .getBody()
-            .jsonPath()
-            .getObject("", PagingResponseBasicPolicyInfoResponse.class);
-
-    Long numPolicies = pagingResponse.getTotalCount();
-
     ApplicantsInfoCopyFromCustomerPutRequest putRequest =
         new ApplicantsInfoCopyFromCustomerPutRequest();
     putRequest.setCustomerId(customerId);
+    putRequest.addPolicyIdsItem(randomPolicy.getPolicyId());
+
+    VADM_Admin.attemptsTo(
+        policiesApi.PUTPoliciesFirstNamedInsuredCopyCustomerInfoOnThePoliciesController(
+            putRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    ORAN_App.attemptsTo(
+        policiesApi.PUTPoliciesFirstNamedInsuredCopyCustomerInfoOnThePoliciesController(
+            putRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AADM_User.attemptsTo(
         policiesApi.PUTPoliciesFirstNamedInsuredCopyCustomerInfoOnThePoliciesController(
             putRequest, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode())
-        .as(SerenityRest.lastResponse().toString())
-        .isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    PutGenericResponse response =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericResponse.class);
+
+    assertThat(response).isNotNull();
+    assertThat(response.getNumberOfRecordsUpdated()).isNotNull();
+    assertThat(response.getNumberOfRecordsUpdated()).isEqualTo(1);
   }
 }
