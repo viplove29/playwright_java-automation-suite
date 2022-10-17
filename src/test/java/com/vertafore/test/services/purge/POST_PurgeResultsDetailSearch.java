@@ -7,7 +7,6 @@ import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
 import com.vertafore.test.util.AppLockUtil;
-import com.vertafore.test.util.PolicyUtil;
 import com.vertafore.test.util.PurgeUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,16 +70,6 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
 
     purgePolicyDeletePostRequestADMIN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
     purgePolicyDeletePostRequestORAN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
-
-    // Check if policy exist
-    BasicPolicyInfoResponse basicPolicyInfoResponseAADM =
-        PolicyUtil.getPolicyById(AADM_User, purgePolicyCandidateResponseList.get(0).getPolicyId());
-    assertThat(basicPolicyInfoResponseAADM).isNotNull();
-
-    // Check if policy exist
-    BasicPolicyInfoResponse basicPolicyInfoResponseORAN =
-        PolicyUtil.getPolicyById(AADM_User, purgePolicyCandidateResponseList.get(1).getPolicyId());
-    assertThat(basicPolicyInfoResponseORAN).isNotNull();
 
     // Set Policy ID in purgePolicyDelete Object
     List<String> purgePolicyIDsAdmin = new ArrayList<>();

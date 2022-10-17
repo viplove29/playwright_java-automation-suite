@@ -7,7 +7,6 @@ import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UsePurgeTo;
 import com.vertafore.test.util.AppLockUtil;
-import com.vertafore.test.util.PolicyUtil;
 import com.vertafore.test.util.PurgeUtil;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,11 +63,6 @@ public class POST_PurgeResultsMarkComplete extends TokenSuperClass {
     purgePolicyDeletePostRequest.setFiscalYear(fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
 
     purgePolicyDeletePostRequest.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
-
-    // Check if policy exist
-    BasicPolicyInfoResponse basicPolicyInfoResponse =
-        PolicyUtil.getPolicyById(AADM_User, purgePolicyCandidateResponseList.get(0).getPolicyId());
-    assertThat(basicPolicyInfoResponse).isNotNull();
 
     // Set Policy ID in purgePolicyDelete Object
     List<String> purgePolicyIDs = new ArrayList<>();
