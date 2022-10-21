@@ -223,9 +223,22 @@ public class EmployeeUtil {
             .stream()
             .filter(employee -> employee.getEmpCode().equals(empCode))
             .collect(Collectors.toList());
-    if (filteredEmployees.size() > 0) {
-      return filteredEmployees.get(0);
-    }
-    return null;
+
+    assert !filteredEmployees.isEmpty();
+    return filteredEmployees.get(0);
+  }
+
+  public static EmployeeResponse getEmployeeDetailsByShortName(
+      String employeeShortName, Actor actor) {
+    List<EmployeeResponse> allEmployees = EmployeeUtil.getAllEmployees(actor);
+    // filter by desired employee
+    List<EmployeeResponse> filteredEmployees =
+        allEmployees
+            .stream()
+            .filter(employee -> employee.getShortName().equals(employeeShortName))
+            .collect(Collectors.toList());
+
+    assert !filteredEmployees.isEmpty();
+    return filteredEmployees.get(0);
   }
 }
