@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseApplicationLockTo;
 import com.vertafore.test.servicewrappers.UseApplicationLocksTo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
@@ -16,6 +17,9 @@ public class AppLockUtil {
   // These values are derived from the CheckOutConstants.cs class in the Main AMS repo
   private static final String CKOUT_TYPE_CUSTOMERSETUP = "10";
   private static final String CKOUT_TYPE_POLICY = "30";
+  private static final String CKOUT_TYPE_GCP = "104";
+  private static final String CKOUT_TYPE_SA_GLOBALCHANGE_DIVISIONCONSOLIDATION = "133";
+  private static final String CKOUT_TYPE_EMS_GLOBALCHANGE_PERSONNEL = "132";
 
   // Controller API's
   private static UseApplicationLockTo applicationLockApi = new UseApplicationLockTo();
@@ -184,6 +188,62 @@ public class AppLockUtil {
 
     for (ApplicationLockResponse policyLock : allPolicyLocks) {
       releaseApplicationLockByApplicationLockId(policyLock.getApplicationLockId(), actor);
+    }
+  }
+
+  public static List<ApplicationLockResponse> getAllGCPLocks(Actor actor) {
+    // 104 locks
+    actor.attemptsTo(
+        applicationLocksApi.GETApplicationLocksOnTheApplicationlocksController(CKOUT_TYPE_GCP, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
+    List<ApplicationLockResponse> gcpLocks =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", ApplicationLockResponse.class);
+
+    actor.attemptsTo(
+        applicationLocksApi.GETApplicationLocksOnTheApplicationlocksController(CKOUT_TYPE_GCP, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
+    // 133 locks
+    List<ApplicationLockResponse> gcpDivisionConsolidationLocks =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", ApplicationLockResponse.class);
+
+    // 132 locks
+    actor.attemptsTo(
+        applicationLocksApi.GETApplicationLocksOnTheApplicationlocksController(CKOUT_TYPE_GCP, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
+    List<ApplicationLockResponse> gcPersonnelLocks =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", ApplicationLockResponse.class);
+
+    List<ApplicationLockResponse> allGCPLocks = new ArrayList<>();
+    allGCPLocks.addAll(gcpDivisionConsolidationLocks);
+    allGCPLocks.addAll(gcPersonnelLocks);
+    allGCPLocks.addAll(gcpLocks);
+
+    return allGCPLocks;
+  }
+
+  public static void releaseAllGCPLocks(Actor actor) {
+    List<ApplicationLockResponse> allGcpLocks = getAllGCPLocks(actor);
+
+    for (ApplicationLockResponse gcpLock : allGcpLocks) {
+      releaseApplicationLockByApplicationLockId(gcpLock.getApplicationLockId(), actor);
     }
   }
 }
