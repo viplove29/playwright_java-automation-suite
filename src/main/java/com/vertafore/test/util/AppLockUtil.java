@@ -182,10 +182,6 @@ public class AppLockUtil {
   public static void releaseAllPolicyApplicationLocks(Actor actor) {
     List<ApplicationLockResponse> allPolicyLocks = getAllPolicyApplicationLocks(actor);
 
-    if (allPolicyLocks.isEmpty()) {
-      return;
-    }
-
     for (ApplicationLockResponse policyLock : allPolicyLocks) {
       releaseApplicationLockByApplicationLockId(policyLock.getApplicationLockId(), actor);
     }
