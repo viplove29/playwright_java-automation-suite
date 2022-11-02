@@ -2,6 +2,11 @@ plugins {
     id 'groovy'
 }
 
+project.afterEvaluate {
+    project.tasks.generatePomFileForPluginMavenPublication.enabled = false
+    project.tasks.publishPluginMavenPublicationToMavenRepository.enabled = false
+}
+
 dependencies {
     implementation localGroovy()
     implementation 'org.openapitools:openapi-generator-cli:4.3.0'
