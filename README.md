@@ -264,6 +264,34 @@ To access the reports locally, after running the test go to
 Open the index.html in your browser and you will see the report. When you find your
 test results you can click on each step that happened and even each request/response that was sent. Each request sent off will be annotated with the 'summary' from swagger, hopefully making clear what was happening on each request that was sent in the test.
 
+## Build Jar file of wrapper classes for other project usage
+
+This project has a gradle task for building the service wrappers and other supporting Java classes into a Jar file that can be
+used by other projects (like the AMS360 GUI test suite) to add EMS api calls into these test suites.
+
+To use it:
+
+`./gradlew toEmsJar`
+
+This gradle task generates a custom Jar file in the build/libs directory.  It should be updated when there are
+changes to the EMS api.
+
+The version of the Jar file is controlled by the `emsJarVersion` variable in the build.gradle file.
+This version needs to be incremented whenever there are breaking changes to the EMS api, or new endpoints in the EMS api
+that need to be tested in another test suite.
+
+## Publish Jar file to Gitlab for other project usage
+
+Performing the gradle `publish` task pushes the Jar file created with the `toEmsJar` task to the Gitlab Package Registry
+at https://gitlab.com/vertafore/agency/sdet/ems-automation-suite/-/packages where it can be accessed by other Gitlab projects.
+
+To use it:
+
+`./gradlew publish`
+
+The publish task uses a Gitlab Private Token from the `gradle.properties` file that needs to be updated every year
+to keep from expiring.
+
 
 ## Helpful Links & Resources
 

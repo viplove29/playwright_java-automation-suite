@@ -58,14 +58,41 @@ allprojects {
 
     apply plugin: 'maven-publish'
 
+    def emsJarName = 'ems-swagger-endpoints'
+    def emsJarVersion = '0.0.2'
+
+    task toEmsJar (type: Jar) {
+        baseName = emsJarName
+        version =  emsJarVersion
+        includeEmptyDirs = false
+        from sourceSets.main.output
+        include "**\\com\\vertafore\\test\\**"
+        destinationDir project.libsDir
+    }
+
     publishing {
         publications {
-            mavenJava(MavenPublication) {
-                from components.java
-                artifact sourceJar
+            pluginMaven(MavenPublication) {
+                groupId "test"
+                artifactId emsJarName
+                version emsJarVersion
+                artifact file("build/libs/${emsJarName}-${emsJarVersion}.jar")
+            }
+        }
+        repositories {
+            maven {
+                url "https://gitlab.com/api/v4/projects/29163794/packages/maven"
+                credentials(HttpHeaderCredentials) {
+                    name = "Private-Token"
+                    value = gitLabPrivateToken // the variable resides in $GRADLE_USER_HOME/gradle.properties
+                }
+                authentication {
+                    header(HttpHeaderAuthentication)
+                }
             }
         }
     }
+
     // Make Gradle use the latest version of SNAPSHOT artifacts (no caching)
     configurations.all {
         resolutionStrategy {
