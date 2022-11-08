@@ -37,21 +37,29 @@ public class POST_PolicyTransactionsSearch extends TokenSuperClass {
             .map(CustomerBasicInfoResponse::getCustomerId)
             .collect(Collectors.toList());
 
+    UseInvoicesTo invoicesApi = new UseInvoicesTo();
+
     // Iterate each customer and find the first customer with transaction invoices
     for (String custId : customerIds) {
-      UseInvoicesTo invoicesApi = new UseInvoicesTo();
-      InvoicesSearchFilterPostRequest invoicesSearchFilterPostRequest =
-          new InvoicesSearchFilterPostRequest();
+      PagingRequestInvoicesSearchPostRequest pagingRequestInvoicesSearchPostRequest =
+          new PagingRequestInvoicesSearchPostRequest();
+      InvoicesSearchPostRequest invoicesSearchFilterPostRequest = new InvoicesSearchPostRequest();
       invoicesSearchFilterPostRequest.setCustomerId(custId);
+
+      pagingRequestInvoicesSearchPostRequest.setModel(invoicesSearchFilterPostRequest);
       // search for invoices for the customer
-      ORAN_App.attemptsTo(
-          invoicesApi.POSTInvoicesOnTheInvoicesController(invoicesSearchFilterPostRequest, ""));
+      AADM_User.attemptsTo(
+          invoicesApi.POSTInvoicesSearchOnTheInvoicesController(
+              pagingRequestInvoicesSearchPostRequest, ""));
+
       List<InvoiceResponse> invoiceResponse =
           LastResponse.received()
-              .answeredBy(ORAN_App)
+              .answeredBy(AADM_User)
               .getBody()
               .jsonPath()
-              .getList("", InvoiceResponse.class);
+              .getObject("", PagingResponseInvoiceResponse.class)
+              .getResponse();
+
       if (!invoiceResponse.isEmpty()) {
         // There could be multiple policies. Iterate policies and find the policy with transactions
         List<InvoiceResponse> invoicesWithTransactions =
