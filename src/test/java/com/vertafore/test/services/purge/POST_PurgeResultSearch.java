@@ -84,7 +84,7 @@ public class POST_PurgeResultSearch extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     ORAN_App.attemptsTo(
         purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(purgePolicyDeletePostRequestORAN, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
 
     PurgeSessionResponse purgeSessionResponseORAN =
         LastResponse.received()
@@ -116,7 +116,7 @@ public class POST_PurgeResultSearch extends TokenSuperClass {
         purgeAPI.POSTPurgeResultsSearchOnThePurgeController(
             pagingRequestPurgeResultPostRequestORAN, ""));
 
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
 
     // Make call to Purge Results Search for VADM_Admin
     VADM_Admin.attemptsTo(

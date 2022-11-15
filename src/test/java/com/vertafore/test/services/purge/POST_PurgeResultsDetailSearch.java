@@ -87,11 +87,7 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     ORAN_App.attemptsTo(
         purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(purgePolicyDeletePostRequestORAN, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    // Call waitForPurgeProcessToComplete method for ORAN_App user before making Purge Policies
-    // Delete Call for AADM_User
-    PurgeUtil.waitForPurgeProcessToComplete(ORAN_App);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
 
     AADM_User.attemptsTo(
         purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(
