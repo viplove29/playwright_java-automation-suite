@@ -2,6 +2,7 @@ package com.vertafore.test.services.global_change_personnel;
 
 import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
@@ -125,8 +126,14 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
               + " was skipped due to business rules or the app lock cou ld not be retrieved.");
     }
 
-    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings)).isZero();
-    assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).isZero();
+    // skip assertions if data could not be found in the max number of tries
+    assumeThat(tries)
+        .as("Could not find an eligible customer in " + MAX_TRIES + " tries. Skipping test.")
+        .isLessThan(MAX_TRIES);
+    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings))
+        .as("Warnings were found.")
+        .isZero();
+    assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).as("Errors were found.").isZero();
   }
 
   @Test
@@ -189,11 +196,17 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
       System.out.println(
           "Policy "
               + gcpImportPostRequest.getPolicyId()
-              + " was skipped due to business rules or the app lock cou ld not be retrieved.");
+              + " was skipped due to business rules or the app lock could not be retrieved.");
     }
 
-    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings)).isZero();
-    assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).isZero();
+    // skip assertions if data could not be found in the max number of tries
+    assumeThat(tries)
+        .as("Could not find an eligible policy in " + MAX_TRIES + " tries. Skipping test.")
+        .isLessThan(MAX_TRIES);
+    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings))
+        .as("Warnings were found.")
+        .isZero();
+    assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).as("Errors were found.").isZero();
   }
 
   @Test
@@ -257,11 +270,17 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
       System.out.println(
           "Customer "
               + gcpImportPostRequest.getCustomerNumber()
-              + " was skipped due to business rules or the app lock cou ld not be retrieved.");
+              + " was skipped due to business rules or the app lock could not be retrieved.");
     }
 
-    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings)).isZero();
-    assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).isZero();
+    // skip assertions if data could not be found in the max number of tries
+    assumeThat(tries)
+        .as("Could not find an eligible customer in " + MAX_TRIES + " tries. Skipping test.")
+        .isLessThan(MAX_TRIES);
+    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings))
+        .as("Warnings were found.")
+        .isZero();
+    assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).as("Errors were found.").isZero();
   }
 
   @Test
@@ -332,23 +351,34 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
       System.out.println(
           "Customer "
               + gcpImportPostRequest.getCustomerNumber()
-              + " was skipped due to business rules or the app lock cou ld not be retrieved.");
+              + " was skipped due to business rules or the app lock could not be retrieved.");
     }
-
+    // skip assertions if data could not be found in the max number of tries
+    assumeThat(tries)
+        .as("Could not find an eligible customer in " + MAX_TRIES + " tries. Skipping test.")
+        .isLessThan(MAX_TRIES);
     assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings)).isEqualTo(3);
     assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).isEqualTo(1);
     assertThat(
-        ErrorLogUtil.warningMessageIsPresent(
-            errorsAndWarnings, "From personnel 'DOESNOTEXIST1' is not present and skipped."));
+            ErrorLogUtil.warningMessageIsPresent(
+                errorsAndWarnings, "From personnel 'DOESNOTEXIST1' is not present and skipped."))
+        .as("Expected warning message for from personnel not present, but it was not found.")
+        .isTrue();
     assertThat(
-        ErrorLogUtil.warningMessageIsPresent(
-            errorsAndWarnings, "'DOESNOTEXIST1' as 'Exec' does not exist and is skipped."));
+            ErrorLogUtil.warningMessageIsPresent(
+                errorsAndWarnings, "'DOESNOTEXIST1' as 'Exec' does not exist and is skipped."))
+        .as("Expected warning message for nonexistent personnel, but it was not found.")
+        .isTrue();
     assertThat(
-        ErrorLogUtil.warningMessageIsPresent(
-            errorsAndWarnings, "'DOESNOTEXIST2' as 'Exec' does not exist and is skipped."));
+            ErrorLogUtil.warningMessageIsPresent(
+                errorsAndWarnings, "'DOESNOTEXIST2' as 'Exec' does not exist and is skipped."))
+        .as("Expected warning message for nonexistent personnel, but it was not found.")
+        .isTrue();
     assertThat(
-        ErrorLogUtil.errorMessageIsPresent(
-            errorsAndWarnings, "No records are selected for global change for personnel."));
+            ErrorLogUtil.errorMessageIsPresent(
+                errorsAndWarnings, "No records are selected for global change for personnel."))
+        .as("Expected error message for no records selected, but it was not found.")
+        .isTrue();
   }
 
   @Test
