@@ -257,11 +257,8 @@ public class POST_GlobalChangePersonnelSetup extends TokenSuperClass {
             gcpSetupPostRequest, ""));
 
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
-    String errorMessage =
-        "The following errors occurred while setting up the GCP process: { Employee Code with value ("
-            + toEmployee
-            + ") provided to 'ToPersonnelCode' does not match the PersonnelType 'Exec' }";
-    Util.validateErrorResponse(errorMessage, AADM_User);
+    String errorMessage = "does not match the PersonnelType 'Exec'";
+    Util.validateErrorResponseContainsString(errorMessage, AADM_User);
   }
 
   // edge case sad path testing to ensure employee type can only be of types P, R, B, or T
