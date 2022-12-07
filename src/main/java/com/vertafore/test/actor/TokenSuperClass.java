@@ -3,6 +3,7 @@ package com.vertafore.test.actor;
 import static com.vertafore.test.actor.BuildEMSCast.GetAccessTokens;
 
 import com.vertafore.test.models.EMSActor;
+import com.vertafore.test.util.EnvVariables;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -19,6 +20,8 @@ public class TokenSuperClass {
 
   @BeforeClass
   public static void beforeAll() {
+    System.out.println("Environment is : " + EnvVariables.BASE_URL + "\n");
+
     if (!haveAccessTokensBeenGranted) {
       actors.addAll(
           List.of(
