@@ -9,6 +9,7 @@ import com.vertafore.test.models.ems.PagingRequestPoliciesSearchPostRequest;
 import com.vertafore.test.models.ems.PagingResponseBasicPolicyInfoResponse;
 import com.vertafore.test.models.ems.PoliciesSearchPostRequest;
 import com.vertafore.test.servicewrappers.UseSubmissionsTo;
+import com.vertafore.test.util.EnvVariables;
 import com.vertafore.test.util.PolicyUtil;
 import java.util.stream.Collectors;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -54,9 +55,16 @@ public class POST_SubmissionsSearch extends TokenSuperClass {
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
+    /*AGNY keys need to be activated via the agency whitelist, which isn't available
+    for regular QA people in MDC */
+
+    int agnyStatusCode = 200;
+    if (EnvVariables.BASE_URL.contains("mdc")) {
+      agnyStatusCode = 401;
+    }
     AGNY_User.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(agnyStatusCode);
 
     VERT_User.attemptsTo(
         (submissionsAPI.POSTSubmissionsSearchOnTheSubmissionsController(pageSearch, "string")));
