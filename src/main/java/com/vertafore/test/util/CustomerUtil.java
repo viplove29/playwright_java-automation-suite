@@ -560,6 +560,7 @@ public class CustomerUtil {
   public static List<CustomerContactDependentResponse> getAllCustomerContactDependents(
       Actor actor, String division) {
 
+    int top = 10000;
     // format body for post search request
     CustomersWithContactsFilterPostRequest customersWithContactsFilterPostRequest =
         new CustomersWithContactsFilterPostRequest();
@@ -569,6 +570,7 @@ public class CustomerUtil {
             new PagingRequestCustomersWithContactsFilterPostRequest();
     pagingRequestCustomersWithContactsFilterPostRequest.setModel(
         customersWithContactsFilterPostRequest);
+    pagingRequestCustomersWithContactsFilterPostRequest.setTop(top);
 
     actor.attemptsTo(
         contactDependentsApi.POSTCustomersWithContactsDependentsSearchOnTheCustomersController(
