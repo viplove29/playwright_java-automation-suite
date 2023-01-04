@@ -7,6 +7,7 @@ import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseCustomerTo;
 import com.vertafore.test.servicewrappers.UseGlobalChangeTo;
+import com.vertafore.test.servicewrappers.UseSuspenseTo;
 import com.vertafore.test.util.*;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -210,6 +211,14 @@ public class POST_GlobalChangePersonnelStart extends TokenSuperClass {
       toEmployeeEmpCode = EmployeeUtil.getRandomExec(AADM_User).getEmpCode();
     }
 
+    // create a suspense so that there are changes guaranteed for GCP:
+    UseSuspenseTo suspenseApi = new UseSuspenseTo();
+    SuspensePostRequest suspense =
+        SuspenseUtil.createRandomSuspenseTiedToEmployee(fromEmployeeEmpCode, AADM_User);
+
+    AADM_User.attemptsTo(suspenseApi.POSTSuspenseOnTheSuspensesController(suspense, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
     // app lock the policy
     ApplicationLockResponse applicationLockResponse =
         AppLockUtil.lockPolicy(randomPolicy.getPolicyId(), "GCP APP LOCK POLICY TEST", AADM_User);
@@ -250,6 +259,10 @@ public class POST_GlobalChangePersonnelStart extends TokenSuperClass {
     AADM_User.attemptsTo(
         gcpApi.POSTGlobalChangePersonnelStartOnThePersonnelglobalchangeController(
             startPostRequest, ""));
+
+    if (SerenityRest.lastResponse().getStatusCode() != 200) {
+      SerenityRest.lastResponse().prettyPrint();
+    }
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // let gcp run
