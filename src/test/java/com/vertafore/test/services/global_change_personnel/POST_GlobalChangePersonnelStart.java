@@ -241,6 +241,11 @@ public class POST_GlobalChangePersonnelStart extends TokenSuperClass {
     AADM_User.attemptsTo(
         gcpApi.POSTGlobalChangePersonnelSetupOnThePersonnelglobalchangeController(
             gcpSetupPostRequest, ""));
+
+    if (SerenityRest.lastResponse().getStatusCode() != 200) {
+      System.out.println("ERROR IN GCP SET UP: \n");
+      SerenityRest.lastResponse().prettyPrint();
+    }
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     GCPSetupResponse gcpSetupResponse =
