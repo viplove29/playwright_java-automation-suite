@@ -24,6 +24,11 @@ public class EnvVariables {
   public static final String AGENCY_NO = getProperty("agency_no");
   public static final String ADMIN_EMP_CODE = getProperty("admin_emp_code");
   public static final String APP_ACCESS_TO_AGENCY_KEY = getProperty("app_access_to_agency_key");
+  public static final String ALL_ACCESS_BANK = getProperty("all_access_bank");
+  public static final String EMS_ACCESS_ONLY_BANK = getProperty("ems_access_only_bank");
+  public static final String EMS_ACCESS_EXCLUDED_BANK = getProperty("ems_access_excluded_bank");
+  public static final String DIVISIONAL_ACCESS_ONLY_BANK =
+      getProperty("divisional_access_only_bank");
 
   private static String getProperty(String property) {
     return EnvironmentSpecificConfiguration.from(
