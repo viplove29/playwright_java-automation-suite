@@ -59,7 +59,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     def emsJarName = 'ems-swagger-endpoints'
-    def emsJarVersion = '0.0.2'
+    def emsJarVersion = '0.0.3'
 
     task toEmsJar (type: Jar) {
         baseName = emsJarName
