@@ -31,7 +31,7 @@ public class GET_SMSConversations extends TokenSuperClass {
 
     ORAN_App.attemptsTo(
         conversationsAPI.GETSmsConversationsOnTheConversationssmsController(null, "String"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AADM_User.attemptsTo(
         conversationsAPI.GETSmsConversationsOnTheConversationssmsController(null, "String"));

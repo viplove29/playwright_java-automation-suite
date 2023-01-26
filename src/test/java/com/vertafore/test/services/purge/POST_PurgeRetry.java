@@ -12,6 +12,7 @@ import com.vertafore.test.util.Util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -62,7 +63,10 @@ public class POST_PurgeRetry extends TokenSuperClass {
 
     // Set Policy ID in purgePolicyDelete Object
     List<String> purgePolicyIDs = new ArrayList<>();
-    purgePolicyIDs.add(purgePolicyCandidateResponseList.get(0).getPolicyId());
+    purgePolicyIDs.add(
+        purgePolicyCandidateResponseList
+            .get(new Random().nextInt(purgePolicyCandidateResponseList.size()))
+            .getPolicyId());
     purgePolicyDeletePostRequest.policyIds(purgePolicyIDs);
 
     String purgeSessionId = PurgeUtil.purgePolicy(AADM_User, purgePolicyDeletePostRequest);

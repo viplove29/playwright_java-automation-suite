@@ -6,12 +6,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.ActivityClaimResponse;
+import com.vertafore.test.models.ems.CustomerIdResponse;
 import com.vertafore.test.servicewrappers.UseActivityTo;
+import com.vertafore.test.util.CustomerUtil;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.UUID;
 import net.serenitybdd.junit.runners.SerenityRunner;
-import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.junit.Test;
@@ -25,11 +26,12 @@ public class POST_ActivityClaim extends TokenSuperClass {
   public void PostActivityClaimSuccessfullyPostsOneClaim() {
 
     Actor AADM_User = theActorCalled("AADM_User");
+    CustomerIdResponse randomCustomer = CustomerUtil.stageARandomCustomer(AADM_User);
 
     UseActivityTo ActivityAPI = new UseActivityTo();
     HashMap<String, String> claimBody = new HashMap<>();
     String randomClaimId = UUID.randomUUID().toString();
-    String randomCustId = UUID.randomUUID().toString();
+    String randomCustId = randomCustomer.getCustomerId();
 
     claimBody.put("action", "string");
     claimBody.put("ClaimId", randomClaimId);
@@ -41,7 +43,6 @@ public class POST_ActivityClaim extends TokenSuperClass {
 
     AADM_User.should(seeThatResponse("Activity Claims Returned", res -> res.statusCode(200)));
 
-    SerenityRest.lastResponse().prettyPrint();
     ActivityClaimResponse claimResponse =
         LastResponse.received()
             .answeredBy(AADM_User)

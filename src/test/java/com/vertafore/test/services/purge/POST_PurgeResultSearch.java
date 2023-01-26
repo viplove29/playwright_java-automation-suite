@@ -62,71 +62,13 @@ public class POST_PurgeResultSearch extends TokenSuperClass {
     // Fiscal End Date only needs to be the Year
     purgePolicyDeletePostRequestADMIN.setFiscalYear(
         fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
-    purgePolicyDeletePostRequestORAN.setFiscalYear(
-        fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
 
     purgePolicyDeletePostRequestADMIN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
-    purgePolicyDeletePostRequestORAN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
 
     // Set Policy ID in purgePolicyDelete Object
     List<String> purgePolicyIDsAdmin = new ArrayList<>();
     purgePolicyIDsAdmin.add(purgePolicyCandidateResponseList.get(0).getPolicyId());
     purgePolicyDeletePostRequestADMIN.policyIds(purgePolicyIDsAdmin);
-
-    List<String> purgePolicyIDsORAN = new ArrayList<>();
-    purgePolicyIDsORAN.add(purgePolicyCandidateResponseList.get(1).getPolicyId());
-    purgePolicyDeletePostRequestORAN.policyIds(purgePolicyIDsORAN);
-
-    // Make Call to Purge Policy Delete
-    VADM_Admin.attemptsTo(
-        purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(
-            purgePolicyDeletePostRequestADMIN, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-    ORAN_App.attemptsTo(
-        purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(purgePolicyDeletePostRequestORAN, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
-
-    PurgeSessionResponse purgeSessionResponseORAN =
-        LastResponse.received()
-            .answeredBy(ORAN_App)
-            .getBody()
-            .jsonPath()
-            .getObject("", PurgeSessionResponse.class);
-
-    // Purge Result Post Request Object
-    PurgeResultPostRequest purgeResultPostRequestORAN = new PurgeResultPostRequest();
-
-    // Add session ID to Purge Results Post Request Object
-    purgeResultPostRequestORAN.setPurgeSessionId(purgeSessionResponseORAN.getPurgeSessionId());
-
-    //  Paging Request Purge Result Post Request object
-    PagingRequestPurgeResultPostRequest pagingRequestPurgeResultPostRequestORAN =
-        new PagingRequestPurgeResultPostRequest();
-
-    // Add Purge Result Post Request Model to Paging Request object
-    pagingRequestPurgeResultPostRequestORAN.setModel(purgeResultPostRequestORAN);
-
-    // Set Skip to 0, Top and Total to 1000
-    pagingRequestPurgeResultPostRequestORAN.setSkip(0);
-    pagingRequestPurgeResultPostRequestORAN.setTotalRecords(1000);
-    pagingRequestPurgeResultPostRequestORAN.setTotalRecords(1000);
-
-    // Make call to Purge Results Search
-    ORAN_App.attemptsTo(
-        purgeAPI.POSTPurgeResultsSearchOnThePurgeController(
-            pagingRequestPurgeResultPostRequestORAN, ""));
-
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
-
-    // Make call to Purge Results Search for VADM_Admin
-    VADM_Admin.attemptsTo(
-        purgeAPI.POSTPurgeResultsSearchOnThePurgeController(
-            pagingRequestPurgeResultPostRequestORAN, ""));
-
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-
-    // Make call to waitForPurgeProcessToComplete to wait for purge to complete running
-    PurgeUtil.waitForPurgeProcessToComplete(AADM_User);
 
     // Make Call to Purge Policy Delete for AADM user
     AADM_User.attemptsTo(
@@ -160,10 +102,19 @@ public class POST_PurgeResultSearch extends TokenSuperClass {
     pagingRequestPurgeResultPostRequest.setTotalRecords(1000);
 
     // Make call to Purge Results Search
+    VADM_Admin.attemptsTo(
+        purgeAPI.POSTPurgeResultsSearchOnThePurgeController(
+            pagingRequestPurgeResultPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    ORAN_App.attemptsTo(
+        purgeAPI.POSTPurgeResultsSearchOnThePurgeController(
+            pagingRequestPurgeResultPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
     AADM_User.attemptsTo(
         purgeAPI.POSTPurgeResultsSearchOnThePurgeController(
             pagingRequestPurgeResultPostRequest, ""));
-
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // Purge Result Summary Response

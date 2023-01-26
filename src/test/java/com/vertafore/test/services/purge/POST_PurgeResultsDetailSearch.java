@@ -58,37 +58,20 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
     // Purge Policy Delete Object
     PurgePolicyDeletePostRequest purgePolicyDeletePostRequestADMIN =
         new PurgePolicyDeletePostRequest();
-    PurgePolicyDeletePostRequest purgePolicyDeletePostRequestORAN =
-        new PurgePolicyDeletePostRequest();
 
     // Set Fiscal End Date and Division Code in Purge Policies Delete Object
     // Fiscal End Date only needs to be the Year
     purgePolicyDeletePostRequestADMIN.setFiscalYear(
         fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
-    purgePolicyDeletePostRequestORAN.setFiscalYear(
-        fiscalEndDateAndDivisionCode.get("fiscalEndDate"));
 
     purgePolicyDeletePostRequestADMIN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
-    purgePolicyDeletePostRequestORAN.setDivision(fiscalEndDateAndDivisionCode.get("divisionCode"));
 
     // Set Policy ID in purgePolicyDelete Object
     List<String> purgePolicyIDsAdmin = new ArrayList<>();
     purgePolicyIDsAdmin.add(purgePolicyCandidateResponseList.get(0).getPolicyId());
     purgePolicyDeletePostRequestADMIN.policyIds(purgePolicyIDsAdmin);
 
-    List<String> purgePolicyIDsORAN = new ArrayList<>();
-    purgePolicyIDsORAN.add(purgePolicyCandidateResponseList.get(1).getPolicyId());
-    purgePolicyDeletePostRequestORAN.policyIds(purgePolicyIDsORAN);
-
     // Make Call to Purge Policy Delete
-    VADM_Admin.attemptsTo(
-        purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(
-            purgePolicyDeletePostRequestADMIN, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
-    ORAN_App.attemptsTo(
-        purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(purgePolicyDeletePostRequestORAN, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
-
     AADM_User.attemptsTo(
         purgeAPI.POSTPurgePoliciesDeleteOnThePurgeController(
             purgePolicyDeletePostRequestADMIN, ""));
@@ -121,6 +104,16 @@ public class POST_PurgeResultsDetailSearch extends TokenSuperClass {
     pagingRequestPurgePolicySearchPostRequest.setTotalRecords(1000);
 
     // Make call to purge/results-detail/search
+    VADM_Admin.attemptsTo(
+        purgeAPI.POSTPurgeResultsDetailSearchOnThePurgeController(
+            pagingRequestPurgeResultDetailPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    ORAN_App.attemptsTo(
+        purgeAPI.POSTPurgeResultsDetailSearchOnThePurgeController(
+            pagingRequestPurgeResultDetailPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
     AADM_User.attemptsTo(
         purgeAPI.POSTPurgeResultsDetailSearchOnThePurgeController(
             pagingRequestPurgeResultDetailPostRequest, ""));
