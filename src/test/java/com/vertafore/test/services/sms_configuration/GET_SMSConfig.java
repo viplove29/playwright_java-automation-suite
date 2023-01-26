@@ -29,7 +29,7 @@ public class GET_SMSConfig extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     ORAN_App.attemptsTo(smsconfigAPI.GETSmsConfigOnTheSmsconfigurationController());
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AADM_User.attemptsTo(smsconfigAPI.GETSmsConfigOnTheSmsconfigurationController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);

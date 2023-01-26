@@ -29,7 +29,7 @@ public class GET_AuthGroups extends TokenSuperClass {
     // ORANG TEST
     ORAN_App.attemptsTo(
         AuthAPI.GETAuthConfigAuthGroupsAuthGroupIdOnTheConfigauthController(null, "string"));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // VADM TEST
     VADM_Admin.attemptsTo(

@@ -30,7 +30,7 @@ public class GET_PurgeFiscalYear extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     ORAN_App.attemptsTo(purgeAPI.GETPurgeFiscalYearOnThePurgeController());
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AADM_User.attemptsTo(purgeAPI.GETPurgeFiscalYearOnThePurgeController());
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);

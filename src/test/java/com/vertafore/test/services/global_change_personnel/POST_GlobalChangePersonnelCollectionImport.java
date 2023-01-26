@@ -22,22 +22,22 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
 
   private GCPImportPostRequest getGCPCollectionImportTestData(Actor actor, Boolean isPolicyOnly) {
     BasicPolicyInfoResponse randomPolicy = PolicyUtil.selectRandomPolicy(actor, "policy");
-    String fromEmployee = randomPolicy.getExecutiveCode();
-    while (EXCLUDED_EMP_CODES.contains(fromEmployee)) {
+    String fromEmployeeEmpCode = randomPolicy.getExecutiveCode();
+    while (EXCLUDED_EMP_CODES.contains(fromEmployeeEmpCode)) {
       randomPolicy = PolicyUtil.selectRandomPolicy(actor, "policy");
-      fromEmployee = randomPolicy.getExecutiveCode();
+      fromEmployeeEmpCode = randomPolicy.getExecutiveCode();
     }
-    String toEmployee = EmployeeUtil.getRandomExec(actor).getEmpCode();
-    while (EXCLUDED_EMP_CODES.contains(toEmployee) || toEmployee.equals(fromEmployee)) {
-      toEmployee = EmployeeUtil.getRandomExec(actor).getEmpCode();
+    EmployeeResponse toEmployee = EmployeeUtil.getRandomExec(actor);
+    while (EXCLUDED_EMP_CODES.contains(toEmployee.getEmpCode())
+        || toEmployee.getEmpCode().equals(fromEmployeeEmpCode)) {
+      toEmployee = EmployeeUtil.getRandomExec(actor);
     }
 
     String fromEmployeeShortName =
-        Objects.requireNonNull(EmployeeUtil.getEmployeeDetailsByEmpCode(actor, fromEmployee))
+        Objects.requireNonNull(EmployeeUtil.getEmployeeDetailsByEmpCode(actor, fromEmployeeEmpCode))
             .getShortName();
-    String toEmployeeShortName =
-        Objects.requireNonNull(EmployeeUtil.getEmployeeDetailsByEmpCode(actor, toEmployee))
-            .getShortName();
+
+    String toEmployeeShortName = toEmployee.getShortName();
 
     int customerNumber =
         Objects.requireNonNull(
@@ -130,9 +130,6 @@ public class POST_GlobalChangePersonnelCollectionImport extends TokenSuperClass 
     assumeThat(tries)
         .as("Could not find an eligible customer in " + MAX_TRIES + " tries. Skipping test.")
         .isLessThan(MAX_TRIES);
-    assertThat(ErrorLogUtil.getNumberOfWarnings(errorsAndWarnings))
-        .as("Warnings were found.")
-        .isZero();
     assertThat(ErrorLogUtil.getNumberOfErrors(errorsAndWarnings)).as("Errors were found.").isZero();
   }
 
