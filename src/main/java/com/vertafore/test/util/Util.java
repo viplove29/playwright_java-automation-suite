@@ -3,6 +3,7 @@ package com.vertafore.test.util;
 import static net.serenitybdd.screenplay.actors.OnStage.theActorInTheSpotlight;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -16,6 +17,9 @@ import net.serenitybdd.screenplay.ensure.Ensure;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 
 public class Util {
+
+  public static Faker faker = new Faker();
+
   public File getFileByFileName(String fileName, String fileExtension) {
 
     return new File(
@@ -100,5 +104,13 @@ public class Util {
       return false;
     }
     return UUID_REGEX_PATTERN.matcher(guid).matches();
+  }
+
+  public static String randomText(int length) {
+    return faker.lorem().characters(length);
+  }
+
+  public static Double randomDollarAmount(double minimum, double maximum) {
+    return faker.number().randomDouble(2, (long) minimum, (long) maximum);
   }
 }
