@@ -31,11 +31,51 @@ public class TokenSuperClass {
               new EMSActor().called("AGNY_User").withKeyType("AGNY").withLoginPath("user"),
               new EMSActor().called("VERT_User").withKeyType("VERT").withLoginPath("user"),
               new EMSActor().called("VERT_V4App").withKeyType("VERT").withLoginPath("v4app"),
-              new EMSActor().called("VADM_Admin").withKeyType("VADM").withLoginPath("admin")));
+              new EMSActor().called("VADM_Admin").withKeyType("VADM").withLoginPath("admin"),
+              new EMSActor()
+                  .called("AADM_NAUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("na_user"),
+              new EMSActor()
+                  .called("AADM_CBUUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("cbu_user"),
+              new EMSActor()
+                  .called("AADM_PBUUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("pbu_user"),
+              new EMSActor()
+                  .called("AADM_EXECUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("exec_user"),
+              new EMSActor()
+                  .called("AADM_PPUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("pp_user"),
+              new EMSActor()
+                  .called("AADM_SGUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("sg_user")));
+
+      //    AADM_NAUSER - no access user - no customer or policy access
+      //    AADM_CBUUSER - Customer Business Unit access user - read and write access to the
+      // customer but no policy access
+      //    AADM_PBUUSER - Policy Business Unit access user - read access to customer and read and
+      // write access to policy
+      //    AADM_EXECUSER - Executive user - read and write access to customer but no policy access
+      //    AADM_PPUSER - Policy Personnel user - read access to customer and read and write access
+      // to policy
+      //    AADM_SGUSER - Service Group user - read only access to customer
+
       cast = GetAccessTokens(actors);
       haveAccessTokensBeenGranted = true;
     }
-
     OnStage.setTheStage(cast);
   }
 }

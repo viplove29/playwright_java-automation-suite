@@ -6,14 +6,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseActivitiesTo;
-import com.vertafore.test.servicewrappers.UseActivityTo;
 import com.vertafore.test.util.ActivityUtil;
-import com.vertafore.test.util.CustomerUtil;
+import com.vertafore.test.util.EnvVariables;
 import com.vertafore.test.util.Util;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -32,29 +28,18 @@ public class POST_ActivitiesAttachment extends TokenSuperClass {
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
+    UseActivitiesTo activitiesApi = new UseActivitiesTo();
+
     List<ActivityIdResponse> activitiesToAppendAttachment =
-        stageActivitiesToAppendAttachmentTo(AADM_User);
+        ActivityUtil.stageMultipleCustomerActivities(AADM_User, 2);
     List<String> activityIds =
         activitiesToAppendAttachment
             .stream()
             .map(ActivityIdResponse::getActivityId)
             .collect(Collectors.toList());
 
-    UseActivitiesTo activitiesApi = new UseActivitiesTo();
-
-    File attachment = Util.createTestFile("Filename.txt");
-    MultiActivityAttachmentPostRequest postRequest = new MultiActivityAttachmentPostRequest();
-    byte[] data = Files.readAllBytes(attachment.toPath());
-    postRequest.setActivityIds(activityIds);
-    postRequest.setComment("comment");
-    postRequest.setData(data);
-    postRequest.setFileSizeInBytes(data.length);
-    postRequest.setSourceFileName(attachment.getName());
-    postRequest.setCompressed(false);
-
-    // we already have necessary data
-    // clean up file before tests, in case tests fail
-    attachment.delete();
+    MultiActivityAttachmentPostRequest postRequest =
+        ActivityUtil.getActivitiesAttachmentPostRequest(activityIds);
 
     VADM_Admin.attemptsTo(
         activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
@@ -77,30 +62,62 @@ public class POST_ActivitiesAttachment extends TokenSuperClass {
     assertThat(response.getAttachmentId()).isNotNull();
   }
 
-  public List<ActivityIdResponse> stageActivitiesToAppendAttachmentTo(Actor actor) {
-    UseActivityTo activityApi = new UseActivityTo();
-    List<ActivityIdResponse> activities = new ArrayList<>();
+  @Test
+  public void postActivityAttachmentWriteMaskTest() throws IOException {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor AADM_NAUser = theActorCalled("AADM_NAUser");
+    Actor AADM_CBUUSER = theActorCalled("AADM_CBUUser");
+    Actor AADM_PBUUSER = theActorCalled("AADM_PBUUser");
+    Actor AADM_EXECUSER = theActorCalled("AADM_EXECUser");
+    Actor AADM_PPUser = theActorCalled("AADM_PPUser");
+    Actor AADM_SGUser = theActorCalled("AADM_SGUser");
 
-    for (int i = 0; i < 2; i++) {
-      String action = ActivityUtil.getRandomActivityAction(actor);
-      ActivityPostRequest activity = new ActivityPostRequest();
-      String customerId = CustomerUtil.selectRandomCustomer(actor, "customer").getCustomerId();
-      activity.setAction(action);
-      activity.setDescription("Description");
-      activity.setCustomerId(customerId);
-      activity.setEntityId(customerId);
+    // use the staged customer ID
+    String customerId = EnvVariables.READ_WRITE_MASK_CUSTOMER_ID;
 
-      actor.attemptsTo(activityApi.POSTActivityOnTheActivitiesController(activity, ""));
-      ActivityIdResponse response =
-          LastResponse.received()
-              .answeredBy(actor)
-              .getBody()
-              .jsonPath()
-              .getObject("", ActivityIdResponse.class);
+    UseActivitiesTo activitiesApi = new UseActivitiesTo();
 
-      activities.add(response);
-    }
+    List<ActivityIdResponse> activitiesToAppendAttachment =
+        ActivityUtil.stageMultipleCustomerActivities(AADM_User, 2, customerId);
+    List<String> activityIds =
+        activitiesToAppendAttachment
+            .stream()
+            .map(ActivityIdResponse::getActivityId)
+            .collect(Collectors.toList());
+    MultiActivityAttachmentPostRequest postRequest =
+        ActivityUtil.getActivitiesAttachmentPostRequest(activityIds);
 
-    return activities;
+    // No access user doesn't have access to customer or policy
+    AADM_NAUser.attemptsTo(
+        activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    Util.validateErrorResponseContainsString(
+        "One or more validation errors occurred while processing the request. Please see the error log for more information",
+        AADM_NAUser);
+
+    // Customer Business user has read and write access to the customer but no policy access
+    AADM_CBUUSER.attemptsTo(
+        activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Policy Business Unit user has read access to customer and read and write access to policy
+    AADM_PBUUSER.attemptsTo(
+        activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Executive user has read and write access to customer but no policy access
+    AADM_EXECUSER.attemptsTo(
+        activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Policy Personnel user has read access to customer and read and write access to policy
+    AADM_PPUser.attemptsTo(
+        activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Service Group user has read only access to customer and no access to policy
+    AADM_SGUser.attemptsTo(
+        activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
   }
 }
