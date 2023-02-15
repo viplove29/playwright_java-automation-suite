@@ -8,6 +8,7 @@ import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseActivityTo;
 import com.vertafore.test.util.ActivityUtil;
 import com.vertafore.test.util.CustomerUtil;
+import com.vertafore.test.util.EnvVariables;
 import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -80,5 +81,81 @@ public class POST_ActivityCustomerSearch extends TokenSuperClass {
 
     assertThat(customerActivity).isNotNull();
     assertThat(customerActivity.getAction()).isEqualTo(action);
+  }
+
+  @Test
+  public void postActivityCustomerSearchReadMaskTest() {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor AADM_NAUser = theActorCalled("AADM_NAUser");
+    Actor AADM_CBUUSER = theActorCalled("AADM_CBUUser");
+    Actor AADM_PBUUSER = theActorCalled("AADM_PBUUser");
+    Actor AADM_EXECUSER = theActorCalled("AADM_EXECUser");
+    Actor AADM_PPUser = theActorCalled("AADM_PPUser");
+    Actor AADM_SGUser = theActorCalled("AADM_SGUser");
+
+    // use the staged customer ID
+    String customerId = EnvVariables.READ_WRITE_MASK_CUSTOMER_ID;
+
+    // Stage Activity to search
+    UseActivityTo activityApi = new UseActivityTo();
+    CustomerActivityPostRequest postRequest = new CustomerActivityPostRequest();
+    postRequest.setCustomerId(customerId);
+    String comment = "Automation Read Mask Test";
+    String action = ActivityUtil.getRandomActivityAction(AADM_User);
+    postRequest.setComment(comment);
+    postRequest.setAction(action);
+
+    AADM_User.attemptsTo(
+        activityApi.POSTActivityCustomerOnTheActivitiesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Create request models for search
+    CustomerActivitiesSearchPostRequest searchPostRequest =
+        new CustomerActivitiesSearchPostRequest();
+    searchPostRequest.setCustomerId(customerId);
+    PagingRequestCustomerActivitiesSearchPostRequest pagingRequest =
+        new PagingRequestCustomerActivitiesSearchPostRequest();
+    pagingRequest.setModel(searchPostRequest);
+
+    // No access user doesn't have access to customer or policy
+    AADM_NAUser.attemptsTo(
+        activityApi.POSTActivityCustomerSearchOnTheActivitiesController(pagingRequest, ""));
+
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    // validate the response
+    PagingResponseCustomerActivityResponse pagingResponse =
+        LastResponse.received()
+            .answeredBy(AADM_NAUser)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseCustomerActivityResponse.class);
+
+    assertThat(pagingResponse).isNotNull();
+    assertThat(pagingResponse.getResponse()).isEmpty();
+
+    // Customer Business user has read and write access to the customer but no policy access
+    AADM_CBUUSER.attemptsTo(
+        activityApi.POSTActivityCustomerSearchOnTheActivitiesController(pagingRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Policy Business Unit user has read access to customer and read and write access to policy
+    AADM_PBUUSER.attemptsTo(
+        activityApi.POSTActivityCustomerSearchOnTheActivitiesController(pagingRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Executive user has read and write access to customer but no policy access
+    AADM_EXECUSER.attemptsTo(
+        activityApi.POSTActivityCustomerSearchOnTheActivitiesController(pagingRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Policy Personnel user has read access to customer and read and write access to policy
+    AADM_PPUser.attemptsTo(
+        activityApi.POSTActivityCustomerSearchOnTheActivitiesController(pagingRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Service Group user has read only access to customer and no access to policy
+    AADM_SGUser.attemptsTo(
+        activityApi.POSTActivityCustomerSearchOnTheActivitiesController(pagingRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
   }
 }

@@ -28,6 +28,24 @@ public class GetAToken implements Performable {
     if (loginType.isBlank() && username.isBlank() && password.isBlank()) {
       username = USERNAME;
       password = PASSWORD;
+    } else if (loginType.equals("na_user") && username.isBlank() && password.isBlank()) {
+      username = AADM_NAUSER_USERNAME;
+      password = AADM_NAUSER_PASSWORD;
+    } else if (loginType.equals("cbu_user") && username.isBlank() && password.isBlank()) {
+      username = AADM_CBUUSER_USERNAME;
+      password = AADM_CBUUSER_PASSWORD;
+    } else if (loginType.equals("pbu_user") && username.isBlank() && password.isBlank()) {
+      username = AADM_PBUUSER_USERNAME;
+      password = AADM_PBUUSER_PASSWORD;
+    } else if (loginType.equals("exec_user") && username.isBlank() && password.isBlank()) {
+      username = AADM_EXECUSER_USERNAME;
+      password = AADM_EXECUSER_PASSWORD;
+    } else if (loginType.equals("pp_user") && username.isBlank() && password.isBlank()) {
+      username = AADM_PPUSER_USERNAME;
+      password = AADM_PPUSER_PASSWORD;
+    } else if (loginType.equals("sg_user") && username.isBlank() && password.isBlank()) {
+      username = AADM_SGUSER_USERNAME;
+      password = AADM_SGUSER_PASSWORD;
     }
     // since VSSO functionality has fundamentally changed this code is no longer needed, but can be
     // left here for future reference

@@ -21,6 +21,37 @@ public class EnvVariables {
   public static final String PASSWORD = getProperty("password");
   //  public static final String VSSO_USERNAME = getProperty("vsso_user");
   //  public static final String VSSO_PASSWORD = getProperty("vsso_password");
+
+  public static final String AADM_NAUSER_USERNAME =
+      getProperty("read_write_mask_users.no_access_user.username");
+  public static final String AADM_NAUSER_PASSWORD =
+      getProperty("read_write_mask_users.no_access_user.password");
+
+  public static final String AADM_CBUUSER_USERNAME =
+      getProperty("read_write_mask_users.customer_business_unit_access_user.username");
+  public static final String AADM_CBUUSER_PASSWORD =
+      getProperty("read_write_mask_users.customer_business_unit_access_user.password");
+
+  public static final String AADM_PBUUSER_USERNAME =
+      getProperty("read_write_mask_users.policy_business_unit_access_user.username");
+  public static final String AADM_PBUUSER_PASSWORD =
+      getProperty("read_write_mask_users.policy_business_unit_access_user.password");
+
+  public static final String AADM_EXECUSER_USERNAME =
+      getProperty("read_write_mask_users.executive_access_user.username");
+  public static final String AADM_EXECUSER_PASSWORD =
+      getProperty("read_write_mask_users.executive_access_user.password");
+
+  public static final String AADM_PPUSER_USERNAME =
+      getProperty("read_write_mask_users.policy_personnel_access_user.username");
+  public static final String AADM_PPUSER_PASSWORD =
+      getProperty("read_write_mask_users.policy_personnel_access_user.password");
+
+  public static final String AADM_SGUSER_USERNAME =
+      getProperty("read_write_mask_users.service_group_access_user.username");
+  public static final String AADM_SGUSER_PASSWORD =
+      getProperty("read_write_mask_users.service_group_access_user.password");
+
   public static final String AGENCY_NO = getProperty("agency_no");
   public static final String ADMIN_EMP_CODE = getProperty("admin_emp_code");
   public static final String APP_ACCESS_TO_AGENCY_KEY = getProperty("app_access_to_agency_key");
@@ -29,6 +60,12 @@ public class EnvVariables {
   public static final String EMS_ACCESS_EXCLUDED_BANK = getProperty("ems_access_excluded_bank");
   public static final String DIVISIONAL_ACCESS_ONLY_BANK =
       getProperty("divisional_access_only_bank");
+
+  public static final String READ_WRITE_MASK_CUSTOMER_ID =
+      getProperty("read_write_mask_users.read_write_mask_customer.customer_id");
+
+  public static final String READ_WRITE_MASK_POLICY_ID =
+      getProperty("read_write_mask_users.read_write_mask_customer.policy_id");
 
   private static String getProperty(String property) {
     return EnvironmentSpecificConfiguration.from(
