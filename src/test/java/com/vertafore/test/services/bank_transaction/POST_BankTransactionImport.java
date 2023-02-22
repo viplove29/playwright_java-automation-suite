@@ -31,8 +31,8 @@ public class POST_BankTransactionImport extends TokenSuperClass {
     request.setBankCode(bank.getBankCode());
     request.setBankShortName(bank.getShortName());
 
-    List<BankStatementDetail> detailsList = new ArrayList<>();
-    BankStatementDetail details = new BankStatementDetail();
+    List<BankStatementPostRequest> detailsList = new ArrayList<>();
+    BankStatementPostRequest details = new BankStatementPostRequest();
     details.setTransactionDate(dateString);
     details.setDescription(description);
     details.setAmount(amount);
