@@ -264,6 +264,34 @@ To access the reports locally, after running the test go to
 Open the index.html in your browser and you will see the report. When you find your
 test results you can click on each step that happened and even each request/response that was sent. Each request sent off will be annotated with the 'summary' from swagger, hopefully making clear what was happening on each request that was sent in the test.
 
+## Specifying Which Test Cases to Run in the GitLab MR Pipeline
+
+The pipeline for EMS merge requests on GitLab will do some basic project checks, then run the entire suite by default. If any tests fail, even if they are not part of the merge request, **the pipeline will fail**.
+
+If you do not want unrelated tests to run in your MR pipeline, you need to specify the tests or test classes in the Merge Request Title.
+Just include the test/test class name(s) somewhere in the **Title** field of the merge request separated by spaces. Make sure they match the method or class names exactly (case-sensitive).
+
+#### Merge Request Title Examples:
+
+- `One Test getActivityGetsActivity`
+
+- `One Class GET_Activity`
+
+- `Multiple Tests getActivityGetsActivity getActivityReadMaskTest`
+
+- `Multiple Classes GET_Activity GET_ActivityActions GET_ActivityPolicy`
+
+The Merge Request Title is searched for a regular expression which matches method and class name formatting in this suite to determine which parts are specifying a test or test class, so it can contain almost anything in any order. However, you should be careful using _camelCase_ or _snake_case_ text in other parts of the title.
+If no matching expressions are found, all tests in the suite will be run. The matching tokens are used with the Gradle `--tests` flag to specify tests. Below are the equivalent gradle commands that would be executed in the pipeline for the example MR titles above:
+
+- `testClasses test --tests *.getActivityGetsActivity --info`
+
+- `testClasses test --tests *.GET_Activity --info`
+
+- `testClasses test --tests *.getActivityGetsActivity --tests *.getActivityReadMaskTest --info`
+
+- `testClasses test --tests *.GET_Activity --tests *.GET_ActivityActions --tests *.GET_ActivityPolicy --info`
+
 ## Build Jar file of wrapper classes for other project usage
 
 This project has a gradle task for building the service wrappers and other supporting Java classes into a Jar file that can be
@@ -291,7 +319,6 @@ To use it:
 
 The publish task uses a Gitlab Private Token from the `gradle.properties` file that needs to be updated every year
 to keep from expiring.
-
 
 ## Helpful Links & Resources
 

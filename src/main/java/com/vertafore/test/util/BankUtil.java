@@ -1,12 +1,10 @@
 package com.vertafore.test.util;
 
-import com.vertafore.test.models.ems.BankAccountResponse;
-import com.vertafore.test.models.ems.BankTransactionsSearchPostRequest;
-import com.vertafore.test.models.ems.BankTransactionsSearchResponse;
-import com.vertafore.test.models.ems.PagingRequestBankTransactionsSearchPostRequest;
+import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseBankAccountsTo;
 import com.vertafore.test.servicewrappers.UseBankTransactionTo;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -43,6 +41,7 @@ public class BankUtil {
     bankTransactionsSearchPostRequest.setStartDate(startDate.toString());
     bankTransactionsSearchPostRequest.setEndDate(startDate.plusMonths(1).toString());
     pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
+    pagingRequestBankTransactionsSearchPostRequest.setTop(10000);
 
     actor.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
@@ -68,5 +67,43 @@ public class BankUtil {
       return null;
     }
     return matchingBankTransactions.get(0);
+  }
+
+  public static BankTransactionImportPostRequest formatBankTransactionImportRequest(
+      BankAccountResponse bank,
+      String dateString,
+      String description,
+      Double amount,
+      String csvFilename) {
+    BankTransactionImportPostRequest request = new BankTransactionImportPostRequest();
+    request.setBankCode(bank.getBankCode());
+    request.setBankShortName(bank.getShortName());
+
+    List<BankStatementPostRequest> detailsList = new ArrayList<>();
+    BankStatementPostRequest details = new BankStatementPostRequest();
+    details.setTransactionDate(dateString);
+    details.setDescription(description);
+    details.setAmount(amount);
+    detailsList.add(details);
+
+    request.setBankStatementDetails(detailsList);
+    request.setFileName(csvFilename);
+    return request;
+  }
+
+  public static BankTransactionImportPostRequest importDummyBankTransaction(
+      Actor actor, BankAccountResponse bank, LocalDateTime currentDate, String filename) {
+    UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        formatBankTransactionImportRequest(
+            bank,
+            currentDate.toString(),
+            "EMSAuto " + Util.randomText(10),
+            Util.randomDollarAmount(1.00, 99999.99),
+            filename);
+    actor.attemptsTo(
+        bankTransactionAPI.POSTBankTransactionImportOnTheBanktransactionController(
+            bankTransactionImportPostRequest, ""));
+    return bankTransactionImportPostRequest;
   }
 }
