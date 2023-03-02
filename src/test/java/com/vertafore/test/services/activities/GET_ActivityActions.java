@@ -25,13 +25,13 @@ public class GET_ActivityActions extends TokenSuperClass {
 
     UseActivityTo ActivityAPI = new UseActivityTo();
 
-    ORAN_App.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController());
+    ORAN_App.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController(null, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    VADM_Admin.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController());
+    VADM_Admin.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController(null, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
-    AADM_User.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController());
+    AADM_User.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController(null, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     ActionResponse action =

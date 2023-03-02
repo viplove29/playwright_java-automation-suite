@@ -18,7 +18,7 @@ public class ActivityUtil {
   private static UseActivityTo activityApi = new UseActivityTo();
 
   public static String getRandomActivityAction(Actor actor) {
-    actor.attemptsTo(activityApi.GETActivityActionsOnTheActivitiesController());
+    actor.attemptsTo(activityApi.GETActivityActionsOnTheActivitiesController(null, ""));
     List<ActionResponse> actions =
         LastResponse.received()
             .answeredBy(actor)

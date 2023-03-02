@@ -11,7 +11,6 @@ import com.vertafore.test.servicewrappers.UseActivityTo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
@@ -28,7 +27,7 @@ public class PUT_ActivityActions extends TokenSuperClass {
     UseActivityTo ActivityAPI = new UseActivityTo();
 
     // Getting a random activity to update
-    AADM_User.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController());
+    AADM_User.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController(null, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<ActionResponse> actions =
@@ -43,6 +42,7 @@ public class PUT_ActivityActions extends TokenSuperClass {
     String oldActionName = activityAction.getActionName();
     String newActionName = "Updated Action";
 
+    // formatting request body
     ActivityActionPutRequest putRequest = new ActivityActionPutRequest();
     putRequest.setActionId(actionId);
     putRequest.setActionName(newActionName);
@@ -74,7 +74,7 @@ public class PUT_ActivityActions extends TokenSuperClass {
     assertThat(response.getActionId()).isEqualTo(actionId);
 
     // validate the action was updated
-    AADM_User.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController());
+    AADM_User.attemptsTo(ActivityAPI.GETActivityActionsOnTheActivitiesController(actionId, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     actions =
@@ -84,12 +84,7 @@ public class PUT_ActivityActions extends TokenSuperClass {
             .jsonPath()
             .getList("", ActionResponse.class);
 
-    ActionResponse actionValidated =
-        actions
-            .stream()
-            .filter(action -> action.getActionId().equals(actionId))
-            .collect(Collectors.toList())
-            .get(0);
+    ActionResponse actionValidated = actions.get(0);
     assertThat(actionValidated).isNotNull();
     assertThat(actionValidated.getActionName()).isEqualTo(newActionName);
 
