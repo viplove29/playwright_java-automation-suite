@@ -5,9 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.javafaker.Faker;
 import com.vertafore.test.actor.TokenSuperClass;
+import com.vertafore.test.models.ems.ExternalReferenceListResponse;
 import com.vertafore.test.models.ems.ExternalReferenceResponse;
 import com.vertafore.test.servicewrappers.UseExternalReferencesTo;
+import com.vertafore.test.util.EmployeeUtil;
 import com.vertafore.test.util.ExternalReferencesUtil;
+import java.util.List;
 import net.serenitybdd.junit.runners.SerenityRunner;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -16,10 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
-public class GET_ExternalReferences extends TokenSuperClass {
+public class GET_ExternalReferencesEmployee extends TokenSuperClass {
 
   @Test
-  public void getExternalReferencesReturnsExternalReference() {
+  public void getExternalReferencesEmployeeGetsEmployeeExternalReference() {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
@@ -29,38 +32,45 @@ public class GET_ExternalReferences extends TokenSuperClass {
 
     String name = faker.name().username();
     String value = faker.phoneNumber().cellPhone();
+    String employeeCode = EmployeeUtil.getRandomEmployee(AADM_User).getEmpCode();
 
     // stage an external reference and get its GUID
     String referenceId =
-        ExternalReferencesUtil.upsertAgencyExternalReference(name, value, AADM_User);
+        ExternalReferencesUtil.upsertEmployeeExternalReference(
+            employeeCode, name, value, AADM_User);
 
     // baseline tests
     VADM_Admin.attemptsTo(
-        externalReferencesApi.GETExternalReferencesOnTheExternalreferencesController(
-            referenceId, ""));
+        externalReferencesApi.GETExternalReferencesEmployeeOnTheExternalreferencesController(
+            employeeCode, name, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
     ORAN_App.attemptsTo(
-        externalReferencesApi.GETExternalReferencesOnTheExternalreferencesController(
-            referenceId, ""));
+        externalReferencesApi.GETExternalReferencesEmployeeOnTheExternalreferencesController(
+            employeeCode, name, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     AADM_User.attemptsTo(
-        externalReferencesApi.GETExternalReferencesOnTheExternalreferencesController(
-            referenceId, ""));
+        externalReferencesApi.GETExternalReferencesEmployeeOnTheExternalreferencesController(
+            employeeCode, name, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // validate response
-    ExternalReferenceResponse efResponse =
+    List<ExternalReferenceResponse> efResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
-            .getObject("", ExternalReferenceResponse.class);
-
+            .getObject("", ExternalReferenceListResponse.class)
+            .getExternalReferences();
     assertThat(efResponse).isNotNull();
-    assertThat(efResponse.getExternalReferenceId()).isEqualTo(referenceId);
-    assertThat(efResponse.getExternalKeyName()).isEqualTo(name);
-    assertThat(efResponse.getExternalKeyValue()).isEqualTo(value);
+    assertThat(efResponse.size()).isEqualTo(1); // names should be unique
+
+    ExternalReferenceResponse stagedReference = efResponse.get(0);
+
+    assertThat(stagedReference).isNotNull();
+    assertThat(stagedReference.getExternalReferenceId()).isEqualTo(referenceId);
+    assertThat(stagedReference.getExternalKeyName()).isEqualTo(name);
+    assertThat(stagedReference.getExternalKeyValue()).isEqualTo(value);
   }
 }
