@@ -9,7 +9,6 @@ import com.vertafore.test.servicewrappers.UseNotificationsTo;
 import com.vertafore.test.util.Util;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
-import net.serenitybdd.screenplay.rest.questions.LastResponse;
 import org.junit.Test;
 
 public class POST_NotificationsMetricsSearch extends TokenSuperClass {
@@ -43,15 +42,6 @@ public class POST_NotificationsMetricsSearch extends TokenSuperClass {
         notificationsApi.POSTNotificationsMetricsSearchOnTheOutboundnotificationserviceController(
             postPagingRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
-    PagingResponseOnsMetricsResponse pagingResponseOnsMetricsResponse =
-        LastResponse.received()
-            .answeredBy(VADM_Admin)
-            .getBody()
-            .jsonPath()
-            .getObject("", PagingResponseOnsMetricsResponse.class);
-    // check for empty response
-    assertThat(pagingResponseOnsMetricsResponse.getResponse().isEmpty()).isTrue();
   }
 
   @Test

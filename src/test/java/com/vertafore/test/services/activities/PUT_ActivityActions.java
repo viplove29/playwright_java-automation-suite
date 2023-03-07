@@ -42,7 +42,6 @@ public class PUT_ActivityActions extends TokenSuperClass {
     String oldActionName = activityAction.getActionName();
     String newActionName = "Updated Action";
 
-    // formatting request body
     ActivityActionPutRequest putRequest = new ActivityActionPutRequest();
     putRequest.setActionId(actionId);
     putRequest.setActionName(newActionName);
