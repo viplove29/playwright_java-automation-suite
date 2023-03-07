@@ -1,10 +1,26 @@
 package com.vertafore.test.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.vertafore.test.models.ems.*;
+import com.vertafore.test.servicewrappers.UseNotificationsTo;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+import net.serenitybdd.rest.SerenityRest;
+import net.serenitybdd.screenplay.Actor;
+import net.serenitybdd.screenplay.rest.questions.LastResponse;
 
 public class NotificationUtil {
+
+  private static List<String> clientVersions = new ArrayList<>(Arrays.asList("1.0", "2.0", "3.0"));
+  private static List<String> clientEndpointsURIs =
+      new ArrayList<>(
+          Arrays.asList(
+              "https://botd-nsclient2.devop.vertafore.com/NSLogger",
+              "https://botd-nsclient2.devop.vertafore.com/NSLogger",
+              "https://botd-nsclient1.devop.vertafore.com:8083/notification"));
 
   public static String getRandomStringAppendedClientName(String clientName) {
     return clientName + " " + (int) (Math.random() * 999);
@@ -80,5 +96,45 @@ public class NotificationUtil {
     notificationClientPostRequest.setNotificationRecipients(recipientList);
 
     return notificationClientPostRequest;
+  }
+
+  public static NotificationClientResponse postRandomNotificationClient(Actor actor) {
+    UseNotificationsTo notificationsApi = new UseNotificationsTo();
+
+    List<String> notificationTypes = new ArrayList<>();
+
+    List<String> activityActionTypes = new ArrayList<>();
+
+    notificationTypes.add("Customer");
+    notificationTypes.add("Policy");
+    notificationTypes.add("Broker");
+    notificationTypes.add("GLGroup");
+
+    int clientIndex = new Random().nextInt(3);
+    String endpointURI = clientEndpointsURIs.get(clientIndex);
+    String clientName =
+        NotificationUtil.getRandomStringAppendedClientName("Client V" + (clientIndex + 1));
+
+    NotificationClientPostRequest notificationClientPostRequest =
+        NotificationUtil.getPostNotificationClientRequest(
+            clientVersions.get(clientIndex),
+            clientName + "1",
+            endpointURI,
+            "On",
+            notificationTypes,
+            activityActionTypes);
+
+    actor.attemptsTo(
+        notificationsApi.POSTNotificationsClientOnTheOutboundnotificationserviceController(
+            notificationClientPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    NotificationClientResponse notificationClientResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", NotificationClientResponse.class);
+    return notificationClientResponse;
   }
 }
