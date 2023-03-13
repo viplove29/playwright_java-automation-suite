@@ -61,7 +61,12 @@ public class TokenSuperClass {
                   .called("AADM_SGUser")
                   .withKeyType("AADM")
                   .withLoginPath("user")
-                  .withLoginType("sg_user")));
+                  .withLoginType("sg_user"),
+              new EMSActor()
+                  .called("AADM_NBTAUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("nbta_user")));
 
       //    AADM_NAUSER - no access user - no customer or policy access
       //    AADM_CBUUSER - Customer Business Unit access user - read and write access to the
@@ -72,6 +77,7 @@ public class TokenSuperClass {
       //    AADM_PPUSER - Policy Personnel user - read access to customer and read and write access
       // to policy
       //    AADM_SGUSER - Service Group user - read only access to customer
+      //    AADM_NBTAUSER - User with no access to Bank Transactions
 
       cast = GetAccessTokens(actors);
       haveAccessTokensBeenGranted = true;

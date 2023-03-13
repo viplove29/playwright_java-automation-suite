@@ -55,17 +55,25 @@ public class EnvVariables {
   public static final String AGENCY_NO = getProperty("agency_no");
   public static final String ADMIN_EMP_CODE = getProperty("admin_emp_code");
   public static final String APP_ACCESS_TO_AGENCY_KEY = getProperty("app_access_to_agency_key");
-  public static final String ALL_ACCESS_BANK = getProperty("all_access_bank");
-  public static final String EMS_ACCESS_ONLY_BANK = getProperty("ems_access_only_bank");
-  public static final String EMS_ACCESS_EXCLUDED_BANK = getProperty("ems_access_excluded_bank");
+
+  public static final String ALL_ACCESS_BANK = getProperty("access_banks.all_access_bank");
+  public static final String EMS_ACCESS_ONLY_BANK =
+      getProperty("access_banks.ems_access_only_bank");
+  public static final String EMS_ACCESS_EXCLUDED_BANK =
+      getProperty("access_banks.ems_access_excluded_bank");
   public static final String DIVISIONAL_ACCESS_ONLY_BANK =
-      getProperty("divisional_access_only_bank");
+      getProperty("access_banks.divisional_access_only_bank");
 
   public static final String READ_WRITE_MASK_CUSTOMER_ID =
       getProperty("read_write_mask_users.read_write_mask_customer.customer_id");
 
   public static final String READ_WRITE_MASK_POLICY_ID =
       getProperty("read_write_mask_users.read_write_mask_customer.policy_id");
+
+  public static final String NO_BANK_TRANSACTION_ACCESS_USERNAME =
+      getProperty("no_bank_transactions_access_user.username");
+  public static final String NO_BANK_TRANSACTION_ACCESS_PASSWORD =
+      getProperty("no_bank_transactions_access_user.password");
 
   private static String getProperty(String property) {
     return EnvironmentSpecificConfiguration.from(

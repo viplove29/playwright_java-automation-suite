@@ -46,6 +46,9 @@ public class GetAToken implements Performable {
     } else if (loginType.equals("sg_user") && username.isBlank() && password.isBlank()) {
       username = AADM_SGUSER_USERNAME;
       password = AADM_SGUSER_PASSWORD;
+    } else if (loginType.equals("nbta_user") && username.isBlank() && password.isBlank()) {
+      username = NO_BANK_TRANSACTION_ACCESS_USERNAME;
+      password = NO_BANK_TRANSACTION_ACCESS_PASSWORD;
     }
     // since VSSO functionality has fundamentally changed this code is no longer needed, but can be
     // left here for future reference
