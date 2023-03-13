@@ -1,5 +1,7 @@
 package com.vertafore.test.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseBankAccountsTo;
 import com.vertafore.test.servicewrappers.UseBankTransactionTo;
@@ -33,8 +35,14 @@ public class BankUtil {
   public static List<BankTransactionsSearchResponse> getBankTransactions(
       Actor actor, String bankCode, LocalDateTime startDate) {
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
-    PagingRequestBankTransactionsSearchPostRequest pagingRequestBankTransactionsSearchPostRequest =
-        new PagingRequestBankTransactionsSearchPostRequest();
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        pagingRequestBankTransactionsSearchPostRequest =
+            new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
+    SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
+    sortOptions.setFieldSort(
+        SortOptionBankTransactionsSortOptions.FieldSortEnum.BANKTRANSACTIONDATE);
+    sortOptions.setIsDescendingOrder(true);
+    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
         new BankTransactionsSearchPostRequest();
     bankTransactionsSearchPostRequest.setBankCode(bankCode);
@@ -47,11 +55,17 @@ public class BankUtil {
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             pagingRequestBankTransactionsSearchPostRequest, ""));
 
-    return LastResponse.received()
-        .answeredBy(actor)
-        .getBody()
-        .jsonPath()
-        .getList("response", BankTransactionsSearchResponse.class);
+    PagingResponseBankTransactionsSearchResponse searchResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseBankTransactionsSearchResponse.class);
+
+    // if response is null, the user does not have access to bank transactions
+    assertThat(searchResponse.getResponse()).isNotNull();
+
+    return searchResponse.getResponse();
   }
 
   public static BankTransactionsSearchResponse getBankTransactionByDescription(
