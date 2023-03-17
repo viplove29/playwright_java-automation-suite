@@ -1,10 +1,12 @@
 package com.vertafore.test.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseBankAccountsTo;
 import com.vertafore.test.servicewrappers.UseBankTransactionTo;
+import com.vertafore.test.servicewrappers.UseDepositsTo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +41,7 @@ public class BankUtil {
         pagingRequestBankTransactionsSearchPostRequest =
             new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
     SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(
-        SortOptionBankTransactionsSortOptions.FieldSortEnum.BANKTRANSACTIONDATE);
+    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
     sortOptions.setIsDescendingOrder(true);
     pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
@@ -119,5 +120,66 @@ public class BankUtil {
         bankTransactionAPI.POSTBankTransactionImportOnTheBanktransactionController(
             bankTransactionImportPostRequest, ""));
     return bankTransactionImportPostRequest;
+  }
+
+  public static BankTransactionImportPostRequest importDummyBankTransaction(
+      Actor actor,
+      BankAccountResponse bank,
+      LocalDateTime currentDate,
+      String filename,
+      Double amount) {
+    UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        formatBankTransactionImportRequest(
+            bank, currentDate.toString(), "EMSAuto " + Util.randomText(10), amount, filename);
+    actor.attemptsTo(
+        bankTransactionAPI.POSTBankTransactionImportOnTheBanktransactionController(
+            bankTransactionImportPostRequest, ""));
+    return bankTransactionImportPostRequest;
+  }
+
+  public static List<DepositsSearchResponse> getUnmatchedDepositsForBank(
+      Actor actor, String bankCode) {
+    UseDepositsTo depositsAPI = new UseDepositsTo();
+
+    PagingRequestDepositsSearchPostRequest pagingDepositsSearchPostRequest =
+        new PagingRequestDepositsSearchPostRequest();
+    DepositsSearchPostRequest depositsSearchPostRequest = new DepositsSearchPostRequest();
+    depositsSearchPostRequest.setBankCode(bankCode);
+    SortOptionGetRequest sortOptions = new SortOptionGetRequest();
+    sortOptions.setFieldSort("PostedDate");
+    sortOptions.setIsDescendingOrder(true);
+    depositsSearchPostRequest.setSortOption(sortOptions);
+    depositsSearchPostRequest.setStartDate(LocalDateTime.now().minusYears(10).toString());
+    depositsSearchPostRequest.setEndDate(LocalDateTime.now().plusYears(10).toString());
+    pagingDepositsSearchPostRequest.setModel(depositsSearchPostRequest);
+
+    actor.attemptsTo(
+        depositsAPI.POSTDepositsUnmatchedSearchOnTheDepositsController(
+            pagingDepositsSearchPostRequest, ""));
+
+    return LastResponse.received()
+        .answeredBy(actor)
+        .getBody()
+        .jsonPath()
+        .getList("response", DepositsSearchResponse.class);
+  }
+
+  public static BankAccountResponse getRandomBankWithAtLeastOneDeposit(
+      Actor actor, boolean includeHidden) {
+    List<BankAccountResponse> banks = getAllAvailableBanks(actor, includeHidden);
+    int tries = 0;
+    int maxTries = 20;
+    int randomNum = new Random().nextInt(banks.size());
+    while (tries < maxTries) {
+      randomNum = new Random().nextInt(banks.size());
+      if (getUnmatchedDepositsForBank(actor, banks.get(randomNum).getBankCode()).size() > 0) {
+        break;
+      }
+      tries++;
+    }
+    // test will be skipped if max tries are used without finding a bank with deposit
+    assumeThat(tries).isLessThan(maxTries);
+    return banks.get(randomNum);
   }
 }

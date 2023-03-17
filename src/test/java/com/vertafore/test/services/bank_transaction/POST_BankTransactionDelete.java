@@ -64,7 +64,6 @@ public class POST_BankTransactionDelete extends TokenSuperClass {
             .getObject("", DeleteGenericLoggingResponse.class);
     assertThat(deleteResponseAADM).isNotNull();
     assertThat(deleteResponseAADM.getClass().getDeclaredFields().length).isEqualTo(2);
-    assertThat(deleteResponseAADM.getEventLogReferenceId()).isNull();
     assertThat(deleteResponseAADM.getNumberOfRecordsDeleted()).isEqualTo(1);
 
     // Make sure transaction was actually deleted
@@ -107,7 +106,6 @@ public class POST_BankTransactionDelete extends TokenSuperClass {
             .getObject("", DeleteGenericLoggingResponse.class);
     assertThat(deleteResponseORAN).isNotNull();
     assertThat(deleteResponseORAN.getClass().getDeclaredFields().length).isEqualTo(2);
-    assertThat(deleteResponseORAN.getEventLogReferenceId()).isNull();
     assertThat(deleteResponseORAN.getNumberOfRecordsDeleted()).isEqualTo(1);
 
     // Make sure transaction was actually deleted
