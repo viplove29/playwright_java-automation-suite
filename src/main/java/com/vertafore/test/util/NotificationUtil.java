@@ -73,6 +73,8 @@ public class NotificationUtil {
     recipientPostRequest.setRecipientEndPointURI(recipientEndPointURI);
     recipientPostRequest.setRecipientVersion(clientVersion);
     recipientPostRequest.setStatus(recipientStatus);
+    recipientPostRequest.setPrimaryContactName("Test Contact");
+    recipientPostRequest.setBackupContactName("Test Contact1");
 
     List<NotificationTypePostRequest> notificationTypesList = new ArrayList<>();
     for (String notificationType : notificationTypes) {
