@@ -100,19 +100,48 @@ public class NotificationUtil {
     return notificationClientPostRequest;
   }
 
+  public static NotificationClientResponse postRandomNotificationsClient(
+      Actor actor, String clientVersion) {
+    int clientIndex;
+    if (clientVersion.equals("1.0")) {
+      clientIndex = 0;
+    } else if (clientVersion.equals("2.0")) {
+      clientIndex = 1;
+    } else if (clientVersion.equals("3.0")) {
+      clientIndex = 2;
+    } else {
+      clientIndex = 0;
+    }
+    return postNotificationClientByClientIndex(actor, clientIndex);
+  }
+
   public static NotificationClientResponse postRandomNotificationClient(Actor actor) {
+    int clientIndex = new Random().nextInt(3);
+    return postNotificationClientByClientIndex(actor, clientIndex);
+  }
+
+  private static NotificationClientResponse postNotificationClientByClientIndex(
+      Actor actor, int clientIndex) {
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
     List<String> notificationTypes = new ArrayList<>();
 
     List<String> activityActionTypes = new ArrayList<>();
 
-    notificationTypes.add("Customer");
-    notificationTypes.add("Policy");
-    notificationTypes.add("Broker");
-    notificationTypes.add("GLGroup");
+    if (clientIndex == 2) {
+      // only version 3.0 has activity action types
+      activityActionTypes.add("Billing");
+      activityActionTypes.add("E-Mail Out");
 
-    int clientIndex = new Random().nextInt(3);
+      notificationTypes.add("Customer");
+      notificationTypes.add("Activity");
+    } else {
+      notificationTypes.add("Customer");
+      notificationTypes.add("Policy");
+      notificationTypes.add("Broker");
+      notificationTypes.add("GLGroup");
+    }
+
     String endpointURI = clientEndpointsURIs.get(clientIndex);
     String clientName =
         NotificationUtil.getRandomStringAppendedClientName("Client V" + (clientIndex + 1));
@@ -138,5 +167,48 @@ public class NotificationUtil {
             .jsonPath()
             .getObject("", NotificationClientResponse.class);
     return notificationClientResponse;
+  }
+
+  public static NotificationClientFullInfoResponse postRandomNotificationClientAndGetClientDetails(
+      Actor actor) {
+    UseNotificationsTo notificationsApi = new UseNotificationsTo();
+    NotificationClientResponse notificationClientResponse = postRandomNotificationClient(actor);
+    String clientId = notificationClientResponse.getClientId();
+
+    // Get the client based on client id. This would get the contact details.
+    actor.attemptsTo(
+        notificationsApi.GETNotificationsClientOnTheOutboundnotificationserviceController(
+            clientId, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    NotificationClientFullInfoResponse clientResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", NotificationClientFullInfoResponse.class);
+    return clientResponse;
+  }
+
+  public static NotificationClientFullInfoResponse postNotificationClientAndGetClientDetails(
+      Actor actor, String clientVersion) {
+    UseNotificationsTo notificationsApi = new UseNotificationsTo();
+    NotificationClientResponse notificationClientResponse =
+        postRandomNotificationsClient(actor, clientVersion);
+    String clientId = notificationClientResponse.getClientId();
+
+    // Get the client based on client id. This would get the contact details.
+    actor.attemptsTo(
+        notificationsApi.GETNotificationsClientOnTheOutboundnotificationserviceController(
+            clientId, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    NotificationClientFullInfoResponse clientResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", NotificationClientFullInfoResponse.class);
+    return clientResponse;
   }
 }
