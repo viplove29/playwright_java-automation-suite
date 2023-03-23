@@ -42,6 +42,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
     sortOptions.setIsDescendingOrder(true);
     pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
+
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
         new BankTransactionsSearchPostRequest();
     bankTransactionsSearchPostRequest.setBankCode(randomBank.getBankCode());

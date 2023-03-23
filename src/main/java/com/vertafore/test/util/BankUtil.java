@@ -44,6 +44,7 @@ public class BankUtil {
     sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
     sortOptions.setIsDescendingOrder(true);
     pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
+
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
         new BankTransactionsSearchPostRequest();
     bankTransactionsSearchPostRequest.setBankCode(bankCode);
