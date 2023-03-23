@@ -39,10 +39,10 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
         pagingRequestBankTransactionsSearchPostRequest =
             new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
     SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(
-        SortOptionBankTransactionsSortOptions.FieldSortEnum.BANKTRANSACTIONDATE);
+    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
     sortOptions.setIsDescendingOrder(true);
     pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
+
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
         new BankTransactionsSearchPostRequest();
     bankTransactionsSearchPostRequest.setBankCode(randomBank.getBankCode());
@@ -121,8 +121,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
         pagingRequestBankTransactionsSearchPostRequest =
             new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
     SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(
-        SortOptionBankTransactionsSortOptions.FieldSortEnum.BANKTRANSACTIONDATE);
+    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
     sortOptions.setIsDescendingOrder(true);
     pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
