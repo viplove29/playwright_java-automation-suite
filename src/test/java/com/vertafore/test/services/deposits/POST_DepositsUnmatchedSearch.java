@@ -37,8 +37,9 @@ public class POST_DepositsUnmatchedSearch extends TokenSuperClass {
       throw new NullPointerException("No Bank available with the name EMSOnly");
     }
 
-    PagingRequestDepositsSearchPostRequest pagingRequestDepositsSearchPostRequest =
-        new PagingRequestDepositsSearchPostRequest();
+    SortedPagingRequestDepositsSearchPostRequestDepositsSortOptions
+        pagingRequestDepositsSearchPostRequest =
+            new SortedPagingRequestDepositsSearchPostRequestDepositsSortOptions();
     pagingRequestDepositsSearchPostRequest.setModel(depositsSearchPostRequest);
     pagingRequestDepositsSearchPostRequest.setSkip(0);
     pagingRequestDepositsSearchPostRequest.setTop(1000);
@@ -67,13 +68,13 @@ public class POST_DepositsUnmatchedSearch extends TokenSuperClass {
 
     assertThat(pagingResponseDepositsSearchResponse).isNotNull();
     assertThat(pagingRequestDepositsSearchPostRequest.getClass().getDeclaredFields().length)
-        .isEqualTo(4);
+        .isEqualTo(5);
 
     List<DepositsSearchResponse> depositsSearchResponseList =
         pagingResponseDepositsSearchResponse.getResponse();
     assertThat(depositsSearchResponseList.size()).isGreaterThan(0);
 
     DepositsSearchResponse depositsSearchResponse = depositsSearchResponseList.get(0);
-    assertThat(depositsSearchResponse.getClass().getDeclaredFields().length).isEqualTo(8);
+    assertThat(depositsSearchResponse.getClass().getDeclaredFields().length).isEqualTo(9);
   }
 }

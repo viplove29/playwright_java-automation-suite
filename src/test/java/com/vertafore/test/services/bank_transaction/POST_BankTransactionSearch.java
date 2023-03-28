@@ -168,10 +168,10 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
         AADM_User, randomBank, currentDate.minusDays(1), CSVUtil.generateUniqueFilename("BTS3d"));
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate.minusHours(1), CSVUtil.generateUniqueFilename("BTS3c"));
+        AADM_User, randomBank, currentDate.minusMonths(1), CSVUtil.generateUniqueFilename("BTS3c"));
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate.plusHours(1), CSVUtil.generateUniqueFilename("BTS3b"));
+        AADM_User, randomBank, currentDate.plusMonths(1), CSVUtil.generateUniqueFilename("BTS3b"));
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
         AADM_User, randomBank, currentDate.plusDays(1), CSVUtil.generateUniqueFilename("BTS3a"));
