@@ -143,14 +143,17 @@ public class BankUtil {
       Actor actor, String bankCode) {
     UseDepositsTo depositsAPI = new UseDepositsTo();
 
-    PagingRequestDepositsSearchPostRequest pagingDepositsSearchPostRequest =
-        new PagingRequestDepositsSearchPostRequest();
+    SortedPagingRequestDepositsSearchPostRequestDepositsSortOptions
+        pagingDepositsSearchPostRequest =
+            new SortedPagingRequestDepositsSearchPostRequestDepositsSortOptions();
+
+    SortOptionDepositsSortOptions sortOptions = new SortOptionDepositsSortOptions();
+    sortOptions.setFieldSort(SortOptionDepositsSortOptions.FieldSortEnum.POSTEDDATE);
+    sortOptions.setIsDescendingOrder(true);
+    pagingDepositsSearchPostRequest.setSortOption(sortOptions);
+
     DepositsSearchPostRequest depositsSearchPostRequest = new DepositsSearchPostRequest();
     depositsSearchPostRequest.setBankCode(bankCode);
-    SortOptionGetRequest sortOptions = new SortOptionGetRequest();
-    sortOptions.setFieldSort("PostedDate");
-    sortOptions.setIsDescendingOrder(true);
-    depositsSearchPostRequest.setSortOption(sortOptions);
     depositsSearchPostRequest.setStartDate(LocalDateTime.now().minusYears(10).toString());
     depositsSearchPostRequest.setEndDate(LocalDateTime.now().plusYears(10).toString());
     pagingDepositsSearchPostRequest.setModel(depositsSearchPostRequest);

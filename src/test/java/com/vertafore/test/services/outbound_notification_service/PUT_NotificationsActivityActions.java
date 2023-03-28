@@ -69,10 +69,7 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
     // uncheck the first activity action on the list
     ActivityActionNotificationPutRequest request = new ActivityActionNotificationPutRequest();
     request.setActionId(actionsResponse.get(0).getActionId());
-    request.setOnsActivityActionId(modifiedOnsActivityActionId);
     request.setIsChecked(false);
-    request.setVersion(clientResponse.getRecipients().get(0).getVersion());
-    request.setOnsRecipientEntityId(actionsResponse.get(0).getOnsRecipientEntityId());
     request.setOnsRecipientId(actionsResponse.get(0).getOnsRecipientId());
     putRequestActions.add(request);
 
@@ -197,10 +194,7 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
     // Send random recipient id for which the recipient doesn't exists in database.
     ActivityActionNotificationPutRequest request = new ActivityActionNotificationPutRequest();
     request.setActionId(firstAction.getActionId());
-    request.setOnsActivityActionId(firstAction.getOnsActivityActionId());
     request.setIsChecked(false);
-    request.setVersion(clientResponse.getRecipients().get(0).getVersion());
-    request.setOnsRecipientEntityId(firstAction.getOnsRecipientEntityId());
     request.setOnsRecipientId(randomGUID);
     putRequestActions.add(request);
 
@@ -215,10 +209,7 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
     putRequestActions.clear();
     request = new ActivityActionNotificationPutRequest();
     request.setActionId(randomGUID);
-    request.setOnsActivityActionId(firstAction.getOnsActivityActionId());
     request.setIsChecked(false);
-    request.setVersion(clientResponse.getRecipients().get(0).getVersion());
-    request.setOnsRecipientEntityId(firstAction.getOnsRecipientEntityId());
     request.setOnsRecipientId(recipientId);
     putRequestActions.add(request);
 
@@ -226,17 +217,13 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
         notificationsApi.PUTNotificationsActivityActionsOnTheOutboundnotificationserviceController(
             putRequestActions, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(404);
-    Util.validateErrorResponseContainsString(
-        "OnsActivityActionId " + randomGUID + " is invalid", AADM_User);
+    Util.validateErrorResponseContainsString("ActionId " + randomGUID + " is invalid", AADM_User);
 
     // Send empty recipient id
     putRequestActions.clear();
     request = new ActivityActionNotificationPutRequest();
     request.setActionId(firstAction.getActionId());
-    request.setOnsActivityActionId(firstAction.getOnsActivityActionId());
     request.setIsChecked(false);
-    request.setVersion(clientResponse.getRecipients().get(0).getVersion());
-    request.setOnsRecipientEntityId(firstAction.getOnsRecipientEntityId());
     request.setOnsRecipientId("");
     putRequestActions.add(request);
 
@@ -244,17 +231,13 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
         notificationsApi.PUTNotificationsActivityActionsOnTheOutboundnotificationserviceController(
             putRequestActions, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
-    Util.validateErrorResponseContainsString(
-        "The string value of onsRecipientId could not be parsed as the expected GUID", AADM_User);
+    Util.validateErrorResponseContainsString("The OnsRecipientId field is required.", AADM_User);
 
     // Send empty action id
     putRequestActions.clear();
     request = new ActivityActionNotificationPutRequest();
     request.setActionId("");
-    request.setOnsActivityActionId(firstAction.getOnsActivityActionId());
     request.setIsChecked(false);
-    request.setVersion(clientResponse.getRecipients().get(0).getVersion());
-    request.setOnsRecipientEntityId(firstAction.getOnsRecipientEntityId());
     request.setOnsRecipientId(recipientId);
     putRequestActions.add(request);
 
@@ -262,7 +245,6 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
         notificationsApi.PUTNotificationsActivityActionsOnTheOutboundnotificationserviceController(
             putRequestActions, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
-    Util.validateErrorResponseContainsString(
-        "The string value of actionId could not be parsed as the expected GUID", AADM_User);
+    Util.validateErrorResponseContainsString("The ActionId field is required.", AADM_User);
   }
 }

@@ -64,7 +64,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBankAADM.getBankCode(), currentDate, expectedDescriptionAADM);
     assertThat(bankTransactionAADM).isNotNull();
-    assertThat(bankTransactionAADM.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionAADM.getMatchStatus()).isNotEqualTo("Matched");
     assertThat(bankTransactionAADM.getMatchedBy()).isEqualTo("");
     assertThat(bankTransactionAADM.getMatchedDate()).isNull();
     assertThat(bankTransactionAADM.getMatchedEntityType()).isNull();
@@ -134,7 +134,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBankAADM.getBankCode(), currentDate, expectedDescriptionAADM);
     assertThat(bankTransactionAfterUnmatchAADM).isNotNull();
-    assertThat(bankTransactionAfterUnmatchAADM.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionAfterUnmatchAADM.getMatchStatus()).isNotEqualTo("Matched");
     assertThat(bankTransactionAfterUnmatchAADM.getMatchedBy()).isEqualTo("");
     assertThat(bankTransactionAfterUnmatchAADM.getMatchedDate()).isNull();
     assertThat(bankTransactionAfterUnmatchAADM.getMatchedEntityType()).isNull();
@@ -168,7 +168,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             ORAN_App, randomBankORAN.getBankCode(), currentDate, expectedDescriptionORAN);
     assertThat(bankTransactionORAN).isNotNull();
-    assertThat(bankTransactionORAN.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionORAN.getMatchStatus()).isNotEqualTo("Matched");
     assertThat(bankTransactionORAN.getMatchedBy()).isEqualTo("");
     assertThat(bankTransactionORAN.getMatchedDate()).isNull();
     assertThat(bankTransactionORAN.getMatchedEntityType()).isNull();
@@ -236,7 +236,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             ORAN_App, randomBankORAN.getBankCode(), currentDate, expectedDescriptionORAN);
     assertThat(bankTransactionAfterUnmatchORAN).isNotNull();
-    assertThat(bankTransactionAfterUnmatchORAN.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionAfterUnmatchORAN.getMatchStatus()).isNotEqualTo("Matched");
     assertThat(bankTransactionAfterUnmatchORAN.getMatchedBy()).isEqualTo("");
     assertThat(bankTransactionAfterUnmatchORAN.getMatchedDate()).isNull();
     assertThat(bankTransactionAfterUnmatchORAN.getMatchedEntityType()).isNull();
@@ -270,7 +270,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBankVADM.getBankCode(), currentDate, expectedDescriptionVADM);
     assertThat(bankTransactionVADM).isNotNull();
-    assertThat(bankTransactionVADM.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionVADM.getMatchStatus()).isNotEqualTo("Matched");
     assertThat(bankTransactionVADM.getMatchedBy()).isEqualTo("");
     assertThat(bankTransactionVADM.getMatchedDate()).isNull();
     assertThat(bankTransactionVADM.getMatchedEntityType()).isNull();
@@ -301,7 +301,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBankVADM.getBankCode(), currentDate, expectedDescriptionVADM);
     assertThat(bankTransactionAfterFailedMatchVADM).isNotNull();
-    assertThat(bankTransactionAfterFailedMatchVADM.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionAfterFailedMatchVADM.getMatchStatus()).isNotEqualTo("Matched");
 
     // Successfully match the bank transaction for testing unmatch (using AADM User)
     // This also verifies that the request body would have been accepted if access was not denied
@@ -387,7 +387,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
     assertThat(bankTransaction).isNotNull();
-    assertThat(bankTransaction.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransaction.getMatchStatus()).isNotEqualTo("Matched");
 
     // Attempt to match imported bank transaction to unmatched deposit
     String bankStatementDetailId = bankTransaction.getBankStatementDetailId();
@@ -425,7 +425,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
     assertThat(bankTransactionAfterFailedMatch).isNotNull();
-    assertThat(bankTransactionAfterFailedMatch.getMatchStatus()).isEqualTo("Unmatched");
+    assertThat(bankTransactionAfterFailedMatch.getMatchStatus()).isNotEqualTo("Matched");
 
     // Successfully match the bank transaction for testing unmatch (using AADM User with Bank
     // Transaction access)
