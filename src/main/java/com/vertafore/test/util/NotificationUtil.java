@@ -69,7 +69,7 @@ public class NotificationUtil {
 
     List<NotificationRecipientPostRequest> recipientList = new ArrayList<>();
     NotificationRecipientPostRequest recipientPostRequest = new NotificationRecipientPostRequest();
-    recipientPostRequest.setRecipientName("Test Contact");
+    recipientPostRequest.setRecipientName("Test Recipient");
     recipientPostRequest.setRecipientEndPointURI(recipientEndPointURI);
     recipientPostRequest.setRecipientVersion(clientVersion);
     recipientPostRequest.setStatus(recipientStatus);
@@ -91,6 +91,19 @@ public class NotificationUtil {
       actionRequest.setActivityActionName(activityAction);
       notificationActivityList.add(actionRequest);
     }
+    recipientPostRequest.setNotificationActivityActions(notificationActivityList);
+
+    recipientList.add(recipientPostRequest);
+
+    // Add one more recipient
+    recipientPostRequest = new NotificationRecipientPostRequest();
+    recipientPostRequest.setRecipientName("Test Recipient1");
+    recipientPostRequest.setRecipientEndPointURI(recipientEndPointURI);
+    recipientPostRequest.setRecipientVersion(clientVersion);
+    recipientPostRequest.setStatus(recipientStatus);
+    recipientPostRequest.setPrimaryContactName("Test Contact");
+    recipientPostRequest.setBackupContactName("Test Contact1");
+    recipientPostRequest.setNotificationTypes(notificationTypesList);
     recipientPostRequest.setNotificationActivityActions(notificationActivityList);
 
     recipientList.add(recipientPostRequest);
