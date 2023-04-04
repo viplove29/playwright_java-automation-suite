@@ -224,4 +224,23 @@ public class NotificationUtil {
             .getObject("", NotificationClientFullInfoResponse.class);
     return clientResponse;
   }
+
+  public static DeleteNotificationClientResponse deleteNotificationsClient(
+      String clientId, Actor actor) {
+    UseNotificationsTo notificationsApi = new UseNotificationsTo();
+
+    // Delete the client based on client Id
+    actor.attemptsTo(
+        notificationsApi.DELETENotificationsClientOnTheOutboundnotificationserviceController(
+            clientId, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    DeleteNotificationClientResponse deletedClientResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", DeleteNotificationClientResponse.class);
+    return deletedClientResponse;
+  }
 }

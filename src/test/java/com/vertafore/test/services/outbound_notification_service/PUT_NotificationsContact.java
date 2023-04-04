@@ -100,6 +100,7 @@ public class PUT_NotificationsContact extends TokenSuperClass {
             .getBody()
             .jsonPath()
             .getObject("", NotificationClientFullInfoResponse.class);
+    boolean testPassed = false;
     for (NotificationContactResponse contact : updatedClientResponse.getContacts()) {
       if (contact.getContactId().equals(contactId)) {
         assertThat(contact.getName())
@@ -112,12 +113,20 @@ public class PUT_NotificationsContact extends TokenSuperClass {
             .isEqualTo(notificationContactResponse.getAddress1() + randomTestSuffix);
         assertThat(contact.getCity())
             .isEqualTo(notificationContactResponse.getCity() + randomTestSuffix);
-        return;
+
+        testPassed = true;
+        break;
       }
     }
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(notificationClientResponse.getClientId(), AADM_User);
+
     // contact not found in the updated client response. Fail the test
-    Assert.fail(
-        "Updated contact not found in notification client response after the contact is updated.");
+    if (!testPassed) {
+      Assert.fail(
+          "Updated contact not found in notification client response after the contact is updated.");
+    }
   }
 
   @Test
@@ -183,5 +192,8 @@ public class PUT_NotificationsContact extends TokenSuperClass {
     Util.validateErrorResponseContainsString(
         "The field ContactName must be a string with a minimum length of 1 and a maximum length of 75.",
         AADM_User);
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(notificationClientResponse.getClientId(), AADM_User);
   }
 }

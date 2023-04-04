@@ -86,6 +86,9 @@ public class GET_NotificationsClient extends TokenSuperClass {
         notificationsApi.GETNotificationsClientOnTheOutboundnotificationserviceController(
             clientId, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
   }
 
   @Test

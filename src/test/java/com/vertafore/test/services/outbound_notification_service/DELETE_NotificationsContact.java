@@ -87,6 +87,9 @@ public class DELETE_NotificationsContact extends TokenSuperClass {
             .getObject("", NotificationClientFullInfoResponse.class);
     assertThat(clientResponse.getRecipients().get(0).getPrimaryContactId()).isNull();
     assertThat(clientResponse.getRecipients().get(0).getBackupContactId()).isNull();
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
   }
 
   @Test

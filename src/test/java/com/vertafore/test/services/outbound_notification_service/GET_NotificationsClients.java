@@ -129,5 +129,10 @@ public class GET_NotificationsClients extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     Util.validateErrorResponseContainsString(
         "The information needed to establish the required context could not be found", VADM_Admin);
+
+    // clean up the test data. Delete the notification client
+    for (String clientId : clientsMap.keySet()) {
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+    }
   }
 }
