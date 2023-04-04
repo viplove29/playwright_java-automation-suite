@@ -40,7 +40,6 @@ public class PUT_NotificationsClient extends TokenSuperClass {
     ORAN_App.attemptsTo(
         notificationsApi.PUTNotificationsClientOnTheOutboundnotificationserviceController(
             putRequest, ""));
-    SerenityRest.lastResponse().prettyPrint();
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     VADM_Admin.attemptsTo(
@@ -79,6 +78,9 @@ public class PUT_NotificationsClient extends TokenSuperClass {
             .jsonPath()
             .getObject("", NotificationClientFullInfoResponse.class);
     assertThat(updatedClientResponse.getName()).isEqualTo(clientName);
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
   }
 
   @Test
@@ -150,5 +152,8 @@ public class PUT_NotificationsClient extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString(
         "A notification client with Client Name '" + clientName1 + "' already exists.", AADM_User);
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(notificationClientResponse.getClientId(), AADM_User);
   }
 }

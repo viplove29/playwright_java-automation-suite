@@ -160,6 +160,9 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
             "The new action id " + id + " is not returned in the get activity actions response.");
       }
     }
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
   }
 
   @Test
@@ -246,5 +249,8 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
             putRequestActions, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString("The ActionId field is required.", AADM_User);
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
   }
 }

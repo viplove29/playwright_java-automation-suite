@@ -66,5 +66,8 @@ public class GET_NotificationsActivityActions extends TokenSuperClass {
             .jsonPath()
             .getList("", ActivityActionNotificationResponse.class);
     assertThat(actionsResponse.isEmpty()).isFalse();
+
+    // clean up the test data. Delete the notification client
+    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
   }
 }

@@ -105,6 +105,10 @@ public class POST_NotificationsClient extends TokenSuperClass {
           notificationsApi.POSTNotificationsClientOnTheOutboundnotificationserviceController(
               notificationClientPostRequest, ""));
       assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+      // clean up the test data. Delete the notification client
+      NotificationUtil.deleteNotificationsClient(
+          notificationClientResponse.getClientId(), AADM_User);
     }
   }
 
