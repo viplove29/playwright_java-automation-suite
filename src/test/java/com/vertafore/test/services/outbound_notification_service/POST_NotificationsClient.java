@@ -13,14 +13,17 @@ import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Test;
 
 public class POST_NotificationsClient extends TokenSuperClass {
 
+  List<String> clientIds = new ArrayList<>();
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void postNotificationsClientBaselineTest() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -76,6 +79,7 @@ public class POST_NotificationsClient extends TokenSuperClass {
               .getObject("", NotificationClientResponse.class);
       // check for valid empty client Id
       assertThat(notificationClientResponse.getClientId().isEmpty()).isFalse();
+      clientIds.add(notificationClientResponse.getClientId());
 
       // update client name before sending another request since the client names are unique
       notificationClientPostRequest.setClientName(clientName + "2");
@@ -105,17 +109,22 @@ public class POST_NotificationsClient extends TokenSuperClass {
           notificationsApi.POSTNotificationsClientOnTheOutboundnotificationserviceController(
               notificationClientPostRequest, ""));
       assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    }
+  }
 
+  @After
+  public void tearDown() {
+    if (clientIds != null) {
       // clean up the test data. Delete the notification client
-      NotificationUtil.deleteNotificationsClient(
-          notificationClientResponse.getClientId(), AADM_User);
+      for (String clientId : clientIds) {
+        NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      }
+      clientIds = new ArrayList<>();
     }
   }
 
   @Test
   public void postNotificationsClientErrorTest() {
-
-    Actor AADM_User = theActorCalled("AADM_User");
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 

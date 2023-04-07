@@ -11,14 +11,17 @@ import com.vertafore.test.util.Util;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Test;
 
 public class DELETE_NotificationsContact extends TokenSuperClass {
 
+  String clientId;
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void deleteNotificationsContactBaselineTest() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -27,7 +30,7 @@ public class DELETE_NotificationsContact extends TokenSuperClass {
     // Post random notification client
     NotificationClientResponse notificationClientResponse =
         NotificationUtil.postRandomNotificationClient(AADM_User);
-    String clientId = notificationClientResponse.getClientId();
+    clientId = notificationClientResponse.getClientId();
 
     // Get the client based on client id. This would get the contact details.
     AADM_User.attemptsTo(
@@ -87,15 +90,19 @@ public class DELETE_NotificationsContact extends TokenSuperClass {
             .getObject("", NotificationClientFullInfoResponse.class);
     assertThat(clientResponse.getRecipients().get(0).getPrimaryContactId()).isNull();
     assertThat(clientResponse.getRecipients().get(0).getBackupContactId()).isNull();
+  }
 
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
+    }
   }
 
   @Test
   public void deleteNotificationsContactErrorTest() {
-
-    Actor AADM_User = theActorCalled("AADM_User");
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
