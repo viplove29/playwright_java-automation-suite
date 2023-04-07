@@ -16,15 +16,18 @@ import java.util.Map;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class PUT_NotificationsActivityActions extends TokenSuperClass {
 
+  String clientId;
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void putNotificationsActivityActionsUpdatesNotificationsActivityActions() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -34,6 +37,7 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
     // Post version 3.0 client and get client
     NotificationClientFullInfoResponse clientResponse =
         NotificationUtil.postNotificationClientAndGetClientDetails(AADM_User, "3.0");
+    clientId = clientResponse.getClientId();
     String recipientId = clientResponse.getRecipients().get(0).getRecipientId();
 
     // get activity actions
@@ -115,7 +119,6 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
     AADM_User.attemptsTo(
         notificationsApi.PUTNotificationsActivityActionsOnTheOutboundnotificationserviceController(
             putRequestActions, ""));
-    SerenityRest.lastResponse().prettyPrint();
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     List<ActivityActionNotificationUpdateResponse> putActionsResponse =
@@ -160,20 +163,25 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
             "The new action id " + id + " is not returned in the get activity actions response.");
       }
     }
+  }
 
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
+    }
   }
 
   @Test
   public void putNotificationsActivityActionsErrorTest() {
-    Actor AADM_User = theActorCalled("AADM_User");
-
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
     // Post version 3.0 client and get client
     NotificationClientFullInfoResponse clientResponse =
         NotificationUtil.postNotificationClientAndGetClientDetails(AADM_User, "3.0");
+    clientId = clientResponse.getClientId();
     String recipientId = clientResponse.getRecipients().get(0).getRecipientId();
 
     // Get activity actions for the recipient
@@ -249,8 +257,5 @@ public class PUT_NotificationsActivityActions extends TokenSuperClass {
             putRequestActions, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString("The ActionId field is required.", AADM_User);
-
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
   }
 }

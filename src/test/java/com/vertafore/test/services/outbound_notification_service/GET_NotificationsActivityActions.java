@@ -12,14 +12,17 @@ import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Test;
 
 public class GET_NotificationsActivityActions extends TokenSuperClass {
 
+  String clientId;
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void getNotificationsActivityActionsBaselineTest() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -28,6 +31,7 @@ public class GET_NotificationsActivityActions extends TokenSuperClass {
     // Post random client and get client
     NotificationClientFullInfoResponse clientResponse =
         NotificationUtil.postNotificationClientAndGetClientDetails(AADM_User, "3.0");
+    clientId = clientResponse.getClientId();
     String recipientId = clientResponse.getRecipients().get(0).getRecipientId();
 
     ORAN_App.attemptsTo(
@@ -66,8 +70,14 @@ public class GET_NotificationsActivityActions extends TokenSuperClass {
             .jsonPath()
             .getList("", ActivityActionNotificationResponse.class);
     assertThat(actionsResponse.isEmpty()).isFalse();
+  }
 
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(clientResponse.getClientId(), AADM_User);
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
+    }
   }
 }

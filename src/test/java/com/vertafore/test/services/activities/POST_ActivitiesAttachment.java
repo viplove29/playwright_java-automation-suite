@@ -92,8 +92,7 @@ public class POST_ActivitiesAttachment extends TokenSuperClass {
         activitiesApi.POSTActivitiesAttachmentOnTheActivitiesController(postRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString(
-        "One or more validation errors occurred while processing the request. Please see the error log for more information",
-        AADM_NAUser);
+        "The following errors occurred while posting the attachment", AADM_NAUser);
 
     // Customer Business user has read and write access to the customer but no policy access
     AADM_CBUUSER.attemptsTo(

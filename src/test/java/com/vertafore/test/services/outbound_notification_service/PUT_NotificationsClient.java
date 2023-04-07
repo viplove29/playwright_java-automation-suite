@@ -12,14 +12,17 @@ import java.util.Random;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Test;
 
 public class PUT_NotificationsClient extends TokenSuperClass {
 
+  String clientId;
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void putNotificationsClientBaselineTest() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -28,7 +31,7 @@ public class PUT_NotificationsClient extends TokenSuperClass {
     // Post random notification client
     NotificationClientResponse notificationClientResponse =
         NotificationUtil.postRandomNotificationClient(AADM_User);
-    String clientId = notificationClientResponse.getClientId();
+    clientId = notificationClientResponse.getClientId();
 
     // update client name
     String clientName = "NewClientName " + new Random().nextInt(1000);
@@ -78,15 +81,19 @@ public class PUT_NotificationsClient extends TokenSuperClass {
             .jsonPath()
             .getObject("", NotificationClientFullInfoResponse.class);
     assertThat(updatedClientResponse.getName()).isEqualTo(clientName);
+  }
 
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
+    }
   }
 
   @Test
   public void putNotificationsClientErrorTest() {
-
-    Actor AADM_User = theActorCalled("AADM_User");
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
@@ -119,7 +126,7 @@ public class PUT_NotificationsClient extends TokenSuperClass {
     // Post random notification client
     NotificationClientResponse notificationClientResponse =
         NotificationUtil.postRandomNotificationClient(AADM_User);
-    String clientId = notificationClientResponse.getClientId();
+    clientId = notificationClientResponse.getClientId();
 
     // Set the client name to empty string
     notificationClientPutRequest = new NotificationClientPutRequest();
@@ -152,8 +159,5 @@ public class PUT_NotificationsClient extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString(
         "A notification client with Client Name '" + clientName1 + "' already exists.", AADM_User);
-
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(notificationClientResponse.getClientId(), AADM_User);
   }
 }

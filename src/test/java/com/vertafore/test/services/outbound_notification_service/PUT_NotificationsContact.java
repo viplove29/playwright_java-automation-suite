@@ -11,15 +11,18 @@ import com.vertafore.test.util.Util;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class PUT_NotificationsContact extends TokenSuperClass {
 
+  String clientId;
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void putNotificationsContactBaselineTest() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -28,7 +31,7 @@ public class PUT_NotificationsContact extends TokenSuperClass {
     // Post random notification client
     NotificationClientResponse notificationClientResponse =
         NotificationUtil.postRandomNotificationClient(AADM_User);
-    String clientId = notificationClientResponse.getClientId();
+    clientId = notificationClientResponse.getClientId();
 
     // Get the client based on client id. This would get the contact details.
     AADM_User.attemptsTo(
@@ -119,9 +122,6 @@ public class PUT_NotificationsContact extends TokenSuperClass {
       }
     }
 
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(notificationClientResponse.getClientId(), AADM_User);
-
     // contact not found in the updated client response. Fail the test
     if (!testPassed) {
       Assert.fail(
@@ -131,8 +131,6 @@ public class PUT_NotificationsContact extends TokenSuperClass {
 
   @Test
   public void putNotificationsContactErrorTest() {
-
-    Actor AADM_User = theActorCalled("AADM_User");
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
@@ -162,7 +160,7 @@ public class PUT_NotificationsContact extends TokenSuperClass {
     // Post random notification client
     NotificationClientResponse notificationClientResponse =
         NotificationUtil.postRandomNotificationClient(AADM_User);
-    String clientId = notificationClientResponse.getClientId();
+    clientId = notificationClientResponse.getClientId();
 
     // Get the client based on client id. This would get the contact details.
     AADM_User.attemptsTo(
@@ -192,8 +190,14 @@ public class PUT_NotificationsContact extends TokenSuperClass {
     Util.validateErrorResponseContainsString(
         "The field ContactName must be a string with a minimum length of 1 and a maximum length of 75.",
         AADM_User);
+  }
 
-    // clean up the test data. Delete the notification client
-    NotificationUtil.deleteNotificationsClient(notificationClientResponse.getClientId(), AADM_User);
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
+    }
   }
 }

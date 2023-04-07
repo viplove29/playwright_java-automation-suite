@@ -15,15 +15,18 @@ import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class DELETE_NotificationsRecipient extends TokenSuperClass {
 
+  String clientId;
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void deleteNotificationsRecipientDeletesRecipient() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
@@ -33,6 +36,7 @@ public class DELETE_NotificationsRecipient extends TokenSuperClass {
     NotificationClientFullInfoResponse clientResponse =
         NotificationUtil.postRandomNotificationClientAndGetClientDetails(AADM_User);
 
+    clientId = clientResponse.getClientId();
     String recipientId1ToDelete = clientResponse.getRecipients().get(0).getRecipientId();
     String recipientId2ToDelete = clientResponse.getRecipients().get(1).getRecipientId();
 
@@ -98,10 +102,17 @@ public class DELETE_NotificationsRecipient extends TokenSuperClass {
     }
   }
 
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
+    }
+  }
+
   @Test
   public void deleteNotificationsRecipientDeletesNotificationRecipientActivityActions() {
-
-    Actor AADM_User = theActorCalled("AADM_User");
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
@@ -109,7 +120,7 @@ public class DELETE_NotificationsRecipient extends TokenSuperClass {
     // notification actions
     NotificationClientFullInfoResponse clientResponse =
         NotificationUtil.postNotificationClientAndGetClientDetails(AADM_User, "3.0");
-
+    clientId = clientResponse.getClientId();
     String recipientIdToDelete = clientResponse.getRecipients().get(0).getRecipientId();
 
     // call delete recipient
@@ -181,6 +192,7 @@ public class DELETE_NotificationsRecipient extends TokenSuperClass {
         NotificationUtil.postRandomNotificationClientAndGetClientDetails(AADM_User);
 
     String recipientId1ToDelete = clientResponse.getRecipients().get(0).getRecipientId();
+    clientId = clientResponse.getClientId();
 
     // call delete recipient
     AADM_User.attemptsTo(

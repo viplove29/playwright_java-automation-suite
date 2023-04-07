@@ -16,19 +16,21 @@ import java.util.Map;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
+import org.junit.After;
 import org.junit.Test;
 
 public class GET_NotificationsClients extends TokenSuperClass {
 
+  Map<String, String> clientsMap = new HashMap<>();
+  Actor AADM_User = theActorCalled("AADM_User");
+
   @Test
   public void getNotificationsClientsBaseTest() {
 
-    Actor AADM_User = theActorCalled("AADM_User");
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
-    Map<String, String> clientsMap = new HashMap<>();
 
     for (int i = 1; i <= 3; i++) {
 
@@ -129,10 +131,16 @@ public class GET_NotificationsClients extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     Util.validateErrorResponseContainsString(
         "The information needed to establish the required context could not be found", VADM_Admin);
+  }
 
-    // clean up the test data. Delete the notification client
-    for (String clientId : clientsMap.keySet()) {
-      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+  @After
+  public void tearDown() {
+    if (clientsMap != null) {
+      // clean up the test data. Delete the notification client
+      for (String clientId : clientsMap.keySet()) {
+        NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      }
+      clientsMap = null;
     }
   }
 }
