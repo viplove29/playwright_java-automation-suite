@@ -75,6 +75,6 @@ public class POST_DepositsUnmatchedSearch extends TokenSuperClass {
     assertThat(depositsSearchResponseList.size()).isGreaterThan(0);
 
     DepositsSearchResponse depositsSearchResponse = depositsSearchResponseList.get(0);
-    assertThat(depositsSearchResponse.getClass().getDeclaredFields().length).isEqualTo(9);
+    assertThat(depositsSearchResponse.getClass().getDeclaredFields().length).isEqualTo(10);
   }
 }
