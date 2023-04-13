@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.rest.questions.LastResponse;
 
@@ -21,11 +22,17 @@ public class BankUtil {
     UseBankAccountsTo bankAccountsAPI = new UseBankAccountsTo();
     actor.attemptsTo(
         bankAccountsAPI.GETBankAccountsOnTheBankaccountsController(includeHidden, "string"));
-    return LastResponse.received()
-        .answeredBy(actor)
-        .getBody()
-        .jsonPath()
-        .getList("", BankAccountResponse.class);
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    List<BankAccountResponse> response =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", BankAccountResponse.class);
+
+    assertThat(response).isNotNull();
+    assertThat(response.size()).isGreaterThan(0);
+    return response;
   }
 
   public static BankAccountResponse getRandomBank(Actor actor, boolean includeHidden) {
