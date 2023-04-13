@@ -57,7 +57,8 @@ public class POST_BankTransactionImport extends TokenSuperClass {
     assertThat(bankTransactionImportResponseAADM.getBankStatementHeaderId()).isNotNull();
     assertThat(bankTransactionImportResponseAADM.getEventLogReferenceId()).isNotNull();
 
-    Thread.sleep(3000);
+    // allow Bank changes to process
+    Thread.sleep(5000);
 
     // Search for imported bank transaction
     BankTransactionsSearchResponse bankTransactionAADM =
