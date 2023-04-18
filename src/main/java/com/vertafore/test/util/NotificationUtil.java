@@ -225,6 +225,23 @@ public class NotificationUtil {
     return clientResponse;
   }
 
+  public static List<NotificationTypeResponse> getNotificationsNotificationTypes(
+      Actor actor, String clientVersion) {
+    UseNotificationsTo notificationsApi = new UseNotificationsTo();
+    actor.attemptsTo(
+        notificationsApi
+            .GETNotificationsNotificationTypesOnTheOutboundnotificationserviceController(
+                clientVersion, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    List<NotificationTypeResponse> notificationTypes =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", NotificationTypeResponse.class);
+    return notificationTypes;
+  }
+
   public static DeleteNotificationClientResponse deleteNotificationsClient(
       String clientId, Actor actor) {
     UseNotificationsTo notificationsApi = new UseNotificationsTo();

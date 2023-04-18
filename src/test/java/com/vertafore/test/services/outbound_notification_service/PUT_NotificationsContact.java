@@ -28,23 +28,10 @@ public class PUT_NotificationsContact extends TokenSuperClass {
 
     UseNotificationsTo notificationsApi = new UseNotificationsTo();
 
-    // Post random notification client
-    NotificationClientResponse notificationClientResponse =
-        NotificationUtil.postRandomNotificationClient(AADM_User);
-    clientId = notificationClientResponse.getClientId();
-
-    // Get the client based on client id. This would get the contact details.
-    AADM_User.attemptsTo(
-        notificationsApi.GETNotificationsClientOnTheOutboundnotificationserviceController(
-            clientId, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
+    // Post random notification client and get client details
     NotificationClientFullInfoResponse clientResponse =
-        LastResponse.received()
-            .answeredBy(AADM_User)
-            .getBody()
-            .jsonPath()
-            .getObject("", NotificationClientFullInfoResponse.class);
+        NotificationUtil.postRandomNotificationClientAndGetClientDetails(AADM_User);
+    clientId = clientResponse.getClientId();
     NotificationContactResponse notificationContactResponse = clientResponse.getContacts().get(0);
     String contactId = notificationContactResponse.getContactId();
 
@@ -121,11 +108,19 @@ public class PUT_NotificationsContact extends TokenSuperClass {
         break;
       }
     }
-
     // contact not found in the updated client response. Fail the test
     if (!testPassed) {
       Assert.fail(
           "Updated contact not found in notification client response after the contact is updated.");
+    }
+  }
+
+  @After
+  public void tearDown() {
+    if (clientId != null) {
+      // delete the client.
+      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
+      clientId = null;
     }
   }
 
@@ -157,24 +152,11 @@ public class PUT_NotificationsContact extends TokenSuperClass {
 
     // test sending valid contact id with empty contact name
 
-    // Post random notification client
-    NotificationClientResponse notificationClientResponse =
-        NotificationUtil.postRandomNotificationClient(AADM_User);
-    clientId = notificationClientResponse.getClientId();
-
-    // Get the client based on client id. This would get the contact details.
-    AADM_User.attemptsTo(
-        notificationsApi.GETNotificationsClientOnTheOutboundnotificationserviceController(
-            clientId, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-
+    // Post random notification client and get client details
     NotificationClientFullInfoResponse clientResponse =
-        LastResponse.received()
-            .answeredBy(AADM_User)
-            .getBody()
-            .jsonPath()
-            .getObject("", NotificationClientFullInfoResponse.class);
+        NotificationUtil.postRandomNotificationClientAndGetClientDetails(AADM_User);
     NotificationContactResponse notificationContactResponse = clientResponse.getContacts().get(0);
+    clientId = clientResponse.getClientId();
     String contactId = notificationContactResponse.getContactId();
 
     // Update contact information with a empty contact name
@@ -190,14 +172,5 @@ public class PUT_NotificationsContact extends TokenSuperClass {
     Util.validateErrorResponseContainsString(
         "The field ContactName must be a string with a minimum length of 1 and a maximum length of 75.",
         AADM_User);
-  }
-
-  @After
-  public void tearDown() {
-    if (clientId != null) {
-      // delete the client.
-      NotificationUtil.deleteNotificationsClient(clientId, AADM_User);
-      clientId = null;
-    }
   }
 }
