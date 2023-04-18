@@ -24,7 +24,7 @@ public class POST_ChecksUnmatchedSearch extends TokenSuperClass {
     UseChecksTo checksAPI = new UseChecksTo();
 
     ChecksSearchPostRequest checksSearchPostRequest = new ChecksSearchPostRequest();
-    BankAccountResponse randomBank = BankUtil.getRandomBank(AADM_User, false);
+    BankAccountResponse randomBank = BankUtil.getRandomBank(ORAN_App, false);
     checksSearchPostRequest.setBankCode(randomBank.getBankCode());
 
     SortedPagingRequestChecksSearchPostRequestChecksSortOptions
@@ -44,6 +44,10 @@ public class POST_ChecksUnmatchedSearch extends TokenSuperClass {
         checksAPI.POSTChecksUnmatchedSearchOnTheChecksController(
             pagingRequestChecksSearchPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    randomBank = BankUtil.getRandomBank(AADM_User, false);
+    checksSearchPostRequest.setBankCode(randomBank.getBankCode());
+    pagingRequestChecksSearchPostRequest.setModel(checksSearchPostRequest);
 
     AADM_User.attemptsTo(
         checksAPI.POSTChecksUnmatchedSearchOnTheChecksController(
