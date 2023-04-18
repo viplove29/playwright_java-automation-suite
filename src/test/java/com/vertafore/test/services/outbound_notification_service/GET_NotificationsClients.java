@@ -71,7 +71,6 @@ public class GET_NotificationsClients extends TokenSuperClass {
       AADM_User.attemptsTo(
           notificationsApi.POSTNotificationsClientOnTheOutboundnotificationserviceController(
               notificationClientPostRequest, ""));
-
       assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
       NotificationClientResponse notificationClientResponse =
