@@ -7,10 +7,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseBankTransactionTo;
-import com.vertafore.test.util.BankUtil;
-import com.vertafore.test.util.CSVUtil;
-import com.vertafore.test.util.ErrorLogUtil;
-import com.vertafore.test.util.Util;
+import com.vertafore.test.util.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
@@ -32,6 +29,8 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
     LocalDateTime currentDate = LocalDateTime.now();
 
@@ -39,14 +38,10 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     // Get unmatched deposit from random bank and import a corresponding bank transaction
     BankAccountResponse randomBankAADM =
         BankUtil.getRandomBankWithAtLeastOneDeposit(AADM_User, false);
-    List<DepositsSearchResponse> depositsSearchResponseAADM =
-        BankUtil.getUnmatchedDepositsForBank(AADM_User, randomBankAADM.getBankCode());
-    // This assumption should not be met, since getRandomBankWithAtLeastOneDeposit() should
-    // guarantee that a deposit is present. In the event that a deposit is found but inaccessible
-    // for whatever reason, the following assumption will ensure that the test is skipped.
-    assumeThat(depositsSearchResponseAADM).isNotEmpty();
-    String entityIdAADM = depositsSearchResponseAADM.get(0).getDepositId();
-    Double amountAADM = depositsSearchResponseAADM.get(0).getAmount();
+    DepositsSearchResponse randomDepositAADM =
+        BankUtil.getRandomDepositForBank(AADM_User, randomBankAADM.getBankCode());
+    String entityIdAADM = randomDepositAADM.getDepositId();
+    Double amountAADM = randomDepositAADM.getAmount();
     BankTransactionImportPostRequest bankTransactionImportPostRequestAADM =
         BankUtil.importDummyBankTransaction(
             AADM_User,
@@ -56,8 +51,6 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             amountAADM);
     String expectedDescriptionAADM =
         bankTransactionImportPostRequestAADM.getBankStatementDetails().get(0).getDescription();
-
-    Thread.sleep(3000);
 
     // Verify imported bank transaction is "unmatched" before matching
     BankTransactionsSearchResponse bankTransactionAADM =
@@ -87,6 +80,8 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             bankTransactionMatchPutRequestAADM, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     Thread.sleep(2000);
+
+    // Verify response
     PutGenericLoggingResponse matchResponseAADM =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -120,6 +115,8 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             bankTransactionUnmatchPutRequestAADM, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     Thread.sleep(2000);
+
+    // Verify response
     PutGenericLoggingResponse unmatchResponseAADM =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -146,11 +143,10 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     // Get unmatched deposit from random bank and import a corresponding bank transaction
     BankAccountResponse randomBankORAN =
         BankUtil.getRandomBankWithAtLeastOneDeposit(ORAN_App, false);
-    List<DepositsSearchResponse> depositsSearchResponseORAN =
-        BankUtil.getUnmatchedDepositsForBank(ORAN_App, randomBankORAN.getBankCode());
-    assumeThat(depositsSearchResponseORAN).isNotEmpty();
-    String entityIdORAN = depositsSearchResponseORAN.get(0).getDepositId();
-    Double amountORAN = depositsSearchResponseORAN.get(0).getAmount();
+    DepositsSearchResponse randomDepositORAN =
+        BankUtil.getRandomDepositForBank(ORAN_App, randomBankORAN.getBankCode());
+    String entityIdORAN = randomDepositORAN.getDepositId();
+    Double amountORAN = randomDepositORAN.getAmount();
     BankTransactionImportPostRequest bankTransactionImportPostRequestORAN =
         BankUtil.importDummyBankTransaction(
             ORAN_App,
@@ -160,8 +156,6 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             amountORAN);
     String expectedDescriptionORAN =
         bankTransactionImportPostRequestORAN.getBankStatementDetails().get(0).getDescription();
-
-    Thread.sleep(3000);
 
     // Verify imported bank transaction is "unmatched" before matching
     BankTransactionsSearchResponse bankTransactionORAN =
@@ -198,6 +192,7 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             .jsonPath()
             .getObject("", PutGenericLoggingResponse.class);
     assertThat(matchResponseORAN.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(matchResponseORAN.getNumberOfRecordsUpdated()).isEqualTo(1);
 
     // Verify imported bank transaction is "matched" to the deposit
     BankTransactionsSearchResponse bankTransactionAfterMatchORAN =
@@ -222,6 +217,8 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             bankTransactionUnmatchPutRequestORAN, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     Thread.sleep(2000);
+
+    // Verify response
     PutGenericLoggingResponse unmatchResponseORAN =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -248,11 +245,10 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     // Get unmatched deposit from random bank and import a corresponding bank transaction
     BankAccountResponse randomBankVADM =
         BankUtil.getRandomBankWithAtLeastOneDeposit(AADM_User, false);
-    List<DepositsSearchResponse> depositsSearchResponseVADM =
-        BankUtil.getUnmatchedDepositsForBank(AADM_User, randomBankVADM.getBankCode());
-    assumeThat(depositsSearchResponseVADM).isNotEmpty();
-    String entityIdVADM = depositsSearchResponseVADM.get(0).getDepositId();
-    Double amountVADM = depositsSearchResponseVADM.get(0).getAmount();
+    DepositsSearchResponse randomDepositVADM =
+        BankUtil.getRandomDepositForBank(AADM_User, randomBankVADM.getBankCode());
+    String entityIdVADM = randomDepositVADM.getDepositId();
+    Double amountVADM = randomDepositVADM.getAmount();
     BankTransactionImportPostRequest bankTransactionImportPostRequestVADM =
         BankUtil.importDummyBankTransaction(
             AADM_User,
@@ -262,8 +258,6 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             amountVADM);
     String expectedDescriptionVADM =
         bankTransactionImportPostRequestVADM.getBankStatementDetails().get(0).getDescription();
-
-    Thread.sleep(3000);
 
     // Verify imported bank transaction is "unmatched" before matching
     BankTransactionsSearchResponse bankTransactionVADM =
@@ -295,6 +289,8 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
             bankTransactionMatchPutRequestVADM, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     Thread.sleep(2000);
+
+    // Verify error in the response
     Util.validateErrorResponseContainsString(
         "The information needed to establish the required context could not be found", VADM_Admin);
     BankTransactionsSearchResponse bankTransactionAfterFailedMatchVADM =
@@ -330,13 +326,13 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     BankTransactionUpdateStatusPutRequest bankTransactionUnmatchPutRequestVADM =
         new BankTransactionUpdateStatusPutRequest();
     bankTransactionUnmatchPutRequestVADM.addBankStatementDetailIdsItem(bankStatementDetailIdVADM);
-
-    // Verify bank transaction is NOT unmatched when access is denied
     VADM_Admin.attemptsTo(
         bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
             bankTransactionUnmatchPutRequestVADM, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
     Thread.sleep(2000);
+
+    // Verify bank transaction is NOT unmatched when access is denied
     Util.validateErrorResponseContainsString(
         "The information needed to establish the required context could not be found", VADM_Admin);
     BankTransactionsSearchResponse bankTransactionAfterFailedUnmatchVADM =
@@ -354,35 +350,142 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
   }
 
   @Test
+  public void bankTransactionMatchAndUnmatchWithChecksAreSuccessful() throws InterruptedException {
+    Actor AADM_User = theActorCalled("AADM_User");
+
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
+    UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    LocalDateTime currentDate = LocalDateTime.now();
+
+    // Get unmatched check from random bank and import a corresponding bank transaction
+    BankAccountResponse randomBank = BankUtil.getRandomBankWithAtLeastOneCheck(AADM_User, false);
+    ChecksSearchResponse randomCheck =
+        BankUtil.getRandomCheckForBank(AADM_User, randomBank.getBankCode());
+    String entityId = randomCheck.getCashDisbursementIdentifier();
+    // Since this bank transaction will be matched to a check, the imported amount must be negative
+    Double amount = -(randomCheck.getAmount());
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        BankUtil.importDummyBankTransaction(
+            AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTM2"), amount);
+    String expectedDescription =
+        bankTransactionImportPostRequest.getBankStatementDetails().get(0).getDescription();
+
+    // Verify imported bank transaction is "unmatched" before matching
+    BankTransactionsSearchResponse bankTransaction =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransaction).isNotNull();
+    assertThat(bankTransaction.getMatchStatus()).isNotEqualTo("Matched");
+    assertThat(bankTransaction.getMatchedBy()).isEqualTo("");
+    assertThat(bankTransaction.getMatchedDate()).isNull();
+    assertThat(bankTransaction.getMatchedEntityType()).isNull();
+    assertThat(bankTransaction.getMatchedEntityIdentifier()).isNull();
+    assertThat(bankTransaction.getMatchConfirmedBy()).isEqualTo("");
+    assertThat(bankTransaction.getMatchConfirmedDate()).isNull();
+
+    // Match imported bank transaction to unmatched check
+    String bankStatementDetailId = bankTransaction.getBankStatementDetailId();
+    BankTransactionMatchPutRequest bankTransactionMatchPutRequest =
+        new BankTransactionMatchPutRequest();
+    BankTransactionMatchEntityPutRequest matchedEntities =
+        new BankTransactionMatchEntityPutRequest();
+    matchedEntities.setMatchType(CHECK_MATCH_TYPE);
+    matchedEntities.setMatchEntityId(entityId);
+    matchedEntities.setBankTransactionDetailId(bankStatementDetailId);
+    bankTransactionMatchPutRequest.addMatchedEntitiesItem(matchedEntities);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
+            bankTransactionMatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify response
+    PutGenericLoggingResponse matchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(matchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(matchResponse.getNumberOfRecordsUpdated()).isEqualTo(1);
+
+    // Verify imported bank transaction is "matched" to the check
+    BankTransactionsSearchResponse bankTransactionAfterMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransactionAfterMatch).isNotNull();
+    assertThat(bankTransactionAfterMatch.getMatchStatus()).isEqualTo("Matched");
+    assertThat(bankTransactionAfterMatch.getMatchedBy()).isEqualTo("Automation, EMSAuto");
+    assertThat(bankTransactionAfterMatch.getMatchedDate()).isNotNull();
+    assertThat(bankTransactionAfterMatch.getMatchedEntityType())
+        .isEqualTo(Integer.parseInt(CHECK_MATCH_TYPE));
+    assertThat(bankTransactionAfterMatch.getMatchedEntityIdentifier()).isEqualTo(entityId);
+    assertThat(bankTransactionAfterMatch.getMatchConfirmedBy()).isEqualTo("Automation, EMSAuto");
+    assertThat(bankTransactionAfterMatch.getMatchConfirmedDate()).isNotNull();
+
+    // Unmatch imported bank transaction
+    BankTransactionUpdateStatusPutRequest bankTransactionUnmatchPutRequest =
+        new BankTransactionUpdateStatusPutRequest();
+    bankTransactionUnmatchPutRequest.addBankStatementDetailIdsItem(bankStatementDetailId);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
+            bankTransactionUnmatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify response
+    PutGenericLoggingResponse unmatchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(unmatchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(unmatchResponse.getNumberOfRecordsUpdated()).isEqualTo(1);
+
+    // Verify imported bank transaction is once again "unmatched"
+    BankTransactionsSearchResponse bankTransactionAfterUnmatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransactionAfterUnmatch).isNotNull();
+    assertThat(bankTransactionAfterUnmatch.getMatchStatus()).isNotEqualTo("Matched");
+    assertThat(bankTransactionAfterUnmatch.getMatchedBy()).isEqualTo("");
+    assertThat(bankTransactionAfterUnmatch.getMatchedDate()).isNull();
+    assertThat(bankTransactionAfterUnmatch.getMatchedEntityType()).isNull();
+    assertThat(bankTransactionAfterUnmatch.getMatchedEntityIdentifier()).isNull();
+    assertThat(bankTransactionAfterUnmatch.getMatchConfirmedBy()).isEqualTo("");
+    assertThat(bankTransactionAfterUnmatch.getMatchConfirmedDate()).isNull();
+  }
+
+  @Test
   public void bankTransactionMatchAndUnmatchAreUnsuccessfulWithoutAccess()
       throws InterruptedException {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor AADM_NBTAUser = theActorCalled("AADM_NBTAUser");
 
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
     LocalDateTime currentDate = LocalDateTime.now();
 
-    // AADM USER (with No Bank Transactions Access)
-    // Get unmatched deposit from random bank and import a corresponding bank transaction (using
-    // AADM User with Bank Transaction access)
+    // Get unmatched deposit from random bank (using AADM User with Bank Transaction access)
     BankAccountResponse randomBank = BankUtil.getRandomBankWithAtLeastOneDeposit(AADM_User, false);
-    List<DepositsSearchResponse> depositsSearchResponse =
-        BankUtil.getUnmatchedDepositsForBank(AADM_User, randomBank.getBankCode());
-    // This assumption should not be met, since getRandomBankWithAtLeastOneDeposit() should
-    // guarantee that a deposit is present. In the event that a deposit is found but inaccessible
-    // for whatever reason, the following assumption will ensure that the test is skipped.
-    assumeThat(depositsSearchResponse).isNotEmpty();
-    String entityId = depositsSearchResponse.get(0).getDepositId();
-    Double amount = depositsSearchResponse.get(0).getAmount();
+    DepositsSearchResponse randomDeposit =
+        BankUtil.getRandomDepositForBank(AADM_User, randomBank.getBankCode());
+    String entityId = randomDeposit.getDepositId();
+    Double amount = randomDeposit.getAmount();
+
+    // Import corresponding bank transaction with matching amount (using AADM User with Bank
+    // Transaction access)
     BankTransactionImportPostRequest bankTransactionImportPostRequest =
         BankUtil.importDummyBankTransaction(
-            AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTM1a"), amount);
+            AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTM3"), amount);
     String expectedDescription =
         bankTransactionImportPostRequest.getBankStatementDetails().get(0).getDescription();
 
-    Thread.sleep(3000);
-
-    // Verify imported bank transaction is "unmatched" before matching
+    // Verify imported bank transaction is "unmatched" before attempting to match (using AADM User
+    // with Bank Transaction access)
     BankTransactionsSearchResponse bankTransaction =
         BankUtil.getBankTransactionByDescription(
             AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
@@ -399,13 +502,14 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     matchedEntities.setMatchEntityId(entityId);
     matchedEntities.setBankTransactionDetailId(bankStatementDetailId);
     bankTransactionMatchPutRequest.addMatchedEntitiesItem(matchedEntities);
-
-    // Verify bank transaction is NOT matched when access is denied
     AADM_NBTAUser.attemptsTo(
         bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
             bankTransactionMatchPutRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     Thread.sleep(2000);
+
+    // Verify bank transaction is NOT matched when access is denied (using AADM User with Bank
+    // Transaction access)
     PutGenericLoggingResponse failedMatchResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -435,7 +539,8 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     Thread.sleep(2000);
 
-    // Verify match was successful for next portion of the test
+    // Verify match was successful for next portion of the test (using AADM User with Bank
+    // Transaction access)
     PutGenericLoggingResponse matchResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -454,13 +559,14 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     BankTransactionUpdateStatusPutRequest bankTransactionUnmatchPutRequest =
         new BankTransactionUpdateStatusPutRequest();
     bankTransactionUnmatchPutRequest.addBankStatementDetailIdsItem(bankStatementDetailId);
-
-    // Verify bank transaction is NOT unmatched when access is denied
     AADM_NBTAUser.attemptsTo(
         bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
             bankTransactionUnmatchPutRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     Thread.sleep(2000);
+
+    // Verify bank transaction is NOT unmatched when access is denied (using AADM User with Bank
+    // Transaction access)
     PutGenericLoggingResponse failedUnmatchResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -489,6 +595,377 @@ public class PUT_BankTransactionMatchUnmatch extends TokenSuperClass {
     AADM_User.attemptsTo(
         bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
             bankTransactionUnmatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+  }
+
+  @Test
+  public void bankTransactionMatchAndUnmatchAreUnsuccessfulWithoutSpecifiedBankAccess()
+      throws InterruptedException {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor AADM_FBTAUser = theActorCalled("AADM_FBTAUser");
+
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
+    UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    LocalDateTime currentDate = LocalDateTime.now();
+
+    // Get unmatched check from random bank (using AADM User with access to all banks)
+    BankAccountResponse accessExcludedBank =
+        BankUtil.getBankByName(AADM_FBTAUser, EnvVariables.EMS_ACCESS_EXCLUDED_BANK, true);
+    ChecksSearchResponse randomCheck =
+        BankUtil.getRandomCheckForBank(AADM_FBTAUser, accessExcludedBank.getBankCode());
+    String entityId = randomCheck.getCashDisbursementIdentifier();
+    // Since this bank transaction will be matched to a check, the imported amount must be negative
+    Double amount = -(randomCheck.getAmount());
+
+    // Import corresponding bank transaction with matching amount (using AADM User with access to
+    // all banks)
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        BankUtil.importDummyBankTransaction(
+            AADM_FBTAUser,
+            accessExcludedBank,
+            currentDate,
+            CSVUtil.generateUniqueFilename("BTM4"),
+            amount);
+    String expectedDescription =
+        bankTransactionImportPostRequest.getBankStatementDetails().get(0).getDescription();
+
+    // Verify imported bank transaction is "unmatched" before attempting to match (using AADM User
+    // with access to all banks)
+    BankTransactionsSearchResponse bankTransaction =
+        BankUtil.getBankTransactionByDescription(
+            AADM_FBTAUser, accessExcludedBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransaction).isNotNull();
+    assertThat(bankTransaction.getMatchStatus()).isNotEqualTo("Matched");
+
+    // Attempt to match imported bank transaction to unmatched check
+    String bankStatementDetailId = bankTransaction.getBankStatementDetailId();
+    BankTransactionMatchPutRequest bankTransactionMatchPutRequest =
+        new BankTransactionMatchPutRequest();
+    BankTransactionMatchEntityPutRequest matchedEntities =
+        new BankTransactionMatchEntityPutRequest();
+    matchedEntities.setMatchType(CHECK_MATCH_TYPE);
+    matchedEntities.setMatchEntityId(entityId);
+    matchedEntities.setBankTransactionDetailId(bankStatementDetailId);
+    bankTransactionMatchPutRequest.addMatchedEntitiesItem(matchedEntities);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
+            bankTransactionMatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify bank transaction is NOT matched when access to bank is denied (using AADM User with
+    // access to all banks)
+    PutGenericLoggingResponse failedMatchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(failedMatchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(failedMatchResponse.getNumberOfRecordsUpdated()).isEqualTo(0);
+    assertThat(failedMatchResponse.getEventLogReferenceId()).isNotNull();
+    List<String> matchErrors =
+        ErrorLogUtil.getErrorMessages(
+            ErrorLogUtil.getErrorsAndWarningsByReferenceId(
+                AADM_User, failedMatchResponse.getEventLogReferenceId()));
+    assertThat(matchErrors).isNotEmpty();
+    assertThat(matchErrors).contains("Requires Full Access to the bank these details belong to.");
+    BankTransactionsSearchResponse bankTransactionAfterFailedMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_FBTAUser, accessExcludedBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransactionAfterFailedMatch).isNotNull();
+    assertThat(bankTransactionAfterFailedMatch.getMatchStatus()).isNotEqualTo("Matched");
+
+    // Successfully match the bank transaction for testing unmatch (using AADM User with access to
+    // all banks)
+    AADM_FBTAUser.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
+            bankTransactionMatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify match was successful for next portion of the test (using AADM User with access to all
+    // banks)
+    PutGenericLoggingResponse matchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_FBTAUser)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(matchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(matchResponse.getNumberOfRecordsUpdated()).isEqualTo(1);
+    BankTransactionsSearchResponse bankTransactionAfterMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_FBTAUser, accessExcludedBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransactionAfterMatch).isNotNull();
+    assertThat(bankTransactionAfterMatch.getMatchStatus()).isEqualTo("Matched");
+
+    // Attempt to unmatch imported bank transaction
+    BankTransactionUpdateStatusPutRequest bankTransactionUnmatchPutRequest =
+        new BankTransactionUpdateStatusPutRequest();
+    bankTransactionUnmatchPutRequest.addBankStatementDetailIdsItem(bankStatementDetailId);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
+            bankTransactionUnmatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify bank transaction is NOT unmatched when access to bank is denied (using AADM User with
+    // access to all banks)
+    PutGenericLoggingResponse failedUnmatchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(failedUnmatchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(failedUnmatchResponse.getNumberOfRecordsUpdated()).isEqualTo(0);
+    assertThat(failedMatchResponse.getEventLogReferenceId()).isNotNull();
+    List<String> unmatchErrors =
+        ErrorLogUtil.getErrorMessages(
+            ErrorLogUtil.getErrorsAndWarningsByReferenceId(
+                AADM_User, failedUnmatchResponse.getEventLogReferenceId()));
+    assertThat(unmatchErrors).isNotEmpty();
+    assertThat(unmatchErrors).contains("Requires Full Access to the bank these details belong to.");
+    BankTransactionsSearchResponse bankTransactionAfterFailedUnmatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_FBTAUser, accessExcludedBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransactionAfterFailedUnmatch).isNotNull();
+    assertThat(bankTransactionAfterFailedUnmatch.getMatchStatus()).isEqualTo("Matched");
+
+    // Successfully unmatch bank transaction for clean up (using AADM User with access to all banks)
+    AADM_FBTAUser.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
+            bankTransactionUnmatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+  }
+
+  @Test
+  public void bankTransactionMatchAndUnmatchAreUnsuccessfulWhenMultipleBanksAreSpecified()
+      throws InterruptedException {
+    Actor AADM_User = theActorCalled("AADM_User");
+
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
+    UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    LocalDateTime currentDate = LocalDateTime.now();
+
+    // Get unmatched deposit from random bank
+    BankAccountResponse randomBank = BankUtil.getRandomBankWithAtLeastOneDeposit(AADM_User, false);
+    DepositsSearchResponse randomDeposit =
+        BankUtil.getRandomDepositForBank(AADM_User, randomBank.getBankCode());
+    String entityId = randomDeposit.getDepositId();
+    Double amount = randomDeposit.getAmount();
+
+    // Import corresponding bank transaction with matching amount
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        BankUtil.importDummyBankTransaction(
+            AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTM5a"), amount);
+    String expectedDescription =
+        bankTransactionImportPostRequest.getBankStatementDetails().get(0).getDescription();
+
+    // Get another unmatched deposit from an additional random bank
+    BankAccountResponse otherRandomBank =
+        BankUtil.getRandomBankWithAtLeastOneDeposit(AADM_User, false);
+    int tries = 0;
+    int maxTries = 20;
+    while (otherRandomBank.getBankCode().equals(randomBank.getBankCode()) && tries < maxTries) {
+      otherRandomBank = BankUtil.getRandomBankWithAtLeastOneDeposit(AADM_User, false);
+      tries++;
+    }
+    assumeThat(tries)
+        .as(
+            "Could not find 2 unique banks with at least one deposit each in "
+                + maxTries
+                + " tries.")
+        .isLessThan(maxTries);
+
+    DepositsSearchResponse randomDepositOtherBank =
+        BankUtil.getRandomDepositForBank(AADM_User, otherRandomBank.getBankCode());
+    String entityIdOtherBank = randomDepositOtherBank.getDepositId();
+    Double amountOtherBank = randomDepositOtherBank.getAmount();
+
+    // Import another corresponding bank transaction with matching amount
+    BankTransactionImportPostRequest bankTransactionImportPostRequestOtherBank =
+        BankUtil.importDummyBankTransaction(
+            AADM_User,
+            otherRandomBank,
+            currentDate,
+            CSVUtil.generateUniqueFilename("BTM5b"),
+            amountOtherBank);
+    String expectedDescriptionOtherBank =
+        bankTransactionImportPostRequestOtherBank.getBankStatementDetails().get(0).getDescription();
+
+    // Verify both imported bank transactions are "unmatched" before matching
+    BankTransactionsSearchResponse bankTransaction =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    BankTransactionsSearchResponse bankTransactionOtherBank =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, otherRandomBank.getBankCode(), currentDate, expectedDescriptionOtherBank);
+    assertThat(bankTransaction).isNotNull();
+    assertThat(bankTransaction.getMatchStatus()).isNotEqualTo("Matched");
+    assertThat(bankTransactionOtherBank).isNotNull();
+    assertThat(bankTransactionOtherBank.getMatchStatus()).isNotEqualTo("Matched");
+
+    // Attempt to match both imported bank transactions to unmatched deposits from separate banks
+    String bankStatementDetailId = bankTransaction.getBankStatementDetailId();
+    String bankStatementDetailIdOtherBank = bankTransactionOtherBank.getBankStatementDetailId();
+    BankTransactionMatchPutRequest bankTransactionMatchPutRequestInvalid =
+        new BankTransactionMatchPutRequest();
+    BankTransactionMatchEntityPutRequest matchedEntities =
+        new BankTransactionMatchEntityPutRequest();
+    BankTransactionMatchEntityPutRequest matchedEntitiesOtherBank =
+        new BankTransactionMatchEntityPutRequest();
+    matchedEntities.setMatchType(DEPOSIT_MATCH_TYPE);
+    matchedEntities.setMatchEntityId(entityId);
+    matchedEntities.setBankTransactionDetailId(bankStatementDetailId);
+    matchedEntitiesOtherBank.setMatchType(DEPOSIT_MATCH_TYPE);
+    matchedEntitiesOtherBank.setMatchEntityId(entityIdOtherBank);
+    matchedEntitiesOtherBank.setBankTransactionDetailId(bankStatementDetailIdOtherBank);
+    bankTransactionMatchPutRequestInvalid.addMatchedEntitiesItem(matchedEntities);
+    bankTransactionMatchPutRequestInvalid.addMatchedEntitiesItem(matchedEntitiesOtherBank);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
+            bankTransactionMatchPutRequestInvalid, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify error in the response
+    PutGenericLoggingResponse failedMatchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(failedMatchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(failedMatchResponse.getNumberOfRecordsUpdated()).isEqualTo(0);
+    assertThat(failedMatchResponse.getEventLogReferenceId()).isNotNull();
+    List<String> matchErrors =
+        ErrorLogUtil.getErrorMessages(
+            ErrorLogUtil.getErrorsAndWarningsByReferenceId(
+                AADM_User, failedMatchResponse.getEventLogReferenceId()));
+    assertThat(matchErrors).isNotEmpty();
+    assertThat(matchErrors)
+        .contains("Cannot process transactions from more than one bank at a time.");
+
+    // Verify both bank transactions were NOT matched
+    BankTransactionsSearchResponse bankTransactionAfterFailedMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    BankTransactionsSearchResponse bankTransactionOtherBankAfterFailedMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, otherRandomBank.getBankCode(), currentDate, expectedDescriptionOtherBank);
+    assertThat(bankTransactionAfterFailedMatch).isNotNull();
+    assertThat(bankTransactionAfterFailedMatch.getMatchStatus()).isNotEqualTo("Matched");
+    assertThat(bankTransactionOtherBankAfterFailedMatch).isNotNull();
+    assertThat(bankTransactionOtherBankAfterFailedMatch.getMatchStatus()).isNotEqualTo("Matched");
+
+    // Successfully match both bank transactions for testing unmatch (using separate requests)
+    BankTransactionMatchPutRequest bankTransactionMatchPutRequest =
+        new BankTransactionMatchPutRequest();
+    bankTransactionMatchPutRequest.addMatchedEntitiesItem(matchedEntities);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
+            bankTransactionMatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    PutGenericLoggingResponse matchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    Thread.sleep(2000);
+
+    BankTransactionMatchPutRequest bankTransactionMatchPutRequestOtherBank =
+        new BankTransactionMatchPutRequest();
+    bankTransactionMatchPutRequestOtherBank.addMatchedEntitiesItem(matchedEntitiesOtherBank);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionMatchOnTheBanktransactionController(
+            bankTransactionMatchPutRequestOtherBank, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    PutGenericLoggingResponse matchResponseOtherBank =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    Thread.sleep(2000);
+
+    // Verify both matches were successful for next portion of the test
+    assertThat(matchResponse.getNumberOfRecordsUpdated()).isEqualTo(1);
+    BankTransactionsSearchResponse bankTransactionAfterMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransactionAfterMatch).isNotNull();
+    assertThat(bankTransactionAfterMatch.getMatchStatus()).isEqualTo("Matched");
+    assertThat(matchResponseOtherBank.getNumberOfRecordsUpdated()).isEqualTo(1);
+    BankTransactionsSearchResponse bankTransactionOtherBankAfterMatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, otherRandomBank.getBankCode(), currentDate, expectedDescriptionOtherBank);
+    assertThat(bankTransactionOtherBankAfterMatch).isNotNull();
+    assertThat(bankTransactionOtherBankAfterMatch.getMatchStatus()).isEqualTo("Matched");
+
+    // Attempt to unmatch both imported bank transactions
+    BankTransactionUpdateStatusPutRequest bankTransactionUnmatchPutRequestInvalid =
+        new BankTransactionUpdateStatusPutRequest();
+    bankTransactionUnmatchPutRequestInvalid.addBankStatementDetailIdsItem(bankStatementDetailId);
+    bankTransactionUnmatchPutRequestInvalid.addBankStatementDetailIdsItem(
+        bankStatementDetailIdOtherBank);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
+            bankTransactionUnmatchPutRequestInvalid, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    // Verify error in the response
+    PutGenericLoggingResponse failedUnmatchResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PutGenericLoggingResponse.class);
+    assertThat(failedUnmatchResponse.getClass().getDeclaredFields().length).isEqualTo(2);
+    assertThat(failedUnmatchResponse.getNumberOfRecordsUpdated()).isEqualTo(0);
+    assertThat(failedMatchResponse.getEventLogReferenceId()).isNotNull();
+    List<String> unmatchErrors =
+        ErrorLogUtil.getErrorMessages(
+            ErrorLogUtil.getErrorsAndWarningsByReferenceId(
+                AADM_User, failedUnmatchResponse.getEventLogReferenceId()));
+    assertThat(unmatchErrors).isNotEmpty();
+    assertThat(unmatchErrors)
+        .contains("Cannot process transactions from more than one bank at a time.");
+
+    // Verify both bank transactions were NOT unmatched
+    BankTransactionsSearchResponse bankTransactionAfterFailedUnmatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    BankTransactionsSearchResponse bankTransactionOtherBankAfterFailedUnmatch =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, otherRandomBank.getBankCode(), currentDate, expectedDescriptionOtherBank);
+    assertThat(bankTransactionAfterFailedUnmatch).isNotNull();
+    assertThat(bankTransactionAfterFailedUnmatch.getMatchStatus()).isEqualTo("Matched");
+    assertThat(bankTransactionOtherBankAfterFailedUnmatch).isNotNull();
+    assertThat(bankTransactionOtherBankAfterFailedUnmatch.getMatchStatus()).isEqualTo("Matched");
+
+    // Successfully unmatch both bank transactions for clean up (using separate requests)
+    BankTransactionUpdateStatusPutRequest bankTransactionUnmatchPutRequest =
+        new BankTransactionUpdateStatusPutRequest();
+    bankTransactionUnmatchPutRequest.addBankStatementDetailIdsItem(bankStatementDetailId);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
+            bankTransactionUnmatchPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    Thread.sleep(2000);
+
+    BankTransactionUpdateStatusPutRequest bankTransactionOtherBankUnmatchPutRequest =
+        new BankTransactionUpdateStatusPutRequest();
+    bankTransactionOtherBankUnmatchPutRequest.addBankStatementDetailIdsItem(
+        bankStatementDetailIdOtherBank);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.PUTBankTransactionUnmatchOnTheBanktransactionController(
+            bankTransactionOtherBankUnmatchPutRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
   }
 }

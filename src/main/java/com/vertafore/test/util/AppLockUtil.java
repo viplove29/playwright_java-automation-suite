@@ -20,6 +20,7 @@ public class AppLockUtil {
   private static final String CKOUT_TYPE_GCP = "104";
   private static final String CKOUT_TYPE_SA_GLOBALCHANGE_DIVISIONCONSOLIDATION = "133";
   private static final String CKOUT_TYPE_EMS_GLOBALCHANGE_PERSONNEL = "132";
+  private static final String CKOUT_TYPE_BR = "Bank Reconciliation";
 
   // Controller API's
   private static UseApplicationLockTo applicationLockApi = new UseApplicationLockTo();
@@ -240,6 +241,31 @@ public class AppLockUtil {
 
     for (ApplicationLockResponse gcpLock : allGcpLocks) {
       releaseApplicationLockByApplicationLockId(gcpLock.getApplicationLockId(), actor);
+    }
+  }
+
+  public static List<ApplicationLockResponse> getAllBankRecApplicationLocks(Actor actor) {
+    actor.attemptsTo(
+        applicationLocksApi.GETApplicationLocksOnTheApplicationlocksController(CKOUT_TYPE_BR, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode())
+        .withFailMessage(SerenityRest.lastResponse().toString())
+        .isEqualTo(200);
+    List<ApplicationLockResponse> bankRecLocks =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getList("", ApplicationLockResponse.class);
+
+    assertThat(bankRecLocks).isNotNull();
+    return bankRecLocks;
+  }
+
+  public static void releaseAllBankRecApplicationLocks(Actor actor) {
+    List<ApplicationLockResponse> allBankRecLocks = getAllBankRecApplicationLocks(actor);
+
+    for (ApplicationLockResponse bankRecLock : allBankRecLocks) {
+      releaseApplicationLockByApplicationLockId(bankRecLock.getApplicationLockId(), actor);
     }
   }
 }

@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseBankAccountsTo;
 import com.vertafore.test.servicewrappers.UseBankTransactionTo;
+import com.vertafore.test.servicewrappers.UseChecksTo;
 import com.vertafore.test.servicewrappers.UseDepositsTo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,6 +42,17 @@ public class BankUtil {
     return banks.get(randomNum);
   }
 
+  public static BankAccountResponse getBankByName(
+      Actor actor, String bankName, boolean includeHidden) {
+    List<BankAccountResponse> banks =
+        getAllAvailableBanks(actor, includeHidden)
+            .stream()
+            .filter(bank -> bank.getBankName().equals(bankName))
+            .collect(Collectors.toList());
+    assertThat(banks.size()).isGreaterThan(0);
+    return banks.get(0);
+  }
+
   public static List<BankTransactionsSearchResponse> getBankTransactions(
       Actor actor, String bankCode, LocalDateTime startDate) {
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
@@ -55,7 +67,7 @@ public class BankUtil {
     BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
         new BankTransactionsSearchPostRequest();
     bankTransactionsSearchPostRequest.setBankCode(bankCode);
-    bankTransactionsSearchPostRequest.setStartDate(startDate.toString());
+    bankTransactionsSearchPostRequest.setStartDate(startDate.minusDays(1).toString());
     bankTransactionsSearchPostRequest.setEndDate(startDate.plusMonths(1).toString());
     pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
     pagingRequestBankTransactionsSearchPostRequest.setTop(10000);
@@ -71,9 +83,6 @@ public class BankUtil {
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
 
-    // if response is null, the user does not have access to bank transactions
-    assertThat(searchResponse.getResponse()).isNotNull();
-
     return searchResponse.getResponse();
   }
 
@@ -81,12 +90,15 @@ public class BankUtil {
       Actor actor, String bankCode, LocalDateTime startDate, String expectedDescription) {
     List<BankTransactionsSearchResponse> bankTransactions =
         getBankTransactions(actor, bankCode, startDate);
+    if (bankTransactions == null || bankTransactions.isEmpty()) {
+      return null;
+    }
     List<BankTransactionsSearchResponse> matchingBankTransactions =
         bankTransactions
             .stream()
             .filter(tran -> tran.getDescription().equals(expectedDescription))
             .collect(Collectors.toList());
-    if (matchingBankTransactions.size() == 0) {
+    if (matchingBankTransactions.isEmpty()) {
       return null;
     }
     return matchingBankTransactions.get(0);
@@ -98,6 +110,7 @@ public class BankUtil {
       String description,
       Double amount,
       String csvFilename) {
+    // Amount must be POSITIVE if matching to a deposit, or NEGATIVE if matching to a check
     BankTransactionImportPostRequest request = new BankTransactionImportPostRequest();
     request.setBankCode(bank.getBankCode());
     request.setBankShortName(bank.getShortName());
@@ -115,18 +128,42 @@ public class BankUtil {
   }
 
   public static BankTransactionImportPostRequest importDummyBankTransaction(
-      Actor actor, BankAccountResponse bank, LocalDateTime currentDate, String filename) {
+      Actor actor,
+      BankAccountResponse bank,
+      LocalDateTime currentDate,
+      String filename,
+      Boolean positiveAmount)
+      throws InterruptedException {
+    // Amount must be POSITIVE if matching to a deposit, or NEGATIVE if matching to a check
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    Double amount = Util.randomDollarAmount(1.00, 99999.99);
+    if (!positiveAmount) {
+      amount = Util.randomDollarAmount(-1.00, -99999.99);
+    }
     BankTransactionImportPostRequest bankTransactionImportPostRequest =
         formatBankTransactionImportRequest(
-            bank,
-            currentDate.toString(),
-            "EMSAuto " + Util.randomText(10),
-            Util.randomDollarAmount(1.00, 99999.99),
-            filename);
+            bank, currentDate.toString(), "EMSAuto " + Util.randomText(10), amount, filename);
     actor.attemptsTo(
         bankTransactionAPI.POSTBankTransactionImportOnTheBanktransactionController(
             bankTransactionImportPostRequest, ""));
+
+    // Verify the import was successful
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    BankTransactionImportResponse bankTransactionImportResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", BankTransactionImportResponse.class);
+    assertThat(bankTransactionImportResponse.getBankStatementHeaderId()).isNotNull();
+    assertThat(bankTransactionImportResponse.getEventLogReferenceId()).isNotNull();
+    Thread.sleep(3000);
+    List<String> errorMessages =
+        ErrorLogUtil.getErrorMessages(
+            ErrorLogUtil.getErrorsAndWarningsByReferenceId(
+                actor, bankTransactionImportResponse.getEventLogReferenceId()));
+    assertThat(errorMessages).isEmpty();
+
     return bankTransactionImportPostRequest;
   }
 
@@ -135,7 +172,9 @@ public class BankUtil {
       BankAccountResponse bank,
       LocalDateTime currentDate,
       String filename,
-      Double amount) {
+      Double amount)
+      throws InterruptedException {
+    // Amount must be POSITIVE if matching to a deposit, or NEGATIVE if matching to a check
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
     BankTransactionImportPostRequest bankTransactionImportPostRequest =
         formatBankTransactionImportRequest(
@@ -143,7 +182,48 @@ public class BankUtil {
     actor.attemptsTo(
         bankTransactionAPI.POSTBankTransactionImportOnTheBanktransactionController(
             bankTransactionImportPostRequest, ""));
+
+    // Verify the import was successful
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    BankTransactionImportResponse bankTransactionImportResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", BankTransactionImportResponse.class);
+    assertThat(bankTransactionImportResponse.getBankStatementHeaderId()).isNotNull();
+    assertThat(bankTransactionImportResponse.getEventLogReferenceId()).isNotNull();
+    Thread.sleep(3000);
+    List<String> errorMessages =
+        ErrorLogUtil.getErrorMessages(
+            ErrorLogUtil.getErrorsAndWarningsByReferenceId(
+                actor, bankTransactionImportResponse.getEventLogReferenceId()));
+    assertThat(errorMessages).isEmpty();
+
     return bankTransactionImportPostRequest;
+  }
+
+  public static SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+      formatBankTransactionSearchRequest(
+          String bankCode,
+          LocalDateTime currentDate,
+          SortOptionBankTransactionsSortOptions.FieldSortEnum columnName,
+          boolean isDescending) {
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        pagingRequestBankTransactionsSearchPostRequest =
+            new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
+    SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
+    sortOptions.setFieldSort(columnName);
+    sortOptions.setIsDescendingOrder(isDescending);
+    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
+    BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
+        new BankTransactionsSearchPostRequest();
+    bankTransactionsSearchPostRequest.setBankCode(bankCode);
+    bankTransactionsSearchPostRequest.setStartDate(currentDate.minusYears(1).toString());
+    bankTransactionsSearchPostRequest.setEndDate(currentDate.plusYears(1).toString());
+    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
+
+    return pagingRequestBankTransactionsSearchPostRequest;
   }
 
   public static List<DepositsSearchResponse> getUnmatchedDepositsForBank(
@@ -176,6 +256,46 @@ public class BankUtil {
         .getList("response", DepositsSearchResponse.class);
   }
 
+  public static DepositsSearchResponse getRandomDepositForBank(Actor actor, String bankCode) {
+    List<DepositsSearchResponse> deposits = getUnmatchedDepositsForBank(actor, bankCode);
+    int randomNum = new Random().nextInt(deposits.size());
+    return deposits.get(randomNum);
+  }
+
+  public static List<ChecksSearchResponse> getUnmatchedChecksForBank(Actor actor, String bankCode) {
+    UseChecksTo checksAPI = new UseChecksTo();
+
+    SortedPagingRequestChecksSearchPostRequestChecksSortOptions pagingChecksSearchPostRequest =
+        new SortedPagingRequestChecksSearchPostRequestChecksSortOptions();
+
+    SortOptionChecksSortOptions sortOptions = new SortOptionChecksSortOptions();
+    sortOptions.setFieldSort(SortOptionChecksSortOptions.FieldSortEnum.CHECKDATE);
+    sortOptions.setIsDescendingOrder(true);
+    pagingChecksSearchPostRequest.setSortOption(sortOptions);
+
+    ChecksSearchPostRequest checksSearchPostRequest = new ChecksSearchPostRequest();
+    checksSearchPostRequest.setBankCode(bankCode);
+    checksSearchPostRequest.setStartDate(LocalDateTime.now().minusYears(10).toString());
+    checksSearchPostRequest.setEndDate(LocalDateTime.now().plusYears(10).toString());
+    pagingChecksSearchPostRequest.setModel(checksSearchPostRequest);
+
+    actor.attemptsTo(
+        checksAPI.POSTChecksUnmatchedSearchOnTheChecksController(
+            pagingChecksSearchPostRequest, ""));
+
+    return LastResponse.received()
+        .answeredBy(actor)
+        .getBody()
+        .jsonPath()
+        .getList("response", ChecksSearchResponse.class);
+  }
+
+  public static ChecksSearchResponse getRandomCheckForBank(Actor actor, String bankCode) {
+    List<ChecksSearchResponse> checks = getUnmatchedChecksForBank(actor, bankCode);
+    int randomNum = new Random().nextInt(checks.size());
+    return checks.get(randomNum);
+  }
+
   public static BankAccountResponse getRandomBankWithAtLeastOneDeposit(
       Actor actor, boolean includeHidden) {
     List<BankAccountResponse> banks = getAllAvailableBanks(actor, includeHidden);
@@ -190,6 +310,24 @@ public class BankUtil {
       tries++;
     }
     // test will be skipped if max tries are used without finding a bank with deposit
+    assumeThat(tries).isLessThan(maxTries);
+    return banks.get(randomNum);
+  }
+
+  public static BankAccountResponse getRandomBankWithAtLeastOneCheck(
+      Actor actor, boolean includeHidden) {
+    List<BankAccountResponse> banks = getAllAvailableBanks(actor, includeHidden);
+    int tries = 0;
+    int maxTries = 20;
+    int randomNum = new Random().nextInt(banks.size());
+    while (tries < maxTries) {
+      randomNum = new Random().nextInt(banks.size());
+      if (getUnmatchedChecksForBank(actor, banks.get(randomNum).getBankCode()).size() > 0) {
+        break;
+      }
+      tries++;
+    }
+    // test will be skipped if max tries are used without finding a bank with check
     assumeThat(tries).isLessThan(maxTries);
     return banks.get(randomNum);
   }

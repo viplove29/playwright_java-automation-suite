@@ -74,6 +74,10 @@ public class EnvVariables {
       getProperty("no_bank_transactions_access_user.username");
   public static final String NO_BANK_TRANSACTION_ACCESS_PASSWORD =
       getProperty("no_bank_transactions_access_user.password");
+  public static final String FULL_BANK_TRANSACTION_ACCESS_USERNAME =
+      getProperty("full_bank_transactions_access_user.username");
+  public static final String FULL_BANK_TRANSACTION_ACCESS_PASSWORD =
+      getProperty("full_bank_transactions_access_user.password");
 
   private static String getProperty(String property) {
     return EnvironmentSpecificConfiguration.from(

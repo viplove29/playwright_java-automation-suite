@@ -6,9 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.vertafore.test.actor.TokenSuperClass;
 import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseBankTransactionTo;
-import com.vertafore.test.util.BankUtil;
-import com.vertafore.test.util.CSVUtil;
-import com.vertafore.test.util.Util;
+import com.vertafore.test.util.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
@@ -24,33 +22,29 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     Actor ORAN_App = theActorCalled("ORAN_App");
     Actor VADM_Admin = theActorCalled("VADM_Admin");
 
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
     LocalDateTime currentDate = LocalDateTime.now();
+
+    // AADM USER
+    // Get random bank
     BankAccountResponse randomBank = BankUtil.getRandomBank(AADM_User, false);
     String bankName = randomBank.getBankName();
 
     // Import one bank transaction to ensure there is at least one in the random bank
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS1"));
-    Thread.sleep(3000);
+        AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS1a"), true);
 
-    // Create custom search request for random bank
+    // Create search request
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         pagingRequestBankTransactionsSearchPostRequest =
-            new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
-    SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
-    sortOptions.setIsDescendingOrder(true);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
+                true);
 
-    BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
-        new BankTransactionsSearchPostRequest();
-    bankTransactionsSearchPostRequest.setBankCode(randomBank.getBankCode());
-    bankTransactionsSearchPostRequest.setStartDate(LocalDateTime.now().minusYears(1).toString());
-    bankTransactionsSearchPostRequest.setEndDate(LocalDateTime.now().plusYears(1).toString());
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // AADM USER
     // Search for bank transactions
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
@@ -72,6 +66,22 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     assertThat(bankTransactionsAADM.get(0).getBankName()).isEqualTo(bankName);
 
     // ORAN APP
+    // Get random bank
+    randomBank = BankUtil.getRandomBank(AADM_User, false);
+    bankName = randomBank.getBankName();
+
+    // Import one bank transaction to ensure there is at least one in the random bank
+    BankUtil.importDummyBankTransaction(
+        AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS1b"), true);
+
+    // Create search request
+    pagingRequestBankTransactionsSearchPostRequest =
+        BankUtil.formatBankTransactionSearchRequest(
+            randomBank.getBankCode(),
+            currentDate,
+            SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
+            true);
+
     // Search for bank transactions
     ORAN_App.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
@@ -98,6 +108,8 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             pagingRequestBankTransactionsSearchPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
+    // Verify response contains expected error
     Util.validateErrorResponseContainsString(
         "The information needed to establish the required context could not be found", VADM_Admin);
   }
@@ -107,37 +119,32 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     Actor AADM_User = theActorCalled("AADM_User");
     Actor AADM_NBTAUser = theActorCalled("AADM_NBTAUser");
 
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
     LocalDateTime currentDate = LocalDateTime.now();
     BankAccountResponse randomBank = BankUtil.getRandomBank(AADM_User, false);
 
     // Import one bank transaction to ensure there is at least one in the random bank
-    BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS2"));
-    Thread.sleep(3000);
-
-    // Create custom search request for random bank
-    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
-        pagingRequestBankTransactionsSearchPostRequest =
-            new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
-    SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
-    sortOptions.setIsDescendingOrder(true);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
-        new BankTransactionsSearchPostRequest();
-    bankTransactionsSearchPostRequest.setBankCode(randomBank.getBankCode());
-    bankTransactionsSearchPostRequest.setStartDate(LocalDateTime.now().minusYears(1).toString());
-    bankTransactionsSearchPostRequest.setEndDate(LocalDateTime.now().plusYears(1).toString());
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // AADM USER (with No Bank Transactions Access)
-    // Attempt to search for bank transactions
-    AADM_NBTAUser.attemptsTo(
-        bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        BankUtil.importDummyBankTransaction(
+            AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS2"), true);
+    String expectedDescription =
+        bankTransactionImportPostRequest.getBankStatementDetails().get(0).getDescription();
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
+    // Attempt to search for bank transactions - should return zero transactions
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequest =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
+                true);
+    AADM_NBTAUser.attemptsTo(
+        bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
+            bankTransactionSearchPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
     PagingResponseBankTransactionsSearchResponse searchResponse =
         LastResponse.received()
             .answeredBy(AADM_User)
@@ -150,11 +157,75 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     assertThat(searchResponse.getNextPageLink()).isNull();
     assertThat(searchResponse.getNextPageRequestBody()).isNull();
     assertThat(searchResponse.getTotalCount()).isZero();
+
+    // Verify transaction exists (using AADM User with Bank Transaction access)
+    BankTransactionsSearchResponse bankTransaction =
+        BankUtil.getBankTransactionByDescription(
+            AADM_User, randomBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransaction).isNotNull();
+  }
+
+  @Test
+  public void bankTransactionSearchReturnsNothingWithoutSpecifiedBankAccess()
+      throws InterruptedException {
+    Actor AADM_User = theActorCalled("AADM_User");
+    Actor AADM_FBTAUser = theActorCalled("AADM_FBTAUser");
+
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
+
+    UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
+    LocalDateTime currentDate = LocalDateTime.now();
+    BankAccountResponse accessExcludedBank =
+        BankUtil.getBankByName(AADM_FBTAUser, EnvVariables.EMS_ACCESS_EXCLUDED_BANK, true);
+
+    // Import one bank transaction (using AADM User with access to all banks)
+    BankTransactionImportPostRequest bankTransactionImportPostRequest =
+        BankUtil.importDummyBankTransaction(
+            AADM_FBTAUser,
+            accessExcludedBank,
+            currentDate,
+            CSVUtil.generateUniqueFilename("BTD3"),
+            true);
+    String expectedDescription =
+        bankTransactionImportPostRequest.getBankStatementDetails().get(0).getDescription();
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    // Attempt to search for bank transactions - should return zero transactions
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequest =
+            BankUtil.formatBankTransactionSearchRequest(
+                accessExcludedBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
+                true);
+    AADM_User.attemptsTo(
+        bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
+            bankTransactionSearchPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    PagingResponseBankTransactionsSearchResponse searchResponseAADM =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", PagingResponseBankTransactionsSearchResponse.class);
+    assertThat(searchResponseAADM).isNotNull();
+    assertThat(searchResponseAADM.getResponse()).isNull();
+    assertThat(searchResponseAADM.getNextPageLink()).isNull();
+    assertThat(searchResponseAADM.getNextPageRequestBody()).isNull();
+    assertThat(searchResponseAADM.getTotalCount()).isZero();
+
+    // Verify transaction exists (using AADM User with access to all banks)
+    BankTransactionsSearchResponse bankTransaction =
+        BankUtil.getBankTransactionByDescription(
+            AADM_FBTAUser, accessExcludedBank.getBankCode(), currentDate, expectedDescription);
+    assertThat(bankTransaction).isNotNull();
   }
 
   @Test
   public void bankTransactionSearchReturnsSortedTransactions() throws InterruptedException {
     Actor AADM_User = theActorCalled("AADM_User");
+
+    AppLockUtil.releaseAllBankRecApplicationLocks(AADM_User);
 
     UseBankTransactionTo bankTransactionAPI = new UseBankTransactionTo();
     LocalDateTime currentDate = LocalDateTime.now();
@@ -162,177 +233,210 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
 
     // Import multiple bank transactions with different dates and filenames
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS3e"));
+        AADM_User, randomBank, currentDate, CSVUtil.generateUniqueFilename("BTS3e"), true);
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate.minusDays(1), CSVUtil.generateUniqueFilename("BTS3d"));
+        AADM_User,
+        randomBank,
+        currentDate.minusDays(1),
+        CSVUtil.generateUniqueFilename("BTS3d"),
+        true);
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate.minusMonths(1), CSVUtil.generateUniqueFilename("BTS3c"));
+        AADM_User,
+        randomBank,
+        currentDate.minusMonths(1),
+        CSVUtil.generateUniqueFilename("BTS3c"),
+        true);
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate.plusMonths(1), CSVUtil.generateUniqueFilename("BTS3b"));
+        AADM_User,
+        randomBank,
+        currentDate.plusMonths(1),
+        CSVUtil.generateUniqueFilename("BTS3b"),
+        true);
     Thread.sleep(1000);
     BankUtil.importDummyBankTransaction(
-        AADM_User, randomBank, currentDate.plusDays(1), CSVUtil.generateUniqueFilename("BTS3a"));
+        AADM_User,
+        randomBank,
+        currentDate.plusDays(1),
+        CSVUtil.generateUniqueFilename("BTS3a"),
+        true);
     Thread.sleep(1000);
 
-    // Create custom search request for random bank - filename, descending
+    // Search with sort: date descending
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
-        pagingRequestBankTransactionsSearchPostRequest =
-            new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
-    SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
-    sortOptions.setIsDescendingOrder(true);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    BankTransactionsSearchPostRequest bankTransactionsSearchPostRequest =
-        new BankTransactionsSearchPostRequest();
-    bankTransactionsSearchPostRequest.setBankCode(randomBank.getBankCode());
-    bankTransactionsSearchPostRequest.setStartDate(LocalDateTime.now().minusYears(1).toString());
-    bankTransactionsSearchPostRequest.setEndDate(LocalDateTime.now().plusYears(1).toString());
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // Search and verify response is sorted by date descending
+        bankTransactionSearchPostRequestDateDescending =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
+                true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+            bankTransactionSearchPostRequestDateDescending, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    PagingResponseBankTransactionsSearchResponse searchResponse1 =
+    PagingResponseBankTransactionsSearchResponse searchResponseDateDescending =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
-    assertThat(searchResponse1).isNotNull();
-    List<BankTransactionsSearchResponse> bankTransactions1 = searchResponse1.getResponse();
-    assertThat(searchResponse1.getTotalCount()).isGreaterThanOrEqualTo(5);
-    String previousDate1 = bankTransactions1.get(0).getTransactionDate();
-    for (BankTransactionsSearchResponse bankTransaction : bankTransactions1) {
-      assertThat(bankTransaction.getTransactionDate()).isLessThanOrEqualTo(previousDate1);
+    assertThat(searchResponseDateDescending).isNotNull();
+
+    // Verify response is sorted by date descending
+    List<BankTransactionsSearchResponse> bankTransactionsDateDescending =
+        searchResponseDateDescending.getResponse();
+    assertThat(searchResponseDateDescending.getTotalCount()).isGreaterThanOrEqualTo(5);
+    String previousDate = bankTransactionsDateDescending.get(0).getTransactionDate();
+    for (BankTransactionsSearchResponse bankTransaction : bankTransactionsDateDescending) {
+      assertThat(bankTransaction.getTransactionDate()).isLessThanOrEqualTo(previousDate);
     }
 
-    // Update search request - date, ascending
-    sortOptions.setIsDescendingOrder(false);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
+    // Search with sort: date ascending
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequestDateAscending =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
+                false);
 
-    // Search and verify response is sorted by date ascending
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+            bankTransactionSearchPostRequestDateAscending, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    PagingResponseBankTransactionsSearchResponse searchResponse2 =
+    PagingResponseBankTransactionsSearchResponse searchResponseDateAscending =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
-    assertThat(searchResponse2).isNotNull();
-    List<BankTransactionsSearchResponse> bankTransactions2 = searchResponse2.getResponse();
-    assertThat(searchResponse2.getTotalCount()).isGreaterThanOrEqualTo(5);
-    String previousDate2 = bankTransactions2.get(0).getTransactionDate();
-    for (BankTransactionsSearchResponse bankTransaction : bankTransactions2) {
-      assertThat(bankTransaction.getTransactionDate()).isGreaterThanOrEqualTo(previousDate2);
+    assertThat(searchResponseDateAscending).isNotNull();
+
+    // Verify response is sorted by date ascending
+    List<BankTransactionsSearchResponse> bankTransactionsDateAscending =
+        searchResponseDateAscending.getResponse();
+    assertThat(searchResponseDateAscending.getTotalCount()).isGreaterThanOrEqualTo(5);
+    previousDate = bankTransactionsDateAscending.get(0).getTransactionDate();
+    for (BankTransactionsSearchResponse bankTransaction : bankTransactionsDateAscending) {
+      assertThat(bankTransaction.getTransactionDate()).isGreaterThanOrEqualTo(previousDate);
     }
 
-    // Update search request - filename, descending
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.FILENAME);
-    sortOptions.setIsDescendingOrder(true);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // Search and verify response is sorted by filename descending
+    // Search with sort: filename descending
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequestFilenameDescending =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.FILENAME,
+                true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+            bankTransactionSearchPostRequestFilenameDescending, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    PagingResponseBankTransactionsSearchResponse searchResponse3 =
+    PagingResponseBankTransactionsSearchResponse searchResponseFilenameDescending =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
-    assertThat(searchResponse3).isNotNull();
-    List<BankTransactionsSearchResponse> bankTransactions3 = searchResponse3.getResponse();
-    assertThat(searchResponse3.getTotalCount()).isGreaterThanOrEqualTo(5);
-    String previousFilename1 = bankTransactions3.get(0).getFilename();
-    for (BankTransactionsSearchResponse bankTransaction : bankTransactions3) {
-      assertThat(bankTransaction.getFilename()).isLessThanOrEqualTo(previousFilename1);
+    assertThat(searchResponseFilenameDescending).isNotNull();
+
+    // Verify response is sorted by filename descending
+    List<BankTransactionsSearchResponse> bankTransactionsFilenameDescending =
+        searchResponseFilenameDescending.getResponse();
+    assertThat(searchResponseFilenameDescending.getTotalCount()).isGreaterThanOrEqualTo(5);
+    String previousFilename = bankTransactionsFilenameDescending.get(0).getFilename();
+    for (BankTransactionsSearchResponse bankTransaction : bankTransactionsFilenameDescending) {
+      assertThat(bankTransaction.getFilename()).isLessThanOrEqualTo(previousFilename);
     }
 
-    // Update search request - filename, ascending
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.FILENAME);
-    sortOptions.setIsDescendingOrder(false);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // Search and verify response is sorted by filename ascending
+    // Search with sort: filename ascending
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequestFilenameAscending =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.FILENAME,
+                false);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+            bankTransactionSearchPostRequestFilenameAscending, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    PagingResponseBankTransactionsSearchResponse searchResponse4 =
+    PagingResponseBankTransactionsSearchResponse searchResponseFilenameAscending =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
-    assertThat(searchResponse4).isNotNull();
-    List<BankTransactionsSearchResponse> bankTransactions4 = searchResponse4.getResponse();
-    assertThat(searchResponse4.getTotalCount()).isGreaterThanOrEqualTo(5);
-    String previousFilename2 = bankTransactions4.get(0).getFilename();
-    for (BankTransactionsSearchResponse bankTransaction : bankTransactions4) {
-      assertThat(bankTransaction.getFilename()).isGreaterThanOrEqualTo(previousFilename2);
+    assertThat(searchResponseFilenameAscending).isNotNull();
+
+    // Verify response is sorted by filename ascending
+    List<BankTransactionsSearchResponse> bankTransactionsFilenameAscending =
+        searchResponseFilenameAscending.getResponse();
+    assertThat(searchResponseFilenameAscending.getTotalCount()).isGreaterThanOrEqualTo(5);
+    previousFilename = bankTransactionsFilenameAscending.get(0).getFilename();
+    for (BankTransactionsSearchResponse bankTransaction : bankTransactionsFilenameAscending) {
+      assertThat(bankTransaction.getFilename()).isGreaterThanOrEqualTo(previousFilename);
     }
 
-    // Update search request - deposit amount, descending
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.DEPOSIT);
-    sortOptions.setIsDescendingOrder(true);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // Search and verify response is sorted by deposit descending
+    // Search with sort: deposit amount descending
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequestDepositDescending =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.DEPOSIT,
+                true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+            bankTransactionSearchPostRequestDepositDescending, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    PagingResponseBankTransactionsSearchResponse searchResponse5 =
+    PagingResponseBankTransactionsSearchResponse searchResponseDepositDescending =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
-    assertThat(searchResponse5).isNotNull();
-    List<BankTransactionsSearchResponse> bankTransactions5 = searchResponse5.getResponse();
-    assertThat(searchResponse5.getTotalCount()).isGreaterThanOrEqualTo(5);
-    Double previousDeposit1 = bankTransactions5.get(0).getDeposit();
-    for (BankTransactionsSearchResponse bankTransaction : bankTransactions5) {
-      assertThat(bankTransaction.getDeposit()).isLessThanOrEqualTo(previousDeposit1);
+    assertThat(searchResponseDepositDescending).isNotNull();
+
+    // Verify response is sorted by deposit amount descending
+    List<BankTransactionsSearchResponse> bankTransactionsDepositDescending =
+        searchResponseDepositDescending.getResponse();
+    assertThat(searchResponseDepositDescending.getTotalCount()).isGreaterThanOrEqualTo(5);
+    Double previousDeposit = bankTransactionsDepositDescending.get(0).getDeposit();
+    for (BankTransactionsSearchResponse bankTransaction : bankTransactionsDepositDescending) {
+      assertThat(bankTransaction.getDeposit()).isLessThanOrEqualTo(previousDeposit);
     }
 
-    // Update search request - deposit amount, ascending
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.DEPOSIT);
-    sortOptions.setIsDescendingOrder(false);
-    pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
-    pagingRequestBankTransactionsSearchPostRequest.setModel(bankTransactionsSearchPostRequest);
-
-    // Search and verify response is sorted by deposit ascending
+    // Search with sort: deposit amount ascending
+    SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
+        bankTransactionSearchPostRequestDepositAscending =
+            BankUtil.formatBankTransactionSearchRequest(
+                randomBank.getBankCode(),
+                currentDate,
+                SortOptionBankTransactionsSortOptions.FieldSortEnum.DEPOSIT,
+                false);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
-            pagingRequestBankTransactionsSearchPostRequest, ""));
+            bankTransactionSearchPostRequestDepositAscending, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
-    PagingResponseBankTransactionsSearchResponse searchResponse6 =
+    PagingResponseBankTransactionsSearchResponse searchResponseDepositAscending =
         LastResponse.received()
             .answeredBy(AADM_User)
             .getBody()
             .jsonPath()
             .getObject("", PagingResponseBankTransactionsSearchResponse.class);
-    assertThat(searchResponse6).isNotNull();
-    List<BankTransactionsSearchResponse> bankTransactions6 = searchResponse6.getResponse();
-    assertThat(searchResponse6.getTotalCount()).isGreaterThanOrEqualTo(5);
-    Double previousDeposit2 = bankTransactions6.get(0).getDeposit();
-    for (BankTransactionsSearchResponse bankTransaction : bankTransactions6) {
-      assertThat(bankTransaction.getDeposit()).isGreaterThanOrEqualTo(previousDeposit2);
+    assertThat(searchResponseDepositDescending).isNotNull();
+
+    // Verify response is sorted by deposit amount ascending
+    List<BankTransactionsSearchResponse> bankTransactionsDepositAscending =
+        searchResponseDepositAscending.getResponse();
+    assertThat(searchResponseDepositAscending.getTotalCount()).isGreaterThanOrEqualTo(5);
+    previousDeposit = bankTransactionsDepositAscending.get(0).getDeposit();
+    for (BankTransactionsSearchResponse bankTransaction : bankTransactionsDepositAscending) {
+      assertThat(bankTransaction.getDeposit()).isGreaterThanOrEqualTo(previousDeposit);
     }
   }
 }
