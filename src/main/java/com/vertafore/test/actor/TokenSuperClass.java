@@ -66,7 +66,12 @@ public class TokenSuperClass {
                   .called("AADM_NBTAUser")
                   .withKeyType("AADM")
                   .withLoginPath("user")
-                  .withLoginType("nbta_user")));
+                  .withLoginType("nbta_user"),
+              new EMSActor()
+                  .called("AADM_FBTAUser")
+                  .withKeyType("AADM")
+                  .withLoginPath("user")
+                  .withLoginType("fbta_user")));
 
       //    AADM_NAUSER - no access user - no customer or policy access
       //    AADM_CBUUSER - Customer Business Unit access user - read and write access to the
