@@ -61,7 +61,7 @@ public class POST_SubmissionsSearch extends TokenSuperClass {
 
     int agnyStatusCode = 200;
     int vertUserCode = 200;
-    int vertAppCode = 200;
+    int vertAppCode = 401;
 
     if (EnvVariables.BASE_URL.contains("mdc")) {
       agnyStatusCode = 401;
