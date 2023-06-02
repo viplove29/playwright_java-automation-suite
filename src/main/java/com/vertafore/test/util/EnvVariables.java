@@ -12,6 +12,7 @@ public class EnvVariables {
   public static final String VADM_APP_KEY = getProperty("appkey_VADM");
   public static final String AGNY_APP_KEY = getProperty("appkey_AGNY");
   public static final String ORAN_APP_KEY = getProperty("appkey_ORAN");
+  public static final String IVAN_APP_KEY = getProperty("appkey_IVAN");
   public static final String ORAN_APP_ID = getProperty("appId_orange");
   public static final String LOGIN_USER_PATH = getProperty("login_user_path");
   public static final String LOGIN_APP_PATH = getProperty("login_app_path");
@@ -55,6 +56,10 @@ public class EnvVariables {
   public static final String AGENCY_NO = getProperty("agency_no");
   public static final String ADMIN_EMP_CODE = getProperty("admin_emp_code");
   public static final String APP_ACCESS_TO_AGENCY_KEY = getProperty("app_access_to_agency_key");
+
+  public static final String IVANS_USER_ID = getProperty("ivans_user_id");
+
+  public static final String IVANS_MAILBOX = getProperty("ivans_mailbox");
 
   public static final String ALL_ACCESS_BANK = getProperty("access_banks.all_access_bank");
   public static final String EMS_ACCESS_ONLY_BANK =

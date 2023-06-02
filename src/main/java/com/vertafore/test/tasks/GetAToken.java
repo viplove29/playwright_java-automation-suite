@@ -76,6 +76,15 @@ public class GetAToken implements Performable {
             authAPI.POSTAuthUserLoginOnTheAuthenticationController(tokenBody, "string"));
         break;
 
+      case "ivans":
+        tokenBody.put("agencyNo", AGENCY_NO);
+        tokenBody.put("userId", IVANS_USER_ID);
+        tokenBody.put("mailbox", IVANS_MAILBOX);
+
+        actor.attemptsTo(
+            authAPI.POSTAuthIvansLoginOnTheAuthenticationController(tokenBody, "string"));
+        break;
+
       case "app":
         tokenBody.put("agencyNo", AGENCY_NO);
         tokenBody.put("appAccessToAgencyKey", APP_ACCESS_TO_AGENCY_KEY);
