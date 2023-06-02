@@ -36,6 +36,9 @@ public class GetALoginKey implements Performable {
       case "ORAN":
         appKey = ORAN_APP_KEY;
         break;
+      case "IVAN":
+        appKey = IVAN_APP_KEY;
+        break;
       default:
         throw new IllegalArgumentException("Invalid Key Type");
     }
