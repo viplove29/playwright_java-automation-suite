@@ -40,10 +40,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         pagingRequestBankTransactionsSearchPostRequest =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
-                true);
+                randomBank.getBankCode(), currentDate, "TransactionDate", true);
 
     // Search for bank transactions
     AADM_User.attemptsTo(
@@ -77,10 +74,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     // Create search request
     pagingRequestBankTransactionsSearchPostRequest =
         BankUtil.formatBankTransactionSearchRequest(
-            randomBank.getBankCode(),
-            currentDate,
-            SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
-            true);
+            randomBank.getBankCode(), currentDate, "TransactionDate", true);
 
     // Search for bank transactions
     ORAN_App.attemptsTo(
@@ -137,10 +131,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequest =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
-                true);
+                randomBank.getBankCode(), currentDate, "TransactionDate", true);
     AADM_NBTAUser.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequest, ""));
@@ -194,10 +185,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequest =
             BankUtil.formatBankTransactionSearchRequest(
-                accessExcludedBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
-                true);
+                accessExcludedBank.getBankCode(), currentDate, "TransactionDate", true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequest, ""));
@@ -268,10 +256,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequestDateDescending =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
-                true);
+                randomBank.getBankCode(), currentDate, "TransactionDate", true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequestDateDescending, ""));
@@ -297,10 +282,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequestDateAscending =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE,
-                false);
+                randomBank.getBankCode(), currentDate, "TransactionDate", false);
 
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
@@ -327,10 +309,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequestFilenameDescending =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.FILENAME,
-                true);
+                randomBank.getBankCode(), currentDate, "Filename", true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequestFilenameDescending, ""));
@@ -356,10 +335,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequestFilenameAscending =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.FILENAME,
-                false);
+                randomBank.getBankCode(), currentDate, "Filename", false);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequestFilenameAscending, ""));
@@ -385,10 +361,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequestDepositDescending =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.DEPOSIT,
-                true);
+                randomBank.getBankCode(), currentDate, "Deposit", true);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequestDepositDescending, ""));
@@ -414,10 +387,7 @@ public class POST_BankTransactionSearch extends TokenSuperClass {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         bankTransactionSearchPostRequestDepositAscending =
             BankUtil.formatBankTransactionSearchRequest(
-                randomBank.getBankCode(),
-                currentDate,
-                SortOptionBankTransactionsSortOptions.FieldSortEnum.DEPOSIT,
-                false);
+                randomBank.getBankCode(), currentDate, "Deposit", false);
     AADM_User.attemptsTo(
         bankTransactionAPI.POSTBankTransactionSearchOnTheBanktransactionController(
             bankTransactionSearchPostRequestDepositAscending, ""));
