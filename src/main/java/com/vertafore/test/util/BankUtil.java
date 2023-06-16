@@ -38,6 +38,7 @@ public class BankUtil {
 
   public static BankAccountResponse getRandomBank(Actor actor, boolean includeHidden) {
     List<BankAccountResponse> banks = getAllAvailableBanks(actor, includeHidden);
+    assertThat(banks).withFailMessage("No banks found.").isNotEmpty();
     int randomNum = new Random().nextInt(banks.size());
     return banks.get(randomNum);
   }
@@ -60,7 +61,7 @@ public class BankUtil {
         pagingRequestBankTransactionsSearchPostRequest =
             new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
     SortOptionBankTransactionsSortOptions sortOptions = new SortOptionBankTransactionsSortOptions();
-    sortOptions.setFieldSort(SortOptionBankTransactionsSortOptions.FieldSortEnum.TRANSACTIONDATE);
+    sortOptions.setFieldSort("TransactionDate");
     sortOptions.setIsDescendingOrder(true);
     pagingRequestBankTransactionsSearchPostRequest.setSortOption(sortOptions);
 
@@ -205,10 +206,7 @@ public class BankUtil {
 
   public static SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
       formatBankTransactionSearchRequest(
-          String bankCode,
-          LocalDateTime currentDate,
-          SortOptionBankTransactionsSortOptions.FieldSortEnum columnName,
-          boolean isDescending) {
+          String bankCode, LocalDateTime currentDate, String columnName, boolean isDescending) {
     SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions
         pagingRequestBankTransactionsSearchPostRequest =
             new SortedPagingRequestBankTransactionsSearchPostRequestBankTransactionsSortOptions();
@@ -235,7 +233,7 @@ public class BankUtil {
             new SortedPagingRequestDepositsSearchPostRequestDepositsSortOptions();
 
     SortOptionDepositsSortOptions sortOptions = new SortOptionDepositsSortOptions();
-    sortOptions.setFieldSort(SortOptionDepositsSortOptions.FieldSortEnum.POSTEDDATE);
+    sortOptions.setFieldSort("PostedDate");
     sortOptions.setIsDescendingOrder(true);
     pagingDepositsSearchPostRequest.setSortOption(sortOptions);
 
@@ -258,6 +256,7 @@ public class BankUtil {
 
   public static DepositsSearchResponse getRandomDepositForBank(Actor actor, String bankCode) {
     List<DepositsSearchResponse> deposits = getUnmatchedDepositsForBank(actor, bankCode);
+    assertThat(deposits).withFailMessage("No deposits found.").isNotEmpty();
     int randomNum = new Random().nextInt(deposits.size());
     return deposits.get(randomNum);
   }
@@ -269,7 +268,7 @@ public class BankUtil {
         new SortedPagingRequestChecksSearchPostRequestChecksSortOptions();
 
     SortOptionChecksSortOptions sortOptions = new SortOptionChecksSortOptions();
-    sortOptions.setFieldSort(SortOptionChecksSortOptions.FieldSortEnum.CHECKDATE);
+    sortOptions.setFieldSort("CheckDate");
     sortOptions.setIsDescendingOrder(true);
     pagingChecksSearchPostRequest.setSortOption(sortOptions);
 
@@ -292,6 +291,7 @@ public class BankUtil {
 
   public static ChecksSearchResponse getRandomCheckForBank(Actor actor, String bankCode) {
     List<ChecksSearchResponse> checks = getUnmatchedChecksForBank(actor, bankCode);
+    assertThat(checks).withFailMessage("No checks found.").isNotEmpty();
     int randomNum = new Random().nextInt(checks.size());
     return checks.get(randomNum);
   }
@@ -299,6 +299,7 @@ public class BankUtil {
   public static BankAccountResponse getRandomBankWithAtLeastOneDeposit(
       Actor actor, boolean includeHidden) {
     List<BankAccountResponse> banks = getAllAvailableBanks(actor, includeHidden);
+    assertThat(banks).withFailMessage("No banks found.").isNotEmpty();
     int tries = 0;
     int maxTries = 20;
     int randomNum = new Random().nextInt(banks.size());
@@ -317,6 +318,7 @@ public class BankUtil {
   public static BankAccountResponse getRandomBankWithAtLeastOneCheck(
       Actor actor, boolean includeHidden) {
     List<BankAccountResponse> banks = getAllAvailableBanks(actor, includeHidden);
+    assertThat(banks).withFailMessage("No banks found.").isNotEmpty();
     int tries = 0;
     int maxTries = 20;
     int randomNum = new Random().nextInt(banks.size());
