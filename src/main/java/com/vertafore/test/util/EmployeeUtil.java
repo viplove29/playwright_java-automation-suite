@@ -1,7 +1,13 @@
 package com.vertafore.test.util;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.gson.JsonObject;
 import com.vertafore.test.models.ems.*;
+import com.vertafore.test.servicewrappers.UseBalanceJournalEntriesTo;
 import com.vertafore.test.servicewrappers.UseEmployeeTo;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -240,5 +246,84 @@ public class EmployeeUtil {
 
     assert !filteredEmployees.isEmpty();
     return filteredEmployees.get(0);
+  }
+
+  public static CommissionSetupResponse postRandomEmployeeCommissionSetup(Actor actor) {
+    UseEmployeeTo employeeAPI = new UseEmployeeTo();
+
+    String employeeCode = "!!$";
+    CommissionSetupPostRequest commissionSetupPostRequest = new CommissionSetupPostRequest();
+    commissionSetupPostRequest.setPersonnelCode(employeeCode);
+    commissionSetupPostRequest.setAppliesTo("Premium");
+    commissionSetupPostRequest.setTypeOfBusiness("3");
+    commissionSetupPostRequest.setLineOfBusiness("(All)");
+    commissionSetupPostRequest.setWritingCompany("!!1");
+    LocalDate dateObj = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    String date = dateObj.format(formatter);
+    commissionSetupPostRequest.setEffectiveDate(date);
+    commissionSetupPostRequest.setBusinessOrigin("OR");
+    commissionSetupPostRequest.setTransactionType("NBS");
+    commissionSetupPostRequest.setParentCompany("!!1");
+    commissionSetupPostRequest.setCommissionMethod("P");
+    commissionSetupPostRequest.setPlanType("(All)");
+    commissionSetupPostRequest.setCommissionPercentage(0.40);
+
+    actor.attemptsTo(
+        employeeAPI.POSTEmployeeCommissionSetupOnTheEmployeesController(
+            commissionSetupPostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+
+    CommissionSetupResponse commissionSetupResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", CommissionSetupResponse.class);
+    return commissionSetupResponse;
+  }
+
+  public static void deleteEmployeeCommissionSetup(Actor actor, String commissionSetupId) {
+    UseEmployeeTo employeeAPI = new UseEmployeeTo();
+    actor.attemptsTo(
+        employeeAPI.DELETEEmployeeCommissionSetupOnTheEmployeesController(commissionSetupId, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+  }
+
+  public static ImportBalanceJournalEntryResponse putBalanceJournalEntriesCustomerImport(
+      Actor actor) {
+    UseBalanceJournalEntriesTo balanceJournalEntriesApi = new UseBalanceJournalEntriesTo();
+
+    /*
+     * Base64 encoded csv file data for
+     *
+     * Customer Id,Customer Name,Policy Id,Policy Number,Invoice Balance,Late Charge Balance,Number of Days Old,Financed Balance,Description
+     * 26a69cc3-2f48-49c2-b664-5c243e5e6d86,,,,1000,,1,,Test
+     * */
+
+    JsonObject json = new JsonObject();
+    json.addProperty("BalanceJournalEntryType", "Customer");
+    json.addProperty(
+        "CSVFileData",
+        "Q3VzdG9tZXIgSWQsQ3VzdG9tZXIgTmFtZSxQb2xpY3kgSWQsUG9saWN5IE51bWJlcixJbnZvaWNlIEJhbGFuY2UsTGF0ZSBDaGFyZ2UgQmFsYW5jZSxOdW1iZXIgb2YgRGF5cyBPbGQsRmluYW5jZWQgQmFsYW5jZSxEZXNjcmlwdGlvbgoyNmE2OWNjMy0yZjQ4LTQ5YzItYjY2NC01YzI0M2U1ZTZkODYsLCwsMTAwMCwsMSwsVGVzdAo=");
+    LocalDate dateObj = LocalDate.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    String date = dateObj.format(formatter);
+    json.addProperty("JournalEntryDate", date);
+    json.addProperty("Description", "The 30");
+    json.addProperty("IgnoreWarnings", true);
+
+    actor.attemptsTo(
+        balanceJournalEntriesApi
+            .PUTBalanceJournalEntriesCustomerImportOnTheBalancejournalentriesController(
+                json.toString(), ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+    ImportBalanceJournalEntryResponse importBalanceJournalEntryResponse =
+        LastResponse.received()
+            .answeredBy(actor)
+            .getBody()
+            .jsonPath()
+            .getObject("", ImportBalanceJournalEntryResponse.class);
+    return importBalanceJournalEntryResponse;
   }
 }
