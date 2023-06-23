@@ -10,6 +10,7 @@ import com.vertafore.test.models.ems.CustomerInfoResponse;
 import com.vertafore.test.servicewrappers.UseGlobalChangeTo;
 import com.vertafore.test.util.CSVUtil;
 import com.vertafore.test.util.CustomerUtil;
+import com.vertafore.test.util.GlobalChangeUtil;
 import com.vertafore.test.util.PolicyUtil;
 import java.util.*;
 import net.serenitybdd.junit.runners.SerenityRunner;
@@ -20,27 +21,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(SerenityRunner.class)
 public class PUT_GlobalChangeBusinessUnitImport extends TokenSuperClass {
-
-  private HashMap<String, Object> getBodyForGlobalChangeBusinessUnit(
-      String csvByteArray, String changeType, String collectionMemo, String fileName) {
-    String globalChangeBUType;
-    switch (changeType.toUpperCase()) {
-      case "POLICY":
-        globalChangeBUType = "Policy Only";
-        break;
-      case "CUSTOMER":
-        globalChangeBUType = "Customer Only";
-        break;
-      default:
-        throw new IllegalArgumentException("Type must be POLICY or CUSTOMER.");
-    }
-    HashMap<String, Object> body = new HashMap<>();
-    body.put("csvFileData", csvByteArray);
-    body.put("globalChangeBusinessUnitType", globalChangeBUType);
-    body.put("collectionMemo", collectionMemo);
-    body.put("fileName", fileName);
-    return body;
-  }
 
   @Test
   public void globalChangeBusinessUnitForPolicyOnlyUpdatesPolicyBusinessUnit()
@@ -55,7 +35,7 @@ public class PUT_GlobalChangeBusinessUnitImport extends TokenSuperClass {
     String csvHeaders = CSVUtil.generateGlobalChangeBUCSVHeaders("policy", false);
     String csv = csvHeaders + csvRow + System.lineSeparator();
     HashMap<String, Object> body1 =
-        getBodyForGlobalChangeBusinessUnit(
+        GlobalChangeUtil.getBodyForGlobalChangeBusinessUnit(
             CSVUtil.toByteArray(csv),
             "policy",
             "EMS Automation",
@@ -80,7 +60,7 @@ public class PUT_GlobalChangeBusinessUnitImport extends TokenSuperClass {
     String reversedCsvHeaders = CSVUtil.generateGlobalChangeBUCSVHeaders("policy", true);
     String reversedCsv = reversedCsvHeaders + csvRow + System.lineSeparator();
     HashMap<String, Object> body2 =
-        getBodyForGlobalChangeBusinessUnit(
+        GlobalChangeUtil.getBodyForGlobalChangeBusinessUnit(
             CSVUtil.toByteArray(reversedCsv),
             "policy",
             "EMS Automation",
@@ -114,7 +94,7 @@ public class PUT_GlobalChangeBusinessUnitImport extends TokenSuperClass {
     String csvHeaders = CSVUtil.generateGlobalChangeBUCSVHeaders("customer", false);
     String csv = csvHeaders + csvRow + System.lineSeparator();
     HashMap<String, Object> body1 =
-        getBodyForGlobalChangeBusinessUnit(
+        GlobalChangeUtil.getBodyForGlobalChangeBusinessUnit(
             CSVUtil.toByteArray(csv),
             "customer",
             "EMS Automation",
@@ -137,7 +117,7 @@ public class PUT_GlobalChangeBusinessUnitImport extends TokenSuperClass {
     String reversedCsvHeaders = CSVUtil.generateGlobalChangeBUCSVHeaders("customer", true);
     String reversedCsv = reversedCsvHeaders + csvRow + System.lineSeparator();
     HashMap<String, Object> body2 =
-        getBodyForGlobalChangeBusinessUnit(
+        GlobalChangeUtil.getBodyForGlobalChangeBusinessUnit(
             CSVUtil.toByteArray(reversedCsv),
             "customer",
             "EMS Automation",
