@@ -10,6 +10,7 @@ import com.vertafore.test.models.ems.UserAuthGroupsDeletePostRequest;
 import com.vertafore.test.models.ems.UserAuthGroupsPostRequest;
 import com.vertafore.test.servicewrappers.UseEmployeeTo;
 import com.vertafore.test.util.EmployeeUtil;
+import com.vertafore.test.util.EnvVariables;
 import java.util.ArrayList;
 import java.util.List;
 import net.serenitybdd.rest.SerenityRest;
@@ -32,21 +33,24 @@ public class POST_EmployeeUserAuthGroupsDelete extends TokenSuperClass {
     String employeeCode = "";
     String authGroupId = "";
     for (EmployeeResponse employee : employees) {
-      // Get employee auth group id
-      AADM_User.attemptsTo(
-          employeeApi.GETEmployeeUserAuthGroupsOnTheEmployeesController(employee.getEmpCode(), ""));
-      assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
+      if (!employee.getShortName().equalsIgnoreCase(EnvVariables.USERNAME)) {
+        // Get employee auth group id
+        AADM_User.attemptsTo(
+            employeeApi.GETEmployeeUserAuthGroupsOnTheEmployeesController(
+                employee.getEmpCode(), ""));
+        assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-      List<UserAuthGroupResponse> userAuthGroupResponses =
-          LastResponse.received()
-              .answeredBy(AADM_User)
-              .getBody()
-              .jsonPath()
-              .getList("", UserAuthGroupResponse.class);
-      if (!userAuthGroupResponses.isEmpty()) {
-        employeeCode = employee.getEmpCode();
-        authGroupId = userAuthGroupResponses.get(0).getAuthGroupId();
-        break;
+        List<UserAuthGroupResponse> userAuthGroupResponses =
+            LastResponse.received()
+                .answeredBy(AADM_User)
+                .getBody()
+                .jsonPath()
+                .getList("", UserAuthGroupResponse.class);
+        if (!userAuthGroupResponses.isEmpty()) {
+          employeeCode = employee.getEmpCode();
+          authGroupId = userAuthGroupResponses.get(0).getAuthGroupId();
+          break;
+        }
       }
     }
 
