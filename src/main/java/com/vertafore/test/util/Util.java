@@ -7,9 +7,9 @@ import com.github.javafaker.Faker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import java.io.*;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 import net.serenitybdd.rest.SerenityRest;
 import net.serenitybdd.screenplay.Actor;
@@ -76,6 +76,11 @@ public class Util {
     Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     String json = gson.toJson(objectToPrint);
     System.out.println("\n" + json + "\n");
+  }
+
+  public static Map<String, Object> convertObjectToMap(Object object) {
+    Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+    return gson.fromJson(gson.toJson(object), new TypeToken<Map<String, Object>>() {}.getType());
   }
 
   public static File createTestFile(String filename) {
