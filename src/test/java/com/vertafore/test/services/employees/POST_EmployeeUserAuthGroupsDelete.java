@@ -4,10 +4,7 @@ import static net.serenitybdd.screenplay.actors.OnStage.theActorCalled;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.vertafore.test.actor.TokenSuperClass;
-import com.vertafore.test.models.ems.EmployeeResponse;
-import com.vertafore.test.models.ems.UserAuthGroupResponse;
-import com.vertafore.test.models.ems.UserAuthGroupsDeletePostRequest;
-import com.vertafore.test.models.ems.UserAuthGroupsPostRequest;
+import com.vertafore.test.models.ems.*;
 import com.vertafore.test.servicewrappers.UseEmployeeTo;
 import com.vertafore.test.util.EmployeeUtil;
 import com.vertafore.test.util.EnvVariables;
@@ -30,11 +27,16 @@ public class POST_EmployeeUserAuthGroupsDelete extends TokenSuperClass {
 
     // get random employee code
     List<EmployeeResponse> employees = EmployeeUtil.getAllEmployees(AADM_User);
+
     String employeeCode = "";
     String authGroupId = "";
     for (EmployeeResponse employee : employees) {
-      if (!employee.getShortName().equalsIgnoreCase(EnvVariables.USERNAME)) {
-        // Get employee auth group id
+
+      // EMSAuto is the ems suite user, qaown is the UI suite user. Make sure not to touch either
+      if (!(employee.getShortName().equalsIgnoreCase(EnvVariables.USERNAME)
+          || employee.getShortName().equalsIgnoreCase("qaown"))) {
+
+        // Get employees auth groups
         AADM_User.attemptsTo(
             employeeApi.GETEmployeeUserAuthGroupsOnTheEmployeesController(
                 employee.getEmpCode(), ""));
@@ -46,6 +48,8 @@ public class POST_EmployeeUserAuthGroupsDelete extends TokenSuperClass {
                 .getBody()
                 .jsonPath()
                 .getList("", UserAuthGroupResponse.class);
+
+        // Get auth group id if list isn't empty
         if (!userAuthGroupResponses.isEmpty()) {
           employeeCode = employee.getEmpCode();
           authGroupId = userAuthGroupResponses.get(0).getAuthGroupId();
@@ -57,14 +61,6 @@ public class POST_EmployeeUserAuthGroupsDelete extends TokenSuperClass {
     UserAuthGroupsPostRequest userAuthGroupsPostRequest = new UserAuthGroupsPostRequest();
     userAuthGroupsPostRequest.setEmpCode(employeeCode);
     userAuthGroupsPostRequest.setAuthGroupId(authGroupId);
-
-    List<UserAuthGroupsPostRequest> postRequest = new ArrayList<>();
-    postRequest.add(userAuthGroupsPostRequest);
-
-    // AADM POST
-    AADM_User.attemptsTo(
-        employeeApi.POSTEmployeeUserAuthGroupsOnTheEmployeesController(postRequest, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
     // Create delete request
     UserAuthGroupsDeletePostRequest userAuthGroupsDeletePostRequest =
@@ -81,16 +77,34 @@ public class POST_EmployeeUserAuthGroupsDelete extends TokenSuperClass {
             deletePostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
 
+    // ORAN Test
+    ORAN_App.attemptsTo(
+        employeeApi.POSTEmployeeUserAuthGroupsDeleteOnTheEmployeesController(
+            deletePostRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+
     // AADM Test
     AADM_User.attemptsTo(
         employeeApi.POSTEmployeeUserAuthGroupsDeleteOnTheEmployeesController(
             deletePostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
 
-    // ORAN Test
-    ORAN_App.attemptsTo(
-        employeeApi.POSTEmployeeUserAuthGroupsDeleteOnTheEmployeesController(
-            deletePostRequest, ""));
-    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(403);
+    DeleteGenericResponse deleteResponse =
+        LastResponse.received()
+            .answeredBy(AADM_User)
+            .getBody()
+            .jsonPath()
+            .getObject("", DeleteGenericResponse.class);
+
+    assertThat(deleteResponse).isNotNull();
+    assertThat(deleteResponse.getNumberOfRecordsDeleted()).isEqualTo(1);
+
+    // REINSTATE PERMISSIONS POST TEST
+    List<UserAuthGroupsPostRequest> postRequest = new ArrayList<>();
+    postRequest.add(userAuthGroupsPostRequest);
+
+    AADM_User.attemptsTo(
+        employeeApi.POSTEmployeeUserAuthGroupsOnTheEmployeesController(postRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(200);
   }
 }
