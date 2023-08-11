@@ -75,6 +75,7 @@ public class NotificationUtil {
     recipientPostRequest.setStatus(recipientStatus);
     recipientPostRequest.setPrimaryContactName("Test Contact");
     recipientPostRequest.setBackupContactName("Test Contact1");
+    recipientPostRequest.setRecipientType("1");
 
     List<NotificationTypePostRequest> notificationTypesList = new ArrayList<>();
     for (String notificationType : notificationTypes) {
@@ -105,6 +106,7 @@ public class NotificationUtil {
     recipientPostRequest.setBackupContactName("Test Contact1");
     recipientPostRequest.setNotificationTypes(notificationTypesList);
     recipientPostRequest.setNotificationActivityActions(notificationActivityList);
+    recipientPostRequest.setRecipientType("Non-blocking");
 
     recipientList.add(recipientPostRequest);
 
