@@ -54,6 +54,7 @@ public class PUT_NotificationsRecipient extends TokenSuperClass {
     notificationRecipientPutRequest.setRecipientEndPointURI(endPointURI);
     notificationRecipientPutRequest.setAuthenticationCode(authenticationCode);
     notificationRecipientPutRequest.setPrimaryContactId(contactId);
+    notificationRecipientPutRequest.setRecipientType("1");
 
     ORAN_App.attemptsTo(
         notificationsApi.PUTNotificationsRecipientOnTheOutboundnotificationserviceController(
@@ -92,6 +93,7 @@ public class PUT_NotificationsRecipient extends TokenSuperClass {
             .getBody()
             .jsonPath()
             .getObject("", NotificationClientFullInfoResponse.class);
+    Util.printObjectAsJson(updatedClientResponse);
     for (NotificationRecipientResponse recipient : updatedClientResponse.getRecipients()) {
       if (recipient.getRecipientId().equals(recipientId)) {
         assertThat(recipient.getName()).isEqualTo(recipientName);
@@ -293,5 +295,43 @@ public class PUT_NotificationsRecipient extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(404);
     Util.validateErrorResponseContainsString(
         "A backup contact with Id '" + randomGUID + "' could not be found.", AADM_User);
+
+    // Send invalid recipient type. Valid values are 1 or 2 OR blocking or non-blocking
+    notificationRecipientPutRequest = new NotificationRecipientPutRequest();
+    notificationRecipientPutRequest.setRecipientId(recipientId);
+    notificationRecipientPutRequest.setRecipientVersion("2.0");
+    notificationRecipientPutRequest.setStatus("Off");
+    notificationRecipientPutRequest.setRecipientName("test");
+    notificationRecipientPutRequest.setRecipientEndPointURI("test_uri");
+    notificationRecipientPutRequest.setPrimaryContactId(contactId);
+    notificationRecipientPutRequest.setBackupContactId(contactId);
+    notificationRecipientPutRequest.setRecipientType("10");
+
+    AADM_User.attemptsTo(
+        notificationsApi.PUTNotificationsRecipientOnTheOutboundnotificationserviceController(
+            notificationRecipientPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    Util.validateErrorResponseContainsString(
+        "Notification recipient type must be one of the following: 'Blocking' or '1', 'Non-blocking' or '2",
+        AADM_User);
+
+    // Send invalid recipient type. Valid values are 1 or 2 OR blocking or non-blocking
+    notificationRecipientPutRequest = new NotificationRecipientPutRequest();
+    notificationRecipientPutRequest.setRecipientId(recipientId);
+    notificationRecipientPutRequest.setRecipientVersion("2.0");
+    notificationRecipientPutRequest.setStatus("Off");
+    notificationRecipientPutRequest.setRecipientName("test");
+    notificationRecipientPutRequest.setRecipientEndPointURI("test_uri");
+    notificationRecipientPutRequest.setPrimaryContactId(contactId);
+    notificationRecipientPutRequest.setBackupContactId(contactId);
+    notificationRecipientPutRequest.setRecipientType("test");
+
+    AADM_User.attemptsTo(
+        notificationsApi.PUTNotificationsRecipientOnTheOutboundnotificationserviceController(
+            notificationRecipientPutRequest, ""));
+    assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
+    Util.validateErrorResponseContainsString(
+        "Notification recipient type must be one of the following: 'Blocking' or '1', 'Non-blocking' or '2",
+        AADM_User);
   }
 }
