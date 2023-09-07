@@ -106,7 +106,7 @@ public class NotificationUtil {
     recipientPostRequest.setBackupContactName("Test Contact1");
     recipientPostRequest.setNotificationTypes(notificationTypesList);
     recipientPostRequest.setNotificationActivityActions(notificationActivityList);
-    recipientPostRequest.setRecipientType("Non-blocking");
+    recipientPostRequest.setRecipientType("Single Retry");
 
     recipientList.add(recipientPostRequest);
 

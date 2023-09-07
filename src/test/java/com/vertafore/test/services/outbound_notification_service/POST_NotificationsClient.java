@@ -176,7 +176,7 @@ public class POST_NotificationsClient extends TokenSuperClass {
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString("The ClientName field is required.", AADM_User);
 
-    // check for invalid recipient type. Valid values are 1 or 2 OR blocking or non-blocking
+    // check for invalid recipient type. Valid values are 1 or 2 OR blocking or Single Retry
     notificationClientPostRequest.setClientName(clientName + "2");
     notificationClientPostRequest.getNotificationRecipients().get(0).setStatus("On");
     notificationClientPostRequest.getNotificationRecipients().get(0).setRecipientVersion("1.0");
@@ -186,10 +186,10 @@ public class POST_NotificationsClient extends TokenSuperClass {
             notificationClientPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString(
-        "Notification recipient type must be one of the following: 'Blocking' or '1', 'Non-blocking' or '2'",
+        "Notification recipient type must be one of the following: 'Blocking' or '1', 'Single Retry' or '2'",
         AADM_User);
 
-    // check for invalid recipient type. Valid values are 1 or 2 OR blocking or non-blocking
+    // check for invalid recipient type. Valid values are 1 or 2 OR blocking or Single Retry
     notificationClientPostRequest.setClientName(clientName + "3");
     notificationClientPostRequest.getNotificationRecipients().get(0).setStatus("On");
     notificationClientPostRequest.getNotificationRecipients().get(0).setRecipientVersion("1.0");
@@ -199,7 +199,7 @@ public class POST_NotificationsClient extends TokenSuperClass {
             notificationClientPostRequest, ""));
     assertThat(SerenityRest.lastResponse().getStatusCode()).isEqualTo(400);
     Util.validateErrorResponseContainsString(
-        "Notification recipient type must be one of the following: 'Blocking' or '1', 'Non-blocking' or '2'",
+        "Notification recipient type must be one of the following: 'Blocking' or '1', 'Single Retry' or '2'",
         AADM_User);
   }
 }

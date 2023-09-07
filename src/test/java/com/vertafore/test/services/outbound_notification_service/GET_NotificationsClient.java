@@ -84,6 +84,9 @@ public class GET_NotificationsClient extends TokenSuperClass {
     assertThat(clientResponse.getRecipients().get(0).getEndpointUri()).isEqualTo(endPointURI);
     assertThat(clientResponse.getRecipients().get(0).getServiceStatus().getDescription())
         .isEqualTo(status);
+    // check recipient type
+    assertThat(clientResponse.getRecipients().get(0).getRecipientType()).isEqualTo("Single Retry");
+    assertThat(clientResponse.getRecipients().get(1).getRecipientType()).isEqualTo("Blocking");
 
     VADM_Admin.attemptsTo(
         notificationsApi.GETNotificationsClientOnTheOutboundnotificationserviceController(
