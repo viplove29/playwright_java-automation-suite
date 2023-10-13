@@ -1,7 +1,7 @@
-# EMS Automation Suite
+# Playwright Automation Suite
 
 ## About the Project
-This project is intended to test the functionality of all the EMS endpoints, and while currently is only available to run against QA it will soon be able to run against MDC and Production as well. It will also soon be provisioned to be able to run against earlier versions of EMS to ensure proper testing of backwards compatibility and the business rules that come with that.
+This project is intended to test the functionality of all the  endpoints, and while currently is only available to run against QA it will soon be able to run against MDC and Production as well. It will also soon be provisioned to be able to run against earlier versions of EMS to ensure proper testing of backwards compatibility and the business rules that come with that.
 
 The project uses Serenity with JUnit, and implements the Screenplay pattern. It also uses the Handlebars/Mustache plugin to parse the EMS Swagger code and generate 'service-wrappers', which are the classes that we use to build individual endpoint tests. (This is explained a little more in the next section.)
 
